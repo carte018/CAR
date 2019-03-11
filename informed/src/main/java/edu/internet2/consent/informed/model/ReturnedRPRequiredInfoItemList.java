@@ -1,0 +1,129 @@
+package edu.internet2.consent.informed.model;
+
+import java.util.List;
+import java.util.Objects;
+
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Entity
+public class ReturnedRPRequiredInfoItemList {
+
+	@JsonIgnore
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private Long infoitemlistid;
+	
+	@JsonProperty("rhidentifier")
+	@Embedded
+	private RHIdentifier rhidentifier;
+	
+	@JsonProperty("rpidentifier")
+	@OneToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+	private RPIdentifier rpidentifier;
+	
+	@JsonProperty("requiredlist")
+	@ElementCollection @OneToMany(cascade=CascadeType.ALL,fetch = FetchType.EAGER)
+	private List<InfoItemValueList> requiredlist;
+	//private InfoItemValueListList requiredlist;
+	
+	@JsonProperty("version")
+	private int version;
+	
+	@JsonProperty("updated")
+	private long updated;
+	
+	@JsonProperty("state")
+	private String state;
+
+	public Long getInfoitemlistid() {
+		return infoitemlistid;
+	}
+
+	public void setInfoitemlistid(Long infoitemlistid) {
+		this.infoitemlistid = infoitemlistid;
+	}
+
+	public RHIdentifier getRhidentifier() {
+		return rhidentifier;
+	}
+
+	public void setRhidentifier(RHIdentifier rhidentifier) {
+		this.rhidentifier = rhidentifier;
+	}
+
+	public RPIdentifier getRpidentifier() {
+		return rpidentifier;
+	}
+
+	public void setRpidentifier(RPIdentifier rpidentifier) {
+		this.rpidentifier = rpidentifier;
+	}
+
+	public List<InfoItemValueList> getRequiredlist() {
+		return requiredlist;
+	}
+
+	public void setRequiredlist(List<InfoItemValueList> requiredlist) {
+		this.requiredlist = requiredlist;
+	}
+
+	public void setVersion(int value) {
+		this.version = value;
+	}
+	
+	public int getVersion() {
+		return version;
+	}
+	
+	public void setUpdated(long value) {
+		this.updated = value;
+	}
+	
+	public long getUpdated() {
+		return updated;
+	}
+	
+	public void setState(String value) {
+		this.state = value;
+	}
+	
+	public String getState() {
+		return state;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || this.getClass() != o.getClass()) {
+			return false;
+		}
+		ReturnedRPRequiredInfoItemList rpil = (ReturnedRPRequiredInfoItemList) o;
+		return (this.getRhidentifier().equals(rpil.getRhidentifier()) && this.getRpidentifier().equals(rpil.getRpidentifier()) && this.getRequiredlist().equals(rpil.getRequiredlist()));
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.getRhidentifier(),this.getRpidentifier(),this.getRequiredlist());
+	}
+	
+	public String toJSON() throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.writeValueAsString(this);
+	}
+}

@@ -1,0 +1,1247 @@
+		<h1>Relying Party: $rpdisplayname ($rpmi.getRpidentifier().getRptype() / $rpmi.getRpidentifier().getRpid())</h1>
+		
+		<form id="delregistration-form" method="POST" action="/caradmin/rpdelregistration/$rpmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rpmi.getRhidentifier().getRhid())/$rpmi.getRpidentifier().getRptype()/$CarAdminUtils.idEscape($rpmi.getRpidentifier().getRpid())">
+		</form>
+		
+		#if($successmsg)
+			<div class="message success">
+				$successmsg
+			</div>
+		#end
+		#if($failmsg)
+			<div class="message error">
+				$failmsg
+			</div>
+		#end
+		<div class="message notice">
+			If you are using automated metadata import mechanisms to populate information about this relaying party, changes you make here may be overwritten with your next metadata import.
+		</div>
+ 		<div id="sidebar">
+			<div class="content-section"> 
+				<h2>Resource Holder</h2>
+				<p>$rhdisplayname</p>
+			</div>
+	
+			<div class="content-section">
+				<h2 class="header-edit"><a href="#" class="icedit" id="ic_edit_icon"><i class="fa fa-edit"></i></a></h2>
+				<h2>Informed Content</h2>
+				<div id="ic-view">
+					<div class="form-set">
+	        			<label>Icon URL</label>
+        				<div style="word-break: break-word">
+	        				#if($rpmi.getIconurl() && $rpmi.getIconurl().length() > 0)
+        						<a href="$rpmi.getIconurl()" target="blank">$rpmi.getIconurl()&nbsp;<i class="fa fa-external-link-square-alt"></i></a>
+        					#else
+	        					[not provided]
+        					#end
+        				</div>
+					</div>
+					<div class="form-set">
+						<label>Privacy URL</label>
+						<div style="word-break: break-word">
+							#if($rpmi.getPrivacyurl() && $rpmi.getPrivacyurl().length() > 0)
+								<a href="$rpmi.getPrivacyurl()" target="blank">$rpmi.getPrivacyurl()&nbsp;<i class="fa fa-external-link-square-alt"></i></a>
+							#else
+								[not provided]
+							#end
+						</div>
+					</div>
+					<div class="form-set">
+						<label>Default Show Again</label>
+						<div>	
+							#if($rpmi.getDefaultshowagain() && $rpmi.getDefaultshowagain().equalsIgnoreCase("true"))
+								Show
+							#elseif ($rpmi.getDefaultshowagain() && $rpmi.getDefaultshowagain().equalsIgnoreCase("never"))
+								Never Show
+							#else
+								Hide
+							#end
+						</div>
+					</div>
+ 				</div>
+ 				<div id="ic-edit" class="hidden">
+ 					<form id="ic-edit-form" method="POST" action="#">
+ 						<input type="hidden" name="rhtype" value="$rpmi.getRhidentifier().getRhtype()">
+ 						<input type="hidden" name="rhid" value="$rpmi.getRhidentifier().getRhid()">
+ 						<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
+ 						<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+ 						<input type="hidden" name="formname" value="ic_edit_form">
+ 						<div class="form-set">
+		        			<label for="iconurl">Icon URL</label>
+		        			#if($rpmi.getIconurl() && $rpmi.getIconurl().length() > 0)
+		        				<input name="iconurl" type="text" value="$rpmi.getIconurl()">
+		        			#else
+		        				<input name="iconurl" type="text" placeholder="https://my.icon.url">
+		        			#end
+						</div>
+						<div class="form-set">
+							<label for="privacyurl">Privacy URL</label>
+							#if($rpmi.getPrivacyurl() && $rpmi.getPrivacyurl().length() > 0)
+								<input name="privacyurl" type="text" value="$rpmi.getPrivacyurl()">
+							#else
+								<input name="privacyurl" type="text" placeholder="https://my.privacy.stmt">
+							#end
+						</div>
+						<div class="form-set">
+							<label for="defaultshowagain">Default Show Again</label>
+							#if($rpmi.getDefaultshowagain().equals("true"))
+								<select name="defaultshowagain"><option value="true" selected>Show</option><option value="false">Hide</option><option value="never">Never Show</option></select>
+							#elseif($rpmi.getDefaultshowagain().equals("never"))
+								<select name="defaultshowagain"><option value="true">Show</option><option value="false">Hide</option><option value="never" selected>Never Show</option></select>
+							#else	
+								<select name="defaultshowagain"><option value="true">Show</option><option value="false" selected>Hide</option><option value="never">Never Show</option></select>
+							#end							
+						</div>
+						<div class="form-set">
+							<button class="active">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+						</div>
+					</form>
+				</div>
+ 			</div>
+			<div class="content-section">
+				<div id="rpprop-view">
+					<h2 class="header-edit"><a class="rppropedit" href="#" id="rpprop_edit_icon"><i class="fa fa-edit"></i></a></h2>
+					<h2 style="display:inline-block;">Properties</h2>
+					<div class="form-set">
+						#if(! $rpmi.getRpproperties() || $rpmi.getRpproperties().isEmpty())
+							<p>No properties defined.</p>
+						#else
+							<table class="display wrappingtable full-width">
+								<thead>
+									<tr>
+										<th>Property</th>
+										<th>Value</th>
+									</tr>
+								</thead>
+								<tbody>
+									#foreach($prop in $rpmi.getRpproperties())
+										<tr>
+											<td class="wrappingtd"><label>$prop.getRppropertyname()</label></td>
+											<td class="wrappingtd">$prop.getRppropertyvalue()</td>
+										</tr>
+									#end
+								</tbody>
+							</table>
+						#end
+					</div>
+				</div>
+				<div id="rpprop-edit" class="hidden">
+					<h2 class="header-edit"><a class="rppropedit" href="#" id="rpprop_edit_icon"><i class="fa fa-edit"></i></a></h2>
+					<h2 style="display:inline-block;">Properties</h2>
+					<div>
+						<form id="rpprop-edit-form" method="POST" action="#">
+							<input type="hidden" name="rhtype" value="$rpmi.getRhidentifier().getRhtype()">
+ 							<input type="hidden" name="rhid" value="$rpmi.getRhidentifier().getRhid()">
+ 							<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
+ 							<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+ 							<input type="hidden" name="formname" value="rppropertiesform">
+ 							#set($rppropcnt=$rpmi.getRpproperties().size())
+ 							<input type="hidden" id="id_rppropertycount" name="rppropertycount" value="$rppropcnt">
+ 							#set($icnt=0)
+							<table class="display wrappingtable full-width">
+								<thead>
+ 									<tr>
+ 										<th>Property</th>
+ 										<th>Value</th>
+ 										<th>Action</th>
+ 									</tr>
+ 								</thead>
+ 								<tbody id="rpprop-body">
+		 							#foreach($prop in $rpmi.getRpproperties())
+ 										#set($icnt=$icnt+1)
+ 										<tr id="tr_rpprop_$icnt">
+ 											<input type="hidden" id="id_propertyname_$icnt" name="propertyname_$icnt" value="$prop.getRppropertyname()">
+ 											<td>$prop.getRppropertyname()</td>
+ 											<td><input type="text" id="id_propertyvalue_$icnt" name="propertyvalue_$icnt" value="$prop.getRppropertyvalue()" size="10"></td>
+ 											<td><span class="rppropdelete" id="span_delete_$icnt"><a class="noload" href="#">Delete</a></span></td>
+ 										</tr>
+ 									#end
+ 								</tbody>
+ 							</table>
+ 							<br>
+ 							<button id="addpropbutton" class="active">Add Property<i class="fa button-icon-right fa-plus"></i></button>
+ 						</form>
+ 					</div>
+ 				</div>
+			</div>
+			<!-- buttons -->
+			<button id="language-report-button" class="active" style="width: 100%;">Review Languages<i class="fa button-icon-right fa-arrow-right"></i></button>
+			<br><br>
+			<button id="archive-rp-button" class="passive" style="width: 100%;">Archive Relying Party<i class="fa button-icon-right fa-trash"></i></button>
+ 		</div>
+ 		<div id="left">
+ 			<div class="content-section">
+ 				<h2 class="header-edit"><a id="rp_info_edit_icon" class="rpiedit" href="#"><i class="fa fa-edit"></i></a></h2>
+ 				<h2>Relying Party Information</h2>
+	 			<div id="rpi-view">
+ 					<h3 style="word-break: break-word">$rpdisplayname</h3>
+					<p style="word-break: break-word">$rpdescription</p>
+ 				</div>
+
+				<!-- First we need to acquire maps of the Internationalized strings by language -->
+				#set($displayhash={})
+				#set($descrhash={})
+				#foreach($displs in $rpmi.getDisplayname().getLocales())
+					#set($foo=$displayhash.put($displs.getLocale(),$displs.getValue()))
+				#end
+				
+				#foreach($descls in $rpmi.getDescription().getLocales())
+					#set($foo=$descrhash.put($descls.getLocale(),$descls.getValue()))
+				#end
+
+ 				<div id="rpi-edit" class="hidden">						
+					#set($ulangs=[])
+					#foreach($dlang in $languages)
+						#if(($displayhash.get($dlang) && $displayhash.get($dlang).length() > 0) || ($descrhash.get($dlang) && $descrhash.get($dlang).length() > 0))
+							<div id="div_${dlang}_edit" class="content-section">
+								<form id="form_${dlang}_edit_rp" method="POST" action="#">
+									<input type="hidden" name="lang" value="$dlang">
+									<input type="hidden" name="is_delete" id="is_delete_$dlang" value="false">
+									<input type="hidden" name="formname" value="form_${dlang}_edit">
+									<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
+									<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+									<input type="hidden" name="rhtype" value="$rpmi.getRhidentifier().getRhtype()">
+									<input type="hidden" name="rhid" value="$rpmi.getRhidentifier().getRhid()">
+									<h3><a href="#" id="h3_$dlang" class="langtoggle">$dlang</a></h3>
+									<div class="hidden" id="div_rp_h3_$dlang">
+										<div class="form-set">
+											<label for="displayname">Display Name</label>
+											#if($displayhash.get($dlang))
+												<input type="text" name="displayname" value="$displayhash.get($dlang)">
+											#else
+												<input type="text" name="displayname" value="">
+											#end
+										</div>
+										
+										<div class="form-set">
+											<label for="description">Description</label>
+											#if($descrhash.get($dlang))
+												<input type="text" name="description" value="$descrhash.get($dlang)">
+											#else
+												<input type="text" name="description" value="">
+											#end
+										</div>
+										<button class="active">Update <i class="fa button-icon-right fa-arrow-right"></i></button>
+										#if($displayhash.size()>1 || $descrhash.size()>1)
+											<button class="active langdelete" id="langdelete_${dlang}_rp">Delete<i class="button-icon-right fa fa-trash"></i></button>
+										#end
+									</div>
+								</form>
+							</div>
+						#else
+							#set($foo=$ulangs.add($dlang))
+						#end
+					#end
+					#if($ulangs.size() > 0) 
+						<button class="active addrpilang" id="button_addrplang">Add a Language<i class="button-icon-right fa fa-plus"></i></button>
+						<div id="div_rplang_add" class="content-section hidden">
+							<form id="form_rplang_add" method="POST" action="#">
+								<input type="hidden" name="formname" value="form_rplang_add">
+								<input type="hidden" name="rptype" value="$rpmi.getRptype()">
+								<input type="hidden" name="rpid" value="$rpmi.getRpidentifier()">
+								<input type="hidden" name="rhtype" value="$rpmi.getRhtype()">
+								<input type="hidden" name="rhid" value="$rpmi.getRhidentifier()">
+								<h3>Add a Language</h3>
+								<div class="form-set">
+									<label for="lang">Language</label>
+									<select name="lang">
+										#foreach($u in $ulangs)
+											<option value="$u">$u</option>
+										#end
+									</select>
+								</div>
+								<div class="form-set">
+									<label for="displayname">Display Name</label>
+									<input type="text" name="displayname" placeholder="Display Name">
+								</div>
+								<div class="form-set">
+									<label for="description">Description</label>
+									<input type="text" name="description" placeholder="Description">
+								</div>
+								<button class="active">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+							</form>
+						</div>
+					#end
+				</div>
+ 			</div>
+ 			#foreach($t in $rhiitypes)
+	 				#set($ihead=$t.substring(0,1).toUpperCase()+$t.substring(1)+"s")
+	 				#set($isingular=$t.substring(0,1).toUpperCase()+$t.substring(1))
+			 			#if($rprhash.get($t).getRequiredlist() && ! $rprhash.get($t).getRequiredlist().isEmpty())
+
+	 						<div class="content-section" id="div-iitype-required-$t">
+	 							<form method="POST" action="#" id="form-required-$t">
+				 				<input type="hidden" name="rhtype" value="$rhmi.getRhidentifier().getRhtype()">
+				 				<input type="hidden" name="rhid" value="$rhmi.getRhidentifier().getRhid()">
+					 			<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
+			 					<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+			 					<input type="hidden" name="iitype" value="$t">
+			 					<input type="hidden" name="defaultlanguage" value="$language">
+			 						
+			 					<input type="hidden" name="formname" value="form-required-$t"> 
+			 				
+	 							<h2 class="header-edit hidden" id="h2-icon-required-edit-$t"><a href="#" id="icon-required-edit-$t" class="item-edit-icon"><i class="fa fa-edit"></i></a></h2>
+	 							<h2 class="editiitype hidden" id="h2-required-edit-minus-$t"><a href="#" class="ii-heading-minus" id="a-required-edit-minus-$t">-&nbsp;Required $ihead ($rprhash.get($t).getRequiredlist().size())</a></h2>
+	 							<h2 class="editiitype" id="h2-required-edit-plus-$t"><a href="#" class="ii-heading-plus" id="a-required-edit-plus-$t">+&nbsp;Required $ihead ($rprhash.get($t).getRequiredlist().size())</a></h2>
+	 						<!--	<h2 class="editiitype" id="h2-required-edit-$t">Required $ihead ($rprhash.get($t).getRequiredlist().size())</h2>-->
+ 								<!--<h3 class="clickable editiitype" id="h3-required-edit-$t">Required <i class="fa fa-edit"></i></h3>-->
+ 								<div id="div-iitable-required-$t" class="hidden">
+								<table class="display tablesorter wrappingtable full-width smaller" id="table-view-required-$t">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Source</th>
+											<th>Reason</th>
+											<th>Values</th>
+										</tr>
+									</thead>
+									<tbody>
+										#foreach($rrivl in $rprhash.get($t).getRequiredlist())
+											<tr>
+												<td class="wrappingtd">$rrivl.getInfoitemidentifier().getIiid()</td>
+												#if($rrivl.getSourceitemname())
+													<td class="wrappingtd">$rrivl.getSourceitemname()</td>
+												#else
+													<td></td>
+												#end
+												#if($rrivl.getReason())
+													<td class="wrappingtd">$CarAdminUtils.localize($rrivl.getReason(),$language)</td>
+												#else
+													<td></td>
+												#end
+												#if ($rrivl.getValuelist().contains(".*"))
+													<td class="wrappingtd">All values</td>
+												#else
+													<td class="wrappingtd">
+														#foreach($s in $rrivl.getValuelist())
+															$s<br>
+														#end
+													</td>
+												#end
+											</tr>
+										#end
+									</tbody>
+								</table>
+								<table class="display wrappingtable full-width smaller hidden" id="table-edit-required-$t">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Source</th>
+											<th>Reason</th>
+											<th>Values</th>
+											<th>Delete?</th>
+										</tr>
+									</thead>
+									<tbody>
+									#set($ct=0)
+									#foreach($rrivl in $rprhash.get($t).getRequiredlist())
+										#set($ct=$ct+1)
+										<tr>
+										
+											<!-- Continue editing edit table from here RGC -->
+											<input type="hidden" name="iid_$ct" value="$rrivl.getInfoitemidentifier().getIiid()">
+											<input type="hidden" name="deleted_$ct" id="deleted_req_${t}_$ct" value="0">
+											<td class="wrappingtd">$rrivl.getInfoitemidentifier().getIiid()</td>
+											#if($rrivl.getSourceitemname() && ! $rrivl.getSourceitemname().equals(""))
+												<td><input type="text" name="sourceitemname_$ct" value="$rrivl.getSourceitemname()"></td>
+											#else
+												<td><input type="text" name="sourceitemname_$ct" value="$rrivl.getInfoitemidentifier().getIiid()"></td>
+											#end
+											#if($rrivl.getReason() && ! $rrivl.getReason().equals(""))
+												<td><input type="text" name="reason_$ct" value="$CarAdminUtils.localize($rrivl.getReason(),$language)"></td>
+											#else
+												<td><input type="text" name="reason_$ct" placeholder="RP Reason for Request"></td>
+											#end
+											#if ($rrivl.getValuelist().contains(".*"))
+												<td><input type="text" name="values_$ct" value=".*"></td>
+											#else
+												#set($list="")
+												#foreach($s in $rrivl.getValuelist())
+													#if($list.equals(""))
+														#set($list=$s)
+													#else
+														#set($list=$list+","+$s)
+													#end
+												#end
+												<td><input type="text" name="values_$ct" value="$list"></td>
+											#end
+											<td><a href="#" class="item_delete" id="delete_req_${t}_$ct">Delete</a></td>
+										</tr>
+									#end	
+									</tbody>									
+								</table>
+								<input type="hidden" name="itemcount" value="$ct">
+								<br>
+								<button class="active hidden" id="button-update-required-$t">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+								</div>
+								</form>	
+			 				</div>
+			 			#else
+			 			
+			 			#end
+			  			#if($rpohash.get($t).getOptionallist() && ! $rpohash.get($t).getOptionallist().isEmpty())
+			 				<div class="content-section" id="div-iitype-optional-$t">
+			 					<form method="POST" action="#" id="form-optional-$t">
+				 				<input type="hidden" name="rhtype" value="$rhmi.getRhidentifier().getRhtype()">
+				 				<input type="hidden" name="rhid" value="$rhmi.getRhidentifier().getRhid()">
+					 				<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
+			 					<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+			 					<input type="hidden" name="iitype" value="$t">
+			 					<input type="hidden" name="defaultlanguage" value="$language">
+			 						
+			 					<input type="hidden" name="formname" value="form-optional-$t"> 
+			 					<h2 class="header-edit hidden" id="h2-icon-optional-edit-$t"><a href="#" id="icon-optional-edit-$t" class="item-edit-icon"><i class="fa fa-edit"></i></a></h2>
+	 							<h2 class="editiitype hidden" id="h2-optional-edit-minus-$t"><a href="#" class="ii-heading-minus" id="a-optional-edit-minus-$t">-&nbsp;Optional $ihead ($rpohash.get($t).getOptionallist().size())</a></h2>
+	 							<h2 class="editiitype" id="h2-optional-edit-plus-$t"><a href="#" class="ii-heading-plus" id="a-optional-edit-plus-$t">+&nbsp;Optional $ihead ($rpohash.get($t).getOptionallist().size())</a></h2>
+
+				 				<div id="div-iitable-optional-$t" class="hidden">
+								<table class="display tablesorter wrappingtable full-width smaller" id="table-view-optional-$t">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Source</th>
+											<th>Reason</th>
+											<th>Values</th>
+										</tr>
+									</thead>
+									<tbody>
+										#foreach($rrivl in $rpohash.get($t).getOptionallist())
+											<tr>
+												<td class="wrappingtd">$rrivl.getInfoitemidentifier().getIiid()</td>
+												#if($rrivl.getSourceitemname())
+													<td class="wrappingtd">$rrivl.getSourceitemname()</td>
+												#else
+													<td></td>
+												#end
+												#if($rrivl.getReason() && ! $rrivl.getReason().getLocales().isEmpty())
+													<td class="wrappingtd">$CarAdminUtils.localize($rrivl.getReason(),$language)</td>
+												#else
+													<td></td>
+												#end
+												#if ($rrivl.getValuelist() && $rrivl.getValuelist().contains(".*"))
+													<td class="wrappingtd">All values</td>
+												#else
+													<td class="wrappingtd">
+														#foreach($s in $rrivl.getValuelist())
+															$s<br>
+														#end
+													</td>
+												#end
+											</tr>
+										#end
+									</tbody>
+								</table>
+								<table class="display wrappingtable full-width smaller hidden" id="table-edit-optional-$t">
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Source</th>
+											<th>Reason</th>
+											<th>Values</th>
+											<th>Delete?</th>
+										</tr>
+									</thead>
+									<tbody>
+									#set($ct=0)
+									#foreach($orivl in $rpohash.get($t).getOptionallist())
+										#set($ct=$ct+1)
+										<tr>
+										
+											<!-- Continue editing edit table from here RGC -->
+											<input type="hidden" name="iid_$ct" value="$orivl.getInfoitemidentifier().getIiid()">
+											<input type="hidden" name="deleted_$ct" id="deleted_opt_${t}_$ct" value="0">
+											
+											<td class="wrappingtd">$orivl.getInfoitemidentifier().getIiid()</td>
+											#if($orivl.getSourceitemname() && ! $orivl.getSourceitemname().equals(""))
+												<td><input type="text" name="sourceitemname_$ct" value="$orivl.getSourceitemname()"></td>
+											#else
+												<td><input type="text" name="sourceitemname_$ct" value="$orivl.getInfoitemidentifier().getIiid()"></td>
+											#end
+											#if($orivl.getReason() && ! $orivl.getReason().equals(""))
+												<td><input type="text" name="reason_$ct" value="$CarAdminUtils.localize($orivl.getReason(),$language)"></td>
+											#else
+												<td><input type="text" name="reason_$ct" placeholder="RP Reason for Request"></td>
+											#end
+											#if ($orivl.getValuelist().contains(".*"))
+												<td><input type="text" name="values_$ct" value=".*"></td>
+											#else
+												#set($list="")
+												#foreach($s in $orivl.getValuelist())
+													#if($list.equals(""))
+														#set($list=$s)
+													#else
+														#set($list=$list+","+$s)
+													#end
+												#end
+												<td><input type="text" name="values_$ct" value="$list"></td>
+											#end
+											<td><a href="#" class="item_delete" id="delete_opt_${t}_$ct">Delete</a></td>
+										</tr>
+									#end	
+									</tbody>									
+								</table>
+								<input type="hidden" name="itemcount" value="$ct">
+								<br>
+								<button class="active hidden" id="button-update-optional-$t">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+								</div>
+								</form>
+								
+							</div>
+						#else
+				
+						#end
+	
+ 			#end 
+ 			
+ 			<!-- Add form -->
+ 			<div class="content-section">
+ 				<h2>Add Information Item Request</h2>
+ 				<form id="additemform" method="POST" action="#">
+ 					<input type="hidden" name="formname" value="additemform">
+ 					<input type="hidden" name="rhtype" value="$rhmi.getRhidentifier().getRhtype()">
+ 					<input type="hidden" name="rhid" value="$rhmi.getRhidentifier().getRhid()">
+ 					<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
+ 					<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+ 					
+ 					<table style="width:100%; vertical-align: top;">
+ 						<tbody>
+ 							<tr>
+ 								<td>
+ 									<div class="form-set">
+ 										<label for="iitype">Type</label>
+ 										<select id="add-ii-type" name="iitype" style="width:100%">
+ 											#foreach($t in $rhiitypes)
+ 												<option value="$t">$t</option>
+ 											#end
+ 										</select>
+ 									</div>
+ 									<div class="form-set">
+ 										<label for="iiid">Identifier</label>
+ 										<select id="add-ii-id" name="iiid" style="width: 100%">
+ 										
+ 										</select>
+ 									</div>
+ 									<div class="form-set">
+ 										<label for="required">Disposition</label>
+ 										<select name="required" style="width: 100%">
+ 											<option value="optional">Optional</option>
+ 											<option value="required">Required</option>
+ 										</select>
+ 									</div>
+ 								</td>
+ 								<td style="padding-left: 2em; vertical-align: top;">
+ 									<div class="form-set">
+ 										<label for="sourceii">Source Infomation Item</label>
+ 										<select id="add-ii-source" name="sourceii" style="width: 90%;">
+ 										
+ 										</select>
+ 									</div>
+ 									<div class="form-set">
+ 										<label for="reasonlang" class="visually-hidden">Reason Language</label>
+ 										<label for="reason">RP Reason for Request</label>
+ 										<select class="iblock" name="reasonlang">
+ 											#foreach($l in $languages)
+ 												<option value="$l">$l</option>
+ 											#end
+ 										</select>
+ 										<input class="iblock" type="text" name="reason" placeholder="Reason for request">
+ 									</div>
+ 									<div class="form-set">
+ 										<label for="values">Values</label>
+ 										<input class="iblock" type="text" name="values" placeholder="Regular Expression" style="width: 90%;">
+ 									</div>
+ 								</td>
+ 							</tr>
+ 						</tbody>
+ 					</table>
+ 					<button class="active">Add Item Request<i class="fa button-icon-right fa-plus"></i></button>
+ 				</form>
+ 			</div>
+		</div>
+	 		
+		<script type="text/javascript">
+			var $rcnt;
+			var $ocnt;
+			$(document).ready(function() {
+				$("#archive-rp-button").click(function(e) {
+					handleArchive(e);
+				});
+				$(".ii-heading-plus").click(function(e) {
+					handleIIHeading(e);
+				});
+				$(".ii-heading-minus").click(function(e) {
+					handleIIHeading(e);
+				});
+				$(".additemtoggle").click(function(e) {
+					handleAddItemToggle(e);
+				});
+				$(".item-edit-icon").click(function(e) {
+					handleItemEditIcon(e);
+				});
+				$(".editable").click(function(e) {
+					handleClick(e);
+				});
+				$("#language-report-button").click(function(e) {
+					handleLangReport(e);
+				});
+				$(".noload").click(function(e) {
+					suppress(e);
+				});
+				$(".rpiedit").click(function(e) {
+					handleRPIEdit(e);
+				});
+				$(".langtoggle").click(function(e) {
+					handleLangToggle(e);
+				});
+				$(".langdelete").click(function(e) {
+					handleLangDelete(e);
+				});
+				$(".addrpilang").click(function(e) {
+					handleAddRPLang(e);
+				});
+				$(".unselected").click(function(e) {
+					handleClick(e);
+				});
+				$(".icedit").click(function(e) {
+					handleIcEdit(e);
+				});
+				$(".rppropedit").click(function(e) {
+					handleRpPropEdit(e);
+				});
+				$("#addpropbutton").click(function(e) {
+					handleAddPropButton(e);
+				});
+				$("#rpdisplaynameaddbutton").click(function(e) {
+					addRPDisplayName(e);
+				});
+				$("#rpdescriptionaddbutton").click(function(e) {
+					addRPDescription(e);
+				});
+				$("#showiconurlbutton").click(function(e) {
+					showIconURL(e);
+				});
+				$("#showprivacyurlbutton").click(function(e) {
+					showPrivacyURL(e);
+				});
+				$("#addpropbutton").click(function(e) {
+					addRPProperty(e);
+				});
+				$(".rpdeletebutton").click(function(e) {
+					deleteRPProperty(e);
+				});
+				$("#addtooptional").click(function(e) {
+					addToOptional(e);
+				});
+				$("#addtorequired").click(function(e) {
+					addToRequired(e);
+				});
+				$("#optionaliibutton").click(function(e) {
+					e.preventDefault();
+					$("#optionaliiform").submit();
+				});
+				$("#requirediibutton").click(function(e) {
+					e.preventDefault();
+					$("#requirediiform").submit();
+				});
+				$(".requirediireasonaddbutton").click(function(e) {
+					e.preventDefault();
+					addRequiredIIReason(e);
+				});
+				$(".requiredaddvaluebutton").click(function(e) {
+					e.preventDefault();
+					addRequiredIIValue(e);
+				});
+				$(".optionaliireasonaddbutton").click(function(e) {
+					e.preventDefault();
+					addOptionalIIReason(e);
+				});
+				$(".optionaladdvaluebutton").click(function(e) {
+					e.preventDefault();
+					addOptionalIIValue(e);
+				});
+				$(".rppropdelete").click(function(e) {
+					e.preventDefault();
+					tableDeleteRPProperty(e);
+				});
+				$(".item_delete").click(function(e) {
+					e.preventDefault();
+					deleteIIRequest(e);
+				});
+				
+				resetiidetailbuttons();
+				resetiideletebuttons();
+				
+				// $ocnt = $optionalcount;
+				// $rcnt = $requiredcount;
+				
+				// Add item select restrictions
+				
+				var items = {
+					#foreach ($t in $rhiitypes)
+						"$t": [
+							#foreach ($i in $rhiil.getInfoitemlist())
+								#if (! $inuse.contains($i.getIiid()) && $i.getIitype().equals($t))
+									"$i.getIiid()",
+								#end
+							#end
+						],
+					#end
+				}
+				
+				var aitems = {
+					#foreach ($t in $rhiitypes)
+						"$t": [
+							#foreach ($i in $rhiil.getInfoitemlist())
+								#if($i.getIitype().equals($t))
+									"$i.getIiid()",
+								#end
+							#end
+						],
+					#end
+				}
+				
+				
+					
+				$("#add-ii-type").change(function() {
+					$("#add-ii-id").empty();
+					$("#add-ii-source").empty();
+					$(items[this.value]).each(function(i,t) {
+						$("#add-ii-id").append('<option value="'+t+'">'+t+'</option>');
+					});
+					$(aitems[this.value]).each(function(i,t) {
+						$("#add-ii-source").append('<option value="'+t+'">'+t+'</option>');
+					});
+					valit = $("#add-ii-id").val();
+					optit = $("#add-ii-source option[value="+valit+"]");
+					$(optit).prop('selected',true);
+				});
+				
+				$("#add-ii-type").trigger("change");
+				
+				var valit = $("#add-ii-id").val();
+				var optit = $("#add-ii-source option[value="+valit+"]");
+				$(optit).prop('selected',true);
+								
+			});
+			
+			function handleArchive(e) {
+				e.preventDefault();
+				$("#delregistration-form").submit();
+			}
+			
+			function handleIIHeading(e) {
+				e.preventDefault();
+				tid = e.currentTarget.id;
+				$iclass = tid.replace(/^a-/,"").replace(/-.*$/,"");
+				$itype = tid.replace(/^a-.*-edit-.*-/,"");
+				$("#h2-"+$iclass+"-edit-plus-"+$itype).toggle();
+				$("#h2-"+$iclass+"-edit-minus-"+$itype).toggle();
+				$("#h2-icon-"+$iclass+"-edit-"+$itype).toggle();
+				$("#div-iitable-"+$iclass+"-"+$itype).toggle();
+			}
+			
+			function handleAddItemToggle(e) {
+				e.preventDefault();
+				tid = e.currentTarget.id;
+				$iclass = tid.replace(/^additemtoggle-/,"").replace(/-.*$/,"");
+				$itype = tid.replace(/^additemtoggle-.*-/,"");
+				$("#div-add-"+$iclass+"-"+$itype).toggle();
+			}
+				
+			function handleLangReport(e) {
+				e.preventDefault();
+				var url="/caradmin/rplocalereview/$rpmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rpmi.getRhidentifier().getRhid())/$rpmi.getRpidentifier().getRptype()/$CarAdminUtils.idEscape($rpmi.getRpidentifier().getRpid())/";
+				//window.location.replace(url);
+				window.location.href=url;
+			}
+			
+			function suppress(e) {
+				e.preventDefault();
+			}
+			
+			function handleLangToggle(e) {
+				tid = e.target.id;
+				$("#div_rp_"+tid).toggle();
+			}
+			
+			function handleRPIEdit(e) {
+				e.preventDefault();
+				$("#rpi-edit").toggle();
+				$("#rpi-view").toggle();
+			}
+			
+			function handleAddRPLang(e) {
+				tid = e.target.id;
+				$("#div_rplang_add").toggle();
+				$("#button_addrplang").toggle();
+			}
+			
+			function handleLangDelete(e) {
+				e.preventDefault();
+				tid = e.target.id;
+				var lang = tid.replace(/langdelete_/,"").replace(/_rp/,"");
+				$("#is_delete_"+lang).val("true");
+				$("#form_"+lang+"_edit_rp").submit();
+			}
+			
+			function resetiidetailbuttons() {
+				$(".iidetailbutton").off("hover");
+				$(".iidetailbutton").hover(function(e) {
+					hoverin(e);
+				},function(e) {
+					hoverout(e);
+				});
+				$(".iidetailbutton").off("click");
+				$(".iidetailbutton").click(function(e) {
+					e.preventDefault();
+					openIiDetail(e);
+				});
+				$(".hidedetail").off("click");
+				$(".hidedetail").click(function(e) {
+					e.preventDefault();
+					hideDetail(e);
+				});
+			}
+			
+			function resetiideletebuttons() {
+				$(".iideletebutton").off("hover");
+				$(".iideletebutton").hover(function(e) {
+					hoverin(e);
+				},function(e) {
+					hoverout(e);
+				});
+				$(".iideletebutton").off("click");
+				$(".iideletebutton").click(function(e) {
+					e.preventDefault();
+					deleteII(e);
+				});
+			}
+			
+			function resetiiaddlangbuttons() {
+				$(".requirediireasonaddbutton").off("click");
+				$(".requirediireasonaddbutton").click(function(e) {
+					e.preventDefault();
+					addRequiredIIReason(e);
+				});
+				$(".optionaliireasonaddbutton").off("click");
+				$(".optionaliireasonaddbutton").click(function(e) {
+					e.preventDefault();
+					addOptionalIIReason(e);
+				});
+			}
+			
+			function resetaddvaluebuttons() {
+				$(".requiredaddvaluebutton").off("click");
+				$(".requiredaddvaluebutton").click(function(e) {
+					e.preventDefault();
+					addRequiredIIValue(e);
+				});
+				$(".optionaladdvaluebutton").off("click");
+				$(".optionaladdvaluebutton").click(function(e) {
+					e.preventDefault();
+					addOptionalIIValue(e);
+				});
+			}
+			
+			function hoverin(e) {
+				tid = e.target.id;
+				num = tid.replace(/.*_/,"");
+				if (tid.match(/required.*/)) {
+					$("#requirediidiv_"+num).css("color","blue");
+				} else {
+					$("#optionaliidiv_"+num).css("color","blue");
+				}
+			}
+			
+			function hoverout(e) {
+				tid = e.target.id;
+				num = tid.replace(/.*_/,"");
+				if (tid.match(/required.*/)) {
+					$("#requirediidiv_"+num).css("color","black");
+				} else {
+					$("#optionaliidiv_"+num).css("color","black");
+				}
+			}
+			
+			function openIiDetail(e) {
+				tid = e.target.id;
+				num = tid.replace(/.*_/,"");
+				if (tid.match(/required.*/)) {
+					$("#requirediiupdated_"+num).show();
+					$("#requirediibuttonspan").show();
+					$("#requirediidiv_"+num).hide();
+					$("#requirediidiv_details_"+num).show();
+				} else {
+					$("#optionaliiupdated_"+num).show();
+					$("#optionaliibuttonspan").show();
+					$("#optionaliidiv_"+num).hide();
+					$("#optionaliidiv_details_"+num).show();
+				}
+			}
+			
+			function handleIcEdit(e) {
+				e.preventDefault();
+				$("#ic-view").toggle();
+				$("#ic-edit").toggle();
+			}
+			
+			function handleRpPropEdit(e) {
+				e.preventDefault();
+				$("#rpprop-view").toggle();
+				$("#rpprop-edit").toggle();
+			}
+			
+			function handleAddPropButton(e) {
+				e.preventDefault();
+				icnt=parseInt($("#id_rppropertycount").val())+1;
+				$("#rpprop-body").append("<tr id=\"tr_rpprop_"+icnt+"\">"+
+					"<td><input type=\"text\" id=\"id_propertyname_"+icnt+"\" name=\"propertyname_"+icnt+"\" size=\"10\" placeholder=\"name\"></td>"+
+					"<td><input type=\"text\" id=\"id_propertyvalue_"+icnt+"\" name=\"propertyvalue_"+icnt+"\" size=\"10\" placeholder=\"value\"></td>"+
+					"<td><span class=\"updaterpprops\"><a class=\"noload\" href=\"#\">Update<i class=\"fa button-icon-right fa-arrow-right\"></i></a></span></td>"+
+					"</tr>");
+				$(".updaterpprops").click(function(e) {
+					$("#rpprop-edit-form").submit();
+				});
+				$("#id_rppropertycount").val(icnt);
+			}
+			
+			function hideDetail(e) {
+				tid = e.target.id;
+				num = tid.replace(/.*_/,"");
+				if (tid.match(/required.*/)) {
+					$("#requirediidiv_"+num).show();
+					$("#requirediidiv_details_"+num).hide();
+				} else {
+					$("#optionaliidiv_"+num).show();
+					$("#optionaliidiv_details_"+num).hide();
+				}
+			}
+					
+			function addRPDisplayName(e) {
+				e.preventDefault();
+				var $ctr = $("#rpdisplaynamecount").val();
+				$ctr = parseInt($ctr) + 1;
+				$("#rpdisplaynamecount").val($ctr);
+				var $lname = "rpdisplaynamelanguage_" + $ctr;
+				var $vname = "rpdisplaynamevalue_" + $ctr;
+				var $row = $( "<tr><td><input type=\"text\" name=\"" + $lname + "\" value=\"Enter Language\"></td><td><input type=\"text\" name=\"" + $vname + "\" value=\"Enter display name\"></td></tr>" );
+				$("#rpdisplaynameedittable").append($row);
+			}
+			
+			function addRPDescription(e) {
+				e.preventDefault();
+				var $ctr = $("#rpdescriptioncount").val();
+				$ctr = parseInt($ctr) + 1;
+				$("#rpdescriptioncount").val($ctr);
+				var $lname = "rpdescriptionlanguage_" + $ctr;
+				var $vname = "rpdescriptionvalue_" + $ctr;
+				var $row = $( "<tr><td><input type=\"text\" name=\"" + $lname + "\" value=\"Enter Language\"></td><td><input type=\"text\" name=\"" + $vname + "\" value=\"Enter description\"></td></tr>" );
+				$("#rpdescriptionedittable").append($row);
+			}
+			
+			function addRequiredIIReason(e) {
+				e.preventDefault();
+				tid = e.target.id;
+				var num = tid.replace(/requirediireasonaddlang_/,"");
+				var $ctr = $("#requirediireasoncount_"+num).val();
+				$ctr = parseInt($ctr) + 1;
+				$("#requirediireasoncount_"+num).val($ctr);
+				var $lname = "requirediireasonlanguage_"+$ctr+"_"+num;
+				var $vname = "requirediireasonvalue_"+$ctr+"_"+num;
+				var $row = $("<tr><td><input type=\"text\" id=\""+$lname+"\" name=\""+$lname+"\" value=\"Enter Language\"></td><td><input type=\"text\" id=\""+$vname+"\" name=\""+$vname+"\" value=\"Enter reason\"></td></tr>");
+				$("#requirediireasontable_"+num).append($row);
+			}
+			
+			function addRequiredIIValue(e) {
+				e.preventDefault();
+				tid = e.target.id;
+				var num = tid.replace(/requiredaddvalue_/,"");
+				var $ctr = $("#requirediivaluecount_"+num).val();
+				$ctr = parseInt($ctr) + 1;
+				$("#requirediivaluecount_"+num).val($ctr);
+				var $lname = "requirediivalrex_"+$ctr+"_"+num;
+				var $row = $("<tr><td><input type=\text\" id=\""+$lname+"\" name=\""+$lname+"\" value=\"Enter regex\"></td></tr>");
+				$("#requirediivaluetable_"+num).append($row);
+			}
+			
+			function addOptionalIIValue(e) {
+				e.preventDefault();
+				tid = e.target.id;
+				var num = tid.replace(/optionaladdvalue_/,"");
+				var $ctr = $("#optionaliivaluecount_"+num).val();
+				$ctr = parseInt($ctr) + 1;
+				$("#optionaliivaluecount_"+num).val($ctr);
+				var $lname = "optionaliivalrex_"+$ctr+"_"+num;
+				var $row = $("<tr><td><input type\"text\" id=\""+$lname+"\" name=\""+$lname+"\" value=\"Enter regex\"></td></tr>");
+				$("#optionaliivaluetable_"+num).append($row);
+			}
+			 
+			function addOptionalIIReason(e) {
+				e.preventDefault();
+				tid = e.target.id;
+				var num = tid.replace(/optionaliireasonaddlang_/,"");
+				var $ctr = $("#optionaliireasoncount_"+num).val();
+				$ctr = parseInt($ctr) + 1;
+				$("#optionaliireasoncount_"+num).val($ctr);
+				var $lname = "optionaliireasonlanguage_"+$ctr+"_"+num;
+				var $vname = "optionaliireasonvalue_"+$ctr+"_"+num;
+				var $row = $("<tr><td><input type=\"text\" id=\""+$lname+"\" name=\""+$lname+"\" value=\"Enter Language\"></td><td><input type=\"text\" id=\""+$vname+"\" name=\""+$vname+"\" value=\"Enter reason\"></td></tr>");
+				$("#optionaliireasontable_"+num).append($row);
+			}
+							 
+			function handleClick(e) {
+				tid = e.target.id;
+				pid = e.target.parentElement.id;
+				
+				if (tid.match(/rpdisplayname/)) {
+					editRPDisplayname(e);
+				} else if (tid.match(/rpdescription/)) {
+					editRPDescription(e);
+				} else if (tid.match(/iconurl/)) {
+					editIconURL(e);
+				} else if (tid.match(/privacyurl/)) {
+					editPrivacyURL(e);
+				} else if (tid.match(/defaultshowagain/)) {
+					editDefaultShowAgain(e);
+				} else if (tid.match(/rppropertydiv_/) || pid.match(/rppropertydiv_/) || tid.match(/rpproperty_/)) {
+					showPropertyDeleteButton(e);
+				} else if (tid.match(/addableii_/) || pid.match(/addableii_/)) {
+					markAttribute(e);
+				}
+			}
+			
+			function editRPDisplayname(e) {
+				$("#rpdisplayname").hide();
+				$("#rpdisplayname_edit").show();
+			}
+			
+			function editRPDescription(e) {
+				$("#rpdescription").hide();
+				$("#rpdescription_edit").show();
+			}
+			
+			function editIconURL(e) {
+				$("#iconurldiv").hide();
+				$("#iconurldiv_edit").show();
+			}
+			
+			function editPrivacyURL(e) {
+				$("#privacyurldiv").hide();
+				$("#privacyurldiv_edit").show();
+			}
+			
+			function editDefaultShowAgain(e) {
+				$("#defaultshowagaindiv").hide();
+				$("#defaultshowagaindiv_edit").show();
+			}
+			
+			function showIconURL(e) {
+				e.preventDefault();
+				window.open($("#iconurlinput").val());
+			}
+			
+			function showPrivacyURL(e) {
+				e.preventDefault();
+				window.open($("#privacyurlinput").val());
+			}
+			
+			function showPropertyDeleteButton(e) {
+				tid = e.target.id;
+				pid = e.target.parentElement.id;
+				var num;
+				if (tid.match(/rppropertydiv_/)) {
+					num=tid.replace(/rppropertydiv_/,"");
+				} else if (tid.match(/rpproperty_/,"")) {
+					num=tid.replace(/rpproperty_/,"");
+				}
+				$("#rpdeletebuttonspan_"+num).show();
+			}
+			
+			function addRPProperty(e) {
+				var $count=parseInt($("#rppropertycount").val());
+				$count = $count + 1;
+				ins = "<span class=\"clear floatleft\"><input type=\"text\" name=\"propertyname_"+$count+"\" value=\"Enter property name\"></span><span class=\"floatleft\"><input type=\"text\" name=\"propertyvalue_"+$count+"\" value=\"Enter property value\"></span><span class=\"floatleft\"><button class=\"addbutton\">Update <i class=\"fa button-icon-right fa-arrow-right\"></i></button></span>";
+				$("#rppropertiesform").append(ins);
+				$("#rppropertycount").val($count);
+			}					
+			
+			function deleteRPProperty(e) {
+				tid = e.target.id;
+				pid = e.target.parentElement.id;
+				var num;
+				if (tid && tid.match("_"))
+					num=tid.replace(/rpproperty_deletebutton_/,"");
+				else 
+					num=pid.replace(/rpproperty_deletebutton_/,"");
+				count=$("#rppropertycount").val();
+				$("#rpproperty_"+num).hide();  // remove from display
+				$("#id_propertyname_"+num).attr("name","deletedname");
+				$("#id_propertyvalue_"+num).attr("name","deletedvalue");
+				$("#rppropertiesform").submit();
+			}
+			
+			function tableDeleteRPProperty(e) {
+				tid = e.target.id;
+				pid = e.target.parentElement.id;
+				if (tid && tid.match("_"))
+					num=tid.replace(/span_delete_/,"");
+				else
+					num=pid.replace(/span_delete_/,"");
+				count=$("#id_rppropertycount").val();
+				$("#tr_rpprop_"+num).hide(); // remove from display
+				$("#id_propertyname_"+num).attr("name","deletedname");
+				$("#id_propertyvalue_"+num).attr("name","deletedvalue");
+				$("#rpprop-edit-form").submit();
+			}
+			
+			function deleteII(e) {
+				tid = e.target.id;
+				pid = e.target.parentElement.id;
+				var num;
+				var ct = parseInt($("#addableiicount").val());
+				
+				if (tid && tid.match(/requirediideletebutton_/)) {
+					num = tid.replace(/requirediideletebutton_/,"");
+					count=$("#requiredcount").val();
+					ct = ct + 1;
+					$("#iilist").append("<div id=\"addableii_"+ct+"\" class=\"unselected\">"+$("#requiredii_"+num).html()+"</div>");
+					$("#requiredcount").val(ct);
+					$("#requirediidiv_"+num).hide(); // remove display
+					$("#requirediitype_"+num).attr("name","deletedtype");
+					$("#requirediivalue_"+num).attr("name","deletedvalue");
+					$("#requirediibuttonspan").show();  // enable update button
+					// no autosubmit
+				} else if (tid && tid.match(/optionaliideletebutton_/)) {
+					num = tid.replace(/optionaliideletebutton_/,"");
+					count=$("#optionalcount").val();
+					ct = ct + 1;
+					$("#iilist").append("<div id=\"addableii_"+ct+"\" class=\"unselected\">"+$("#optionalii_"+num).html()+"</div>");
+					$("#optionalcount").val(ct);
+					$("#optionaliidiv_"+num).hide(); // remove display
+					$("#optionaliitype_"+num).attr("name","deletedtype");
+					$("#optionaliivalue_"+num).attr("name","deletedvalue");
+					$("#optionaliibuttonspan").show();  // enable update button
+					// no autosubmit
+				}
+				
+				// reup unselected behaviors
+				$("#addableii_"+ct).click(function(e) {
+					handleClick(e);
+				});
+				$("#addableiicount").val(ct);
+			}
+			
+			function markAttribute(e) {
+				tid = e.target.id;
+				if ($("#"+tid).attr("class").match("unselected"))
+					$("#"+tid).attr("class","marked");
+				else
+					$("#"+tid).attr("class","unselected");
+			}
+			
+			function addToOptional(e) {
+				$.each($(".marked"),function(index,obj) {
+					$ocnt = $ocnt + 1;
+					str = "<div id=\"optionaliidiv_"+$ocnt+"\" class=\"clear nowrap\"><span id=\"optionalii_"+$ocnt+"\" class=\"leftgravity nowrap\">"+$(obj).html()+"</span><span class=\"nowrap rightgravity\"><span class=\"iblock\"><button id=\"optionaliidetailbutton_"+$ocnt+"\" class=\"iidetailbutton\">Details</button></span><span class=\"iblock\"><button id=\"optionaliideletebutton_"+$ocnt+"\" class=\"iideletebutton\">Delete</button></span></span><span id=\"optionaliiupdated_"+$ocnt+"\" class=\"rightgravity\">&#8710</span></div>";
+					whole = $(obj).html();
+					type = whole.replace(/&nbsp;:.*/,"");
+					id = whole.replace(/^.*:&nbsp;/,"");
+					str = str + "<input type=\"hidden\" id=\"optionaliitype_"+$ocnt+"\" name=\"optionaliitype_"+$ocnt+"\" value=\""+type+"\">";
+					str = str + "<input type=\"hidden\" id=\"optionaliivalue_"+$ocnt+"\" name=\"optionaliivalue_"+$ocnt+"\" value=\""+id+"\">";
+					str = str + "<div id=\"optionaliidiv_details_"+$ocnt+"\" class=\"iidetails hidden\">";
+					str = str + "<div><h4>Type: "+type+"</h4></div>";
+					str = str + "<div><h4>ID: "+id+"</h4></div>";
+					str = str + "<div class=\"labelsp\">SourceId:&nbsp;<input type=\"text\" name=\"optionaliisource_"+$ocnt+"\" value=\""+id+"\"></div>";
+					str = str + "<div class=\"labelsp clear\">Reason</div>";
+					str = str + "<table class=\"clear\" id=\"optionaliireasontable_"+$ocnt+"\"><tr><th>Language</th><th>Reason</th><th><button id=\"optionaliireasonaddlang_"+$ocnt+"\" class=\"addbutton optionaliireasonaddbutton\">Add Language</button></th></tr></table>";
+					str = str + "<input type=\"hidden\" id=\"optionaliireasoncount_"+$ocnt+"\" name=\"optionaliireasoncount_"+$ocnt+"\" value=\"0\">";
+					str = str + "<div class=\"labelsp clear\">Value(s)</div>";
+					str = str + "<div class=\"rightgravity\"><button id=\"optionaladdvalue_"+$ocnt+"\" class=\"addbutton optionaladdvaluebutton\">Add Value</button></div>";
+					str = str + "<table class=\"clear\" id=\"optionaliivaluetable_"+$ocnt+"\"><tr><td><input type=\"text\" id=\"optionaliivalrex_1_"+$ocnt+"\" name=\"optionaliivalrex_1_"+$ocnt+"\" value=\".*\"></td></tr></table>";
+					str = str + "<input type=\"hidden\" id=\"optionaliivaluecount_"+$ocnt+"\" name=\"optionaliivaluecount_"+$ocnt+"\" value=\"1\">";
+					
+					str = str + "<div class=\"rightgravity\"><button id=\"optionalhideiidetail_"+$ocnt+"\" class=\"hidedetail\">Hide Details</button></div>";
+					str = str + "</div>";
+					$(obj).hide();
+					#set($optionalcount = $optionalcount + 1)
+					$("#optionaliiform").append(str);
+					$(".marked").attr("class","unselected");
+					$("#optionalcount").val(parseInt($("#optionalcount").val()) + 1);
+					$("#optionaliibuttonspan").show();
+
+				});
+				resetiideletebuttons();
+				resetiidetailbuttons();
+				resetiiaddlangbuttons();
+				resetaddvaluebuttons();
+			}
+			
+			function addToRequired(e) {
+				$.each($(".marked"),function(index,obj) {
+					$rcnt = $rcnt + 1;
+					str = "<div id=\"requirediidiv_"+$rcnt+"\" class=\"clear nowrap\"><span id=\"requiredii_"+$rcnt+"\" class=\"leftgravity nowrap\">"+$(obj).html()+"</span><span class=\"nowrap rightgravity\"><span class=\"iblock\"><button id=\"requirediidetailbutton_"+$rcnt+"\" class=\"iidetailbutton\">Details</button></span><span class=\"iblock\"><button id=\"requirediideletebutton_"+$rcnt+"\" class=\"iideletebutton\">Delete</button></span></span><span id=\"requirediiupdated_"+$rcnt+"\" class=\"rightgravity\">&#8710</span></div>";
+					whole = $(obj).html();
+					type = whole.replace(/&nbsp;:.*/,"");
+					id = whole.replace(/^.*:&nbsp;/,"");
+					str = str + "<input type=\"hidden\" id=\"requirediitype_"+$rcnt+"\" name=\"requirediitype_"+$rcnt+"\" value=\""+type+"\">";
+					str = str + "<input type=\"hidden\" id=\"requirediivalue_"+$rcnt+"\" name=\"requirediivalue_"+$rcnt+"\" value=\""+id+"\">";
+					str = str + "<div id=\"requirediidiv_details_"+$rcnt+"\" class=\"iidetails hidden\">";
+					str = str + "<div><h4>Type: "+type+"</h4></div>";
+					str = str + "<div><h4>ID: "+id+"</h4></div>";
+					str = str + "<div class=\"labelsp\">SourceId:&nbsp;<input type=\"text\" name=\"requirediisource_"+$rcnt+"\" value=\""+id+"\"></div>";
+					str = str + "<div class=\"labelsp clear\">Reason</div>";
+					str = str + "<table class=\"clear\" id=\"requirediireasontable_"+$rcnt+"\"><tr><th>Language</th><th>Reason</th><th><button id=\"requirediireasonaddlang_"+$rcnt+"\" class=\"addbutton requirediireasonaddbutton\">Add Language</button></th></tr></table>";
+					str = str + "<input type=\"hidden\" id=\"requirediireasoncount_"+$rcnt+"\" name=\"requirediireasoncount_"+$rcnt+"\" value=\"0\">";
+					str = str + "<div class=\"labelsp clear\">Value(s)</div>";
+					str = str + "<div class=\"rightgravity\"><button id=\"requiredaddvalue_"+$rcnt+"\" class=\"addbutton requiredaddvaluebutton\">Add Value</button></div>";
+					str = str + "<table class=\"clear\" id=\"requirediivaluetable_"+$rcnt+"\"><tr><td><input type=\"text\" id=\"requirediivalrex_1_"+$rcnt+"\" name=\"requirediivalrex_1_"+$rcnt+"\" value=\".*\"></td></tr></table>";
+					str = str + "<input type=\"hidden\" id=\"requirediivaluecount_"+$rcnt+"\" name=\"requirediivaluecount_"+$rcnt+"\" value=\"1\">";
+					str = str + "<div class=\"rightgravity\"><button id=\"requiredhideiidetail_"+$rcnt+"\" class=\"hidedetail\">Hide Details</button></div>";
+					str = str + "</div>";
+					
+					$(obj).hide();
+					#set($requiredcount = $requiredcount + 1)
+					$("#requirediiform").append(str);
+					$(".marked").attr("class","unselected");
+					$("#requiredcount").val(parseInt($("#requiredcount").val())+1);
+					$("#requirediibuttonspan").show();
+				});
+				resetiideletebuttons();
+				resetiidetailbuttons();
+				resetiiaddlangbuttons();
+				resetaddvaluebuttons();
+
+			}
+			
+			function handleItemEditIcon(e) {
+				e.preventDefault();
+				tid = e.currentTarget.id;
+				type = tid.replace(/.*-edit-/,"");
+				iclass = tid.replace(/icon-/,"").replace(/-edit-.*/,"");
+				//alert("tid is " + tid + " and type is " + type + " and iclass is " + iclass);
+				$("#table-view-"+iclass+"-"+type).toggle();
+				$("#table-edit-"+iclass+"-"+type).toggle();
+				$("#button-update-"+iclass+"-"+type).toggle();
+			}
+			
+			function deleteIIRequest(e) {
+				e.preventDefault();
+				var tid = e.currentTarget.id;
+				var count = tid.replace(/.*_/,"");
+				var type = tid.replace(/^delete_[^_]*_/,"").replace(/_[^_]*$/,"");
+				var cl = tid.replace(/^delete_/,"").replace(/_.*$/,"");
+				var v = $("#deleted_"+cl+"_"+type+"_"+count).val();
+				var trid = e.currentTarget.parentNode.parentNode.id;
+				if (v == "0") {
+					$("#"+tid).html("Restore");
+					$("#deleted_"+cl+"_"+type+"_"+count).attr("value","1");
+					$("#deleted_"+cl+"_"+type+"_"+count).parent().find("td").attr("style","color:#ff9999;");
+					$("#deleted_"+cl+"_"+type+"_"+count).parent().find(":text").attr("style","color:#ff9999;");
+				} else {
+					$("#"+tid).html("Delete");
+					$("#deleted_"+cl+"_"+type+"_"+count).attr("value","0");
+					$("#deleted_"+cl+"_"+type+"_"+count).parent().find("td").attr("style","");
+					$("#deleted_"+cl+"_"+type+"_"+count).parent().find(":text").attr("style","");
+				}
+			}
+		</script>

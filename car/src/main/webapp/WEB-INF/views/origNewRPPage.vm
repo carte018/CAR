@@ -1,0 +1,152 @@
+<div id="sidebar">
+	<div class="section-title">Decision Key</div>
+	<br>
+	<table>
+		<tr>
+			<td class="term">Permit</td>
+			<td class="definition">Share the requested information.</td>
+		</tr>
+		<tr>
+			<td class="term">Deny</td>
+			<td class="definition">Do not share the requested information.</td>
+		</tr>
+		<tr>
+			<td class="term">Ask Me</td>
+			<td class="definition">Ask me whether I'd like to share the requested information.</td>
+		</tr>
+		<tr>
+			<td class="term">Use Advice</td>
+			<td class="definition">Follow $institution_name's recommendation regarding sharing this information</td>
+		</tr>
+	</table>
+</div>
+
+<div id="primary">
+	<div class="section-title">New Site Policy</div>
+	<p>You can choose what is sent to a new site.  Here are the current choices:</p>
+	<form name="postData" id="newRPForm" method="POST" action="new_rp">
+	<table id="settings-table">
+		<tr>
+			<th>Attribute</th>
+			<th colspan="4">Decision</th>
+		</tr>
+		#set ($attrnum = 0)
+		#foreach ($dec in $decisions) 
+			<tbody>
+				#set ($first = 0)
+				
+				#foreach ($val in $dec.getDecisions().keySet())
+					<tr>
+						#if ($first == 0) 
+							<td><div class="label">$dec.getAttribute()</div>
+								<div class="sublabel">currently: $val</div>
+							</td>
+						#else 
+							<td><div class="sublabel">currently: $val</div>
+							</td>
+						#end
+							<input type="hidden"  name="newRPDecisions['$attrnum'].infoType" value="$dec.getInfoType()">
+							<input type="hidden" name="newRPDecisions['$attrnum'].infoValue" value="$dec.getInfoValue()">
+							<input type="hidden" name="newRPDecisions['$attrnum'].decisionValue" value="$val">
+							<td class="policy-option">
+							permit
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("permit"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="permit" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="permit">
+							#end
+							</td>
+							<td class="policy-option">
+							deny
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("deny"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="deny" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="deny">
+							#end
+							</td>
+							<td class="policy-option">
+							ask me
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("askme"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe">
+							#end
+							</td>
+							<td class="policy-option">
+							use advice
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("useadvice"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice">
+							#end
+							</td>
+					</tr>
+					#set ($first = $first + 1)
+					#set ($attrnum = $attrnum + 1)
+				#end
+			</tbody>
+		#end
+		<tbody>
+		<tr>
+		<td><div class="label">Other Attributes</div>
+			<div class="sublabel">Attributes not listed above</div>
+		<td class="policy-option">
+			permit
+			#if ($others.getDecisions().get("Attributes not listed above").equalsIgnoreCase("permit"))
+				<input type="radio" name="OtherAttributesDecision" value="permit" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="permit">
+			#end
+		</td>
+		<td class="policy-option">
+			deny
+			#if ($others.getDecisions().get("Attributes not listed above").equalsIgnoreCase("deny"))
+				<input type="radio" name="OtherAttributesDecision" value="deny" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="deny">
+			#end	
+		</td>
+		<td class="policy-option">
+			ask me
+			#if ($others.getDecisions().get("Attributes not listed above").equalsIgnoreCase("askme"))
+				<input type="radio" name="OtherAttributesDecision" value="askMe" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="askMe">
+			#end
+		</td>
+		<td class="policy-option">
+			use advice
+			#if ($others.getDecisions().get("Attributes not listed above").equalsIgnoreCase("useadvice"))
+				<input type="radio" name="OtherAttributesDecision" value="useAdvice" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="useAdvice">
+			#end
+		</td>
+		</tr>
+	</tbody> 
+	</table>
+	<div class="section-title" style="margin-top:1em;"">Offline Requests</div>
+		<p>How would you like your "ask me" choices handled if a site requests information when you aren't present?</p>
+		
+		<ul class="preference">
+			#if ($whileImAwayDecision.equals("permit"))
+			<li><input type="radio" name="WhileImAwayDecision" value="permit" checked="checked">Share the requested information</li>
+			#else
+			<li><input type="radio" name="WhileImAwayDecision" value="permit">Share the requested information</li>
+			#end
+			#if ($whileImAwayDecision.equals("deny"))
+			<li><input type="radio" name="WhileImAwayDecision" value="deny" checked="checked">Do not share the requested information</li>
+			#else
+			<li><input type="radio" name="WhileImAwayDecision" value="deny">Do not share the requested information</li>
+			#end
+			#if ($whileImAwayDecision.equals("useAdvice"))
+			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice" checked="checked">Follow $institution_name's recommendation</li>
+			#else
+			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice">Follow $institution_name's recommendation</li>
+			#end
+		</ul>
+		<button onClick="document.getElementById('newRPForm').submit();" style="margin: 10px auto 0 auto">Save</button>
+	</div>
+	</form> 
+</div>
+							

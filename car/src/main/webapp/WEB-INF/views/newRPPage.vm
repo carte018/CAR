@@ -1,0 +1,174 @@
+		     #if($successmsg)
+		<div class="message success">
+			$successmsg
+		</div>
+	#end
+	#if($failmsg)
+		<div class="message error">
+			$failmsg
+		</div>
+	#end
+	#if($noticemsg)
+		<div class="message notice">
+			$noticemsg
+		</div>
+	#end
+<h1>New Site Preferences</h1>
+<div id="sidebar">
+	<div class="content-section">
+	<h2>What is this?</h2>
+<p>By default, we will ask you how to proceed when a new site or service requests information about you. If you would like to avoid being asked or set general guidelines for how we should respond to new sites, you can indicate your preferences here.</p>
+<p>You can adjust preferences for specific sites at the <a href="/car/carma/selfservice/sites">Sites and Services</a> page.</p>
+</div>
+</div>
+
+<div id="left">
+	<div class="content-section">
+	
+	<h2>If a new site asks for your information, how would you like us to respond?</h2>
+	<form name="postData" id="newRPForm" method="POST" action="new_rp">
+	<!--<table id="settings-table" class="display smaller-text">-->
+	<table class="display full-width smaller-text">
+		<thead>
+		<tr>
+			<th>&nbsp;</th>
+			<th>Permit<div style="font-weight: normal;"><i>provide information</i></div></th>
+			<th>Deny<div style="font-weight: normal;"><i>do not provide</i></div></th>
+			<th>Ask Me<div style="font-weight: normal;"><i>prompt me to decide</i></div></th>
+			<th>Use Recommendation<div style="font-weight: normal;"><i>follow ${institution_name}'s recommendation</i></div></th>
+		</tr>
+		</thead>
+		#set ($attrnum = 0)
+		#foreach ($dec in $decisions) 
+			<tbody>
+				#set ($first = 0)
+				#set ($disp = $dec.getDisplayValues())
+				#foreach ($val in $dec.getDecisions().keySet())
+					#set ($dv = $disp[$val])
+					<tr>
+						#if ($first == 0) 
+							<td style="max-width: 40em;word-break: break-all;"><div class="label">$dec.getAttribute()</div>
+								#if($dv)
+								<div class="sublabel">$dv</div>
+								#else
+								<div class="sublabel">$val</div>
+								#end
+							</td>
+						#else  
+							#if($dv)
+							<td style="max-width: 40em;word-break: break-all"><div class="sublabel">$dv</div>
+							#else 
+							<td style="max-width: 40em;word-break: break-all;"><div class="sublabel">$val</div>
+							#end
+							</td>
+						#end
+							<input type="hidden"  name="newRPDecisions['$attrnum'].infoType" value="$dec.getInfoType()">
+							<input type="hidden" name="newRPDecisions['$attrnum'].infoValue" value="$dec.getInfoValue()">
+							<input type="hidden" name="newRPDecisions['$attrnum'].decisionValue" value="$val">
+							<td class="policy-option" style="word-break: keep-all;">
+							permit
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("permit"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="permit" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="permit">
+							#end
+							</td>
+							<td class="policy-option" style="word-break: keep-all;">
+							deny
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("deny"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="deny" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="deny">
+							#end
+							</td>
+							<td class="policy-option" style="word-break: keep-all;">
+							ask me
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("askme"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe">
+							#end
+							</td>
+							<td class="policy-option" style="word-break: keep-all;">
+							use recommendation
+							#if ($dec.getDecisions().get($val).equalsIgnoreCase("useadvice"))
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice" checked="checked">
+							#else
+								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice">
+							#end
+							</td>
+					</tr>
+					#set ($first = $first + 1)
+					#set ($attrnum = $attrnum + 1)
+				#end
+				<tr class="spacer"><th colspan="5" style="padding: .1em;"></th></tr>
+			</tbody>
+		#end
+		<tbody>
+		<tr>
+		<td><div class="label">Other Information</div>
+			<div class="sublabel"><i>Information not listed above</i></div>
+		<td class="policy-option">
+			permit
+			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("permit"))
+				<input type="radio" name="OtherAttributesDecision" value="permit" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="permit">
+			#end
+		</td>
+		<td class="policy-option">
+			deny
+			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("deny"))
+				<input type="radio" name="OtherAttributesDecision" value="deny" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="deny">
+			#end	
+		</td>
+		<td class="policy-option">
+			ask me
+			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("askme"))
+				<input type="radio" name="OtherAttributesDecision" value="askMe" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="askMe">
+			#end
+		</td>
+		<td class="policy-option">
+			use recommendation
+			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("useadvice"))
+				<input type="radio" name="OtherAttributesDecision" value="useAdvice" checked="checked">
+			#else
+				<input type="radio" name="OtherAttributesDecision" value="useAdvice">
+			#end
+		</td>
+		</tr>
+	</tbody> 
+	</table>
+	</div>
+	<div class="content-section">
+	<h2>How should we handle your "ask me" choices if you aren't available to ask?</h2>
+		<p>When your information is requested at login, we can prompt you to make a decision.  If your information is requested when you are not using a site or service (e.g., during a routine update process), what should we do about your "ask me" choices?</p>
+		
+		<ul class="simple-list">
+			#if ($whileImAwayDecision.equals("permit"))
+			<li><input type="radio" name="WhileImAwayDecision" value="permit" checked="checked">&nbsp;<b>Permit</b> - provide the requested information</li>
+			#else
+			<li><input type="radio" name="WhileImAwayDecision" value="permit">&nbsp;<b>Permit</b> - provide the requested information</li>
+			#end
+			#if ($whileImAwayDecision.equals("deny"))
+			<li><input type="radio" name="WhileImAwayDecision" value="deny" checked="checked">&nbsp;<b>Deny</b> - do not provide the requested information</li>
+			#else
+			<li><input type="radio" name="WhileImAwayDecision" value="deny">&nbsp;<b>Deny</b> - do not provide the requested information</li>
+			#end
+			#if ($whileImAwayDecision.equals("useAdvice"))
+			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice" checked="checked">&nbsp;<b>Use Recommendation</b> - provide the requested information at ${institution_name}'s discretion</li>
+			#else
+			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice">&nbsp;<b>Use Recommendation</b> - provide the requested information at ${institution_name}'s discretion</li>
+			#end
+		</ul>
+	</div>
+	<button class="active" onClick="document.getElementById('newRPForm').submit();">Save<i class="fa button-icon-right fa-arrow-right"></i></button>
+	
+	</form> 
+</div>
+</div>
+							

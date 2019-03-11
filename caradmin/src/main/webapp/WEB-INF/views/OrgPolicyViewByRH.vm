@@ -1,0 +1,456 @@
+<h1>$rhdisplayname ($rhmi.getRhidentifier().getRhtype() / $rhmi.getRhidentifier().getRhid())</h1>
+
+#if($successmsg)
+<div class="message success">
+	$successmsg
+</div>
+#end
+#if($failmsg)
+<div class="message error">
+	$failmsg
+</div>
+#end
+
+<div id="sidebar">
+	<div class="content-section">
+		<h2>Managing Policies</h2>
+			<h3>Institutional Policies</h3>
+				<p>Organizational administrative policy about information exchange.  Users may see these as "institutional recommendations" when consent is employed.</p>
+			<h3>User Policies</h3>
+				<p>User-defined preferences as obtained from intercept exchanges or self-service.</p>
+			<h3>Meta Policies</h3>
+				<p>These policies determine whether institutional or user policy should prevail in a given situation.</p>
+	</div>
+
+	<button style="width: 100%;" id="addpolbutton" class="active">Add Institutional Policy<i class="fa button-icon-right fa-plus"></i></button>
+	<br><br>
+	<button style="width: 100%;" id="addmetabutton" class="active">Add Meta Policy<i class="fa button-icon-right fa-plus"></i></button>
+</div>
+<div id="left">
+	<div class="content-section">
+		<h2>Institutional Policies</h2>
+		<ol class="orgpollist">
+			#foreach($pol in $policies)
+				#set($did="detail_$pol.getPolicyMetaData().getPolicyId().getBaseId()")
+				#set($ph=$daterec.setTime($pol.getPolicyMetaData().getCreateTime()))
+				<li class="clickableli" id="$pol.getPolicyMetaData().getPolicyId().getBaseId()">
+				<div id="wdiv_$pol.getPolicyMetaData().getPolicyId().getBaseId()" style="margin: 0.2em; background-color: #eee; max-width: 60%;"><a href="#" class="toggledetails" id="toggledetails_$pol.getPolicyMetaData().getPolicyId().getBaseId()">+</a>&nbsp;$pol.getPolicy().getDescription() <a style="float: right;" href="#" class="orgpolicydelbutton" id="orgpolicydel_$pol.getPolicyMetaData().getPolicyId().getBaseId()">Delete</a>
+				<div class="hiddendetail content-section" id="$did">
+					#set($pi=$pol.getPolicyMetaData().getPolicyId())
+					<!--$pol.getPolicyMetaData().getPolicyId().getBaseId()-->
+					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editorgpolicy/$pi.getBaseId()"><i class="fa fa-edit"></i></a></h2>
+					<h3>MetaInformation</h3>
+					<div name="meta_$pi" class="indent1div">
+						<div name="cdiv_$pi">
+							<label for="cdate_$pi">Created: </label>
+							<span name="cdate_$pi">$formatrec.format($daterec)</span>
+						</div>
+						<div name="sdiv_$pi">
+							<label for="state_$pi">Status: </label>
+							<span name="state_$pi">$pol.getPolicyMetaData().getState()</span>
+						</div>
+						<div name="piddiv_$pi">
+							<label for="polid_$pi">PolicyID: </label>
+							<span name="polid_$pi">$pol.getPolicyMetaData().getPolicyId().getBaseId()</span>
+							<label for "polver_$pi">Version: </label>
+							<span name="polver_$pi">$pol.getPolicyMetaData().getPolicyId().getVersion()</span>
+						</div>
+						
+					</div>
+					<h3>Affected Users:</h3>
+					<div name="users_$pi" class="indent2div">
+						#set($upropcount=0)
+						#foreach($uprop in $pol.getPolicy().getUserPropertyArray())
+							<label for="uprop_$pi_$upropcount">Property: </label>
+							<span name="uprop_$pi_$upropcount">$uprop.getUserPropName()</span>
+							<label for="upropval_$pi_$upropcount">Matches: </label>
+							<span name="upropval_$pi_$upropcount">$uprop.getUserPropValue()</span>
+							#set($upropcount=$upropcount+1)
+						#end
+					</div>
+					<h3>Target RPs:</h3>
+					<div name="rps_$pi" class="indent2div">
+						#set($rppropcount=0)
+						#foreach($rpprop in $pol.getPolicy().getRelyingPartyPropertyArray())
+							<label for="rpprop_$pi_$rppropcount">Property: </label>
+							<span name="rpprop_$pi_$rppropcount">$rpprop.getRpPropName()</span>
+							<label for "rppropval_$pi_$rppropcount">Matches: </label>
+							<span name="rppropval_$pi_$rppropcount">$rpprop.getRpPropValue()</span>
+							#set($rppropcount=$rppropcount+1)
+						#end
+					</div>
+					<h3>Release Directives:</h3>
+					<div name="relps_$pi" class="indent2div">
+						<table name="relpols_$pi" class="display full-width wrappingtable">
+							<thead>
+								<tr>
+									<th class="wrappingtd">Item Type</th>
+									<th class="wrappingtd">Item ID</th>
+									<th>Directive</th>
+									<th class="wrappingtd">Values</th>
+									<th class="wrappingtd">Basis</th>
+								</tr>
+							</thead>
+							<tbody>
+							#foreach($relpol in $pol.getPolicy().getArrayOfInfoReleaseStatement())
+								#foreach($dirset in $relpol.getArrayOfOrgDirectiveOnValues())
+									<tr>
+										<td class="wrappingtd">
+											$relpol.getInfoId().getInfoType()
+										</td>
+										<td class="wrappingtd">
+											$relpol.getInfoId().getInfoValue()
+										</td>
+										<td>
+											$dirset.getOrgReleaseDirective()
+										</td>
+										<td class="wrappingtd">
+											#set($values="")
+											#set($vf=1)
+											#foreach($v in $dirset.getValueObjectList())
+												#if($vf == 1)
+													#set($vf=0)
+													#set($values=$values+$v.getValue())
+												#else 
+													#set($values=$values+", "+$v.getValue())
+												#end
+											#end 
+											$values												
+										</td>
+										<td class="wrappingtd">
+										#if($dirset.getOrgPolicyBasis() && $dirset.getOrgPolicyBasis()!="")
+											$dirset.getOrgPolicyBasis()
+										#else
+											#if ($dirset.getOrgReleaseDirective()=="permit")
+												<em>unspecified</em>
+											#else
+												n/a
+											#end
+										#end
+										</td>
+									</tr>
+								#end 
+								<tr>
+									<td class="wrappingtd">
+										$relpol.getInfoId().getInfoType()
+									</td>
+									<td class="wrappingtd">
+										$relpol.getInfoId().getInfoValue()
+									</td>
+									<td>
+										$relpol.getOrgDirectiveAllOtherValues().getOrgReleaseDirective()
+									</td>
+									<td class="wrappingtd">
+										#if($relpol.getArrayOfOrgDirectiveOnValues() && ! $relpol.getArrayOfOrgDirectiveOnValues().isEmpty())
+											All other values
+										#else
+											All values
+										#end
+									</td>
+									<td class="wrappingtd">
+										#if($relpol.getOrgDirectiveAllOtherValues().getOrgPolicyBasis() && $relpol.getOrgDirectiveAllotherValues().getOrgPolicyBasis()!="")
+											$relpol.getOrgDirectiveAllOtherValues().getOrgPolicyBasis()
+										#else
+											#if ($replol.getOrgDirectiveAllOtherValues().getOrgReleaseDirective()=="permit")
+												<em>unspecified</em>
+											#else
+												n/a
+											#end
+										#end									
+									</td>
+								</tr>
+							#end
+							#if($pol.getPolicy().getAllOtherOrgInfoReleaseStatement())
+								<tr>
+									<td colspan="2" class="wrappingtd">
+										Any Other Request
+									</td>
+									<td>
+											$pol.getPolicy().getAllOtherOrgInfoReleaseStatement().getOrgDirectiveAllOtherValues().getOrgReleaseDirective()
+									</td>
+									<td class="wrappingtd">
+										All values
+									</td>
+									<td class="wrappingtd">
+										&nbsp;
+									</td>
+								</tr>
+							#end
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			#end
+			</div>
+			</li>
+		</ol>
+	</div>
+
+	<div class="content-section">
+		<h2>Meta Policies</h2>
+		<ol class="metapollist">
+			#foreach($pol in $icmpolicies)
+				#set($did="detail_$pol.getPolicyMetaData().getPolicyId().getBaseId()")
+				#set($ph=$daterec.setTime($pol.getPolicyMetaData().getCreateTime()))
+				<li class="clickableli" id="$pol.getPolicyMetaData().getPolicyId().getBaseId()">
+				<div id="wdiv_$pol.getPolicyMetaData().getPolicyId().getBaseId()" style="margin: 0.2em; background-color: #eee; max-width: 60%;"><a href="#" class="toggledetails" id="toggledetails_$pol.getPolicyMetaData().getPolicyId().getBaseId()">+</a>&nbsp;$pol.getPolicy().getDescription() <a style="float: right;" href="#" class="metapolicydelbutton" id="metapolicydel_$pol.getPolicyMetaData().getPolicyId().getBaseId()">Delete</a>
+				
+				<div class="hiddendetail content-section" id="$did">
+					#set($pi=$pol.getPolicyMetaData().getPolicyId())
+					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editmetapolicy/$pi.getBaseId()"><i class="fa fa-edit"></i></a></h2>
+					<h3>MetaInformation</h3>
+					<div name="meta_$pi" class="indent1div">
+						<div name="cdiv_$pi">
+							<label for="cdate_$pi">Created: </label>
+							<span name="cdate_$pi">$formatrec.format($daterec)</span>
+						</div>
+						<div name="sdiv_$pi">
+							<label for="state_$pi">Status: </label>
+							<span name="state_$pi">$pol.getPolicyMetaData().getState()</span>
+						</div>
+						<div name="piddiv_$pi">
+							<label for="polid_$pi">PolicyID: </label>
+							<span name="polid_$pi">$pol.getPolicyMetaData().getPolicyId().getBaseId()</span>
+							<label for "polver_$pi">Version: </label>
+							<span name="polver_$pi">$pol.getPolicyMetaData().getPolicyId().getVersion()</span>
+						</div>
+						
+					</div>
+					<h3>Affected Users:</h3>
+					<div name="users_$pi" class="indent2div">
+						#set($upropcount=0)
+						#foreach($uprop in $pol.getPolicy().getUserPropertyArray())
+							<label for="uprop_$pi_$upropcount">Property: </label>
+							<span name="uprop_$pi_$upropcount">$uprop.getUserPropName()</span>
+							<label for="upropval_$pi_$upropcount">Matches: </label>
+							<span name="upropval_$pi_$upropcount">$uprop.getUserPropValue()</span>
+							#set($upropcount=$upropcount+1)
+						#end
+					</div>
+					<h3>Target RPs:</h3>
+					<div name="rps_$pi" class="indent2div">
+						#set($rppropcount=0)
+						#foreach($rpprop in $pol.getPolicy().getRelyingPartyPropertyArray())
+							<label for="rpprop_$pi_$rppropcount">Property: </label>
+							<span name="rpprop_$pi_$rppropcount">$rpprop.getRpPropName()</span>
+							<label for "rppropval_$pi_$rppropcount">Matches: </label>
+							<span name="rppropval_$pi_$rppropcount">$rpprop.getRpPropValue()</span>
+							#set($rppropcount=$rppropcount+1)
+						#end
+					</div>
+					<h3>Release Directives:</h3>
+					<div name="relps_$pi" class="indent2div">
+						<table name="relpols_$pi" class="display">
+							<thead>
+								<tr>
+									<th>Item</th>
+									<th>Directive</th>
+									<th>Values</th>
+								</tr>
+							</thead>
+							<tbody>
+							#foreach($relpol in $pol.getPolicy().getArrayOfInfoReleaseStatement())
+								#foreach($dirset in $relpol.getArrayOfIcmDirectiveOnValues())
+									<tr>
+										<td>
+											$relpol.getInfoId().getInfoType() : $relpol.getInfoId().getInfoValue()
+										</td>
+										<td>
+											$dirset.getIcmReleaseDirective()
+										</td>
+										<td class="wrappingtd">
+											#set($values="")
+											#set($vf=1)
+											#foreach($v in $dirset.getValueObjectList())
+												#if($vf == 1)
+													#set($vf=0)
+													#set($values=$values+$v.getValue())
+												#else 
+													#set($values=$values+", "+$v.getValue())
+												#end
+											#end 
+											$values												
+										</td>
+									</tr>
+								#end 
+								<tr>
+									<td>
+										$relpol.getInfoId().getInfoType() : $relpol.getInfoId().getInfoValue()
+									</td>
+									<td>
+										$relpol.getIcmDirectiveAllOtherValues().getIcmReleaseDirective()
+									</td>
+									<td>
+										#if($relpol.getArrayOfIcmDirectiveOnValues() && ! $relpol.getArrayOfIcmDirectiveOnValues().isEmpty())
+											All other values
+										#else
+											All values
+										#end
+									</td>
+								</tr>
+							#end
+							#if($pol.getPolicy().getAllOtherOrgInfoReleaseStatement())
+								<tr>
+									<td>
+										Any Other Request
+									</td>
+									<td>
+											$pol.getPolicy().getAllOtherOrgInfoReleaseStatement().getIcmDirectiveAllOtherValues().getIcmReleaseDirective()
+									</td>
+									<td>
+										All values
+									</td>
+								</tr>
+							#end
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			#end
+			</div>
+			</li>
+		</ol>
+	</div>
+</div>
+
+<form id="metapolmover" action="#" method="POST">
+	<input type="hidden" name="formid" value="metapolmover">
+	<input type="hidden" id="metapolmover_order" name="order" value="">
+	<input type="hidden" id="metapolmover_beforeid" name="beforeid" value="">
+	<input type="hidden" id="metapolmover_afterid" name="afterid" value="">
+	<input type="hidden" id="metapolmover_movedid" name="movedid" value="">
+</form>
+
+<form id="orgpolmover" action="#" method="POST">
+	<input type="hidden" name="formid" value="orgpolmover">
+	<input type="hidden" id="orgpolmover_order" name="order" value="">
+	<input type="hidden" id="orgpolmover_beforeid" name="beforeid" value="">
+	<input type="hidden" id="orgpolmover_afterid" name="afterid" value="">
+	<input type="hidden" id="orgpolmover_movedid" name="movedid" value="">
+</form>
+		
+<form id="orgpoldelete" action="#" method="POST">
+	<input type="hidden" name="formid" value="orgpoldelete">
+	<input type="hidden" name="baseid" id="orgpoldelete_baseid" value="">
+</form>
+
+<form id="metapoldelete" action="#" method="POST">
+	<input type="hidden" name="formid" value="metapoldelete">
+	<input type="hidden" name="baseid" id="metapoldelete_baseid" value="">
+</form>		
+<script>
+  			$(document).ready(function() {
+  				$(".hiddendetail").hide();
+  				$('.toggledetails').click(function(e) {
+  					e.preventDefault();
+  					$("#detail_"+e.target.id.replace("toggledetails_","")).toggle();
+  					if ($("#detail_"+e.target.id.replace("toggledetails_","")).is(":visible")) {
+  						$("#wdiv_"+e.target.id.replace("toggledetails_","")).addClass("nodrag");
+  						$("#"+e.target.id).html("-");
+  					} else {
+  						$("#wdiv_"+e.target.id.replace("toggledetails_","")).removeClass("nodrag");
+  						$("#"+e.target.id).html("+");
+  					}
+  				});
+  				$('.clickableli').click(function(e) {
+  					$("#detail_"+e.target.id).toggle();
+  					if ($("#detail_"+e.target.id).is(":visible")) {
+  						$("#wdiv_"+e.target.id).addClass("nodrag");
+  					} else {
+  						$("#wdiv_"+e.target.id).removeClass("nodrag");
+  					}
+  				});
+  				$(".metapolicydelbutton").click(function(e) {
+  					handleMetaPolicyDel(e);
+  				});
+  				$(".orgpolicydelbutton").click(function(e) {
+  					handleOrgPolicyDel(e);
+  				});
+  				$("#addpolbutton").click(function(e) {
+  					handleAddPolButton(e);
+  				});
+  				$("#addmetabutton").click(function(e) {
+  					handleAddMetaButton(e);
+  				});
+  				$(".orgpollist").sortable({axis: "y", containment: "parent"});
+  				
+  				$(".orgpollist").on("sortstop", function(e,u) {
+  					var i = u.item.attr("id").replace("wdiv_","");
+  					var p = u.item.prev();
+  					var n = u.item.next();
+  					if (u.position.top < u.originalPosition.top) {
+  						$("#orgpolmover_order").val("before");
+  						$("#orgpolmover_beforeid").val(n.attr("id"));
+  						$("#orgpolmover_movedid").val(i);
+  						$(".orgpollist").sortable("disable");
+  						$("#orgpolmover").submit();
+  						$(".orgpollist").sortable("enable");
+  						$("#wdiv_"+i).spin();
+  					} else {
+  						$("#orgpolmover_order").val("after");
+  						$("#orgpolmover_afterid").val(p.attr("id"));
+  						$("#orgpolmover_movedid").val(i);
+  						$(".orgpollist").sortable("disable");
+  						$("#orgpolmover").submit();
+  						$(".orgpollist").sortable("enable");
+  						$("#wdiv_"+i).spin();
+  						
+  					}
+  				}); 
+  				
+  				$(".metapollist").sortable({axis: "y", containment: "parent", cancel: ".nodrag"});
+  				
+  				$(".metapollist").on("sortstop", function(e,u) {
+  					var i = u.item.attr("id").replace("wdiv_","");
+  					var p = u.item.prev();
+  					var n = u.item.next();
+  					if (u.position.top < u.originalPosition.top) {
+  						$("#metapolmover_order").val("before");
+  						$("#metapolmover_beforeid").val(n.attr("id"));
+  						$("#metapolmover_movedid").val(i);
+  						$(".metapollist").sortable("disable");
+  						$("#metapolmover").submit();
+  						$(".metapollist").sortable("enable");
+  						$("#wdiv_"+i).spin();
+  					} else {
+  						$("#metapolmover_order").val("after");
+  						$("#metapolmover_afterid").val(p.attr("id"));
+  						$("#metapolmover_movedid").val(i);
+  						$(".metapollist").sortable("disable");
+  						$("#metapolmover").submit();
+  						$(".metapollist").sortable("enable");
+  						$("#wdiv_"+i).spin();
+  					}
+  				}); 
+  				
+  				
+  				
+  			});
+  			
+  			function handleMetaPolicyDel(e) {
+  				e.preventDefault();
+  				var nm=e.target.id;
+  				var pol=nm.replace("metapolicydel_","");
+  				$("#"+nm).toggle();
+  				$("#metapoldelete_baseid").attr("value",pol);
+  				$("#metapoldelete").submit();
+  			}
+  			function handleOrgPolicyDel(e) {
+  				e.preventDefault();
+  				var nm=e.target.id;
+  				var pol=nm.replace("orgpolicydel_","");
+  				$("#"+nm).toggle();
+  				$("#orgpoldelete_baseid").attr("value",pol);
+  				$("#orgpoldelete").submit();
+  			}
+  			function handleAddPolButton(e) {
+  				e.preventDefault();
+  				url="/caradmin/addorgpolicy/$rhmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rhmi.getRhidentifier().getRhid())/";
+  				window.location.href = url;
+  			}
+  			function handleAddMetaButton(e) {
+  				e.preventDefault();
+  				url="/caradmin/addmetapolicy/$rhmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rhmi.getRhidentifier().getRhid())/";
+  				window.location.href = url;
+  			}
+</script>

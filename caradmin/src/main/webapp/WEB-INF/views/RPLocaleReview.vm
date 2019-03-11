@@ -1,0 +1,285 @@
+<h1>Language Report: $displayname</h1>
+#if($successmsg)
+<div class="message success">
+	$successmsg
+</div>
+#end
+#if($failmsg)
+<div class="message error">
+	$failmsg
+</div>
+#end
+
+<div class="content-section">
+	<h2 class="header-edit"><a href="#" id="rpmlangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2>Relying Party Metainformation</h2>
+	<table id="rpmviewtable" class="display full-width">
+		<thead>
+			<tr>
+				#set($colcount=1)
+				<th class="wrappingtd">Property</th>
+				#foreach($l in $languages)
+					#set($colcount=$colcount+1)
+					<th class="wrappingtd">$l</th>
+				#end
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="wrappingtd">Display Name</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
+						<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)</td>
+					#else
+						<td class="wrappingtd langnotok">missing</td>
+					#end
+				#end
+			</tr>
+			<tr>
+				<td class="wrappingtd">Description</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
+						<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)</td>
+					#else
+						<td class="wrappingtd langnotok">missing</td>
+					#end
+				#end
+			</tr>
+		</tbody>
+	</table>
+	<form id="rpmeditform" method="POST" action="#">
+	<input type="hidden" name="formname" value="rpmeditform">
+	<input type="hidden" name="rhtype" value="$rrpmi.getRhidentifier().getRhtype()">
+	<input type="hidden" name="rhid" value="$rrpmi.getRhidentifier().getRhid()">
+	<input type="hidden" name="rpid" value="$rrpmi.getRpidentifier().getRpid()">
+	<input type="hidden" name="rptype" value="$rrpmi.getRpidentifier().getRptype()">
+	<input type="hidden" name="defaultlanguage" value="$lang">
+	
+	<table id="rpmedittable" class="display full-width hidden wrappingtable">
+		<thead>
+			<tr>
+				#set($colcount=1)
+				<th class="wrappingtd">Property</th>
+				#foreach($l in $languages)
+					#set($colcount=$colcount+1)
+					<th class="wrappingtd">$l</th>
+				#end
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="wrappingtd">Display Name</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
+						<td><input type="text" name="rpdisplayname_$l" value="$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)"></td>
+					#else
+						<td><input type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
+					#end
+				#end
+			</tr>
+			<tr>
+				<td class="wrappingtd">Description</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
+						<td><input type="text" name="rpdescription_$l" value="$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)"></td>
+					#else
+						<td><input type="text" name="rpdescription_$l" placeholder="Add translation"></td>
+					#end
+				#end
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<button id="rpmeditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+	</form>
+</div>
+
+<div class="content-section">
+
+	<h2 class="header-edit"><a href="#" id="rprilangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2>Required Information Item Metainformation</h2>
+	#if(! $rpriil || $rpriil.isEmpty())
+		<p>No required information items to display.</p>
+	#else
+		<table id="rpriviewtable" class="display full-width wrappingtable">
+			<thead>
+				<tr>
+					#set($colcount=1)
+					<th class="wrappingtd">Property</th>
+					#foreach($l in $languages)
+						#set($colcount=$colcount+1)
+						<th class="wrappingtd">$l</th>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+				#foreach($rpi in $rpriil.getRequiredlist())
+					<tr>
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						#foreach($l in $languages)
+							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
+								<td class="wrappingtd langok">$CarAdminUtils.localize($rpi.getReason(),$l,false)</td>
+							#else
+								<td class="wrappingtd langnotok">missing</td>
+							#end
+						#end
+					</tr>
+				#end
+			</tbody>
+		</table>
+		<form id="rprieditform" method="POST" action="#">
+		<input type="hidden" name="formname" value="rprieditform">
+		<input type="hidden" name="rhtype" value="$rrpmi.getRhidentifier().getRhtype()">
+		<input type="hidden" name="rhid" value="$rrpmi.getRhidentifier().getRhid()">
+		<input type="hidden" name="rptype" value="$rrpmi.getRpidentifier().getRptype()">
+		<input type="hidden" name="rpid" value="$rrpmi.getRpidentifier().getRpid()">
+		<input type="hidden" name="defaultlanguage" value="$lang">
+		
+		<table id="rpriedittable" class="display full-width hidden wrappingtable">
+			<thead>
+				<tr>
+					#set($colcount=1)
+					<th class="wrappingtd">Property</th>
+					#foreach($l in $languages)
+						#set($colcount=$colcount+1)
+						<th class="wrappingtd">$l</th>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+				#set($icount=0)
+				#foreach($rpi in $rpriil.getRequiredlist())
+					<tr>
+						#set($icount=$icount+1)
+						<input type="hidden" name="iitype_$icount" value="$rpi.getInfoitemidentifier().getIitype()">
+						<input type="hidden" name="iiid_$icount" value="$rpi.getInfoitemidentifier().getIiid()">
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						#foreach($l in $languages)
+							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
+								<td><input type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
+							#else
+								<td><input type="text" name="ii_reason_${icount}_$l" placeholder="Add Translation"></td>
+							#end
+						#end
+					</tr>
+				#end 
+			</tbody>
+		</table>
+		<input type="hidden" name="icount" value="$icount">
+		<br>
+		<button id="rprieditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+		</form>
+	#end	
+
+</div>
+
+<div class="content-section">
+
+	<h2 class="header-edit"><a href="#" id="rpoilangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2>Optional Information Item Metainformation</h2>
+	#if(! $rpoiil || $rpoiil.isEmpty())
+		<p>No optional information items to display.</p>
+	#else
+			<table id="rpoiviewtable" class="display full-width wrappingtable">
+			<thead>
+				<tr>
+					#set($colcount=1)
+					<th class="wrappingtd">Property</th>
+					#foreach($l in $languages)
+						#set($colcount=$colcount+1)
+						<th class="wrappingtd">$l</th>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+				#foreach($rpi in $rpoiil.getOptionallist())
+					<tr>
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						#foreach($l in $languages)
+							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
+								<td class="wrappingtd langok">$CarAdminUtils.localize($rpi.getReason(),$l,false)</td>
+							#else
+								<td class="wrappingtd langnotok">missing</td>
+							#end
+						#end
+					</tr>
+				#end
+			</tbody>
+		</table>
+		<form id="rpoieditform" method="POST" action="#">
+		<input type="hidden" name="formname" value="rpoieditform">
+		<input type="hidden" name="rhtype" value="$rrpmi.getRhidentifier().getRhtype()">
+		<input type="hidden" name="rhid" value="$rrpmi.getRhidentifier().getRhid()">
+		<input type="hidden" name="rptype" value="$rrpmi.getRpidentifier().getRptype()">
+		<input type="hidden" name="rpid" value="$rrpmi.getRpidentifier().getRpid()">
+		<input type="hidden" name="defaultlanguage" value="$lang">
+		
+		<table id="rpoiedittable" class="display full-width hidden wrappingtable">
+			<thead>
+				<tr>
+					#set($colcount=1)
+					<th class="wrappingtd">Property</th>
+					#foreach($l in $languages)
+						#set($colcount=$colcount+1)
+						<th class="wrappingtd">$l</th>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+				#set($icount=0)
+				#foreach($rpi in $rpoiil.getOptionallist())
+					<tr>
+						#set($icount=$icount+1)
+						<input type="hidden" name="iitype_$icount" value="$rpi.getInfoitemidentifier().getIitype()">
+						<input type="hidden" name="iiid_$icount" value="$rpi.getInfoitemidentifier().getIiid()">
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						#foreach($l in $languages)
+							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
+								<td><input type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
+							#else
+								<td><input type="text" name="ii_reason_${icount}_$l" placeholder="Add Translation"></td>
+							#end
+						#end
+					</tr>
+				#end 
+			</tbody>
+		</table>
+		<input type="hidden" name="icount" value="$icount">
+		<br>
+		<button id="rpoieditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+		</form>
+	#end
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#rpmlangedit").click(function(e) {
+			rplangtoggle(e);
+		});
+		$("#rprilangedit").click(function(e) {
+			rprilangtoggle(e);
+		});
+		$("#rpoilangedit").click(function(e) {
+			rpoilangtoggle(e);
+		});
+	});
+	
+	function rplangtoggle(e) {
+		e.preventDefault();
+		$("#rpmviewtable").toggle();
+		$("#rpmedittable").toggle();
+		$("#rpmeditbutton").toggle();
+	}
+	function rprilangtoggle(e) {
+		e.preventDefault();
+		$("#rpriviewtable").toggle();
+		$("#rpriedittable").toggle();
+		$("#rprieditbutton").toggle();
+	}
+	function rpoilangtoggle(e) {
+		e.preventDefault();
+		$("#rpoiviewtable").toggle();
+		$("#rpoiedittable").toggle();
+		$("#rpoieditbutton").toggle();
+	}
+</script>

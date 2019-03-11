@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver.class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql:loadbalance://idms-consentdb-dev-03.oit.duke.edu:3306,idms-consentdb-dev-02.oit.duke.edu:3306,idms-consentdb-dev-01.oit.duke.edu:3306/copsu?autoReconnect=true</property>
+    <property name="hibernate.connection.username">copsu</property>
+    <property name="hibernate.connection.password">ConsentingAdults</property>
+    <property name="hibernate.connection.autocommit">false</property>
+
+	<property name="hibernate.c3p0.min_size">1</property>
+	<property name="hibernate.c3p0.max_size">10</property>
+	<property name="hibernate.c3p0.timeout">3605</property>
+	<property name="hibernate.c3p0.max_statements">50</property>
+	<property name="hibernate.c3p0.idle_test_period">3600</property>
+	<property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
+	 
+    <!-- Do not go into production with this in place; this is for testing only -->
+    <!-- <property name="hbm2ddl.auto">create</property> --> <!-- RGC:  disabled for now -->
+    <!--  Enable this to show SQL being processed  -->
+    <!-- <property name="hibernate.show_sql">true</property> -->
+    <!-- commented by RGC for testing externalization of config -->
+    <!-- <mapping class="edu.internet2.consent.copsu.model.ReturnedPolicy"/>
+    <mapping class="edu.internet2.consent.copsu.model.InfoReleaseStatement"/>
+    <mapping class="edu.internet2.consent.copsu.model.DirectiveOnValues"/>
+    <mapping class="edu.internet2.consent.copsu.model.ValueObject"/>
+    <mapping class="edu.internet2.consent.copsu.model.ReturnedChangeOrder"/>
+    <mapping class="edu.internet2.consent.copsu.model.ListableUserId"/>
+    <mapping class="edu.internet2.consent.copsu.model.ListableRelyingPartyId"/>
+    <mapping class="edu.internet2.consent.copsu.model.ListablePolicyId"/> -->
+    
+  </session-factory>
+</hibernate-configuration>

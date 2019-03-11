@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="resources/css/intercept-main.css">
+    <link rel="stylesheet" href="resources/css/duke.css">
+    <link rel="stylesheet" href="resources/css/selfservice.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/js/jquery.leanModal.min.js"></script>
+    <script type="text/javascript" src="resources/js/main.js"></script>
+    <title>$page-title</title>
+  </head>
+  <body>
+    <div id="header">
+      <div id="logo"><img src="resources/img/dukelogo-horiz-white@3x.png"></div>
+      <div id="tierlogo"><img src="resources/img/tier.png"></div>
+    </div>
+    <div id="main">
+    	<div id="title">
+    		<div id="user-info" class="user-info"><i>logged in as $username.replaceAll(";.*$","")</i></div>
+    	</div>
+    	<div>
+    		#foreach ($dispname in $iiDisplayNames.keySet())
+    			#foreach ($val in $ivalmap.get($dispname))
+    				$dispname == $iiDisplayNames.get($dispname) == $val
+    				<br>
+    			#end
+    			<br>
+    		#end
+    	</div>
+    	<div>
+    		$arpsiDecision.toJSON()
+    	</div>
+    	<div>
+    		$idrespo.toJSON()
+    	</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,870 @@
+	<form id="delete_rh_form" method="POST" action="/caradmin/delregistration/$injectedrhlist.get(0).getRhtype()/$CarAdminUtils.idEscape($injectedrhlist.get(0).getRhidentifier())/">
+	</form>
+	
+	#if($successmsg) 
+		<div class="message success">
+			$successmsg
+		</div>
+	#end
+	#if($failmsg) 
+		<div class="message error">
+			$failmsg
+		</div>
+	#end
+	
+	#set($formnumber=0)
+	<h1>$injectedrhlist.get(0).getDisplayname(): ($injectedrhlist.get(0).getRhtype() / $injectedrhlist.get(0).getRhidentifier() )</h1>
+	<div id="sidebar">
+
+		<div class="content-section">
+			<h2>Overview</h2>
+			<table class="stats">
+				<tr>
+					<td class="stat-label">Information Items</td>
+					<td class="stat-value">$ihash.size()</td>
+				</tr>
+				<tr>
+					<td class="stat-label">Relying Parties</td>
+					<td class="stat-value">$armi.size()</td>
+				</tr>
+				<tr>
+					<td class="stat-label">Active Relying Parties</td>
+					<td class="stat-value">$activerpct</td>
+				</tr>
+				<tr>
+					<td class="stat-label">Active Users</td>
+					<td class="stat-value">$userct</td>
+				</tr>
+				<tr>
+					<td class="stat-label">Organizational Policies</td>
+					<td class="stat-value">$orgpolct</td>
+				</tr>
+				<tr>
+					<td class="stat-label">Meta Policies</td>
+					<td class="stat-value">$metapolct</td>
+				</tr>
+			</table>
+		</div>		
+		<button id="policy_review_button" class="active" style="width:100%;">Review Policies<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<br><br>
+		<button id="language_report_button" class="active" style="width:100%;">Review Languages<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<br><br>
+		<button id="archive_rh_button" class="passive" style="width:100%;">Archive Resource Holder<i class="fa button-icon-right fa-trash"></i></button>
+	</div>
+	
+		<div id="left">
+			#foreach ($x in $injectedrhlist)
+				<div class="content-section">
+					<h2 class="header-edit">
+						<a id="rh_edit_icon"><i class="fa fa-edit"></i></a>
+					</h2>
+					<h2>Resource Holder Metainformation</h2>
+  					#set($formnumber=$formnumber+1)
+					<h3 id="h3-dispname">$x.getDisplayname()</h3>
+					<p id="p-descr">$x.getDescription()</p>
+
+				<!-- First we need to acquire maps of the Internationalized strings by language -->
+				#set($displayhash={})
+				#set($descrhash={})
+				#foreach($displs in $x.getIdisplayname().getLocales())
+					#set($foo=$displayhash.put($displs.getLocale(),$displs.getValue()))
+				#end
+				#foreach($descls in $x.getIdescription().getLocales())
+					#set($foo=$descrhash.put($descls.getLocale(),$descls.getValue()))
+				#end
+				<div id="div_rhinfo_intern_edit" class="hidden">
+					#set($ulangs=[])
+					#foreach($dlang in $languages)
+						#if(($displayhash.get($dlang) && $displayhash.get($dlang).length() > 0) || ($descrhash.get($dlang) && $descrhash.get($dlang).length() > 0))
+							<div id="div_${dlang}_edit" class="content-section">
+								<form id="form_${dlang}_edit_rh" method="POST" action="#">
+									<input type="hidden" name="lang" value="$dlang">
+									<input type="hidden" name="is_delete" id="is_delete_$dlang" value="false">
+									<input type="hidden" name="formname" value="form_${dlang}_edit">
+									<input type="hidden" name="rhtype" value="$x.getRhtype()">
+									<input type="hidden" name="rhid" value="$x.getRhidentifier()">							
+									<h3><a href="#" class="langtoggle" id="h3_$dlang">$dlang</a></h3>
+									<div class="hidden" id="div_rh_h3_$dlang">
+										<div class="form-set">
+											<label for="displayname">Display Name</label>
+											#if($displayhash.get($dlang))
+												<input type="text" name="displayname" value="$displayhash.get($dlang)">
+											#else
+												<input type="text" name="displayname" value="">
+											#end
+										</div>
+										<div class="form-set">
+											<label for="description">Description</label>
+											#if($descrhash.get($dlang))
+												<input type="text" name="description" value="$descrhash.get($dlang)">
+											#else
+												<input type="text" name="description" value="">
+											#end
+										</div>
+										<button class="active">Update<i class="button-icon-right fa fa-arrow-right"></i></button>
+										#if($displayhash.size() > 1 || $descrhash.size() > 1)
+											<button class="active langdelete" id="langdelete_${dlang}_rh">Delete<i class="button-icon-right fa fa-trash"></i></button>
+										#end
+									</div>
+								</form>
+							</div>
+						#else
+							#set($foo=$ulangs.add($dlang))
+						#end
+					#end		
+					#if($ulangs.size() > 0)
+						<button class="active addrhilang" id="button_addrhlang">Add a Language<i class="button-icon-right fa fa-plus"></i></button>	
+						<div id="div_rhlang_add" class="content-section hidden">
+							<form id="form_rhlang_add" method="POST" action="#">
+								<input type="hidden" name="formname" value="form_rhlang_add">
+								<input type="hidden" name="rhtype" value="$x.getRhtype()">
+								<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+								<h3>Add a Language</h3>
+								<div class="form-set">
+									<label for="lang">Language</label>
+									<select name="lang">
+										#foreach($u in $ulangs)
+											<option value="$u">$u</option>
+										#end
+									</select>
+								</div>
+								<div class="form-set">
+									<label for="displayname">Display Name</label>
+									<input type="text" name="displayname" value="">
+								</div>
+								<div class="form-set">
+									<label for="description">Description</label>
+									<input type="text" name="description" value="">
+								</div>
+								<br>
+								<button class="active">Update<i class="button-icon-right fa fa-arrow-right"></i></button>
+							</form>
+						</div>
+					#end							
+							
+				</div>
+
+	</div>  
+	<!-- new refactor of ii information block -->
+	#set($uptype=[])
+	#foreach($itype in $iitypes)
+		#if(! $phash.containsKey($itype))
+			#set($foo=$uptype.add($itype))
+		#else
+			#set($current=$phash.get($itype))
+			#if($current && ! $current.isEmpty())
+				<div class="content-section" name="csdiv_$itype">
+			#else
+				<div class="content-section hidden" name="csdiv_$itype">
+			#end
+			<form id="iiform_$itype" method="POST" action="#">
+				<input type="hidden" name="formname" value="iiform_$itype">
+				<input type="hidden" name="rhtype" value="$x.getRhtype()">
+				<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+
+						#set($ihead=$itype.substring(0,1).toUpperCase()+$itype.substring(1)+"s")
+						#if($current && ! $current.isEmpty())
+						<div id="ii_heading_plus_div_$itype">
+							<h2><a href="#" class="ii_heading" id="ii_heading_plus_$itype">+&nbsp;$ihead ($current.keySet().size())</a></h2>
+						</div>
+						<div id="ii_heading_minus_div_$itype" class="hidden" style="display:inline;">
+							<h2 class="header-edit" id="ii_heading_edit_icon_$itype">
+								<a id="rh_edit_icon_$itype" href="#" class="ii_edit_toggle"><i class="fa fa-edit"></i></a>
+							</h2>
+							<h2 class="header-edit hidden" id="ii_heading_save_icon_$itype">
+								<a id="rh_save_icon_$itype" href="#" class="ii_edit_save">Save Changes</a>
+							</h2>							
+							<h2><a href="#" class="ii_heading" id="ii_heading_minus_$itype">-&nbsp;$ihead ($current.keySet().size())</a></h2>
+						</div>
+						#else
+						<div><h2>$ihead</h2></div>
+						#end
+							#set($iinumber=0)
+							#set($iiinumber=0)
+							#set($vinumber=0)
+							#if($current && ! $current.isEmpty())
+							<div id="iitable_${itype}_wrapper" class="hidden">
+							#if($current.keySet().size() > 25)
+								<table class="display full-width smaller-text dataTable no-footer" role="grid" aria-describedby="ii_table_view_${itype}_info" id="ii_table_view_$itype">
+							#else
+							<div id="ii_table_view_${itype}_wrapper" class="dataTable_wrapper">
+							<table class="display full-width smaller-text" id="ii_table_view_$itype">
+							#end
+							<thead>
+								<tr>
+									<th>Identifier</th>
+									<th>Display Name</th>
+									<th>Presentation</th>
+									<th>Policy</th>
+									<th>Properties</th>
+								</tr>
+							</thead>
+							<tbody id="tbody_view_$itype">
+								#set($ikeys=$current.keySet())
+								#set($iskeys=[])
+								#set($ifoo=$iskeys.addAll($ikeys))
+								#set($ifoo=$Collections.sort($iskeys,$iicomparator))
+								#foreach($iiii in $iskeys)
+									#set($iiinumber=$iiinumber+1)
+									<tr>
+										<input type="hidden" name="iid_$iiinumber" value="$iiii.getIiid()">
+										<td class="wrappingtd">$iiii.getIiid()</td>
+										<td class="wrappingtd">#if($ihash.get($iiii) && $ihash.get($iiii).getDisplayname() && $CarAdminUtils.localize($ihash.get($iiii).getDisplayname(),$lang))$CarAdminUtils.localize($ihash.get($iiii).getDisplayname(),$lang)#end</td>
+										<td class="wrappingtd">#if($ihash.get($iiii) && $ihash.get($iiii).getPresentationtype())$ihash.get($iiii).getPresentationtype()#else missing #end</td>
+										<td class="wrappingtd">#if($ihash.get($iiii) && $ihash.get($iiii).getPolicytype())#if($ihash.get($iiii).getPolicytype().equals("PAO"))by $itype#else by value#end #else missing #end</td>
+										<td class="wrappingtd">
+											#if($ihash.get($iiii).getAsnd())ASND #end
+											#if($ihash.get($iiii).getMultivalued())multivalued #end
+											#if($ihash.get($iiii).getSensitivity())sensitive #end
+											#if(!$ihash.get($iiii).getAsnd() && !$ihash.get($iiii).getMultivalued() && ! $ihash.get($iiii).getSensitivity()) - #end
+										</td>
+                            			<!--
+                            			<td class="wrappingtd">#if($ihash.get($iiii).getAsnd()) yes #else no #end</td>
+										<td class="wrappingtd">#if($ihash.get($iiii).getMultivalued()) yes #else no #end</td>
+										<td class="wrappingtd">#if($ihash.get($iiii).getSensitivity()) yes #else no #end</td>
+										-->
+									</tr>
+								#end
+							</tbody>
+							</table>
+							#if($current.keySet().size() <= 25) 
+							</div>
+							#end
+							#if($current.keySet().size() > 25)
+								<table class="display full-width smaller-text dataTable no-footer" role="grid" aria-describedby="ii_table_edit_${itype}_info" id="ii_table_edit_$itype">
+							#else
+							<div id="ii_table_edit_${itype}_wrapper" class="dataTable_wrapper">
+							<table class="display full-width smaller-text" id="ii_table_edit_$itype">
+							#end
+							<thead>
+								<tr>
+									<th>Identifier</th>
+									<th>Display Name</th>
+									<th>Presentation</th>
+									<th>Policy</th>
+									<th>Properties</th>
+								</tr>
+							</thead>
+							<tbody id="tbody_edit_$itype">
+								#set($vkeys=$current.keySet())
+								#set($ivkeys=[])
+								#set($vfoo=$ivkeys.addAll($vkeys))
+								#set($vfoo=$Collections.sort($ivkeys,$iicomparator))
+								#foreach($vi in $ivkeys)
+									#set($vinumber=$vinumber+1)
+									<tr>
+										<input type="hidden" name="iid_$vinumber" value="$vi.getIiid()">
+										<td class="wrappingtd">$vi.getIiid()</td>
+										<td class="wrappingtd">#if($ihash.get($vi) && $ihash.get($vi).getDisplayname() && $CarAdminUtils.localize($ihash.get($vi).getDisplayname(),$lang))$CarAdminUtils.localize($ihash.get($vi).getDisplayname(),$lang)#end</td>
+										
+										<td class="wrappingtd">
+											<select name="iipresentationtype_$vinumber">
+												<option value="TRANSPARENT"></option>
+												<option value="TRANSPARENT" #if($ihash.get($vi).getPresentationtype() && $ihash.get($vi).getPresentationtype().equals("TRANSPARENT"))selected#end>TRANSPARENT</option>
+												<option value="OPAQUE" #if($ihash.get($vi).getPresentationtype() && $ihash.get($vi).getPresentationtype().equals("OPAQUE"))selected#end>OPAQUE</option>
+												<option value="ENCODED" #if($ihash.get($vi).getPresentationtype() && $ihash.get($vi).getPresentationtype().equals("ENCODED"))selected#end>ENCODED</option>
+											</select>
+										</td>
+										<td class="wrappingtd">
+											<select name="iipolicytype_$vinumber">
+												<option value="PEV"></option>
+												<option value="PEV" #if($ihash.get($vi).getPolicytype() && $ihash.get($vi).getPolicytype().equals("PEV"))selected#end>by value</option>
+												<option value="PAO" #if($ihash.get($vi).getPolicytype() && $ihash.get($vi).getPolicytype().equals("PAO"))selected#end>by item</option>
+											</select>
+										</td>
+										<td class="wrappingtd">
+											<input type="checkbox" name="iiasnd_$vinumber" value="true" #if($ihash.get($vi).isAsnd())checked#end>
+											<label for="iiasnd_$vinumber" class="inline">ASND</label>
+											<input type="checkbox" name="iimultivalued_$vinumber" value="true" #if($ihash.get($vi).isMultivalued())checked#end>
+											<label for="iimultivalued_$vinumber" class="inline">Multi</label>
+											<input type="checkbox" name="iisensitive_$vinumber" value="true" #if($ihash.get($vi).isSensitivity())checked#end>
+											<label for="iisensitive_$vinumber" class="inline">Sensitive</label>
+										
+										</td>
+									</tr>
+								#end
+							</tbody>
+												
+							</table>
+							#if($current.keySet().size() <= 25)
+							</div>
+							#end
+							</div>
+							#else
+								<h3>No $ihead configured</h3>
+							#end
+							<input type="hidden" id="iicount_$itype" name="iicount" value="$vinumber">
+						</form>
+
+						</form> <!--This is supposed to be in the file -->
+							<div id="div-add-ii-$itype" class="hidden">
+								<form id="form-add-ii-$itype" method="POST" action="#">
+									<input type="hidden" name="formname" value="form-add-ii-$itype">
+									<input type="hidden" name="rhtype" value="$x.getRhtype()">
+									<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+									<h3>Add $itype</h3>
+									<div class="form-set">
+										<label for="iiid">Identifier</label>
+										<input type="text" name="iiid" placeholder="Item Identifier">
+									</div>
+									<div class="form-set">
+										<label for="displaynametable">Display Name</label>
+										<table name="displaynametable">
+											<tr>
+												<td>
+													<select name="displaynamelang">
+														#foreach($rl in $languages)
+															<option value="$rl">$rl</option>
+														#end
+													</select>
+												</td>
+												<td>
+													<input type="text" name="displaynamevalue" placeholder="Display Name">
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div class="form-set">
+										<label for="descriptiontable">Description</label>
+										<table name="descriptiontable">
+											<tr>
+												<td>
+													<select name="descriptionlang">
+														#foreach($rl in $languages)
+															<option value="$rl">$rl</option>
+														#end
+													</select>
+												</td>
+												<td>
+													<input type="text" name="descriptionvalue" placeholder="Description">
+												</td>
+											</tr>
+										</table>
+									</div>
+									<div class="form-set">
+										<label for="prestype">Presentation Type</label>
+										<select name="prestype">
+											<option value="TRANSPARENT">TRANSPARENT</option>
+											<option value="ENCODED">ENCODED</option>
+											<option value="OPAQUE">OPAQUE</option>
+										</select>
+									</div>
+									<div class="form-set">
+										<label for="policytype">Policy Type</label>
+										<select name="policytype">
+											<option value="PEV">On Every Value (PEV)</option>
+											<option value="PAO">On Attribute Only (PAO)</option>
+										</select>
+									</div>
+									<div class="form-set">
+										<input type="checkbox" name="asnd" value="true">
+										<label for="asnd" class="inline">Always Send / Never Display?</label>
+									</div>
+									<div class="form-set">
+										<input type="checkbox" name="multivalued" value="true">
+										<label for="multivalued" class="inline">Multivalued?</label>
+									</div>
+									<div class=form-set">
+										<input type="checkbox" name="sensitivity" value="true">
+										<label for="sensitivity" class="inline">Sensitive?</label>
+									</div>
+									<button class="active submitaddii">Add<i class="fa button-icon-right fa-sync-alt"></i></button>
+								</form>
+							</div>
+					</div>
+			#end
+		#end
+
+    <!-- end refactor of ii information block -->
+	
+			<!-- Add an Information Item (in general) panel -->
+			
+		<div class="content-section">
+		<h2>Add Information Item</h2>
+		<form id="additemform" method="POST" action="#">
+		<input type="hidden" name="formname" value="additemform">
+		<input type="hidden" name="rhtype" value="$x.getRhtype()">
+		<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+		<table style="width:100%, vertical-align: top;">
+			<tbody>
+				<tr>
+					<td>
+						<div class="form-set">
+							<label for="iitype">Type</label>
+							<select name="iitype"style="width:100%">
+								#foreach($itype in $iitypes)
+									<option value="$itype">$itype</option>
+								#end
+							</select>
+						</div>
+						<div class="form-set">
+							<label for="iiid">Identifier</label>
+							<input type="text" name="iiid" placeholder="Item Identifier" style="width: 100%;">
+						</div>
+						<div class="form-set">
+							<label for="displaynamelang" class="visually-hidden">Display Name Language</label>
+							<label for="displaynamevalue">Display Name</label>
+							<select name="displaynamelang" class="iblock">
+								#foreach($l in $languages)
+									<option value="$l">$l</option>
+								#end
+							</select>
+							<input type="text" class="iblock" name="displaynamevalue" placeholder="Display Name">
+						</div>
+						<div class="form-set">
+							<label for="descriptionlang" class="visually-hidden">Description Language</label>
+							<label for="descriptionvalue">Description</label>
+							<select name="descriptionlang" class="iblock">
+								#foreach($l in $languages)
+									<option value="$l">$l</option>
+								#end
+							</select>
+							<input type="text" class="iblock" name="descriptionvalue" placeholder="Description">
+						</div
+					</td>
+					<td style="padding-left: 2em; vertical-align: top;">
+						<div class="form-set">
+							<label for="prestype">Value Presentation</label>
+							<select name="prestype" class="iblock" style="width: 90%;">
+								<option value="TRANSPARENT">Transparent (display raw value)</option>
+								<option value="ENCODED">Encoded (use display value)</option>
+								<option value="OPAQUE">Opaque (display representative value)</option>
+							</select>
+						</div>
+						<div class="form-set">
+							<label for="policytype">Policy Application</label>
+							<select name="policytype" class="iblock" style="width: 90%">
+								<option value="PAO">Policy by item (PAO)</option>
+								<option value="PEV">Policy by value (PEV)</option>
+							</select>
+						</div>
+						<div class="form-set">
+							<input type="checkbox" name="asnd" id="asnd" value="true">
+							<label for="asnd" class="inline">Always Send/Never Display</label>
+						</div>
+						<div class="form-set">
+							<input type="checkbox" name="multivalued" id="multivalued" value="true">
+							<label for="multivalued" class="inline">Multi-valued</label>
+						</div>
+						<div class="form-set">
+							<input type="checkbox" name="sensitivity" id="sensitivity" value="true">
+							<label for="sensitivity" class="inline">Sensitive</label>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<button class="active">Add Information Item<i class="fa button-icon-right fa-plus"></i></button>
+	</form>	
+	</div>
+	
+	
+	</div>	
+	</div>
+	#end
+	
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".editable").click(function(e) {
+		handleClick(e);
+	});
+	$("#rh_edit_icon").click(function(e) {
+		handleClick(e);
+	});
+	$("#archive_rh_button").click(function(e) {
+		handleArchive(e);
+	});
+	$("#language_report_button").click(function(e) {
+		handleLangReport(e);
+	});
+	$("#policy_review_button").click(function(e) {
+		handlePolicyReview(e);
+	});
+	$(".langtoggle").click(function(e) {
+		handleLang(e);
+	});
+	$(".ii_heading").click(function(e) {
+		handleIiheading(e);
+	});
+	$(".ii_edit_toggle").click(function(e) {
+		handleIiEditToggle(e);
+	});
+	$(".ii_edit_save").click(function(e) {
+		handleIiEditSave(e);
+	});
+	$(".addrhilang").click(function(e) {
+		handleAddRHLang(e);
+	});
+	$("#addiitypebutton").click(function(e) {
+		handleAddIIType(e);
+	});
+	$(".langdelete").click(function(e) {
+		handleLangDelete(e);
+	});
+	$(".addbutton").click(function(e) {
+		addButtonPress(e);
+	});
+	$(".addiibu").click(function(e) {
+		addIiButtonPress(e);
+	});
+	$(".iieditbu").click(function(e) {
+		handleIiEdit(e);
+	});
+	$(".newbutton").click(function(e) {
+		newButtonPress(e);
+	});
+	$("#displayaddbutton").click(function(e) {
+		addDisplayNameLanguage(e);
+	});
+	$("#descriptionaddbutton").click(function(e) {
+		addDescriptionLanguage(e);
+	});
+	$(".displayaddbutton").click(function(e) {
+		addEditDisplayNameLanguage(e);
+	});
+	$(".descriptionaddbutton").click(function(e) {
+		addEditDescriptionLanguage(e);
+	});
+	$(".attrdelbutton").click(function(e) {
+		delAttr(e);
+	});
+	$(".editbutton").click(function(e) {
+		editAttr(e);
+	});
+	$(".dnaddlangbutton").click(function(e) {
+		addDNLang(e);
+	});
+	$(".descaddlangbutton").click(function(e) {
+		addDescLang(e);
+	});
+	$(".additemtoggle").click(function(e) {
+		handleAddItemToggle(e);
+	});
+	initializeDataTables();  
+	
+	initializeHidden(); 
+	
+});
+
+function initializeDataTables() {
+	$(".dataTable").DataTable();
+}
+
+function initializeHidden() {
+	$(".hidden").hide(); 
+	#foreach($itype in $iitypes)
+		$("#ii_table_view_${itype}_wrapper").show();
+		$("#ii_table_edit_${itype}_wrapper").hide();
+	#end
+}
+
+function resetAddLangButtons() {
+	$(".dnaddlangbutton").off("click");
+	$(".dnaddlangbutton").click(function(e) {
+		addDNLang(e);
+	});
+	$(".descaddlangbutton").off("click");
+	$(".descaddlangbutton").click(function(e) {
+		addDescLang(e);
+	});
+}
+
+function handleLangReport(e) {
+	e.preventDefault();
+	var url = "/caradmin/rhlocalereview/$injectedrhlist.get(0).getRhtype()/$CarAdminUtils.idEscape($injectedrhlist.get(0).getRhidentifier())/";
+	window.location.href=url;
+}
+
+function handlePolicyReview(e) {
+	e.preventDefault();
+	var url = "/caradmin/orgpolicyview/$injectedrhlist.get(0).getRhtype()/$CarAdminUtils.idEscape($injectedrhlist.get(0).getRhidentifier())/";
+	window.location.href=url;
+}
+
+function handleArchive(e) {
+	e.preventDefault();
+	$("#delete_rh_form").submit();
+}
+
+function handleIiEditToggle(e) {
+	e.preventDefault();
+	tid = e.currentTarget.id;
+	it = tid.replace(/.*_icon_/,"");
+	$("#ii_heading_save_icon_"+it).toggle();
+	$("#ii_heading_edit_icon_"+it).toggle();
+	$("#ii_table_view_"+it+"_wrapper").toggle();
+	$("#ii_table_edit_"+it+"_wrapper").toggle();
+	
+}
+
+function handleIiEditSave(e) {
+	e.preventDefault();
+	tid = e.currentTarget.id;
+	it = tid.replace(/.*_icon_/,"");
+	$("#iiform_"+it).submit();
+}
+
+function handleLang(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	$("#div_rh_"+tid).toggle();
+}
+
+function handleAddIIType(e) {
+	e.preventDefault();
+	if ($("#addiitypeform").is(":visible")) {
+		$("#addiitypeform").submit();
+	} else {
+		$("#addiitypeform").toggle();
+		$("#addiitypebutton").html("Update");
+	}
+}
+
+function handleAddRHLang(e) {
+	tid = e.target.id;
+	$("#div_rhlang_add").toggle();
+	$("#button_addrhlang").toggle();
+}
+
+function handleLangDelete(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	la = tid.replace("langdelete_","").replace("_rh","");
+	$("#is_delete_"+la).val("true");
+	$("#form_"+la+"_edit_rh").submit();
+}
+
+function handleIiheading(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	it = tid.replace(/ii_heading_[^_]*_/,"");
+	$("#ii_heading_plus_div_"+it).toggle();
+	$("#ii_heading_minus_div_"+it).toggle();
+	$("#iitable_"+it+"_wrapper").toggle();
+}
+
+function handleIiEdit(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	inum = tid.replace(/.*_/,"");
+	itype = tid.replace("edit_","").replace(/_[0-9]+/,"");
+	alert("click on edit for "+tid+" ("+itype+","+inum+")");
+	
+}
+
+function addIiButtonPress(e) {
+	e.preventDefault();  // defang
+}
+
+function handleClick(e) {
+	tid = e.target.id;
+	pid = e.target.parentElement.id;
+	if (pid.match(/span_ii_.*/) || tid.match(/span_ii_.*/)) {
+		attrClick(e);
+	} else {
+		$("#div_displayname_1").toggle();
+		$("#div_description_1").toggle();
+		$("#h3-dispname").toggle();
+		$("#p-descr").toggle();
+		$("#div_rhinfo_intern_edit").toggle();
+		
+	}
+}
+
+function attrClick(e) {
+	tid=e.target.id;
+	tnum = tid.replace("span_ii_","").replace(/_.*$/,"");
+	inum = tid.replace("span_ii_","").replace(/.*_/,"");
+	bid = "button_del_ii_"+tnum+"_"+inum;
+	sid = "span_del_ii_"+tnum+"_"+inum;
+	bid2 = "button_ii_"+tnum+"_"+inum+"_editbutton";
+	sid2 = "span_ii_"+tnum+"_"+inum+"_editbutton";
+	$("#"+sid).toggle();
+	$("#"+sid2).toggle();
+}
+
+function delAttr(e) {
+	e.preventDefault();
+	tid=e.target.id;
+	tnum = tid.replace("button_del_ii_","").replace(/_.*$/,"");
+	inum = tid.replace("button_del_ii_","").replace(/.*_/,"");
+	$("#ii_"+tnum+"_"+inum+"_type").val("");
+	$("#ii_"+tnum+"_"+inum+"_type").val("");
+	$("#iiform_"+tnum).submit();
+}
+
+function editAttr(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	tnum = tid.replace("button_ii_","").replace(/_.*$/,"");
+	inum = tid.replace("button_ii_","").replace(/_editbutton$/,"").replace(/.*_/,"");
+	$("#span_ii_"+tnum+"_"+inum+"_edit").show();
+	$("#span_ii_"+tnum+"_"+inum).hide();
+	$("#span_del_ii_"+tnum+"_"+inum).hide();
+	$("#span_ii_"+tnum+"_"+inum+"_editbutton").hide();
+	$("#ii_modified_"+tnum+"_"+inum).val("true");
+}
+
+function addButtonPress(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	fnum = tid.replace("addbutton_","");
+	var $ctr = $("#iicount_"+fnum).val();
+	$ctr = parseInt($ctr) + 1;
+	$("#iicount_"+fnum).val($ctr);
+	var $row = $( "<div id=\"span_ii_"+fnum+"_"+$ctr+"_edit\" class=\"attr leftgravity outline doublespace clear eightypercent\">");
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_type\">Type:</label><input type=\"text\" id=\"ii_"+fnum+"_"+$ctr+"_type\" name=\"iitype"+$ctr+"\" placeholder=\"EnterIIType\" size=\"19\">");
+	$row.append($add);
+	$add=$( "<label for=\"ii_"+fnum+"_"+$ctr+"_id\">Id:</label><input type=\"text\" id=\"ii_"+fnum+"_"+$ctr+"_id\" name=\"iiid"+$ctr+"\" placeholder=\"Enter ID\" size=\"19\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div class=\"heading3 clear\">Displayname</div>");
+	$row.append($add);
+	$add=$( "<table class=\"clear outline\" id=\"ii_"+fnum+"_"+$ctr+"_dntable\">");
+	$row.append($add);
+	$add=$( "<tr><th>Language</th><th>Displayname</th><th><button id=\"ii_"+fnum+"_"+$ctr+"_dnaddlangbutton\" class=\"active dnaddlangbutton\">Add<i class=\"button-icon-right fa fa-plus\"></i></button></th></tr>");
+	$row.append($add);
+	$add=$( "<input type=\"hidden\" id=\"ii_"+fnum+"_"+$ctr+"_dnlangcount\" name=\"ii_"+fnum+"_"+$ctr+"_dnlangcount\" value=\"0\">");
+	$row.append($add);
+	$add=$( "</table>");
+	$row.append($add);
+	$add=$( "<div class=\"heading3 clear\">Description</div>");
+	$row.append($add);
+	$add=$( "<table class=\"clear outline\" id=\"ii_"+fnum+"_"+$ctr+"_desctable\">");
+	$row.append($add);
+	$add=$( "<tr><th>Language</th><th>Description</th><th><button id=\"ii_"+fnum+"_"+$ctr+"_descaddlangbutton\" class=\"active descaddlangbutton\">Add<i class=\"button-icon-right fa fa-plus\"></i></button></th></tr>");
+	$row.append($add);
+	$add=$( "<input type=\"hidden\" id=\"ii_"+fnum+"_"+$ctr+"_desclangcount\" name=\"ii_"+fnum+"_"+$ctr+"_desclangcount\" value=\"0\">");
+	$row.append($add);
+	$add=$( "</table>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_prestype\">Presentation Type:</label>");
+	$row.append($add);
+	$add=$( "<select id=\"ii_"+fnum+"_"+$ctr+"_prestype\" name=\"ii_+fnum"+"_"+$ctr+"_prestype\"><option value=\"ENCODED\">ENCODED</option><option value=\"OPAQUE\">OPAQUE</option><option value=\"TRANSPARENT\">TRANSPARENT</option></select>");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_policytype\">Policy Type:</label>");
+	$row.append($add);
+	$add=$( "<select id=\"ii_"+fnum+"_"+$ctr+"_policytype\" name=\"ii_"+fnum+"_"+$ctr+"_policytype\"><option value=\"PAO\">PAO</option><option value=\"PEV\">PEV</option></select>");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_asnd\">Always Send / Never Display?</label>");
+	$row.append($add);
+	$add=$( "<input type=\"checkbox\" id=\"ii_"+fnum+"_"+$ctr+"_asnd\" name=\"ii_"+fnum+"_"+$ctr+"_asnd\" value=\"true\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_multivalued\">Multivalued?</label>");
+	$row.append($add);
+	$add=$( "<input type=\"checkbox\" id=\"ii_"+fnum+"_"+$ctr+"_multivalued\" name=\"ii_"+fnum+"_"+$ctr+"_multivalued\" value=\"true\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_sensitivity\">Sensitive?</label>");
+	$row.append($add);
+	$add=$( "<input type=\"checkbox\" id=\"ii_"+fnum+"_"+$ctr+"_sensitivity\" name=\"ii_"+fnum+"_"+$ctr+"_sensitivity\" value=\"true\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div class=\"rightgravity\"><button id=\"ii_"+fnum+"_"+$ctr+"_submitdetails\" class=\"active\">Update<i class=\"button-icon-right fa fa-arrow-right\"></i></button></div>");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<input type=\"hidden\" id=\"ii_modified_"+fnum+"_"+$ctr+"\" name=\"ii_modified_"+fnum+"_"+$ctr+"\" value=\"true\">");
+	$row.append($add);
+	
+	$("#div_attrlist_"+fnum).append($row);
+	resetAddLangButtons();
+}
+
+function newButtonPress(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	$("#wrapperdiv").hide();
+	$("#div_newrhform").show();
+}
+
+function addDisplayNameLanguage(e) {
+	e.preventDefault();
+	var $ctr = $("#displaynamecount").val();
+	$ctr = parseInt($ctr) + 1;
+	$("#displaynamecount").val($ctr);
+	var $lname = "displaynamelanguage" + $ctr;
+	var $vname = "displaynamevalue" + $ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\"" + $lname + "\" placeholder=\"Language\"></td><td><input type=\"text\" name=\"" + $vname + "\" placeholder=\"Display name\"></td></tr>" );
+	$("#displaynametable").append($row);
+}
+
+function addEditDisplayNameLanguage(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace("displayaddbutton_","");
+	var $ctr = $("#displaynamecount_"+$formn).val();
+	$ctr = parseInt($ctr) + 1;
+	$("#displaynamecount_"+$formn).val($ctr);
+	var $lname = "displaynamelanguage_"+$ctr;
+	var $vname = "displaynamevalue_"+$ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Display nane\"></td></tr>");
+	$("#displaynametable_"+$formn).append($row);
+}
+
+function addDescriptionLanguage(e) {
+	e.preventDefault();
+	var $ctr = $("#descriptioncount").val();
+	$ctr = parseInt($ctr) + 1;
+	$("#descriptioncount").val($ctr);
+	var $lname = "descriptionlanguage" + $ctr;
+	var $vname = "descriptionvalue" + $ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\"" + $lname + "\" value=\"Language\"></td><td><input type=\"text\" name=\"" + $vname + "\" value=\"Enter description\"></td></tr>" );
+	$("#descriptiontable").append($row);
+}
+
+function addEditDescriptionLanguage(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace("descriptionaddbutton_","");
+	var $ctr = $("#descriptioncount_"+$formn).val();
+	$ctr = parseInt($ctr) + 1;
+	$("#descriptioncount_"+$formn).val($ctr);
+	var $lname = "descriptionlanguage_"+$ctr;
+	var $vname = "descriptionvalue_"+$ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Enter display nane\"></td></tr>");
+	$("#descriptiontable_"+$formn).append($row);
+}
+
+function addDNLang(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace(/ii_/,"").replace(/_.*/,"");
+	var $ctr = e.target.id.replace(/ii_[^_]*_/,"").replace(/_.*/,"");
+	var $ict = $("#ii_"+$formn+"_"+$ctr+"_dnlangcount").val();
+	$ict = parseInt($ict) + 1;
+	$("#ii_"+$formn+"_"+$ctr+"_dnlangcount").val($ict);
+	var $lname = "ii_"+$formn+"_"+$ctr+"_dnlang_"+$ict;
+	var $vname = "ii_"+$formn+"_"+$ctr+"_dnvalue_"+$ict;
+	var $row = $( "<tr><td><input type=\"text\" name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Display name\"></td></tr>");
+	$("#ii_"+$formn+"_"+$ctr+"_dntable").append($row);
+}
+
+function addDescLang(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace(/ii_/,"").replace(/_.*/,"");
+	var $ctr = e.target.id.replace(/ii_[^_]*_/,"").replace(/_.*/,"");
+	var $ict = $("#ii_"+$formn+"_"+$ctr+"_desclangcount").val();
+	$ict = parseInt($ict) + 1;
+	$("#ii_"+$formn+"_"+$ctr+"_desclangcount").val($ict);
+	var $lname = "ii_"+$formn+"_"+$ctr+"_desclang_"+$ict;
+	var $vname = "ii_"+$formn+"_"+$ctr+"_descvalue_"+$ict;
+	var $row = $( "<tr><td><input type=\"text\"name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Description\"></td></tr>");
+	$("#ii_"+$formn+"_"+$ctr+"_desctable").append($row);
+}
+
+function handleAddItemToggle(e) {
+	e.preventDefault();
+	var $type = e.currentTarget.id.replace(/additemtoggle_/,"");
+	$("#div-add-ii-"+$type).toggle();
+}
+
+</script>

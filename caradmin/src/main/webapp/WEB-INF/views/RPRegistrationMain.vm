@@ -1,0 +1,12 @@
+			<h1>Resource Holders</h1>
+			<div class="content-section">
+				<ul>
+					#foreach($meta in $rhmetalist)
+						<li><a href="/caradmin/rpregistration/$meta.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($meta.getRhidentifier().getRhid())/">$CarAdminUtils.localize($meta.getDisplayname(),$locale)</a></li>
+					#end
+				</ul>
+			</div>
+			
+		
+				
+  	

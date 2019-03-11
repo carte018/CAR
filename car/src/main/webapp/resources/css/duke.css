@@ -1,0 +1,44 @@
+a{
+  color: #0577b1;
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px dotted #0577b1;
+  line-height: 2em;
+}
+
+a:hover{
+  color: #001a57;
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #001a57;
+}
+
+h1{color: #001a57}
+h2{color: #666666}
+h3{color: #001a57}
+h4{color: #666666}
+
+#header{
+  background: #001a57;
+}
+
+button.active{
+  color: #fff;
+  border: 2px solid #001a57;
+  background: #001a57;
+}
+
+button.active:hover{
+  background: #0577b1;
+  border: 2px solid #0577b1;
+}
+
+button.inactive{
+  border: 2px solid #d8d8d8;
+  background: #fff;
+}
+
+button.inactive:hover{
+  border: 2px solid #d8d8d8;
+  background: #d8d8d8;
+}

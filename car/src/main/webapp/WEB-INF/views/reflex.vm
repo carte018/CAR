@@ -1,0 +1,11 @@
+<html>
+<body>
+<form id="postForm" name="postForm" method="POST" action="$returnUrl">
+<input type="hidden" name="json" value="$json">
+<input type="submit" value="Click here to submit">
+</form>
+<script language=javascript>
+  window.onload = document.forms['postForm'].submit();
+</script>
+</body>
+</html>

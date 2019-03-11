@@ -1,0 +1,66 @@
+<div id="sidebar">
+	<div class="content-section">
+		#set($rhgrand=0)
+		#set($iigrand=0)
+		#set($activegrand=0)
+		#set($rpgrand=0)
+		#set($polgrand=0)
+		#set($ugrand=0)
+		#foreach($iv in $injected)
+			#set($rhgrand=$rhgrand+1)
+			#set($iigrand=$iigrand+$iv.getInfoitemcount())
+			#set($rpgrand=$rpgrand+$iv.getRpcount())
+			#set($activegrand=$activegrand+$iv.getActiverpcount())
+			#set($ugrand=$ugrand+$iv.getUsercount())
+			#set($polgrand=$polgrand+$iv.getUserpolcount()+$iv.getArpsipolcount()+$iv.getCarmapolcount())
+		#end
+		<h2>Grand Totals</h2>
+		<div name="grands">
+			<table class="stats">
+				<tr><td class="stat-label">Resource Holders</td><td class="stat-value">$rhgrand</td></tr>
+				<tr><td class="stat-label">Information Items</td><td class="stat-value">$iigrand</td></tr>
+				<tr><td class="stat-label">Relying Parties</td><td class="stat-value">$rpgrand</td></tr>
+				<tr><td class="stat-label">In-Use RPs</td><td class="stat-value">$activegrand</td></tr>
+				<tr><td class="stat-label">Users</td><td class="stat-value">$ugrand</td></tr>
+				<tr><td class="stat-label">Policies</td><td class="stat-value">$polgrand</td></tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div id="left">
+	<div class="content-section">
+		<h2>Recent</h2>
+		<ul class="log">
+			#foreach($entry in $activitylist)
+				#set($foo=$date.setTime($entry.getTimestamp()))
+				<li>$sdf.format($date)  -  $entry.getUser() $entry.getOperation()</li>
+			#end
+		</ul>
+	</div>
+	<div class="content-section">
+			<h2>Policies</h2>
+			<table class="display full-width">
+			<thead>
+				<tr>
+					<th class="wrappingtd">Resource Holder</th>
+					<th class="wrappingtd">Organizational Policies</th>
+					<th class="wrappingtd">Meta Policies</th>
+					<th class="wrappingtd">User Policies</th>
+				</tr>
+			</thead>
+			<tbody>
+				#foreach ($rhmi in $rhlist)
+					<tr>
+						<td class="wrappingtd"><a href="/caradmin/orgpolicyview/$rhmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rhmi.getRhidentifier().getRhid())">$rhdisp.get($rhmi.getRhidentifier().getRhid())</a></td>
+						<td class="wrappingtd">$rhorg.get($rhmi.getRhidentifier().getRhid())</td>
+						<td class="wrappingtd">$rhicm.get($rhmi.getRhidentifier().getRhid())</td>
+						<td class="wrappingtd">$imap.get($rhmi.getRhidentifier().getRhid()).getUserpolcount()</td>
+					</tr>
+				#end
+			</tbody>
+		</table>
+	</div>
+	<p><a href="#">back to top</a></p>
+</div>
+		

@@ -1,0 +1,408 @@
+     #if($successmsg)
+		<div class="message success">
+			$successmsg
+		</div>
+	#end
+	#if($failmsg)
+		<div class="message error">
+			$failmsg
+		</div>
+	#end
+	#if($noticemsg)
+		<div class="message notice">
+			$noticemsg
+		</div>
+	#end
+     
+       	<h1>Manage Information Sharing for $localizedRPDisplayName</h1>
+ 
+  	<div id="sidebar">
+  		<div class="content-section">
+        <h2>$localizedRPDisplayName</h2>
+          $localizedRPDescription
+          #set($privu=$rpMetaInformation.getPrivacyurl())
+          #set($icou=$rpMetaInformation.getIconurl())
+          
+          #if ($icou && ! $icou.equals(""))
+          <img src="$rpMetaInformation.getIconurl()" style="width: 80px; float: right; margin: 1em;">
+          #end
+          #if($privu)
+          <p><a href="$rpMetaInformation.getPrivacyurl()" target="_blank">privacy policy</a></p>
+          #else
+          <p><i>no privacy policy</i></p>
+          #end
+          <div style="clear: both;"></div>
+          
+          
+      
+      </div>
+      <div class="content-section">
+      	<h2>History</h2>
+      	<ul id="rp-history" class="simple-list">
+      		<li>Updated: $updateDate</li>
+      		<li>Policy Version: $version</li>
+      	</ul>
+      </div>
+    </div>
+      <div id="left">
+        <div class="content-section">
+      	<h2>Information Requested by $localizedRPDisplayName</h2>
+        #if (! $injectedDecisions.isEmpty())
+        <p>You can choose whether the following information is shared with $localizedRPDisplayName:</p>
+        
+        
+      <div id="view-preferences">
+        
+        <table class="display full-width smaller-text">
+          <tr>
+            <th>Item</th>
+            <th class="no-wrap">Current Value</th>
+            <th class="no-wrap">Current Choice</th>
+            <th class="no-wrap">Duke Recommends</th>
+            
+          </tr>
+          #set($seen = {})
+          #foreach ($attr in $injectedDecisions.keySet())
+          #set($aid = $attr.split(':')[0])
+          #if (!$policytype.get($aid).equalsIgnoreCase("PAO") || !$seen.containsKey($aid))
+          #if ($policytype.get($aid).equalsIgnoreCase("PAO") && ! $seen.containsKey($aid))
+          #set($foo=$seen.put($aid,"1"))
+           <tr>
+           #if ($injectedDecisions.get($attr).getDisplayName())
+           <td><div class="label">$injectedDecisions.get($attr).getDisplayName()</div>
+           	   <div class="sublabel">$injectedDecisions.get($attr).getReason()</div></td>
+           #else
+           <td><div class="label">$attr.replaceAll(":.*$","")</div>
+           <div class="sublabel">$injectedDecisions.get($attr).getReason()</div></td>
+           #end
+           <td>$dispvals.get($aid)</td>
+           #else
+          <tr>
+          #if ($injectedDecisions.get($attr).getDisplayName())
+          <td><div class="label">$injectedDecisions.get($attr).getDisplayName()</div>
+          	  <div class="sublabel">$injectedDecisions.get($attr).getReason()</div></td>
+          	  #if($injectedDecisions.get($attr).getValueDisplayName().equals("not available"))
+          	  <td style="word-break: break-all;"><span class="not-available">$injectedDecisions.get($attr).getValueDisplayName()</span></td>
+          	  #else
+          	  <td style="word-break: break-all;">$injectedDecisions.get($attr).getValueDisplayName()</td>
+          	  #end
+          #else
+          <td><div class="label">$attr.replaceAll(":.*$","")</div>
+          	  <div class="sublabel">$injectedDecisions.get($attr).getReason()</div></td>
+          	  #if($injectedDecisions.get($attr).getValueDisplayName().equals("not available"))
+          	  <td style="word-break: break-all;"><span class="not-available">$injectedDecisions.get($attr).getValueDisplayName()</span></td>
+          	  #else
+          	  <td style="word-break: break-all;">$injectedDecisions.get($attr).getValueDisplayName()</td>
+          	  #end
+          #end
+          #end
+			  #if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("useAdvice"))
+				#set($current=$injectedDecisions.get($attr).getRecommendedDirective())
+			  #else
+			    #set($current=$injectedDecisions.get($attr).getPolicyDirective())
+		      #end
+		      #if($injectedDecisions.get($attr).getPolicyDirective().equals("askMe"))
+		      <td class="askMe">ask me</td>
+		      #else
+		      <td class="$current">$injectedDecisions.get($attr).getPolicyDirective()</td>
+		      #end
+		      <td class="$injectedDecisions.get($attr).getRecommendedDirective()">$injectedDecisions.get($attr).getRecommendedDirective()</td>
+		  </tr>
+		  #end	
+		  #end
+		  <tr>
+		  	<th colspan=4>Additional Settings</th>
+		  </tr>
+		  <tr>
+		  <td><div class="label">All other information</div>
+		  <div class="sublabel">If $localizedRPDisplayName requests information not listed above</div></td>
+		  <td>(any values)</td>
+		  #set($current=$userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective())
+		  #if($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("askme"))
+		  <td class="$current">ask me</td>
+		  #else
+		  <td class="$current">$userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective()</td>
+		  #end
+		  <td class="askMe">ask me</td>
+		  </tr>	
+		  <tr>
+		  <td><div class="label">While I'm Away</div>
+		  <div class="sublabel">If your choice above is "ask me" but you're not available to answer when $localizedRPDisplayName requests information about you</div></td>
+		  <td>(any values)</td>
+		  #set($current=$userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective())
+		  <td class="$current">$userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective()</td>
+		  <td class="deny">deny</td>
+		  </tr>
+        </table>
+        <br>
+        <button id="editButton" class="active">Edit<i class="button-icon-right fa fa-edit"></i></button>
+        <button id="returnButton" class="passive">Cancel<i class="button-icon-right fa fa-times"></i></button>
+      </div>  
+      #else 
+      <div id="view-preferences">
+      	<p>$localizedRPDisplayName does not request any optional information</p>
+      	<br>
+      		<button id="returnButton" class="passive">Cancel<i class="button-icon-right fa fa-times"></i></button>
+      </div>
+      #end
+        
+      <div id="change-preferences" style="display: none">
+        <form name="master-return-form" id="master-return-form" method="POST" action="updatepolicy?conversation=$sconvo">
+        <input type="hidden" name="baseId" value="$baseId">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
+        <table id="settings-table" class="display full-width smaller-text">
+          <tr>
+            <th>&nbsp;</th>
+            <th>Permit <div style="font-weight: normal"><i>provide information</i></div></th>
+            <th>Deny <div style="font-weight: normal"><i>do not provide</i></div></th>
+            <th>Ask Me <div style="font-weight: normal"><i>prompt me to decide</i></div></th>
+            <th>Use Recommendation <div style="font-weight: normal"><i>follow Duke's recommendation</i></div></th>      
+          </tr>
+        #set($seen={})
+        #foreach ($attr in $injectedDecisions.keySet())   
+      	  #set($aid = $attr.split(':')[0])
+      	  #if (!$policytype.get($aid).equalsIgnoreCase("PAO") || !$seen.containsKey($aid))
+          #if ($policytype.get($aid).equalsIgnoreCase("PAO") && ! $seen.containsKey($aid))
+          #set($foo=$seen.put($aid,"1"))
+          #set($need_endbody=1)
+          <tbody>
+          <tr>
+          	#if ($injectedDecisions.get($attr).getDisplayName())
+            <td><div class="label">$injectedDecisions.get($attr).getDisplayName()</div>
+                <div class="sublabel">$dispvals.get($aid)</div></td>
+            #else
+            <td><div class="label">$attr.replaceAll(":.*$","")</div>
+            <div class="sublabel">$dispvals.get($aid)</div></td>
+            #end
+          #else
+          <tbody>
+          <tr>
+          #if($injectedDecisions.get($attr).getDisplayName())
+            <td style="word-break: break-all;"><div class="label">$injectedDecisions.get($attr).getDisplayName()</div>
+                <div class="sublabel">$injectedDecisions.get($attr).getValueDisplayName()</div></td>
+            #else
+            <td style="word-break: break-all;"><div class="label">$attr.replaceAll(":.*$","")</div>
+            	<div class="sublabel">$injectedDecisions.get($attr).getValueDisplayName()</div></td>
+            #end
+          #end
+            <td class="policy-option no-wrap">
+            	permit
+            	#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("permit") || (!$injectedDecisions.get($attr).getPolicyDirective() && $injectedDecisions.get($attr).getRecommendedDirective().equalsIgnoreCase("permit"))) 
+            		<input type="radio" name="$attr.toString()" value="permit" checked>
+        		#else
+        			<input type="radio" name="$attr.toString()" value="permit">
+    			#end
+			</td>
+            <td class="policy-option no-wrap">
+            	deny
+            	#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("deny"))
+            		<input type="radio" name="$attr.toString()" value="deny" checked>
+        		#else
+        			<input type="radio" name="$attr.toString()" value="deny">
+    			#end
+			</td>
+			<td class="policy-option no-wrap">
+				ask me
+				#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("askMe"))
+					<input type="radio" name="$attr.toString()" value="askMe" checked>
+				#else
+					<input type="radio" name="$attr.toString()" value="askMe">
+				#end
+			</td>
+			<td class="policy-option no-wrap">
+				use recommendation
+				#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("useAdvice"))
+					<input type="radio" name="$attr.toString()" value="useAdvice" checked>
+				#else
+					<input type="radio" name="$attr.toString()" value="useAdvice">
+				#end
+            </td>
+          </tr>
+           		 		                   <tr class="spacer">
+          	<th colspan="5" style="padding: .1em;"></th>
+          </tr>
+        </tbody>
+  		#end
+  		#end
+  		<tbody>
+  		<tr>
+  		<td><div class="label">All other information</div>
+  		    <div class="sublabel">For any other information requested by $localizedRPDisplayName</div></td>
+  		    <td class="policy-option no-wrap">
+  		    permit
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("permit"))
+  		    	<input type="radio" name="allOtherInfo" value="permit" checked>
+  		    #else
+  		    	<input type="radio" name="allOtherInfo" value="permit">
+  		    #end
+  		    </td>
+  		    <td class="policy-option no-wrap">
+  		    deny
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("deny"))
+  		    	<input type="radio" name="allOtherInfo" value="deny" checked>
+  		    #else
+  		    	<input type="radio" name="allOtherInfo" value="deny">
+  		    #end
+  		    </td>
+  		    <td class="policy-option no-wrap">
+  		    ask me
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("askMe"))
+  		    	<input type="radio" name="allOtherInfo" value="askMe" checked>
+  		    #else
+  		    	<input type="radio" name="allOtherInfo" value="askMe">
+  		    #end
+  		    </td>
+  		    <td class="policy-option no-wrap">
+  		    use recommendation
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("useAdvice"))
+  		    	<input type="radio" name="allOtherInfo" value="useAdvice" checked>
+  		    #else
+  		    	<input type="radio" name="allOtherInfo" value="useAdvice">
+  		    #end
+  		    </td>
+  		</tr>
+  		          <tr class="spacer">
+          	<th colspan="5" style="padding: .1em;"></th>
+          </tr>
+  		</tbody>
+  		<tbody>
+  		<tr>
+  		<td><div class="label">While I'm Away</div>
+  		    <div class="sublabel">If your choice above is "ask me" but you're not available to answer when $localizedRPDisplayName requests information about you</div></td>
+  		    <td class="policy-option no-wrap">
+  		    permit
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("permit"))
+  		    	<input type="radio" name="whileImAway" value="permit" checked>
+  		    #else
+  		    	<input type="radio" name="whileImAway" value="permit">
+  		    #end
+  		    </td>
+  		    <td class="policy-option no-wrap">
+  		    deny
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("deny"))
+  		    	<input type="radio" name="whileImAway" value="deny" checked>
+  		    #else
+  		    	<input type="radio" name="whileImAway" value="deny">
+  		    #end
+  		    </td>
+  		    <td class="policy-option no-wrap">
+  		     &nbsp;
+  		    </td>
+  		    <td class="policy-option no-wrap">
+  		    use recommendation
+  		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("useAdvice"))
+  		    	<input type="radio" name="whileImAway" value="useAdvice" checked>
+  		    #else
+  		    	<input type="radio" name="whileImAway" value="useAdvice">
+  		    #end
+  		    </td>
+  		</tr>
+  		</tbody>
+        </table>
+        </form>
+         <div>
+        <button id="saveButton" class="active">Save<i class="button-icon-right fa fa-arrow-right"></i></button>
+        <button id="cancelButton" class="passive">Cancel<i class="button-icon-right fa fa-times"></i></button>
+        </div>
+        <div style="clear: left;"></div>
+        <br>
+      </div>
+              </div>  <!--content-section ends-->
+      
+     #if(!$hasMandatory)
+     <div class="content-section">
+     <h2>Information Required by $localizedRPDisplayName</h2>
+     <p>$localizedRPDisplayName does not automatically receive any required information about users</p>
+     </div>
+     #end
+     #if($hasMandatory)
+      
+        <div class="content-section">
+        <h2>Information Required by $localizedRPDisplayName</h2>
+        <p>Duke will release the following information about users of $localizedRPDisplayName:</p>
+        
+        <table class="data-table display full-width">
+          <tr>
+            <th>Attribute</th>
+            <th class="no-wrap">Current Value(s)</th>
+          </tr>
+          #foreach($mkey in $mandatory.keySet())
+          <tr>
+            	<td><div class="label">$mandatory.get($mkey).get(0).getDisplayName()</div>
+            		#if($mandatory.get($mkey).get(0).getReason())
+	            		<div class="sublabel">$mandatory.get($mkey).get(0).getReason()</div>
+	            	#else
+	            		<div class="sublabel"></div>
+	            	#end
+    	        </td>
+				<td>
+					#foreach ($j in $mandatory.get($mkey))
+						#if($j.getValueDisplayName().equals("not available"))
+						<div><span class="not-available">$j.getValueDisplayName()</span></div>
+						#else
+						<div>$j.getValueDisplayName()</div>
+						#end
+					#end
+				</td>
+			</tr>
+		  #end
+          #foreach($requiredAttribute in $requiredAttributes)
+          	<tr>
+          		<td><div class="label">$requiredAttribute.getDisplayName()</div>
+          			<div class="sublabel">$requiredAttribute.getReason()</div>
+      			</td>
+      			#if($requiredAttribute.getCurrentValue().contains("not available"))
+      			<td><span class="not-available">$requiredAttribute.getCurrentValue()</span></td>
+      			#else
+      			<td>$requiredAttribute.getCurrentValue()</td>
+      			#end
+  			</tr>
+		  #end
+		  
+        </table>
+        </div>
+        <br>
+        #end
+      
+ 		<!-- Disclaimer -->
+        
+      </div>  
+    </div>
+</html>
+
+<script>
+  $('#show-form').click(function(e){
+    e.preventDefault();
+    $('#view-preferences').hide();
+    $('#change-preferences').show();
+  });
+   $('#saveButton').click(function(e){
+     e.preventDefault();
+     $('#master-return-form').submit();
+   });
+   $('#cancelButton').click(function(e){
+   	 e.preventDefault();
+   	 $('#change-preferences').hide();
+   	 $('#view-preferences').show();
+   });
+   $('#editButton').click(function(e){
+     e.preventDefault();
+     $('#view-preferences').hide();
+     $('#change-preferences').show();
+   });
+   $('#returnButton').click(function(e){
+     e.preventDefault();
+     window.location.href="/car/carma/selfservice/sites?canceled=true";
+   });
+   $('#show-required').click(function(e){
+   	e.preventDefault();
+   	$('#required-release').show();
+   	$('#show-required').hide();
+   });
+   $('#hide-required').click(function(e){
+   	e.preventDefault();
+   	$('#required-release').hide();
+   	$('#show-required').show();
+   });
+</script>
+</script>

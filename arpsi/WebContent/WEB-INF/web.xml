@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+
+<web-app>
+    <servlet>
+    <servlet-name>arpsi</servlet-name>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>edu.internet2.consent.arpsi</param-value> 
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+      <servlet-name>arpsi</servlet-name>
+      <url-pattern>*</url-pattern>
+    </servlet-mapping>
+</web-app>

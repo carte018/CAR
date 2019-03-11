@@ -1,0 +1,29 @@
+    <div id="sidebar">
+      <div class="section-title">New Site Policy</div>
+      <p><a href="/carma/new_rp">Manage defaults for what information is shared for new sites</a>.</p>
+    </div>
+    <div id="primary">
+      <div class="section-title">My Sites</div>
+      <p>Manage what personal information Duke will send for the following sites:</p>   
+    
+    
+      <table class="data-table">
+        <tr>
+          <th><a href="#">Name</a></th>
+          <th><a href="#">URL</a></th>
+          <th><a href="#">Updated</a></th>  
+          <th>&nbsp;</th>
+        </tr>
+      #foreach ($policy in $currentUserPolicies) 
+		<tr>
+  		<td>$rpicMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId()).getDisplayName()</td>
+  		<td>$rpicMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId()).getAccessUrl().replaceAll("https://","").replaceAll("/.*$","")</td>
+  		<td>$updateMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId())</td>
+  		<td><a href="/carma/manage_rp?baseId=$policy.getPolicyMetaData().getPolicyId().getBaseId()">manage</a></td>
+		</tr>
+	#end
+	</table>
+    
+    </div>
+ 
+	

@@ -1,0 +1,110 @@
+		     #if($successmsg)
+		<div class="message success">
+			$successmsg
+		</div>
+	#end
+	#if($failmsg)
+		<div class="message error">
+			$failmsg
+		</div>
+	#end
+	#if($noticemsg)
+		<div class="message notice">
+			$noticemsg
+		</div>
+	#end
+		<h1>Add a Site</h1>
+		<div id="sidebar">
+			<div class="content-section">
+				<h2>About Adding Sites Manually</h2>
+				In most cases, sites will be added to your preferences list automatically, as you visit
+				them and specify your preferences.  For various reasons, you may want or need to establish 
+				preferences for a site or service without actually visiting it -- for example, you might 
+				need to set preferences for the use of your personal information before a service tries 
+				to access it in your absence.  Listed here are all the sites and services for which you 
+				don't currently have specific preferences specified.  Click the "Add" link next to any 
+				one of them will take you into an editor where you can specify your specific preferences 
+				for that site.
+			</div>
+		</div>
+		<div id="left">
+			<div class="content-section">
+				#if($items.size() > 10) 
+					<table class="display full-width dataTable no-footer" role="grid" aria-describedby="rptable_info" id="rptable">
+				#else
+					<table class="display full-width" id="rptable">
+				#end
+						<thead>
+							<tr>
+								<th>Site/Service</th>
+								<th>Resource Holder</th>
+								<th>Add?</th>
+							</tr>
+						</thead>
+						<tbody>
+							#set($ctr=0)
+							#foreach($item in $items)
+								#set($ctr=$ctr+1)
+								<tr>
+									<input type="hidden" id="rhtype_$ctr" value="$item.getRhtype()">
+									<input type="hidden" id="rhid_$ctr" value="$item.getRhid()">
+									<input type="hidden" id="rptype_$ctr" value="$item.getRptype()">
+									<input type="hidden" id="rpid_$ctr" value="$item.getRpid()">
+									<input type="hidden" id="usertype_$ctr" value=$item.getUsertype()">
+									<td>$item.getRpdisp()</td>
+									<td>$item.getRhdisp()</td>
+									<td><a class="adder" id="adder_$ctr" href="#">Add</a></td>
+								</tr>
+							#end
+						</tbody>
+					</table>
+			</div>
+		</div>
+		<form name="addform" id="addform" style="display:none;" method="POST" action="#">
+			<input id="add_rhid" type="hidden" name="add_rhid" value="">
+			<input id="add_rhtype" type="hidden" name="add_rhtype" value="">
+			<input id="add_rpid" type="hidden" name="add_rpid" value="">
+			<input id="add_rptype" type="hidden" name="add_rptype" value="">
+			<input id="add_usertype" type="hidden" name="add_usertype" value="">
+			<input id="add_userid" type="hidden" name="add_userid" value="$remoteuser">
+			<input id="conversation" type="hidden" name="conversation" value="$conversation">
+			<input id="csrftoken" type="hidden" name="csrftoken" value="$csrftoken">
+		</form>
+	   <script type="text/javascript">
+    	$(document).ready(function() {
+    		$(".dataTable").DataTable(
+    			{
+    				"columns": [
+    					null,
+    					null,
+    					null],
+    				"drawCallback": function(settings) {
+    					$(".adder").click(function(e) {
+    						e.preventDefault();
+    						handleAdd(e);
+    					});
+    				}
+    			});
+    		$(".adder").click(function(e) {
+    			e.preventDefault();
+    			handleAdd(e);
+    		});
+    	});
+    	
+    	function handleAdd(e) {
+    		e.preventDefault();
+    		var num = e.target.id.replace("adder_","");
+    		var rhid = String($("#rhid_"+num).val());
+    		$("#add_rhid").val(rhid);
+    		var rhtype = String($("#rhtype_"+num).val());
+    		$("#add_rhtype").val(rhtype);
+    		var rpid = String($("#rpid_"+num).val());
+    		$("#add_rpid").val(rpid);
+    		var rptype = String($("#rptype_"+num).val());
+    		$("#add_rptype").val(rptype);
+    		var usertype = String($("#usertype_"+num).val());
+    		$("#add_usertype").val(usertype);
+    		$("#addform").submit();
+    	}
+    </script>
+				

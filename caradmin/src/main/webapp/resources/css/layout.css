@@ -1,0 +1,104 @@
+body{
+  color: #444;
+  font-family: helvetica, sans-serif;
+}
+
+a{
+  color: #0736A4;
+  text-decoration: none;
+}
+
+a:hover{text-decoration: underline}
+
+#user-info{
+  text-align: right;
+  margin-bottom: 5px;
+}
+
+#banner{
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  padding: 1em 0;
+}
+
+@media (max-width: 499px) {
+  #container{margin: 0}
+  #banner{height: 38px}
+  #banner h1{margin: 0 0 0 16px}
+  #main-logo{display: none}
+  #alt-logo{display: visible}
+  #tier-logo{display: none}
+}
+
+@media (min-width:500px) and (max-width: 699px) {
+  #container{margin: 0}
+  #alt-logo{display: none}
+  
+  #banner{
+    position: relative;
+    height: 60px;
+  }
+  
+  a#main-logo img{
+    height: 60px;
+    position: absolute;
+    left: 0;
+  }
+  
+  a#tier-logo img{
+    height: 40px;
+    position: absolute;
+    right: 0;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 899px) {
+
+  #container{margin: 1em 2em}
+  #alt-logo{display: none}
+  
+  #banner{
+    position: relative;
+    height: 60px;
+  }
+  
+  a#main-logo img{
+    height: 60px;
+    position: absolute;
+    left: 0;
+  }
+  
+  a#tier-logo img{
+    height: 40px;
+    position: absolute;
+    right: 0;
+  }
+
+}
+
+@media (min-width: 900px){
+
+  #container{margin: 3em 5em}
+  #alt-logo{display: none}
+  
+  #banner{
+    position: relative;
+    height: 60px;
+  }
+  
+  a#main-logo img{
+    height: 60px;
+    position: absolute;
+    left: 0;
+  }
+  
+  a#tier-logo img{
+    height: 40px;
+    position: absolute;
+    right: 0;
+  }
+
+}
+
+#main{margin-top: 1em}
+

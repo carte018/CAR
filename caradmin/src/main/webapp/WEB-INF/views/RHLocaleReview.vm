@@ -1,0 +1,230 @@
+<h1>Language Report: $displayname</h1>
+#if($successmsg)
+<div class="message success">
+	$successmsg
+</div>
+#end
+#if($failmsg)
+<div class="message error">
+	$failmsg
+</div>
+#end
+<div class="content-section">
+
+<h2 class="header-edit"><a href="#" id="rhmlangedit"><i class="fa fa-edit"></i></a></h2>
+<h2>Resource Holder Metainformation</h2>
+	<table id="rhmviewtable" class="display full-width">
+		<thead>
+			<tr>
+				#set($colcount=1)
+				<th class="wrappingtd">Property</th>
+				#foreach($l in $languages)
+					#set($colcount=$colcount+1)
+					<th class="wrappingtd">$l</th>
+				#end
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="wrappingtd">Display Name</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false))
+						<td class="wrappingtd langok">$CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false)</td>
+					#else
+						<td class="wrappingtd langnotok">missing</td>
+					#end
+				#end
+			</tr>
+			<tr>
+				<td class="wrappingtd">Description</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false))
+						<td class="wrappingtd langok">$CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false)</td>
+					#else
+						<td class="wrappingtd langnotok">missing</td>
+					#end
+				#end
+			</tr>
+		</tbody>
+	</table>
+	<form id="rhmeditform" method="POST" action="#">
+	<input type="hidden" name="formname" value="rhmeditform">
+	<input type="hidden" name="rhtype" value="$rhmetainfo.getRhidentifier().getRhtype()">
+	<input type="hidden" name="rhid" value="$rhmetainfo.getRhidentifier().getRhid()">
+	
+	<table id="rhmedittable" class="display full-width hidden">
+		<thead>
+			<tr>
+				#set($colcount=1)
+				<th class="wrappingtd">Property</th>
+				#foreach($l in $languages)
+					#set($colcount=$colcount+1)
+					<th class="wrappingtd">$l</th>
+				#end
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="wrappingtd">Display Name</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false))
+						<td><input type="text" name="rhdisplayname_$l" value="$CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false)"></td>
+					#else
+						<td><input type="text" name="rhdisplayname_$l" placeholder="Add translation"></td>
+					#end
+				#end
+			</tr>
+			<tr>
+				<td class="wrappingtd">Description</td>
+				#foreach($l in $languages)
+					#if($CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false))
+						<td><input type="text" name="rhdescription_$l" value="$CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false)"></td>
+					#else
+						<td><input type="text" name="rhdescription_$l" placeholder="Add translation"></td>
+					#end
+				#end
+			</tr>
+		</tbody>
+	</table>
+	<br>
+	<button id="rhmeditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+	</form>
+</div>
+
+<div class="content-section">
+	<h2 class="header-edit"><a href="#" id="rhilangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2>Information Item Metainformation</h2>
+	#if(! $arimi || $arimi.isEmpty())
+		<p>No information items to display.</p>
+	#else
+		<table id="rhiviewtable" class="display full-width">
+			<thead>
+				<tr>
+					#set($colcount=1)
+					<th class="wrappingtd">Property</th>
+					#foreach($l in $languages)
+						#set($colcount=$colcount+1)
+						<th class="wrappingtd">$l</th>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+	
+			#foreach($i in $arimi)
+				#if($i && $i.getIiidentifier())
+					<tr>
+						<td class="wrappingtd">Display Name: $i.getIiidentifier().getIiid()</label></td>
+						#foreach($l in $languages)
+							#if($i.getDisplayname() && $CarAdminUtils.localize($i.getDisplayname(),$l,false))
+								<td class="wrappingtd langok">$CarAdminUtils.localize($i.getDisplayname(),$l,false)</td>
+							#else
+								<td class="wrappingtd langnotok">missing</td>
+							#end
+						#end
+					</tr>
+					<tr>
+						<td class="wrappingtd">Description: $i.getIiidentifier().getIiid()</td>
+						#foreach($l in $languages)
+							#if($i.getDescription() && $CarAdminUtils.localize($i.getDescription(),$l,false))
+								<td class="wrappingtd langok">$CarAdminUtils.localize($i.getDescription(),$l,false)</td>
+							#else
+								<td class="wrappingtd langnotok">missing</td>
+							#end
+						#end
+					</tr>
+					<tr class="spacer">
+						<td rowspan="2">&nbsp;</td>
+						#foreach($l in $languages)
+							<td rowspan="2">&nbsp;</td>
+						#end
+					</tr>
+					<tr class="spacer"></tr>
+				#end 
+			#end
+			</tbody>
+		</table>
+		
+		<form id="rhieditform" method="POST" action="#">
+		<input type="hidden" name="formname" value="rhieditform">
+		<input type="hidden" name="rhtype" value="$rhmetainfo.getRhidentifier().getRhtype()">
+		<input type="hidden" name="rhid" value="$rhmetainfo.getRhidentifier().getRhid()">
+		
+		<table id="rhiedittable" class="display full-width hidden">
+			<thead>
+				<tr>
+					#set($colcount=1)
+					<th class="wrappingtd">Property</th>
+					#foreach($l in $languages)
+						#set($colcount=$colcount+1)
+						<th class="wrappingtd">$l</th>
+					#end
+				</tr>
+			</thead>
+			<tbody>
+			#set($icount=0)
+			#foreach($i in $arimi)
+				#set($icount=$icount+1)
+				<input type="hidden" name="itype_$icount" value="$i.getIiidentifier().getIitype()">
+				<input type="hidden" name="iid_$icount" value="$i.getIiidentifier().getIiid()">
+				#if($i && $i.getIiidentifier())
+					<tr>
+						<td class="wrappingtd">Display Name: $i.getIiidentifier().getIiid()</label></td>
+						#foreach($l in $languages)
+							#if($i.getDisplayname() && $CarAdminUtils.localize($i.getDisplayname(),$l,false))
+								<td><input type="text" name="iidisplayname_${icount}_$l" value="$CarAdminUtils.localize($i.getDisplayname(),$l,false)"></td>
+							#else
+								<td><input type="text" name="iidisplayname_${icount}_$l" placeholder="Add translation"></td>
+							#end
+						#end
+					</tr>
+					<tr>
+						<td class="wrappingtd">Description: $i.getIiidentifier().getIiid()</td>
+						#foreach($l in $languages)
+							#if($i.getDescription() && $CarAdminUtils.localize($i.getDescription(),$l,false))
+								<td><input type="text" name="iidescription_${icount}_$l" value="$CarAdminUtils.localize($i.getDescription(),$l,false)"></td>
+							#else
+								<td><input type="text" name="iidescription_${icount}_$l" placeholder="Add translation"></td>
+							#end
+						#end
+					</tr>
+					<tr class="spacer">
+						<td rowspan="2">&nbsp;</td>
+						#foreach($l in $languages)
+							<td rowspan="2">&nbsp;</td>
+						#end
+					</tr>
+					<tr class="spacer"></tr>
+				#end 
+			#end
+			</tbody>
+		</table>
+		<input type="hidden" name="icount" value="$icount">
+		<br>
+		<button id="rhieditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+		</form>
+	#end		
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#rhmlangedit").click(function(e) {
+			rhlangtoggle(e);
+		});
+		$("#rhilangedit").click(function(e) {
+			rhilangtoggle(e);
+		});
+	});
+	
+	function rhlangtoggle(e) {
+		e.preventDefault();
+		$("#rhmviewtable").toggle();
+		$("#rhmedittable").toggle();
+		$("#rhmeditbutton").toggle();
+	}
+	function rhilangtoggle(e) {
+		e.preventDefault();
+		$("#rhiviewtable").toggle();
+		$("#rhiedittable").toggle();
+		$("#rhieditbutton").toggle();
+	}
+</script>

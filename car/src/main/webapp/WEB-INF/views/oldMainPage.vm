@@ -1,0 +1,28 @@
+<h2>My Sites</h2>
+<div style="height: 60px; padding: 5px; background: #dddddd;">
+<div>
+And since the quarrel will bear no color for the thing he is, fashion it thus:  that what he is, augmented,
+would run to these and these extremities.  And therefore think him as a serpent's egg -- which, hatched,
+would as his kind grow mischievous -- and kill him in the shell.</div>
+<div></div>
+<div style="float:right padding: 5px">--William Shakespeare</div>
+</div>
+<div style="padding: 10px;">
+<table width=90%>
+<tr>
+  <td onclick="alert('You clicked \'Name\'');">Name</td>
+  <td onclick="alert('You clicked \'URL\'');">URL</td>
+  <td onclick="alert('You clicked \"Last Updated\'');">Last Updated</td>
+  <td></td>
+<tr>
+#foreach ($policy in $currentUserPolicies) 
+<tr style="padding: 5px; border-top: 1px solid #eeeeee;">
+  <td>$rpicMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId()).getDisplayName()</td>
+  <td><a href="$rpicMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId()).getAccessUrl()">$rpicMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId()).getAccessUrl().replaceAll("https://","").replaceAll("/.*$","")</a></td>
+  
+  <td>$updateMap.get($policy.getUserInfoReleasePolicy().getRelyingPartyId())</td>
+  <td><a href="/carma?baseId=$policy.getPolicyMetaData().getPolicyId().getBaseId()">manage</a></td>
+</tr>
+#end
+</table>
+</div>

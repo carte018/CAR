@@ -1,0 +1,183 @@
+		<h1>Relying Parties ($airpmi.size() total)</h1>
+		
+		#if($successmsg)
+			<div class="message success">
+				$successmsg
+			</div>
+		#end
+		#if($failmsg)
+			<div class="message error">
+				$failmsg
+			</div>
+		#end
+		<div id="sidebar">
+			<div class="content-section">
+				<h2>New Relying Party</h2>
+				
+				<form id="newrpform" method="POST" action="#">
+					<input type="hidden" name="formname" value="newrpform">
+					<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
+					<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
+					<div class="form-set">
+						<label for="rhidentification">Resource Holder<span class="required">*</span></label>
+						<select name="rhidentification" style="max-width: 95%">
+							#foreach($vtype in $rhlist)
+								<option value="$vtype">$vtype</option>
+							#end
+						</select>
+					</div>
+					<div class="form-set">
+						<label for="rpid">Identifier<span class="required">*</span></label>
+						<label for="rptype" class="visually-hidden">Relying Party Type</label>
+						<select name="rptype">
+							#foreach ($vtype in $rpidtypes)
+								<option value="$vtype">$vtype</option>
+							#end
+						</select>
+						<input type="text" name="rpid" placeholder="Enter RP ID">
+					</div>
+					
+					<div class="form-set">
+						<label for="displaynamevalue_1">Display Name<span class="required">*</span></label>
+						<label for="displaynamelang_1" class="visually-hidden">Display Name Language</label>
+						<select name="displaynamelang_1">
+							#foreach($vlang in $languages)
+								<option value="$vlang">$vlang</option>
+							#end
+						</select>
+						<input type="text" name="displaynamevalue_1" placeholder="Display name">
+					</div>
+					
+					<div class="form-set">
+						<label for="descriptionvalue_1">Description</label>
+						<label for="descriptionlang_1" class="visually-hidden">Description Language</label>
+						<select name="descriptionlang_1">
+							#foreach($vdesclang in $languages)
+								<option value="$vdesclang">$vdesclang</lption>
+							#end
+						</select>
+						<input type="text" name="descriptionvalue_1" placeholder="Description">
+					</div>
+
+					<button id="createrpbutton" class="active">Create New Relying Party<i class="fa button-icon-right fa-arrow-right"></i></button>
+				</form>
+			</div>
+		</div>
+		<div id="left">
+			<div class="content-section">
+				
+				<table id="rp-list" class="display full-width dataTable no-footer" role="grid" aria-describedby="rp-list_info">
+					<thead>
+						<tr>
+							<th>Resource Holder</th>
+							<th>Relying Party</th>
+						</tr>
+					</thead>
+					<tbody id="list_body">
+						#foreach($rpmi in $airpmi) 
+							<tr>
+								<td class="wrappingtd">$displist.get($rpmi.getRhid())</td>
+								<td class="wrappingtd"><span><a href="/caradmin/rpregistration/$rpmi.getRhtype()/$CarAdminUtils.idEscape($rpmi.getRhid())/$rpmi.getRptype()/$CarAdminUtils.idEscape($rpmi.getRpid())/">$rpmi.getDisplayname() ($rpmi.getRpid())</a></span></td>
+							</tr>
+						#end
+					</tbody>
+				</table>
+				
+			</div>
+		</div>
+			
+		<script type="text/javascript">
+			
+			$(document).ready(function() {
+				$("#filterbutton").click(function(e) {
+					e.preventDefault();
+					filter_list(e);
+				});
+				$('#searchinput').bind("enterKey",function(e){
+				   e.preventDefault();
+				   $("#filterbutton").click();
+				});
+				$('#searchinput').click(function(e) {
+					e.preventDefault();
+					if ($('#searchinput').val().match("Search/filter string")) {
+						$('#searchinput').val('');
+					} 
+				});
+				$('#searchinput').keyup(function(e){
+					if (e.keyCode == 13 || $('#searchinput').val().length == 0 || $('#searchinput').val().length > 2) {
+						$(this).trigger("enterKey");
+					}
+			    });
+			    
+			    $('#displaynameaddbutton').click(function(e) {
+			    	e.preventDefault();
+			    	addDisplayName(e);
+			    });
+			    $('#descriptionaddbutton').click(function(e) {
+			    	e.preventDefault();
+			    	addDescription(e);
+			    });
+				//$("#rp-list").tablesorter();	
+				$(".dataTable").DataTable();		    
+			});
+			
+			var injectedList = $JSON;
+			var injectedMap = $MAP;
+			
+			function idEscape(s) {
+				return s.replace(/\//g,"!").replace(/ /,"%20").replace(/\|/,"%7C");
+			}
+			
+			function filter_list(e) {
+				var $search=$("#searchinput").val();
+				var $doall = 0;
+				if ($search.length < 3) {
+					$doall = 1;
+				}
+				s2 = ".*"+$search+".*";
+				s1 = new RegExp(s2,"i");
+				$("#list_body").html('');
+				$astring = "";
+				for (var i = 0; i < injectedList.length; i++) {
+					if ($doall == 1 || injectedList[i].rpid.match(s1) || injectedList[i].displayname.match(s1)) {
+						$astring = $astring + "<tr>"+
+							"<td class=\"wrappingtd\">"+injectedMap[injectedList[i].rhid]+"</td>"+
+							"<td class=\"wrappingtd\"><span><a href=\"/caradmin/rpregistration/"+injectedList[i].rhtype+"/"+idEscape(injectedList[i].rhid)+"/"+injectedList[i].rptype+"/"+idEscape(injectedList[i].rpid)+"/\">"+injectedList[i].displayname+" ("+injectedList[i].rpid+")</a></span></td>"+
+							"</tr>";
+					}
+				}
+				$("#list_body").append($astring);
+			}
+			
+			function filter_list_old(e) {
+				var $search=$("#searchinput").val();
+				$("#div_list").html('');
+				for (var i = 0; i < injectedList.length; i++) {
+					s2=".*"+$search+".*";
+					s1=new RegExp(s2,"i")
+					if (injectedList[i].rpid.match(s1) || injectedList[i].displayname.match(s1)) {
+						$("#div_list").append(
+							"<a href=\"/caradmin/rpregistration/"+injectedList[i].rhtype+"/"+idEscape(injectedList[i].rhid)+"/"+injectedList[i].rptype+"/"+idEscape(injectedList[i].rpid)+"/\">"+injectedList[i].displayname+" ("+injectedList[i].rpid+")</a><br>");
+					}
+				}
+			}
+			
+			function addDisplayName(e) {
+				e.preventDefault();
+				var $ctr = $("#displaynamecount").val();
+				$ctr = parseInt($ctr) + 1;
+				$("#displaynamecount").val($ctr);
+				$row = $("<tr><td><input type=\"text\" name=\"displaynamelang_"+$ctr+"\" id=\"displaynamelang_"+$ctr+"\" value=\"Enter Language\"></td><td><input type=\"text\" name=\"displaynamevalue_"+$ctr+"\" id=\"displaynamevalue_"+$ctr+"\" value=\"Enter DisplayName\" size=\"40\"></td></tr>");
+				$("#displaynametable").append($row);
+			}
+			
+			function addDescription(e) {
+				e.preventDefault();
+				var $ctr = $("#descriptioncount").val();
+				$ctr = parseInt($ctr) + 1;
+				$("#descriptioncount").val($ctr);
+				$row = $("<tr><td><input type=\"text\" name=\"descriptionlang_"+$ctr+"\" id=\"descriptionlang_"+$ctr+"\" value=\"Enter Language\"></td><td><input type=\"text\" name=\"descriptionvalue_"+$ctr+"\" id=\"descriptionvalue_"+$ctr+"\" value=\"Enter Description\" size=\"40\"></td></tr>");
+				$("#descriptiontable").append($row);
+			}
+			
+		</script>							

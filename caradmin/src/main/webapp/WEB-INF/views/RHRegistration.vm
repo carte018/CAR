@@ -1,0 +1,572 @@
+
+	#set($formnumber=0)
+	
+	
+	<h1>Resource Holders</h1>
+	<div id="sidebar">
+		<div class="content-section">
+			<h2>New Resource Holder</h2>
+			<form id="newrhform" method="POST" action="#">
+				<h3>Identifier</h3>
+				<table>
+					<tr>
+						<td>
+							<select name="rhtype">
+								#foreach ($vtype in $rhidtypes)
+									<option value="$vtype">$vtype</option>
+								#end
+							</select>
+						</td>
+						<td>
+							<input type="text" name="rhid" placeholder="RH Identifier">
+						</td>
+					</tr>
+				</table>
+				
+				<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
+				<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
+				<input type="hidden" name="formname" value="newrhform">
+				<h3>Display Name</h3>
+				<table id="displaynametable" name="displaynametable">
+					<tr>
+						<td>
+							<select name="displaynamelanguage1">
+								#foreach($vlang in $languages)
+									<option value=$vlang>$vlang</option>
+								#end
+							</select>
+						</td>
+						<td>
+							<input type="text" name="displaynamevalue1" placeholder="Display name">
+						</td>
+					</tr>
+				</table>
+
+				<h3>Description</h3>				
+				<table id="descriptiontable" name="descriptiontable">
+					<tr>
+						<td>
+							<select name="descriptionlanguage1">
+								#foreach($vdesclang in $languages)
+									<option value=$vdesclang>$vdesclang</option>
+								#end
+							</select>
+						</td>
+						<td>
+							<input type="text" name="descriptionvalue1" placeholder="Description">
+						</td>
+					</tr>
+				</table>
+				<br><br>
+				
+				<div class="form-set">
+					<button class="active" type="submit">Create New RH<i class="button-icon-right fa fa-arrow-right"></i></button>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div id="left">
+			#foreach ($x in $injectedrhlist)
+				<div class="content-section">
+  					#set($formnumber=$formnumber+1)
+  					<!--<div id="div_rhinfo_$formnumber" class="rhinfo">-->
+  					<div id="div_rhinfo_$formnumber">
+					<div id="div_displayname_$formnumber" class="heading1 editable">
+						$x.getDisplayname()
+					</div>
+					<!--<div id="div_displayname_${formnumber}_edit" class="heading1 hidden leftgravity"><input type="text" id="div_displayname_${formnumber}_value" name="displayname" value="$x.getDisplayname()"></div>-->
+					<!--<div id="div_displayname_${formnumber}_editbutton" class="hidden"><button class="editbutton">Update</button></div>-->
+					<div id="div_displayname_${formnumber}_edit" class="heading1 hidden leftgravity">$x.getDisplayname()</div>
+					
+					<div id="div_description_$formnumber" class="heading1 editable">
+						$x.getDescription()
+					</div>
+					<!--<div id="div_description_${formnumber}_edit" class="heading1 hidden leftgravity"><input type="text" id="div_description_${formnumber}_value" name="description" value="$x.getDescription()" size="$x.getDescription().length()"></div>-->
+					<!--<div id="div_description_${formnumber}_editbutton" class="hidden"><button class="editbutton">Update</button></div>-->
+					<div id="div_description_${formnumber}_edit" class="heading1 hidden leftgravity">$x.getDescription()</div>
+				</div>
+		<div id="div_rhinfo_${formnumber}_edit" class="hidden clear outline">
+			<h4>$x.getRhtype()&nbsp;&nbsp;$x.getRhidentifier()</h4>
+			<form id="rhifno_edit_${formnumber}" method="POST" action="#">
+				<input type="hidden" name="formname" value="rhinfo_edit_${formnumber}">
+				#set($dncount=$x.getIdisplayname().getLocales().size())
+				#set($dscount=$x.getIdescription().getLocales().size())
+				<input type="hidden" id="displaynamecount_${formnumber}" name="displaynamecount" value="$dncount">
+				<input type="hidden" id="descriptioncount_${formnumber}" name="descriptioncount" value="$dscount">
+				<input type="hidden" name="rhtype" value="$x.getRhtype()">
+				<input type="hidden" name="rhidentifier" value="$x.getRhidentifier()">
+				<input type="hidden" name="formnumber" value="${formnumber}">
+				<h3>Display Name</h3>
+				<table id="displaynametable_${formnumber}">
+					<tr>
+						<th>Language</th>
+						<th>DisplayName</th>
+						<th><button id="displayaddbutton_${formnumber}" class="displayaddbutton active">Add a Language<i class="button-icon-right fa fa-plus"></i></button></th>
+					</tr>
+					#set($ictr=0)
+					#foreach($locale in $x.getIdisplayname().getLocales())
+						#set($ictr=$ictr + 1)
+						#set($lname="displaynamelanguage_"+${ictr})
+						#set($lid="displaynamelanguage_"+${formnumber}+"_"+${ictr})
+						#set($vname="displaynamevalue_"+${ictr})
+						#set($vid="displaynamevalue_"+${formnumber}+"_"+${ictr})
+						<tr>
+							<td><input type="text" id="$lid" name="$lname" value="$locale.getLocale()"></td>
+							<td><input type="text" id="$vid" name="$vname" value="$locale.getValue()"></td>
+						</tr>
+					#end
+				</table>
+				<h3>Description</h3>
+				<table id="descriptiontable_${formnumber}">
+					<tr>
+						<th>Language</th>
+						<th>Description</th>
+						<th><button id="descriptionaddbutton_${formnumber}" class="descriptionaddbutton active">Add a Language<i class="button-icon-right fa fa-plus"></i></button></th>
+					</tr>
+					#set($ictr=0)
+					#foreach($locale in $x.getIdescription().getLocales())
+						#set($ictr=$ictr + 1)
+						#set($lname="descriptionlanguage_"+${ictr})
+						#set($lid="descriptionlanguage_"+${formnumber}+"_"+${ictr})
+						#set($vname="descriptionvalue_"+${ictr})
+						#set($vid="descriptionvalue_"+${formnumber}+"_"+${ictr})
+						<tr>
+							<td><input type="text" id="$lid" name="$lname" value="$locale.getLocale()"></td>
+							<td><input type="text" id="$vid" name="$vname" value="$locale.getValue()"></td>
+						</tr>
+					#end
+				</table>
+				<input type="submit" value="Update Metainformation">
+			</form>
+		</div>
+		<!--<div id="rhtype_${formnumber}" class="rhdetails">-->
+		<div id="rhtype_${formnumber}">
+			<label for="span_rhtype_$formnumber">IDType</label>
+			<span id="span_rhtype_$formnumber" name="span_rhtype_$formnumber" class="valuesp">$x.getRhtype()</span>
+		</div>
+		<!--<div id="rhvalue_${formnumber}" class="rhdetails">-->
+		<div id="rhvalue_${formnumber}">
+			<label for="span_rhid_$formnumber">Identifier</label>
+			<span id="span_rhid_$formnumber" class="valuesp">$x.getRhidentifier()</span>
+		</div>
+		<!--<div class="heading3 doublespace">-->
+		<h3>
+			InfoItems
+		</h3>
+		<form id="iiform_$formnumber" method="POST" action="#">
+			<input type="hidden" name="formname" value="form$formnumber">
+			<input type="hidden" name="formnumber" value="$formnumber">
+			<input type="hidden" id="rhtype_$formnumber" name="rhtype" value="$x.getRhtype()">
+			<input type="hidden" id="rhid_$formnumber" name="rhid" value="$x.getRhidentifier()">		
+			<div class="attrs">
+				<div id="div_attrlist_${formnumber}" class="attrlist">
+					#set($iinumber=0)
+					#foreach($i in $x.getIilistmap().getInfoitemlist())
+						#set($iinumber=$iinumber+1)
+						<span id="span_ii_${formnumber}_$iinumber" class="attr editable leftgravity clear">$i.getIitype()&nbsp;:&nbsp;$i.getIiid()</span>
+						<!--<span id="span_del_ii_${formnumber}_$iinumber" class="hidden leftgravity"><button id="button_del_ii_${formnumber}_$iinumber" class="attrdelbutton">Delete</button></span>-->
+						<span id="span_del_ii_${formnumber}_$iinumber" class="hidden"><button id="button_del_ii_${formnumber}_$iinumber" class="active attrdelbutton">Delete<i class=button-icon-right fa fa-trash></i></button></span>
+						#set($iitype=$i.getIitype())
+						#set($iiid=$i.getIiid())
+						#set($iistring=$iitype+":"+$iiid)
+						#set($len=$iistring.length())
+						#set($idlen=$iiid.length())
+						#set($itlen=$iitype.length())
+						<!--<span id="span_ii_${formnumber}_${iinumber}_edit" class="attr hidden leftgravity"><input type="text" id="span_ii_${formnumber}_${iinumber}_$value" name="ii_${iinumber}" value="$iistring" size="$len"></span>-->
+						<div id="span_ii_${formnumber}_${iinumber}_edit" class="attr hidden leftgravity outline doublespace clear eightypercent">
+							<div>
+								<label for="ii_${formnumber}_${iinumber}_type">Type:</label><input  type="text" id="ii_${formnumber}_${iinumber}_type" name="iitype${iinumber}" value="$iitype" size="$itlen">
+								<label for="ii_${formnumber}_${iinumber}_id">Id:</label><input  type="text" id="ii_${formnumber}_${iinumber}_id" name="iiid${iinumber}" value="$iiid" size="$idlen">
+							</div>
+
+							<!--<div class="heading3 clear">Displayname</div>-->
+							<label for="ii_${formnumber}_${iinumber}_dntable">Displayname<button id="ii_${formnumber}_${iinumber}_dnaddlangbutton" class="dnaddlangbutton active">Add<i class="button-icon-right fa fa-plus"></i></button></label>
+							<table class="clear outline" id="ii_${formnumber}_${iinumber}_dntable" name="ii_${formnumber}_${iinumber}_dntable">
+								<tr>
+									<th>Language</th>
+									<th>Displayname</th>
+									<!--<th><button id="ii_${formnumber}_${iinumber}_dnaddlangbutton" class="active dnaddlangbutton">Add<i class="button-icon-right fa fa-plus"></i></button></th>-->
+									<!--<th><button id="ii_${formnumber}_${iinumber}_dnaddlangbutton" class="dnaddlangbutton active">Add<i class="button-icon-right fa fa-plus"></i></button><th>-->
+								</tr>
+								#set($ictr=0)
+								#foreach($is in $ihash.get($i).getDisplayname().getLocales())
+									#set($ictr=$ictr+1)
+									<tr>
+										<td>
+											<input type="text" id="ii_${formnumber}_${iinumber}_dnlang_${ictr}" name="ii_${formnumber}_${iinumber}_dnlang_${ictr}" value="$is.getLocale()">
+										</td>
+										<td>
+											<input type="text" id="ii_${formnumber}_${iinumber}_dnvalue_${ictr}" name="ii_${formnumber}_${iinumber}_dnvalue_${ictr}" value="$is.getValue()">
+										</td>
+									</tr>
+								#end
+								<input type="hidden" id="ii_${formnumber}_${iinumber}_dnlangcount" name="ii_${formnumber}_${iinumber}_dnlangcount" value="${ictr}">
+							</table>
+							<div class="heading3 clear">Description</div>
+							<table class="clear outline" id="ii_${formnumber}_${iinumber}_desctable">
+								<tr>
+									<th>Language</th>
+									<th>Description</th>
+									<!--<th><button id="ii_${formnumber}_${iinumber}_descaddlangbutton" class="descaddlangbutton">Add</button><th>-->
+									<th><button id="ii_${formnumber}_${iinumber}_descaddlangbutton" class="active descaddlangbutton">Add<i class="button-icon-right fa fa-plus"></i></button></th>
+								</tr>
+								#set($ictr=0)
+								#foreach($is in $ihash.get($i).getDescription().getLocales())
+									#set($ictr=$ictr+1)
+									<tr>
+										<td>
+											<input type="text" id="ii_${formnumber}_${iinumber}_desclang_${ictr}" name="ii_${formnumber}_${iinumber}_desclang_${ictr}" value="$is.getLocale()">
+										</td>
+										<td>
+											<input type="text" id="ii_${formnumber}_${iinumber}_descvalue_${ictr}" name="ii_$formnumber}_${iinumber}_descvalue_${ictr}" value="$is.getValue()">
+										</td>
+									</tr>
+								#end
+								<input type="hidden" id="ii_${formnumber}_${iinumber}_desclangcount" name="ii_${formnumber}_${iinumber}_desclangcount" value="${ictr}">
+							</table>
+							<div>
+								<label for="ii_${formnumber}_${iinumber}_prestype">Presentation Type:</label>
+								<select id="ii_${formnumber}_${iinumber}_prestype" name="ii_${formnumber}_${iinumber}_prestype">
+									#if($ihash.get($i).getPresentationtype().equals("ENCODED"))
+										<option value="ENCODED" selected>ENCODED</option>
+									#else
+										<option value="ENCODED">ENCODED</option>
+									#end
+									#if($ihash.get($i).getPresentationtype().equals("OPAQUE"))
+										<option value="OPAQUE" selected>OPAQUE</option>
+									#else
+										<option value="OPAQUE">OPAQUE</option>
+									#end
+									#if($ihash.get($i).getPresentationtype().equals("TRANSPARENT"))
+										<option value="TRANSPARENT" selected>TRANSPARENT</option>
+									#else
+										<option value="TRANSPARENT">TRANSPARENT</option>
+									#end
+								</select>
+							</div>
+							<div>
+								<label for="ii_${formnumber}_${iinumber}_policytype">Policy Type:</label>
+								<select id="ii_${formnumber}_${iinumber}_policytype" name="ii_${formnumber}_${iinumber}_policytype">
+									#if($ihash.get($i).getPolicytype().equals("PAO"))
+										<option value="PAO" selected>PAO</option>
+									#else
+										<option value="PAO">PAO</option>
+									#end
+									#if($ihash.get($i).getPolicytype().equals("PEV"))
+										<option value="PEV" selected>PEV</option>
+									#else
+										<option value="PEV">PEV</option>
+									#end
+								</select>
+							</div>
+							<div>
+								<label for="ii_${formnumber}_${iinumber}_asnd">Always Send / Never Display?</label>
+								#if($ihash.get($i).getAsnd())
+									<input type="checkbox" id="ii_${formnumber}_${iinumber}_asnd" name="ii_${formnumber}_${iinumber}_asnd" value="true" checked>
+								#else
+									<input type="checkbox" id="ii_${formnumber}_${iinumber}_asnd" name="ii_${formnumber}_${iinumber}_asnd" value="true">
+								#end
+							</div>
+							<div>
+								<label for="ii_${formnumber}_${iinumber}_multivalued">Multivalued?</label>
+								#if($ihash.get($i).getMultivalued())
+									<input type="checkbox" id="ii_${formnumber}_${iinumber}_multivalued" name="ii_${formnumber}_${iinumber}_multivalued" value="true" checked>
+								#else
+									<input type="checkbox" id="ii_${formnumber}_${iinumber}_multivalued" name="ii_${formnumber}_${iinumber}_multivalued" value="true">
+								#end
+							</div>
+							<div>
+								<label for="ii_${formnumber}_${iinumber}_sensitivity">Sensitivie?</label>
+								#if($ihash.get($i).getSensitivity())
+									<input type="checkbox" id="ii_${formnumber}_${iinumber}_sensitivity" name="ii_${formnumber}_$iinumber}_sensitivity" value="true" checked>
+								#else
+									<input type="checkbox" id="ii_${formnumber}_${iinumber}_sensitivity" name="ii_${formnumber}_$iinumber}_sensitivity" value="true">
+								#end
+							</div>
+							<div class="rightgravity">
+								<button id="ii_${formnumber}_${iinumber}_submitdetails" class="active">Update<i class="button-icon-right fa fa-sync-alt"></i></button>
+							</div>
+						</div>			
+						<!--<span id="span_ii_${formnumber}_${iinumber}_editbutton" class="hidden leftgravity"><button id="button_ii_${formnumber}_${iinumber}_editbutton" class="editbutton">Update</button></span>-->
+						<span id="span_ii_${formnumber}_${iinumber}_editbutton" class="hidden"><button id="button_ii_${formnumber}_${iinumber}_editbutton" class="active editbutton">Update<i class="button-icon-right fa fa-sync-alt"></i></button></span>
+						<br>
+						<input type="hidden" id="ii_modified_${formnumber}_${iinumber}" name="ii_modified_${formnumber}_${iinumber}" value="false">
+					#end
+					
+				</div>
+				<!--<div class="attrbutton"><button class="addbutton" id="addbutton_${formnumber}">Add Item</button></div>-->
+				<div class="attrbutton">
+					<button class="active addbutton" id="addbutton_${formnumber}">
+						Add Item<i class="button-icon-right fa fa-plus"></i>
+			</div>
+			<input type="hidden" id="iicount_$formnumber" name="iicount" value="${iinumber}">
+		</form>
+	</div>
+	</div>
+	#end
+	</div>
+	
+	<hr>		
+
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$(".editable").click(function(e) {
+		handleClick(e);
+	});
+	$(".addbutton").click(function(e) {
+		addButtonPress(e);
+	});
+	$(".newbutton").click(function(e) {
+		newButtonPress(e);
+	});
+	$("#displayaddbutton").click(function(e) {
+		addDisplayNameLanguage(e);
+	});
+	$("#descriptionaddbutton").click(function(e) {
+		addDescriptionLanguage(e);
+	});
+	$(".displayaddbutton").click(function(e) {
+		addEditDisplayNameLanguage(e);
+	});
+	$(".descriptionaddbutton").click(function(e) {
+		addEditDescriptionLanguage(e);
+	});
+	$(".attrdelbutton").click(function(e) {
+		delAttr(e);
+	});
+	$(".editbutton").click(function(e) {
+		editAttr(e);
+	});
+	$(".dnaddlangbutton").click(function(e) {
+		addDNLang(e);
+	});
+	$(".descaddlangbutton").click(function(e) {
+		addDescLang(e);
+	});
+});
+
+function resetAddLangButtons() {
+	$(".dnaddlangbutton").off("click");
+	$(".dnaddlangbutton").click(function(e) {
+		addDNLang(e);
+	});
+	$(".descaddlangbutton").off("click");
+	$(".descaddlangbutton").click(function(e) {
+		addDescLang(e);
+	});
+}
+
+function handleClick(e) {
+	tid = e.target.id;
+	pid = e.target.parentElement.id;
+	if (pid.match(/span_ii_.*/) || tid.match(/span_ii_.*/)) {
+		attrClick(e);
+	} else {
+		num = tid.replace("div_displayname_","").replace("div_description_","");
+		rtype = "rhtype_" + num;
+		rid = "rhvalue_" + num;
+		stripped = $(e.target).html().replace(/&nbsp;/g,"").replace(/^\s*/,"").replace(/\s*$/,"");
+		type = stripped.replace(/:.*$/,"");
+		value = stripped.replace(/^.*:/,"");
+		$("#"+pid).hide();
+		$("#"+rtype).hide();
+		$("#"+rid).hide();
+		$("#"+pid+"_edit").show();
+	}
+}
+
+function attrClick(e) {
+	tid=e.target.id;
+	tnum = tid.replace("span_ii_","").replace(/_.*$/,"");
+	inum = tid.replace("span_ii_","").replace(/.*_/,"");
+	bid = "button_del_ii_"+tnum+"_"+inum;
+	sid = "span_del_ii_"+tnum+"_"+inum;
+	bid2 = "button_ii_"+tnum+"_"+inum+"_editbutton";
+	sid2 = "span_ii_"+tnum+"_"+inum+"_editbutton";
+	$("#"+sid).toggle();
+	$("#"+sid2).toggle();
+}
+
+function delAttr(e) {
+	e.preventDefault();
+	tid=e.target.id;
+	tnum = tid.replace("button_del_ii_","").replace(/_.*$/,"");
+	inum = tid.replace("button_del_ii_","").replace(/.*_/,"");
+	//$("#iitype_"+tnum+"_"+inum).val("");
+	//$("#iiid_"+tnum+"_"+inum).val("");
+	//$("#form"+tnum).submit();
+	$("#ii_"+tnum+"_"+inum+"_type").val("");
+	$("#ii_"+tnum+"_"+inum+"_type").val("");
+	$("#iiform_"+tnum).submit();
+}
+
+function editAttr(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	tnum = tid.replace("button_ii_","").replace(/_.*$/,"");
+	inum = tid.replace("button_ii_","").replace(/_editbutton$/,"").replace(/.*_/,"");
+	$("#span_ii_"+tnum+"_"+inum+"_edit").show();
+	$("#span_ii_"+tnum+"_"+inum).hide();
+	$("#span_del_ii_"+tnum+"_"+inum).hide();
+	$("#span_ii_"+tnum+"_"+inum+"_editbutton").hide();
+	$("#ii_modified_"+tnum+"_"+inum).val("true");
+}
+
+function addButtonPress(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	fnum = tid.replace("addbutton_","");
+	var $ctr = $("#iicount_"+fnum).val();
+	$ctr = parseInt($ctr) + 1;
+	$("#iicount_"+fnum).val($ctr);
+	var $row = $( "<div id=\"span_ii_"+fnum+"_"+$ctr+"_edit\" class=\"attr leftgravity outline doublespace clear eightypercent\">");
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_type\">Type:</label><input type=\"text\" id=\"ii_"+fnum+"_"+$ctr+"_type\" name=\"iitype"+$ctr+"\" placeholder=\"EnterIIType\" size=\"19\">");
+	$row.append($add);
+	$add=$( "<label for=\"ii_"+fnum+"_"+$ctr+"_id\">Id:</label><input type=\"text\" id=\"ii_"+fnum+"_"+$ctr+"_id\" name=\"iiid"+$ctr+"\" placeholder=\"Enter ID\" size=\"19\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div class=\"heading3 clear\">Displayname</div>");
+	$row.append($add);
+	$add=$( "<table class=\"clear outline\" id=\"ii_"+fnum+"_"+$ctr+"_dntable\">");
+	$row.append($add);
+	$add=$( "<tr><th>Language</th><th>Displayname</th><th><button id=\"ii_"+fnum+"_"+$ctr+"_dnaddlangbutton\" class=\"active dnaddlangbutton\">Add<i class=\"button-icon-right fa fa-plus\"></i></button></th></tr>");
+	$row.append($add);
+	$add=$( "<input type=\"hidden\" id=\"ii_"+fnum+"_"+$ctr+"_dnlangcount\" name=\"ii_"+fnum+"_"+$ctr+"_dnlangcount\" value=\"0\">");
+	$row.append($add);
+	$add=$( "</table>");
+	$row.append($add);
+	$add=$( "<div class=\"heading3 clear\">Description</div>");
+	$row.append($add);
+	$add=$( "<table class=\"clear outline\" id=\"ii_"+fnum+"_"+$ctr+"_desctable\">");
+	$row.append($add);
+	$add=$( "<tr><th>Language</th><th>Description</th><th><button id=\"ii_"+fnum+"_"+$ctr+"_descaddlangbutton\" class=\"active descaddlangbutton\">Add<i class=\"button-icon-right fa fa-plus\"></i></button></th></tr>");
+	$row.append($add);
+	$add=$( "<input type=\"hidden\" id=\"ii_"+fnum+"_"+$ctr+"_desclangcount\" name=\"ii_"+fnum+"_"+$ctr+"_desclangcount\" value=\"0\">");
+	$row.append($add);
+	$add=$( "</table>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_prestype\">Presentation Type:</label>");
+	$row.append($add);
+	$add=$( "<select id=\"ii_"+fnum+"_"+$ctr+"_prestype\" name=\"ii_+fnum"+"_"+$ctr+"_prestype\"><option value=\"ENCODED\">ENCODED</option><option value=\"OPAQUE\">OPAQUE</option><option value=\"TRANSPARENT\">TRANSPARENT</option></select>");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_policytype\">Policy Type:</label>");
+	$row.append($add);
+	$add=$( "<select id=\"ii_"+fnum+"_"+$ctr+"_policytype\" name=\"ii_"+fnum+"_"+$ctr+"_policytype\"><option value=\"PAO\">PAO</option><option value=\"PEV\">PEV</option></select>");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_asnd\">Always Send / Never Display?</label>");
+	$row.append($add);
+	$add=$( "<input type=\"checkbox\" id=\"ii_"+fnum+"_"+$ctr+"_asnd\" name=\"ii_"+fnum+"_"+$ctr+"_asnd\" value=\"true\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_multivalued\">Multivalued?</label>");
+	$row.append($add);
+	$add=$( "<input type=\"checkbox\" id=\"ii_"+fnum+"_"+$ctr+"_multivalued\" name=\"ii_"+fnum+"_"+$ctr+"_multivalued\" value=\"true\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$add=$( "<div><label for=\"ii_"+fnum+"_"+$ctr+"_sensitivity\">Sensitive?</label>");
+	$row.append($add);
+	$add=$( "<input type=\"checkbox\" id=\"ii_"+fnum+"_"+$ctr+"_sensitivity\" name=\"ii_"+fnum+"_"+$ctr+"_sensitivity\" value=\"true\">");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<div class=\"rightgravity\"><button id=\"ii_"+fnum+"_"+$ctr+"_submitdetails\" class=\"active\">Update<i class=\"button-icon-right fa fa-sync-alt\"></i></button></div>");
+	$row.append($add);
+	$add=$( "</div>");
+	$row.append($add);
+	$add=$( "<input type=\"hidden\" id=\"ii_modified_"+fnum+"_"+$ctr+"\" name=\"ii_modified_"+fnum+"_"+$ctr+"\" value=\"true\">");
+	$row.append($add);
+	
+	$("#div_attrlist_"+fnum).append($row);
+	resetAddLangButtons();
+}
+
+function newButtonPress(e) {
+	e.preventDefault();
+	tid = e.target.id;
+	$("#wrapperdiv").hide();
+	$("#div_newrhform").show();
+}
+
+function addDisplayNameLanguage(e) {
+	e.preventDefault();
+	var $ctr = $("#displaynamecount").val();
+	$ctr = parseInt($ctr) + 1;
+	$("#displaynamecount").val($ctr);
+	var $lname = "displaynamelanguage" + $ctr;
+	var $vname = "displaynamevalue" + $ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\"" + $lname + "\" placeholder=\"Language\"></td><td><input type=\"text\" name=\"" + $vname + "\" placeholder=\"Display name\"></td></tr>" );
+	$("#displaynametable").append($row);
+}
+
+function addEditDisplayNameLanguage(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace("displayaddbutton_","");
+	var $ctr = $("#displaynamecount_"+$formn).val();
+	$ctr = parseInt($ctr) + 1;
+	$("#displaynamecount_"+$formn).val($ctr);
+	var $lname = "displaynamelanguage_"+$ctr;
+	var $vname = "displaynamevalue_"+$ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Display nane\"></td></tr>");
+	$("#displaynametable_"+$formn).append($row);
+}
+
+function addDescriptionLanguage(e) {
+	e.preventDefault();
+	var $ctr = $("#descriptioncount").val();
+	$ctr = parseInt($ctr) + 1;
+	$("#descriptioncount").val($ctr);
+	var $lname = "descriptionlanguage" + $ctr;
+	var $vname = "descriptionvalue" + $ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\"" + $lname + "\" value=\"Language\"></td><td><input type=\"text\" name=\"" + $vname + "\" value=\"Enter description\"></td></tr>" );
+	$("#descriptiontable").append($row);
+}
+
+function addEditDescriptionLanguage(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace("descriptionaddbutton_","");
+	var $ctr = $("#descriptioncount_"+$formn).val();
+	$ctr = parseInt($ctr) + 1;
+	$("#descriptioncount_"+$formn).val($ctr);
+	var $lname = "descriptionlanguage_"+$ctr;
+	var $vname = "descriptionvalue_"+$ctr;
+	var $row = $( "<tr><td><input type=\"text\" name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Enter display nane\"></td></tr>");
+	$("#descriptiontable_"+$formn).append($row);
+}
+
+function addDNLang(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace(/ii_/,"").replace(/_.*/,"");
+	var $ctr = e.target.id.replace(/ii_[^_]*_/,"").replace(/_.*/,"");
+	var $ict = $("#ii_"+$formn+"_"+$ctr+"_dnlangcount").val();
+	$ict = parseInt($ict) + 1;
+	$("#ii_"+$formn+"_"+$ctr+"_dnlangcount").val($ict);
+	var $lname = "ii_"+$formn+"_"+$ctr+"_dnlang_"+$ict;
+	var $vname = "ii_"+$formn+"_"+$ctr+"_dnvalue_"+$ict;
+	var $row = $( "<tr><td><input type=\"text\" name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Display name\"></td></tr>");
+	$("#ii_"+$formn+"_"+$ctr+"_dntable").append($row);
+}
+
+function addDescLang(e) {
+	e.preventDefault();
+	var $formn = e.target.id.replace(/ii_/,"").replace(/_.*/,"");
+	var $ctr = e.target.id.replace(/ii_[^_]*_/,"").replace(/_.*/,"");
+	var $ict = $("#ii_"+$formn+"_"+$ctr+"_desclangcount").val();
+	$ict = parseInt($ict) + 1;
+	$("#ii_"+$formn+"_"+$ctr+"_desclangcount").val($ict);
+	var $lname = "ii_"+$formn+"_"+$ctr+"_desclang_"+$ict;
+	var $vname = "ii_"+$formn+"_"+$ctr+"_descvalue_"+$ict;
+	var $row = $( "<tr><td><input type=\"text\"name=\""+$lname+"\" value=\"Language\"></td><td><input type=\"text\" name=\""+$vname+"\" value=\"Description\"></td></tr>");
+	$("#ii_"+$formn+"_"+$ctr+"_desctable").append($row);
+}
+
+</script>
+

@@ -1,0 +1,317 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="resources/css/intercept-main.css">
+    <link rel="stylesheet" href="resources/css/duke.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/js/jquery.leanModal.min.js"></script>
+    <title>$page-title</title>
+  </head>
+  <body>
+    <div id="header">
+      <div id="logo"><img src="resources/img/dukelogo-horiz-white@3x.png"></div>
+      <div id="tierlogo"><img src="resources/img/tier.png"></div>
+    </div>
+    <div id="main">
+         <div id="title">
+         	#if ($hasChoices)
+         		<h1>$title-choice</h1>
+         	#else
+         		<h1>$title-nochoice<h1>
+         	#end
+        	<hr>
+        	<h2>$intro</h2>
+      	</div>
+      	<div id="columns">
+  			<div id="rp-info">
+    			<div class="content-box">
+      				<div id="rp-img">
+        				<img src=$rpiconurl>
+      				</div>
+      				<h3>$rpdisplayname</h3>
+      				<div id="rp-description">
+        				#if (! $rpdescription || $rpdescription == "")
+           					 $rp_no_summary
+        				#else
+           					$rpdescription
+        				#end
+      				</div>
+      				<div id="rp-privacy-content"></div>
+      				<div id="rp-privacy">
+        				<a href="#rp-privacy-content" id="rp-privacy-link">privacy policy</a>
+      				</div>
+    			</div>
+    			<div id="show-self-service" class="toggle-link">
+      				<span class="subset">Update your preferences:</span> <a href="#">Consent Manager</a>
+    			</div>
+  			</div>
+  			<div id="release-info">
+  				#if($hasUserChoices)
+        			<div class="content-box" id="release-summary">
+    
+      					#if($hasMustDecisions)
+        					<h3>$header_must</h3>
+          					<table class="attr-summary">
+          						#foreach( $mustDecision in $injectedDecisions )
+          							#if ($mustDecision.getRecommendedDirective()=="permit")
+          								#set($tdclass="permit")
+          								#set($tdimg="resources/img/check-green.png")
+          								#set($tdup="PERMIT")
+      								#else
+      									#set($tdclass="deny")
+      									#set($tdimg="resources/img/x-red.png")
+      									#set($tdup="DENY")
+      								#end
+          							<tr>
+          								<td class="$tdclass" nowrap><img src="$tdimg">$tdup</td>
+          								<td><div class="label">$mustDecision.getAttrDisplayName() ($mustDecision.getAttrValue())</div> 
+                    						<span class="subset">$areason.get($mustDecision.getAttrName())</span>
+                						</td>
+          							</tr>
+          						#end
+          					</table>
+          					
+       
+           					<div class="button-options" id="choice-options">
+             					<button class="active" id="edit-choices">$choice_edit <img src="resources/img/edit.png"></button>
+              					<button class="active" id="continue-nochoice">$choice_dont_edit <img src="resources/img/continue.png"></button>
+            				</div>
+       					#end
+       				</div>
+       				<!--there-->
+       				<div id="release-choices" style="display:none;">
+        	   		<div class="content-box">
+        	
+       		      		<h3>$release_what</h3>
+            
+          		   		<table class="attr-summary">
+               				#foreach ($mustDecision in $injectedDecisions)
+               					<tr>
+                 					<td class="choice" nowrap>
+                   						<a href="#" class="choice-button permit">permit</a>
+                   						<a href="#" class="choice-button deny">deny</a>
+                 					</td>
+                 					<td><div class="label">$mustDecision.getAttrDisplayName() ($mustDecision.getAttrValue())</div> 
+                     					<span class="subset">$areason.get($mustDecision.getAttrName())</span>
+                 					</td>
+               					</tr>
+               				#end
+             			</table>
+            			<div class="toggle-link">
+              				<a href="#" id="hide-choice">Hide -</a>
+            			</div>
+          			</div>
+         
+        		</div>
+       				   					<div id="show-other-attrs" class="toggle-link">
+          						<a href="#" id="show-nochoice">$show_required +</a>
+        					</div>
+        
+
+         					<div id="other-attrs-summary" class="content-box" style="display: none;">
+           						<h3>The following information will also be released if you continue:</h3>
+           						<table class="attr-summary">
+           							#foreach($nochoiceDecision in $injectedDecisions)
+             							<tr>
+               								<td class="necessary"><img src="resources/img/necessary.png"></td>
+               								<td><div class="label">$nochoiceDecision.getAttrDisplayName() ($nochoiceDecision.getAttrValue())</div> 
+                   								<span class="subset">$areason.get($nochoiceDecision.getAttrName())</span>
+               								</td>
+             							</tr>
+             						#end
+           						</table>
+           						<a href="#" id="hide-nochoice">Hide -</a>
+         					</div>
+         					
+         					<!--lite-->
+         					<div id="rp-show-info" class="toggle-link">
+         						<a href="#" id="show-rp-lite-link">Show more about this site +</a>
+         						
+         						<div id="rp-show-info-lite" class="content-box" style="display:none;">
+         							<h3>$rpdisplayname&nbsp;&nbsp;(<small><a href="$rpprivacyurl" id="rp-privacy-link-2">privacy policy</a></small>)</h3>
+         							<p>$rpdescription</p>
+         							<a href="#" id="hide-rp-info-lite">Hide -</a>
+         						</div>
+         					</div>
+         								
+    			#else
+    				<div class="content-box" id="release-summary">
+  						<h3>$header_nochoice</h3>
+     					<form name="nochoice" id="nochoice" action="$actionUrl" method="POST">
+     						<table class="attr-summary">
+       							#foreach ($decision in $injectedDecisions)
+       								<tr>
+       									<td class="necessary"><img src="resources/img/necessary.png"></td>
+         								<td><div class="label">$decision.getAttrDisplayName() ($decision.getAttrValue())</div> 
+            				 				<span class="subset">because, reasons: $areason.get($decision.getAttrName())</span>
+         								</td>
+       								</tr>
+       							#end
+     						</table>
+     					</form>
+  					</div>
+  
+  					<div id="continue-options">
+    					<div class="content-box">
+      						<h4>$save_prompt</h4>
+      						<ul id="remember-options">
+        						<li><input type="radio" name="remember" checked>
+            						$acknowledge_show_false</li>
+        						<li><input type="radio" name="remember">
+            						$acknowledge_show_true</li>
+      						</ul>
+    					</div>
+    					<div class="button-options">
+      						<button class="inactive">$continue_button_false &nbsp;<img src="resources/img/cancel.png"></button>
+      						<button class="active">$continue_button_true &nbsp;<img src="resources/img/continue.png"></button>
+    					</div>
+    				</div>
+    			#end
+    			<!-- here -->
+  				
+        		<div id="continue-options" style="display: none;">
+       				<div class="content-box">
+            			<h4>$save_prompt</h4>
+            			<ul id="remember-options">
+              				<li><input type="radio" name="remember" checked>
+                  				$save_true_suppress</li>
+              				<li><input type="radio" name="remember">
+                  				$save_true_show_again</li>
+              				<li><input type="radio" name="remember">
+                  				$save_false</li>
+            			</ul>
+          			</div>
+          
+          			<div class="button-options">
+            			<button class="inactive">Cancel <img src="resources/img/cancel.png"></button>
+            			<button class="active" onClick="document.getElementById('master_return_form').submit();">Accept and Continue <img src="resources/img/continue.png"></button>
+          			</div>
+        		</div>
+   			</div>
+        	
+		</div>
+
+ 
+    </div>
+  </body>
+</html>
+
+<script type="text/javascript">
+  $('a#rp-privacy-link').leanModal();
+  $('#choice-options button').click(function(e){
+    e.preventDefault();
+    $("#continue-nochoice").hide();
+    $("#continue-options").show();
+  });
+
+  $("a#show-nochoice").click(function(e){
+    e.preventDefault();
+    $(this).hide();
+    $("#other-attrs-summary").show();
+  });
+
+  $("a#hide-nochoice").click(function(e){
+    e.preventDefault();
+    $("#other-attrs-summary").hide();
+    $("a#show-nochoice").show();
+  });
+
+  $("button#edit-choices").click(function(e){
+    e.preventDefault();
+    $("#release-choices").show();
+    $("#release-summary").hide();
+  });
+
+  $("a#hide-choice").click(function(e){
+    e.preventDefault();
+    $("#release-choices").hide();
+    $("#release-summary").show();
+  });
+
+  $("a.choice-button").click(function(e){
+    e.preventDefault();
+    if($(this).hasClass("active")){
+      $(this).removeClass("active");
+      $(this).siblings().addClass("active");
+    }
+    else{
+      $(this).addClass("active");
+      $(this).siblings().removeClass("active");
+    }
+  });
+  
+  $("a#show-rp-lite-link").click(function(e){
+    e.preventDefault();
+    $("#rp-show-info-lite").show();
+    $(this).hide();
+  });
+  
+  $("a#hide-rp-info-lite").click(function(e){
+    e.preventDefault();
+    $("#rp-show-info-lite").hide();
+   $("a#show-rp-lite-link").show();
+  });
+  
+  
+</script>
+
+  
+  <form name="master_return_form" id="master_return_form" method="POST" action="$actionUrl">
+  
+    <input type="hidden" name="csrftoken" value="$csrftoken">
+    
+  	#foreach ($mustDecision in $injectedDecisions)
+  		#set($counter=0)
+  		
+  		<div class="decision must">
+  		<input type="text" class="attr_value" name="valuemap_$mustDecision.getAttrName()_$counter" value="$mustDecision.getAttrValue()">
+  		<span class="attr_name">$mustDecision.getAttrName()</span>
+  		<span class="attr_displayname">$mustDecision.getAttrDisplayName()</span>
+  		<span class="attr_reason">$areason.get($mustDecision.getAttrName())</span>
+  		#if ($mustDecision.getRecommendedDirective()=="permit")
+  			<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit" checked>
+  			<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny">
+  		#else
+  			<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit">
+  			<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny" checked>
+  		#end
+  		</div>
+  	#end
+  	#foreach ($mayDecision in $mayDecisions)
+  		#set($counter=0)
+  		<div class="decision may">
+  		<input type="text" class="attr_value" name="valuemap_$mayDecision.getAttrName()_$counter" value="$mayDecision.getAttrValue()">
+  		<span class="attr_name">$mayDecision.getAttrName()</span>
+  		<span class="attr_displayname">$mayDecision.getAttrDisplayName()</span>
+  		<span class="attr_reason">$areason.get($mayDecision.getAttrName())</span>
+  		#if ($mayDecision.getCurrentdecision()=="permit")
+  			<input class="may_decision_pair" id="radio_$mayDecision.getAttrname()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrname()_$counter" value="permit" checked>
+  			<input class="may_decision_pair" id="radio_$mayDecision.getAttrname()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrname()_$counter" value="deny">
+  		#else
+  		 	<input class="may_decision_pair" id="radio_$mayDecision.getAttrname()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrname()_$counter" value="permit">
+  			<input class="may_decision_pair" id="radio_$mayDecision.getAttrname()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrname()_$counter" value="deny" checked>
+  		#end
+  		</div>
+  	#end
+  	#foreach ($nochoiceDecision in $nochoiceDecisions)
+  		#set($counter=0)
+  		<div class="decision nochoice">
+  		<input type="text" class="attr_value" name="valuemap_$nochoiceDecision.getAttrName()_$counter" value=$nochoiceDecision.getAttrValue()">
+  		<span class="attr_name">$nochoiceDecision.getAttrName()</span>
+  		<span class="attr_displayname">$nochoiceDecision.getAttrDisplayName()</span>
+  		<!-- no reason for nochoice values -->
+  		#if ($nochoiceDecision.getCurrentdecision()=="permit")
+  			<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrname()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrname()_$counter" value="permit" checked readonly>
+  			<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrname()_deny_$counter" type="radio" name="radio_$nochoiceDecision.getAttrname()_$counter" value="deny" readonly>
+  		#else
+  			<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrname()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrname()_$counter" value="permit" readonly>
+  			<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrname()_deny_$counter" type="radio" name="radio_$nochoiceDecision.getAttrname()_$counter" value="deny" checked readonly>
+  		#end
+  		</div>
+  	#end
+  	<input type="checkbox" name="saveandhide" value="1">save and dont show</input>
+  	<input type="checkbox" name="saveandshow" value="2">save and show again</input>
+  	<input type="checkbox" name="dontsave" value="3">dont save</input>
+  	<input type="checkbox" name="alltheway" value="1">pushToIdp</input>
+  	<input type="submit" value="submit" name="submit">
+  </form>

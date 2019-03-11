@@ -1,0 +1,154 @@
+		<h1>$rhdisplayname ($rhmeta.getRhidentifier().getRhtype()/$rhmeta.getRhidentifier().getRhid())</h1>
+		
+		<div id="sidebar">
+			<div class="content-section">
+				<h2>New Relying Party</h2>
+				<h3>Resource Holder</h3>
+				<p>$rhdisplayname</p>
+				<form id="newrpform" method="POST" action="#">
+					<input type="hidden" name="formname" value="newrpform">
+					<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
+					<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
+					<h3>Identifier</h3>
+					<table>
+						<tr>
+							<td>
+								<select name="rptype">
+									#foreach ($vtype in $rpidtypes)
+										<option value="$vtype">$vtype</option>
+									#end
+								</select>
+							</td>
+							<td>
+								<input type="text" name="rpid" placeholder="Enter RP ID">
+							</td>
+						</tr>
+					</table>
+					<h3>Display Name</h3>
+					<table id="displaynametable" name="displaynametable">
+						<tr>
+							<td>
+								<select name="displaynamelang_1">
+									#foreach($vlang in $languages)
+										<option value=$vlang>$vlang</option>
+									#end
+								</select>
+							</td>
+							<td>
+								<input type="text" name="displaynamevalue_1" placeholder="Display name">
+							</td>
+						</tr>
+					</table>				
+					<h3>Description</h3>				
+					<table id="descriptiontable" name="descriptiontable">
+						<tr>
+							<td>
+								<select name="descriptionlang_1">
+									#foreach($vdesclang in $languages)
+										<option value=$vdesclang>$vdesclang</option>
+									#end
+								</select>
+							</td>
+							<td>
+								<input type="text" name="descriptionvalue_1" placeholder="Description">
+							</td>
+						</tr>
+					</table>
+					<br><br>
+					<div class="form-set">
+						<button id="createrpbutton" class="active">Create New RP</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div id="left">
+			<div class="content-section">
+				<h2>Relying Parties for $rhdisplayname</h2>
+				<div class="form-set">
+					<label for="searchstring">Search/Filter</label>
+					<input type="text" name="searchstring" id="searchinput" placeholder="Search string">
+					<button id="filterbutton" class="visually-hidden">Filter list</button>
+				</div>
+
+				<div id="div_list" class="rplist">
+					#foreach($meta in $rpmetalist)
+							<a href="/caradmin/rpregistration/$meta.getRhtype()/$CarAdminUtils.idEscape($meta.getRhid())/$meta.getRptype()/$CarAdminUtils.idEscape($meta.getRpid())/">$meta.getDisplayname() ($meta.getRpid())</a>
+							<br>
+					#end
+				</div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
+			var injectedList = $JSON;
+			//modJSON = modJSON.replace(/'/g,"");
+			//var injectedList = $.parseJSON(modJSON);
+			
+			$(document).ready(function() {
+				$("#filterbutton").click(function(e) {
+					e.preventDefault();
+					filter_list(e);
+				});
+				$('#searchinput').bind("enterKey",function(e){
+				   e.preventDefault();
+				   $("#filterbutton").click();
+				});
+				$('#searchinput').click(function(e) {
+					e.preventDefault();
+					if ($('#searchinput').val().match("Search/filter string")) {
+						$('#searchinput').val('');
+					} 
+				});
+				$('#searchinput').keyup(function(e){
+					if (e.keyCode == 13 || $('#searchinput').val().length == 0 || $('#searchinput').val().length > 2) {
+						$(this).trigger("enterKey");
+					}
+			    });
+			    
+			    $('#displaynameaddbutton').click(function(e) {
+			    	e.preventDefault();
+			    	addDisplayName(e);
+			    });
+			    $('#descriptionaddbutton').click(function(e) {
+			    	e.preventDefault();
+			    	addDescription(e);
+			    });
+			    
+			});
+			
+			function idEscape(s) {
+				return s.replace(/\//g,"!").replace(/ /,"%20").replace(/\|/,"%7C");
+			}
+			
+			function filter_list(e) {
+				var $search=$("#searchinput").val();
+				$("#div_list").html('');
+				for (var i = 0; i < injectedList.length; i++) {
+					s2=".*"+$search+".*";
+					s1=new RegExp(s2,"i")
+					if (injectedList[i].rpid.match(s1) || injectedList[i].displayname.match(s1)) {
+						$("#div_list").append(
+							"<a href=\"/caradmin/rpregistration/"+injectedList[i].rhtype+"/"+idEscape(injectedList[i].rhid)+"/"+injectedList[i].rptype+"/"+idEscape(injectedList[i].rpid)+"/\">"+injectedList[i].displayname+" ("+injectedList[i].rpid+")</a><br>");
+					}
+				}
+			}
+			
+			function addDisplayName(e) {
+				e.preventDefault();
+				var $ctr = $("#displaynamecount").val();
+				$ctr = parseInt($ctr) + 1;
+				$("#displaynamecount").val($ctr);
+				$row = $("<tr><td><input type=\"text\" name=\"displaynamelang_"+$ctr+"\" id=\"displaynamelang_"+$ctr+"\" value=\"Enter Language\"></td><td><input type=\"text\" name=\"displaynamevalue_"+$ctr+"\" id=\"displaynamevalue_"+$ctr+"\" value=\"Enter DisplayName\" size=\"40\"></td></tr>");
+				$("#displaynametable").append($row);
+			}
+			
+			function addDescription(e) {
+				e.preventDefault();
+				var $ctr = $("#descriptioncount").val();
+				$ctr = parseInt($ctr) + 1;
+				$("#descriptioncount").val($ctr);
+				$row = $("<tr><td><input type=\"text\" name=\"descriptionlang_"+$ctr+"\" id=\"descriptionlang_"+$ctr+"\" value=\"Enter Language\"></td><td><input type=\"text\" name=\"descriptionvalue_"+$ctr+"\" id=\"descriptionvalue_"+$ctr+"\" value=\"Enter Description\" size=\"40\"></td></tr>");
+				$("#descriptiontable").append($row);
+			}
+			
+		</script>							

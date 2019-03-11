@@ -1,0 +1,33 @@
+#if($successmsg)
+<div class="message success">
+	$successmsg
+</div>
+#end
+#if($failmsg)
+<div class="message error">
+	$failmsg
+</div>
+#end
+<div id="left">
+	
+	<div class="content-section">
+		<table class="display full-width">
+			<thead>
+				<tr>
+					<th>Resource Holder</th>
+					<th>Organizational Policies</th>
+					<th>Meta Policies</th>
+				</tr>
+			</thead>
+			<tbody>
+				#foreach ($rhmi in $rhlist)
+					<tr>
+						<td class="wrappingtd"><a href="/caradmin/orgpolicyview/$rhmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rhmi.getRhidentifier().getRhid())">$rhdisp.get($rhmi.getRhidentifier().getRhid())</a></td>
+						<td class="wrappingtd">$rhorg.get($rhmi.getRhidentifier().getRhid())</td>
+						<td class="wrappingtd">$rhicm.get($rhmi.getRhidentifier().getRhid())</td>
+					</tr>
+				#end
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,464 @@
+
+#if($successmsg)
+<div class="message success">
+	$successmsg
+</div>
+#end
+#if($failmsg)
+<div class="message error">
+	$failmsg
+</div>
+#end
+
+<h1>Institutional Policy: $policytoedit.getPolicy().getDescription() (Version: $policytoedit.getPolicyMetaData().getPolicyId().getVersion()) ($CarAdminUtils.localize($rhmi.getDisplayname(),$lang))</h2>
+
+<div id="sidebar">
+	<div class="content-section">
+		<h2>Instructions</h2>
+		<p>Institutional policies reflect your organization's intent with respect to the use of personal information in various situations.</p>
+		<p>For a given transaction, institutional policies may be controlling or may be presented as "institutional recommendations" to end users during consent interactions.</p>
+		<p>Institutional policies contain three primary elements:</p>
+		<ul class="simple-list">
+			<li><strong>Relying Party Restriction</strong> - describes which relying parties the policy is applicable to.  Some policies may apply to all relying parties, while others may apply to a single relying party or a set of relying parties identified by a regular expression match against an RP property.</li>
+			<li><strong>User Restriction</strong> - describes which users the policy is applicable to.  Some policies may apply to all users, while others may apply only to those users with specific characteristics.</li>
+			<li><strong>Directives</strong> - describe the actual decisions to render for specific items with specific values when requested by applicable relying parties regarding applicable users.</li>
+		</ul>
+		<p>Recording a Lawful Basis for each directive allows CAR to provide GDPR and other privacy compliance reports as needed.</p>
+		<p><strong>Note</strong> that selecting "Consent" as the basis for a directive does <strong>NOT</strong> automatically apply a matching meta policy to enforce consent -- be sure to adjust meta policies as necessary when employing consent.</p>
+		<p><strong>Note also</strong> that setting a "permit" or "deny" directive for "all other items" will prevent any lower-priority policies that might otherwise apply from being used when rendering decisions.</p>
+	</div>
+</div>
+
+<div id="left">
+
+	<form id="editopform" method="POST" action="#">
+	
+		<input type="hidden" name="formname" value="editopform">
+		<input type="hidden" name="policyid" value="$policytoedit.getPolicyMetaData().getPolicyId().getBaseId()">
+		<input type="hidden" name="rhtype" value="$policytoedit.getPolicy().getResourceHolderId().getRHType()">
+		<input type="hidden" name="rhid" value="$policytoedit.getPolicy().getResourceHolderId().getRHValue()">
+		
+		<div class="content-section">
+			<div class="form-set">
+				<h2>Policy Description</h2>
+				<input type="text" name="policydescription" value="$policytoedit.getPolicy().getDescription()">
+			</div>
+		</div>
+		<div class="content-section">
+			<h2>Relying Parties</h2>
+			<p>Apply this policy to:</p>
+			<div class="form-set">
+				#if($allrps)
+				<input type="radio" name="rpstrategy" value="allRPs" id="rpstrategy1" class="rpstrategy" checked>
+				#else
+				<input type="radio" name="rpstrategy" value="allRPs" id="rpstrategy1" class="rpstrategy">
+				#end
+				#if($allrps)
+				<span id="selectedrpstrategy1" class="inline">
+				#else
+				<span id="selectedrpstrategy1" class="hidden inline">
+				#end
+				<label class="inline" for="rpstrategy1">All RPs of type <select name="specrptype1">#foreach($t in $supportedrptypes)<option value="$t" #if($allrpType==$t)selected#end>$t</option>#end</select></label>
+				</span>
+				#if($allrps)
+				<span id="unselectedrpstrategy1" class="hidden inline">
+				#else
+				<span id="unselectedrpstrategy1" class="inline">
+				#end
+					<label class="inline" for="rpstrategy1">All RPs</label>
+				</span>
+			</div>
+			<div class="form-set">
+				#if($somerps)
+				<input type="radio" name="rpstrategy" value="matchedRPs" id="rpstrategy2" class="rpstrategy" checked>
+				#else
+				<input type="radio" name="rpstrategy" value="matchedRPs" id="rpstrategy2" class="rpstrategy">
+				#end
+				#if($somerps)
+				<span id="selectedrpstrategy2" class="inline">
+				#else
+				<span id="selectedrpstrategy2" class="hidden inline">
+				#end
+				<label class="inline" for="rpstrategy2">RPs where <input type="text" name="rpproperty" #if($somerps) value="$somerparray.get(0).getRpPropName()" #else placeholder="RP Property Name"#end></label>
+				<label class="inline">matches <input type="text" name="rpmatch" #if($somerps) value="$somerparray.get(0).getRpPropValue()" #else placeholder="Regular Expression" #end></label>
+				</span>
+				#if($somerps)
+				<span id="unselectedrpstrategy2" class="inline hidden">
+				#else
+				<span id="unselectdedrpstrategy2" class="inline">
+				#end
+				<label class="inline" for="rpstrategy2">Only Some RPs</label>
+				</span>
+			</div>
+			<div class="form-set">
+				#if($onerp)
+				<input type="radio" name="rpstrategy" value="oneRP" id="rpstrategy3" class="rpstrategy" checked>
+				#else
+				<input type="radio" name="rpstrategy" value="oneRP" id="rpstrategy3" class="rpstrategy">
+				#end
+				#if($onerp)
+				<span id="selectedrpstrategy3" class="inline">
+				#else
+				<span id="selectedrpstrategy3" class="hidden inline">
+				#end
+				<label class="inline" for="rpstrategy3">Specific RP <select name="specrptype">#foreach($t in $supportedrptypes)<option value="$t" #if($onerpType==$t)selecdted#end>$t</option>#end</select></label>
+				<label class="inline"><select name="specrpid" style="width:100%;word-wrap:break-word;display:inline;">#foreach($i in $rpids)<option value="$i" #if($onerpValue==$i)selected#end>$i</option>#end</select></label>
+				</span>
+				#if($onerp)
+				<span id="unselectedrpstrategy3" class="inline hidden">
+				#else
+				<span id="unselectedrpstrategy3" class="inline">
+				#end
+				<label class="inline" for="rpstrategy3">Only one RP</label>
+				</span>
+			</div>
+		</div>
+		
+		<div class="content-section">
+			<h2>Users</h2>
+			<p>Apply this policy to:</p>
+			<div class="form-set">
+				#if($allusers)
+				<input type="radio" name="userstrategy" value="allUsers" id="userstrategy1" class="userstrategy" checked>
+				#else
+				<input type="radio" name="userstrategy" value="allUsers" id="userstrategy1" class="userstrategy">
+				#end
+				#if($allusers)
+				<span id="selecteduserstrategy1" class="inline">
+				#else
+				<span id="selecteduserstrategy1" class="hidden inline">
+				#end
+					<label class="inline" for="userstrategy1">Users with any value of <input type="text" name="userproperty1" #if($allusers) value="$allusersType" #else placeholder="User Property Name" #end></label>
+				</span>
+				#if($allusers)
+				<span id="unselecteduserstrategy1" class="inline hidden">
+				#else
+				<span id="unselecteduserstrategy1" class="inline">
+				#end
+					<label class="inline" for="userstrategy1">All Users</label>
+				</span>
+			</div>
+			<div class="form-set">
+				#if($someusers)
+				<input type="radio" name="userstrategy" value="matchedUsers" id="userstrategy2" class="userstrategy" checked>
+				#else
+				<input type="radio" name="userstrategy" value="matchedUsers" id="userstrategy2" class="userstrategy">
+				#end
+				#if($someusers)
+				<span id="selecteduserstrategy2" class="inline">
+				#else
+				<span id="selecteduserstrategy2" class="hidden inline">
+				#end
+				<label class="inline" for="userstrategy2">Users with <input type="text" name="userproperty" #if($someusers) value="$someusersarray.get(0).getUserPropName()" #else placeholder="User Property Name" #end></label>
+				<label class="inline">matching <input type="text" name="usermatch" #if($someusers) value="$someusersarray.get(0).getUserPropValue()" #else placeholder="Regular Expression" #end></label>
+				</span>
+				#if($someusers)
+				<span id="unselecteduserstrategy2" class="inline hidden">
+				#else
+				<span id="unselecdteduserstrategy1" class="inline">
+				#end
+				<label class="inline" for="userstrategy2">Only some users</label>
+				</span>
+			</div>
+		</div>
+		
+
+		<div class="content-section">
+			<h2>Directives</h2>
+			#set($dirct=$dircount)			
+			<input type="hidden" name="directivecount" id="directivecount" value="$dircount">
+			<table class="display full-width wrappingtable" id="directivetable">
+				<thead>
+					<tr>
+						<th class="wrappingtd">Item Type</th>
+						<th class="wrappingtd">Item Id</th>
+						<th class="wrappingtd">Directive</th>
+						<th class="wrappingtd">Value(s)</th>
+						<th class="wrappingtd">Lawful Basis</th>
+						<th class="wrappingtd" style="width: 10%;"></th>
+					</tr>
+				</thead>
+				<tbody id="dirtablebody">
+					#foreach($udk in $ukeys)
+						#set($ud=$unrolled.get($udk))
+						#if ($ud.getRowid() && ! $ud.getRowid().contains("_") && $ud.getRowid() != "1")
+							#set($cur=$Integer.parseInt($ud.getRowid()))
+							#set($prev= $cur - 1)
+							#set($pstr= $String.valueOf($prev))
+							<tr id="row_b_$prev">
+								<td colspan="2"></td>
+								<td><select class="aodirective" name="directive_ao_$prev" id="directive_ao_$prev"><option value="PERMIT" #if($aaod.get($pstr).getDirective()=="permit")selected#end>Permit</option><option value="DENY" #if($aaod.get($pstr).getDirective()=="deny")selected#end>Deny</option></select></td>
+								<td>All Other Values</td>
+								<td colspan="2"><select name="basis_ao_$prev" id="basis_ao_$prev" style="width: 100%;"><option value="none">None</option><option value="Consent" #if($aaod.get($pstr).getBasis()=="Consent")selected#end>Consent</option><option value="Contract" #if($aaod.get($pstr).getBasis()=="Contract")selected#end>Contractual obligation</option><option value="Legal obligation" #if($aaod.get($pstr).getBasis()=="Legal obligation")selected#end>Legal obligation</option><option value="Vital Interests" #if($aaod.get($pstr).getBasis()=="Vital Interests")selected#end>Vital Interests</option><option value="Public Task" #if($aaod.get($pstr).getBasis()=="Public Task")selected#end>Public Task</option><option value="Legitimate Interest" #if($aaod.get($pstr).getBasis()=="Legitimate Interest")selected#end>Legitimate Interest</option></select></td>
+							</tr>
+						#end
+						<tr id="row_a_$ud.getRowid()">
+						#if(! $ud.getRowid().contains("_"))
+							<!-- Type: $ud.getIitype() , Name: $ud.getIiid() -->
+							<td class="wrappingtd"><select class="itypeselect" id="itype_$ud.getRowid()" name="itype_$ud.getRowid()">#foreach($it in $supptypes.getInfotypes())<option value="$it" #if($it==$ud.getIitype())selected#end>$it</option>#end</select></td>
+							<td class="wrappingtd"><select name="iid_$ud.getRowid()" id="iid_$ud.getRowid()" style="width: 100%;">#foreach($n in $typeidmap.get($ud.getIitype()))<option value="$n" #if($n==$ud.getIiid())selected#end>$n</option>#end</select></td>
+						#else
+							<td class="wrappingtd"><input type="hidden" id="itype_$ud.getRowid()" name="itype_$ud.getRowid()" value="$ud.getIitype()">$ud.getIitype()</td>
+							<td class="wrappingtd"><input type="hidden" id="iid_$ud.getRowid()" name="iid_$ud.getRowid()" value="$ud.getIiid()">$ud.getIiid()</td>
+						#end
+						<td class="wrappingtd"><select name="directive_$ud.getRowid()" id="directive_$ud.getRowid()" class="directive"><option value="PERMIT" #if($ud.getDirective()=="permit")selected#end>Permit</option><option value="DENY" #if($ud.getDirective()=="deny")selected#end>Deny</option></select></td>
+						<td class="wrappingtd"><input type="text" name="values_$ud.getRowid()" value="$ud.getValue()" style="width: 100%;"></td>
+						<td class="wrappingtd"><select name="basis_$ud.getRowid()" id="basis_$ud.getRowid()" style="width: 100%;"><option value="Consent" #if($ud.getBasis()=="Consent")selected#end>Consent</option><option value="Contract" #if($ud.getBasis()=="Contract")selected#end>Contractual obligation</option><option value="Legal obligation" #if($ud.getBasis()=="Legal obligation")selected#end>Legal obligation</option><option value="Vital Interests" #if($ud.getBasis()=="Vital Interests")selected#end>Vital Interests</option><option value="Public Task" #if($ud.getBasis()=="Public Task")selected#end>Public Task</option><option value="Legitimate Interest" #if($ud.getBasis()=="Legitimate Interest")selected#end>Legitimate Interest</option></select></td>
+						#if(! $ud.getRowid().contains("_"))
+							<!-- Addcounts # $ud.getRowid() is $addcounts.get($ud.getRowid()) -->
+							<td class="wrappingtd" style="width:10%;"><a href="#" id="addelem_$ud.getRowid()" class="addelem"><i class="fa fa-plus"></i></a><input type="hidden" id="addcount_$ud.getRowid()" name="addcount_$ud.getRowid()" value="$addcounts.get($ud.getRowid())"></td>
+						#else
+							<td class="wrappingtd" style="width:10%;"><a href="#" id="delelem_$ud.getRowid()" class="delelem"><i class="fa fa-trash"></i></a></td>
+						#end
+						
+						</tr>
+				
+					#end
+					#set($prev=$ud.getRowid().replaceAll("_.*$",""))
+					<!-- Here, basis is $aaod.get($prev).getBasis() -->
+					<tr id='row_b_$ud.getRowid().replaceAll("_.*$","")'>
+						<td colspan="2"></td>
+						<td><select class="aodirective" name="directive_ao_$prev" id="directive_ao_$prev"><option value="PERMIT" #if($aaod.get($prev).getDirective()== "permit")selected#end>Permit</option><option value="DENY" #if($aaod.get($prev).getDirective()=="deny")selected#end>Deny</option></select></td>
+						<td>All Other Values</td>
+						<td colspan="2"><select name="basis_ao_$prev" id="basis_ao_$prev" style="width: 100%;"><option value="none">None</option><option value="Consent" #if($aaod.get($prev).getBasis()=="Consent")selected#end>Consent</option><option value="Contract" #if($aaod.get($prev).getBasis()=="Contract")selected#end>Contractual obligation</option><option value="Legal obligation" #if($aaod.get($prev).getBasis()=="Legal obligation")selected#end>Legal obligation</option><option value="Vital Interests" #if($aaod.get($prev).getBasis()=="Vital Interests")selected#end>Vital Interests</option><option value="Public Task" #if($aaod.get($prev).getBasis()=="Public Task")selected#end>Public Task</option><option value="Legitimate Interest" #if($aaod.get($prev).getBasis()=="Legitimate Interest")selected#end>Legitimate Intrest</option></select></td>
+					</tr>				
+				</tbody>
+			</table>
+			<br>
+			<button class="active" id="addItemButton">Add Item<i class="fa button-icon-right fa-plus"></i></button>
+		</div>
+		<div class="content-section">
+			<h2>All Other Items</h2>
+			<table class="display">
+				<thead>
+					<tr>
+						<th>Directive</th>
+						<th>Lawful Basis</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							#set($aoid=$policytoedit.getPolicy().getAllOtherOrgInfoReleaseStatement().getOrgDirectiveAllOtherValues().getOrgReleaseDirective().toString())
+							<select name="all-other-items-directive" id="all-other-items-directive">
+								<option value="continue" #if(!$aoid || $aoid=="none" || $aoid=="continue")selected#end>Continue applying lower-priority policies</option>
+								<option value="DENY" #if($aoid.equalsIgnoreCase("deny"))selected#end>Deny</option>
+								<option value="PERMIT" #if($aoid.equalsIgnoreCase("permit"))selected#end>Permit</option>
+							</select>
+						</td>
+						<td>
+							#set($aoip=$policytoedit.getPolicy().getAllOtherOrgInfoReleaseStatement().getOrgDirectiveAllOtherValues().getOrgPolicyBasis())
+							<select name="all-other-items-basis" id="all-other-items-basis">
+								<option value="none" #if(!$aoip)selected#end>None</option>
+								<option value="Consent" #if($aoip.equalsIgnoreCase("Consent"))selected#end>Consent</option>
+								<option value="Contract" #if($aoip.equalsIgnoreCase("Contract"))selected#end>Contractual obligation</option>
+								<option value="Legal Obligation" #if($aoip.equalsIgnoreCase("Legal Obligation"))selected#end>Legal obligation</option>
+								<option value="Vital Interests" #if($aoip.equalsIgnoreCase("Vital Interests"))selectded#end>Vital Interests</option>
+								<option value="Public Task" #if($aoip.equalsIgnoreCase("Public Task"))selected#end>Public Task</option>
+								<option value="Legitimate Interest" #if($aoip.equalsIgnoreCase("Legitimate Interest"))selected#end>Legitimate Interest</option>
+							</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>    
+		<button class="active" id="updateButton">Update Policy<i class="fa button-icon-right fa-arrow-right"></i></button>
+	</form>
+</div>
+		
+		
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#addItemButton").click(function(e) {
+		handleAddItemButton(e);
+	});			
+				
+	$(".itypeselect").change(function(e) {
+		handleitypechange(e);
+	});	
+	
+	$(".rpstrategy").change(function(e) {
+		handlerpstratchange(e);
+	});
+	$(".userstrategy").change(function(e) {
+		handleuserstratchange(e);
+	});
+	$(".directive").change(function(e) {
+		handledirectivechange(e);
+	});
+	$(".aodirective").change(function(e) {
+		handleaodirectivechange(e);
+	});
+	$(".addelem").click(function(e) {
+		handleaddelem(e);
+	});
+	$(".delelem").click(function(e) {
+		handledelelem(e);
+	});
+
+});
+
+function handleaddelem(e) {
+	e.preventDefault();
+	tid = e.currentTarget.id;
+	num = tid.replace("addelem_","");
+	ac = parseInt($("#addcount_"+num).val());
+	ac = ac + 1;
+	$("#addcount_"+num).val(ac);
+	$("#row_a_"+num).after('<tr id="row_a_'+num+'_'+ac+'"><td class="wrappingtd"><input type="hidden" name="itype_'+num+'_'+ac+'" value="'+$("#itype_"+num+" option:selected").val()+'">'+$("#itype_"+num+" option:selected").val()+'</td><td class="wrappingtd"><input type="hidden" name="iid_'+num+'_'+ac+'" value="'+$("#iid_"+num+" option:selected").val()+'">'+$("#iid_"+num+" option:selected").val()+'</td><td class="wrappingtd"><select name="directive_'+num+'_'+ac+'"><option value="PERMIT">Permit</option><option value="DENY">Deny</option></select></td><td class="wrappingtd"><input type="text" name="values_'+num+'_'+ac+'" placeholder="Regular Expression" style="width: 100%;"></td><td class="wrappingtd"><select name="basis_'+num+'_'+ac+'" id="basis_'+num+'_'+ac+'" style="width: 100%;"><option value="Consent">Consent</option><option value="Contract">Contractual obligation</option><option value="Legal obligation">Legal obligation</option><option value="Vital Interests">Vital Interests</option><option value="Public Task">Public Task</option><option value="Legitimate Interest">Legitimate Interest</option></select></td><td class="wrappingtd" style="width: 10%;"><a href="#" id="delelem_'+num+'_'+ac+'" class="delelem"><i class="fa fa-trash"></i></a></td></tr>');
+	$(".delelem").click(function(e) {
+		handledelelem(e);
+	});
+}
+
+function handledelelem(e) {
+	e.preventDefault();
+	tid = e.currentTarget.id;
+	num = tid.replace("delelem_","");
+	$("#"+tid).after('<input type="hidden" name="deleted_'+num+'" value="true">');
+	$("#row_a_"+num).hide();
+}
+
+
+function handleaodirectivechange(e) {
+	tid = e.target.id;
+	n = tid.replace("directive_ao_","");
+	if ($("#"+tid).val()=="DENY") {
+		$("#basis_ao_"+n).empty();
+		$("#basis_ao_"+n).append('<option value="none">None</option><option value="Consent">Consent</option>');
+	} else {
+		$("#basis_ao_"+n).empty();
+		$("#basis_ao_"+n).append('<option value="Consent">Consent</option><option value="Contract">Contractual obligation</option><option value="Legal obligation">Legal obligation</option><option value="Vital Interests">Vital Interests</option><option value="Public Task">Public Task</option><option value="Legitimate Interest">Legitimate Interest</option>');
+		$("#basis_ao_"+n).show();
+	}
+}
+
+function handledirectivechange(e) {
+	tid = e.target.id;
+	n = tid.replace("directive_","");
+	if ($("#"+tid).val()=="DENY") {
+		$("#basis_"+n).empty();
+		$("#basis_"+n).append('<option value="none">None</option><option value="Consent">Consent</option>');
+		//$("#basis_"+n).hide();
+	} else {
+		$("#basis_"+n).empty();
+		$("#basis_"+n).append('<option value="Consent">Consent</option><option value="Contract">Contractual obligation</option><option value="Legal obligation">Legal obligation</option><option value="Vital Interests">Vital Interests</option><option value="Public Task">Public Task</option><option value="Legitimate Interest">Legitimate Interest</option>');
+		$("#basis_"+n).show();
+	}
+}
+
+function handlerpstratchange(e) {
+	if ($("#"+e.target.id).val() == "allRPs") {
+		$("#unselectedrpstrategy1").hide();
+		$("#selectedrpstrategy1").show();
+		$("#selectedrpstrategy2").hide();
+		$("#unselectedrpstrategy2").show();
+		$("#selectedrpstrategy3").hide();
+		$("#unselectedrpstrategy3").show();
+	} else if ($("#"+e.target.id).val() == "matchedRPs") {
+		$("#unselectedrpstrategy1").show();
+		$("#selectedrpstrategy1").hide();
+		$("#selectedrpstrategy2").show();
+		$("#unselectedrpstrategy2").hide();
+		$("#selectedrpstrategy3").hide()
+		$("#unselectedrpstrategy3").show();
+	} else if ($("#"+e.target.id).val() == "oneRP") {
+		$("#selectedrpstrategy1").hide();
+		$("#unselectedrpstrategy1").show();
+		$("#selectedrpstrategy2").hide();
+		$("#unselectedrpstrategy2").show();
+		$("#selectedrpstrategy3").show();
+		$("#unselectedrpstrategy3").hide();
+	} else {
+		$("#selectedrpstrategy1").hide();
+		$("#selectedrpstrategy2").hide();
+		$("#selectedrpstrategy3").hide();
+		$("#unselectedrpstrategy1").show();
+		$("#unselectedrpstrategy2").show();
+		$("#unselectedrpstrategy3").show();
+	}
+}
+
+function handleuserstratchange(e) {
+	if ($("#"+e.target.id).val() == "allUsers") {
+		$("#selecteduserstrategy1").show();
+		$("#unselecteduserstrategy1").hide();
+		$("#selecteduserstrategy2").hide();
+		$("#unselecteduserstrategy2").show();
+	} else if ($("#"+e.target.id).val() == "matchedUsers") {
+		$("#selecteduserstrategy1").hide();
+		$("#unselecteduserstrategy1").show();
+		$("#selecteduserstrategy2").show();
+		$("#unselecteduserstrategy2").hide();
+	} else {
+		$("#selecteduserstrategy1").hide();
+		$("#selecteduserstrategy2").hide();
+		$("#unselecteduserstrategy1").show();
+		$("#unselecteduserstrategy2").show();
+	}
+}
+
+function handleAddItemButton(e) {
+	e.preventDefault();
+	n = Number($("#directivecount").val());
+	n = n + 1;
+	$("#directivecount").val(n);
+
+	$("#dirtablebody").append(
+						`<tr id="row_a_`+n+`">
+						<td class="wrappingtd"><select class="itypeselect" id="itype_`+n+`" name="itype_`+n+`">#foreach($it in $supptypes.getInfotypes())<option value="$it">$it</option>#end</select></td>
+						<td class="wrappingtd"><select name="iid_`+n+`" id="iid_`+n+`" style="width: 100%;"></select></td>
+						<td class="wrappingtd"><select class="directive" name="directive_`+n+`" id="directive_`+n+`"><option value="PERMIT">Permit</option><option value="DENY">Deny</option></select></td>
+						<td class="wrappingtd"><input type="text" name="values_`+n+`" placeholder="Regular Expression" style="width: 100%;"></td>
+						<td class="wrappingtd"><select id="basis_`+n+`" name="basis_`+n+`" style="width: 100%;"><option value="Consent">Consent</option><option value="Contract">Contractual obligation</option><option value="Legal obligation">Legal obligation</option><option value="Vital Interests">Vital Interests</option><option value="Public Task">Public Task</option><option value="Legitimate Interest">Legitimate Interest</option></select></td>
+						<td class="wrappingtd" style="width:10%;"><a href="#" id="addelem_`+n+`" class="addelem"><i class="fa fa-plus"></i></a><input type="hidden" id="addcount_`+n+`" name="addcount_`+n+`" value="0"></td>
+					</tr>
+					<tr id="row_b_`+n+`">
+						<td colspan="2"></td>
+						<td class="wrappingtd"><select class="aodirective" name="directive_ao_`+n+`" id="directive_ao_`+n+`"><option value="PERMIT">Permit</option><option value="DENY">Deny</option></select></td>
+						<td>All Other Values</td>
+						<td><select name="basis_ao_`+n+`" id="basis_ao_`+n+`" style="width: 100%;"><option value="Consent">Consent</option><option value="Contract">Contractual obligation</option><option value="Legal obligation">Legal obligation</option><option value="Vital Interests">Vital Interests</option><option value="Public Task">Public Task</option><option value="Legitimate Interest">Legitimate Interest</option></select></td>
+						<td></td>
+					</tr>`);
+					$(".itypeselect").change(function(e) {
+						handleitypechange(e);
+					});	
+					$("#itype_"+n).trigger("change");
+					$(".aodirective").change(function(e) {
+						handleaodirectivechange(e);
+					});
+					$(".directive").change(function(e) {
+						handledirectivechange(e);
+					});
+					$(".addelem").off("click");
+					$(".addelem").click(function(e) {
+						handleaddelem(e);
+					});
+					$(".delelem").off("click");
+					$(".delelem").click(function(e) {
+						handledelelem(e);
+					});
+}
+
+function handleitypechange(e) {
+				var items = {
+					#foreach ($t in $typeidmap.keySet())
+						"$t": [
+							#foreach ($i in $typeidmap.get($t))
+								"$i",
+							#end
+						],
+					#end
+				}
+					tid = e.target.id;
+					n = tid.replace("itype_","");
+					$("#iid_"+n).empty();
+					$(items[$("#"+tid).val()]).each(function(i,t) {
+						$("#iid_"+n).append('<option value="'+t+'">'+t+'</option>');
+					});
+}
+
+</script>
+
+

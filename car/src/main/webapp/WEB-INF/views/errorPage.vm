@@ -1,0 +1,9 @@
+<html>
+    
+    <div id="main">
+      <div class="content-box">
+    	$message
+      </div>
+    </div>
+  </body>
+</html>

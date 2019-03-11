@@ -1,0 +1,8 @@
+<div style="height: 80px; padding: 5px; border: 1px solid grey;">
+  <div style="float: left">
+      <h1><font color=#004499>Duke</font></h1>
+  </div>
+  <div style="float: right; padding: 10px;">
+      I would like to donate <input value="Kopecs...">
+  </div>
+</div>

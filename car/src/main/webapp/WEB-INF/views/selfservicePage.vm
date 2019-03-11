@@ -1,0 +1,84 @@
+		     #if($successmsg)
+		<div class="message success">
+			$successmsg
+		</div>
+	#end
+	#if($failmsg)
+		<div class="message error">
+			$failmsg
+		</div>
+	#end
+	#if($noticemsg)
+		<div class="message notice">
+			$noticemsg
+		</div>
+	#end
+		<h1>My Sites and Services</h1>
+
+	<div id="sidebar">
+		<div class="content-section">
+			<h2>About these Sites</h2>
+				This page shows participating sites that have requested information about you, either because
+				you have visited them or for administrative reasons.  You can review and (where possible) manage
+				what information about you will be shared with these sites.
+		</div>
+		<button id="addrpbutton" class="active">Add A Site<i class="fa button-icon-right fa-plus"></i></button>
+		
+	</div>
+	<div id="left">
+					#set($rhnum=0)
+    				#foreach ($rhmi in $rhmiList)
+    					#set($rhnum=$rhnum+1)
+    					#foreach ($lstring in $rhmi.getDisplayname().getLocales())
+    						#if ($lstring.getLocale()==$locale)
+    							#set($dispn=$lstring.getValue())
+    						#end
+    					#end
+    					#set($rhid=$rhmi.getRhidentifier().getRhid())
+    					#if(! $policyMap.get($rhid) || $policyMap.get($rhid).isEmpty())
+    					<div/>
+    					#else
+    					
+    					<div class="content-section">
+    					<h2>$dispn</h2>
+    						#if($policyMap.get($rhid).size() > 10) 
+    						<table class="display full-width dataTable no-footer" role="grid" aria-describedby="rhtable_${rhnum}_info" id="rhtable_$rhnum">
+    						#else
+    						<table class="display full-width testvalue">
+    						#end
+    							<thead>
+    							<tr>
+    							<th>Name</th><th>URL</th><th>Updated</th><th></th>
+    							</tr>
+    							</thead>
+    							<tbody>
+    						#foreach ($policy in $policyMap.get($rhid)) 
+    							<tr>
+    								<td>$policy.getRpName()</td>
+    								<td>$policy.getRpUrl()</td>
+    								<td>$policy.getPolicyUpdateDate()</td>
+    								<td><a href="/car/carma/editpolicy?baseId=$policy.getBaseId()">manage</a></td>
+    							</tr>
+							#end
+							</tbody>
+							</table>
+						</div>
+						#end
+    				#end
+    			</div>
+    	</div>
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    		$(".dataTable").DataTable(
+    			{
+    				"columns": [
+    					null,
+    					null,
+    					{"type":"date"},
+    					null]
+    			});
+    		$("#addrpbutton").click(function() {
+    			window.location.href = "/car/carma/selfservice/addsite";
+    		});
+    	});
+    </script>
