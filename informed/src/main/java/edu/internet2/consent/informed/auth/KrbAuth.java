@@ -1,15 +1,16 @@
 package edu.internet2.consent.informed.auth;
 
-import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
-import org.ehcache.expiry.Duration;
-import org.ehcache.expiry.Expirations;
+import java.time.Duration;
+import org.ehcache.expiry.ExpiryPolicy;
+import java.time.temporal.ChronoUnit;
+
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
 import edu.internet2.consent.informed.util.InformedUtility;
@@ -46,7 +47,9 @@ public class KrbAuth implements BasicAuthHandler {
 		if (manager == null) {
 			manager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
 			try {
-				cache = manager.createCache("creds", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,ResourcePoolsBuilder.heap(1000)).withExpiry(Expirations.timeToLiveExpiration(Duration.of(900, TimeUnit.SECONDS))));
+				ExpiryPolicy<Object,Object> ep = ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(900,ChronoUnit.SECONDS));
+
+				cache = manager.createCache("creds", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,ResourcePoolsBuilder.heap(1000)).withExpiry(ep));
 			} catch (Exception e) {
 				InformedUtility.locError(500,"ERR0066",e.getMessage());
 			}
