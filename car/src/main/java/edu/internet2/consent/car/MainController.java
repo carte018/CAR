@@ -369,58 +369,7 @@ public class MainController {
 	
 	@RequestMapping(value="/reflex", method=RequestMethod.POST)
 	public ModelAndView performReflex(HttpServletRequest request) {
-		
-		// The reflex endpoint reflexively returns a "permit everything" response, purely for testing
-		// purposes.
-		return (handleFilterAndDecide(request, false));  // hack, hack, hack
-		
-		//NOTREACHED
-		
-	/*	InputRequest inputRequest = parseInput(request);
-		if (inputRequest == null) {
-			// failed input processing
-			ModelAndView r = new ModelAndView("errorPage");
-			r.addObject("message","Error:  input processing exception");
-			r.addObject("intercept_view","1");
-			return r;
-		}
-		ModelAndView resultView = new ModelAndView("reflex");  // Velocity view
-		
-		// Map input to output, for the moment with everything permitted, just for testing
-		DecisionResponse response = new DecisionResponse();
-		DecisionResponseHeader header = new DecisionResponseHeader();
-		header.setCarInstanceId("https://idms-icm-dev-01.oit.duke.edu/consent/v1/car");
-		header.setDecisionId("bogus-decision-id-0fa8");
-		response.setHeader(header);
-		ArrayList<NameValueDecision> list = new ArrayList<NameValueDecision>();
-		
-		
-		for (AttributeValuelist avl : inputRequest.getAttributes()) {
-			for (String value : avl.getValues()) {
-				NameValueDecision add = new NameValueDecision();
-				add.setName(avl.getAttrname());
-				add.setValue(value);
-				add.setDecision("permit");
-				list.add(add);
-			}
-		}
-		response.setDecisions(list);
-		
-		
-		try {
-			WrappedDecisionResponse w = new WrappedDecisionResponse();
-			w.setDecisionResponse(response);
-			resultView.addObject("json",new String(Base64.encodeBase64(w.toJson().getBytes())));
-			resultView.addObject("returnUrl",inputRequest.getHeader().getCallbackUrl());
-			resultView.addObject("intercept_view","1");
-		} catch (Exception e) {
-			// for now, we don't care about why
-			ModelAndView error = new ModelAndView("errorPage");
-			error.addObject("message","Failed constructing base64 encoded JSON representation for return: " + e.getMessage());
-			error.addObject("intercept_view","1");
-			return error;
-		}
-		return resultView; */
+		return (handleFilterAndDecide(request, false));  
 	}
 	
 	// No GET.  Only POST.  No GET.
@@ -1655,7 +1604,7 @@ public class MainController {
 			try {
 				drh.setCarInstanceId("https://"+config.getProperty("car.car.hostname", true)+":"+config.getProperty("car.car.port", true)+"/car");
 			} catch (Exception w) {
-				drh.setCarInstanceId("https://idms-icm-dev-01.oit.duke.edu/car");
+				drh.setCarInstanceId("https://icm.example.com/car");
 			}
 			// RGC - 11-21-2018
 			if (originalDecisionResponse != null)
