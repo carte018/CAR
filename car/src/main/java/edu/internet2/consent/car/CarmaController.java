@@ -125,7 +125,12 @@ public class CarmaController {
 		}
 		// TODO: make this parameterized via config per deployment instance
 		// return new ModelAndView("redirect:/carma/selfservice");
-		return new ModelAndView("redirect:https://www.oit.duke.edu");
+		CarConfig config = CarConfig.getInstance();
+		String cancelurl = config.getProperty("cancelURL", false);
+		if (cancelurl != null && ! cancelurl.contentEquals("")) 
+			return new ModelAndView("redirect:"+cancelurl);
+		else
+			return new ModelAndView("redirect:https://www.duke.edu");
 	}
 	// Handler for updates returned from the editpolicy page
 	@SuppressWarnings("unchecked")
