@@ -123,8 +123,6 @@ public class CarmaController {
 			sess.removeAttribute(sconvo + ":" + "returntourl");
 			sess.removeAttribute(sconvo + ":" + "csrftoken");
 		}
-		// TODO: make this parameterized via config per deployment instance
-		// return new ModelAndView("redirect:/carma/selfservice");
 		CarConfig config = CarConfig.getInstance();
 		String cancelurl = config.getProperty("cancelURL", false);
 		if (cancelurl != null && ! cancelurl.contentEquals("")) 
@@ -1512,7 +1510,11 @@ public class CarmaController {
 		if (request.getParameter("notice") != null) {
 			model.addObject("noticemsg",request.getParameter("notice"));
 		}
-		model.addObject("logouturl","/Shibboleth.sso/Logout?return=https://shib.oit.duke.edu/cgi-bin/logout.pl");
+		String logouturl = config.getProperty("car.carma.logouturl", false);
+		if (logouturl == null || logouturl.contentEquals("")) 
+			model.addObject("logouturl","/Shibboleth.sso/Logout?return=https://shib.oit.duke.edu/cgi-bin/logout.pl");
+		else 
+			model.addObject("logouturl",logouturl);
 		return model;
 	}
 	
