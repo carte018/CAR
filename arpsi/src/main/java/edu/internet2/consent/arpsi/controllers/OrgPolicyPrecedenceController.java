@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.arpsi.cfg.ArpsiConfig;
 import edu.internet2.consent.arpsi.model.ListOfReturnedPrecedenceObject;
+import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.model.OrgReturnedPolicy;
 import edu.internet2.consent.arpsi.model.PATCH;
 import edu.internet2.consent.arpsi.model.PrecedenceInstruction;
@@ -65,7 +66,7 @@ public class OrgPolicyPrecedenceController {
 			try {
 				config = ArpsiUtility.init("getPolicy", request, headers, null);
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500,"ERR0004");
+				return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 			}
 		
 			// Now we are authorized
@@ -82,7 +83,7 @@ public class OrgPolicyPrecedenceController {
 			// Set up for hibernate request
 			Session sess = ArpsiUtility.getHibernateSession();
 			if (sess == null) {
-				return ArpsiUtility.locError(500, "ERR0018");
+				return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
 			}
 
 			ListOfReturnedPrecedenceObject lorp = new ListOfReturnedPrecedenceObject();
@@ -96,11 +97,11 @@ public class OrgPolicyPrecedenceController {
 				// Check for empty or > 1 response
 				if (retList == null || retList.isEmpty()) {
 					sess.close();
-					return ArpsiUtility.locError(404,"ERR0019");
+					return ArpsiUtility.locError(404,"ERR0019",LogCriticality.info);
 				}
 				if (retList.size() > 1) {
 					sess.close();
-					return ArpsiUtility.locError(409, "ERR0020");
+					return ArpsiUtility.locError(409, "ERR0020",LogCriticality.info);
 				}
 				
 				// Build a response object and return it
@@ -117,7 +118,7 @@ public class OrgPolicyPrecedenceController {
 					sess.close();
 					return buildResponse(Status.OK,lorp.toJSON());
 				} catch (Exception e) {
-					return ArpsiUtility.locError(500, "ERR0016");
+					return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 				}
 			}
 			
@@ -141,12 +142,12 @@ public class OrgPolicyPrecedenceController {
 					List<OrgReturnedPolicy> retList = (List<OrgReturnedPolicy>) polQuery.list();
 					// Check for empty or > 1 response
 					if (retList == null || retList.isEmpty()) {
-						ArpsiUtility.infoLog("LOG0015",policyId);
+						ArpsiUtility.locLog("LOG0015",LogCriticality.debug,policyId);
 						// This is loggable but non-fatal
 						continue;
 					}
 					if (retList.size() > 1) {
-						ArpsiUtility.infoLog("LOG0003",policyId);
+						ArpsiUtility.locLog("LOG0003",LogCriticality.debug,policyId);
 						// Loggable but not fatal and we proceed
 					}
 				
@@ -168,7 +169,7 @@ public class OrgPolicyPrecedenceController {
 					sess.close();
 					return buildResponse(Status.OK,lorp.toJSON());
 				} catch (Exception e) {
-					return ArpsiUtility.locError(500, "ERR0016");
+					return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 				}
 			}
 			
@@ -180,7 +181,7 @@ public class OrgPolicyPrecedenceController {
 			// Check for empty or > 1 response
 			if (retList == null || retList.isEmpty()) {
 				sess.close();
-				return ArpsiUtility.locError(404, "ERR0019");
+				return ArpsiUtility.locError(404, "ERR0019",LogCriticality.info);
 			}
 			for (OrgReturnedPolicy orp : retList) {
 				// Build a response object and add it
@@ -198,7 +199,7 @@ public class OrgPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR0016");
+				return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 			}
 		}
 		
@@ -225,7 +226,7 @@ public class OrgPolicyPrecedenceController {
 			try {
 				config = ArpsiUtility.init("patchPolicy", request, headers, null);
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500,"ERR0004");
+				return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 			}
 
 			
@@ -239,17 +240,17 @@ public class OrgPolicyPrecedenceController {
 				ObjectMapper mapper = new ObjectMapper();
 				piList = mapper.readValue(entity, new TypeReference<List<PrecedenceInstruction>>(){});
 			} catch (JsonParseException e) {
-				return ArpsiUtility.locError(400, "ERR005");
+				return ArpsiUtility.locError(400, "ERR005",LogCriticality.info);
 			} catch (JsonMappingException e) {
-				return ArpsiUtility.locError(400, "ERR006");
+				return ArpsiUtility.locError(400, "ERR006",LogCriticality.info);
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR007");
+				return ArpsiUtility.locError(500, "ERR007",LogCriticality.error);
 			}
 			
 			// Iterate over the list in a transaction
 			Session sess = ArpsiUtility.getHibernateSession();
 			if (sess == null) {
-				return ArpsiUtility.locError(500, "ERR0018");
+				return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
 			}
 
 			Transaction tx = sess.beginTransaction();
@@ -267,7 +268,7 @@ public class OrgPolicyPrecedenceController {
 				if (sourceList == null || sourceList.isEmpty()) {
 					tx.rollback();
 					sess.close();
-					return ArpsiUtility.locError(400, "ERR0044",sourceId);
+					return ArpsiUtility.locError(400, "ERR0044",LogCriticality.info,sourceId);
 				}
 				OrgReturnedPolicy source = sourceList.get(0);
 				
@@ -278,7 +279,7 @@ public class OrgPolicyPrecedenceController {
 				if (targetList == null || targetList.isEmpty()) {
 					tx.rollback();
 					sess.close();
-					return ArpsiUtility.locError(400, "ERR0045",targetId);
+					return ArpsiUtility.locError(400, "ERR0045",LogCriticality.info,targetId);
 				}
 				OrgReturnedPolicy target = targetList.get(0);
 				
@@ -290,7 +291,7 @@ public class OrgPolicyPrecedenceController {
 				if (target.getReturnedPolicyIdentifier().equals(source.getReturnedPolicyIdentifier())) {
 					tx.rollback();
 					sess.close();
-					return ArpsiUtility.locError(400, "ERR0046");
+					return ArpsiUtility.locError(400, "ERR0046",LogCriticality.info);
 				}
 				
 				// Grab the priorities
@@ -323,7 +324,7 @@ public class OrgPolicyPrecedenceController {
 					// fail 
 					tx.rollback();
 					sess.close();
-					return ArpsiUtility.locError(400, "ERR0047",pi.getOperation());
+					return ArpsiUtility.locError(400, "ERR0047",LogCriticality.info,pi.getOperation());
 				}
 				} else {
 					// this is a move to a lower level
@@ -348,7 +349,7 @@ public class OrgPolicyPrecedenceController {
 						// fail 
 						tx.rollback();
 						sess.close();
-						return ArpsiUtility.locError(400, "ERR0047",pi.getOperation());
+						return ArpsiUtility.locError(400, "ERR0047",LogCriticality.info,pi.getOperation());
 					}
 				}
 			}
@@ -377,7 +378,7 @@ public class OrgPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR0016");
+				return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 			}
 		
 		}

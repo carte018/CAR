@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.arpsi.cfg.ArpsiConfig;
 import edu.internet2.consent.arpsi.model.ListOfOrgReturnedPolicy;
+import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.model.OrgInfoReleasePolicy;
 import edu.internet2.consent.arpsi.model.OrgInfoReleaseStatement;
 import edu.internet2.consent.arpsi.model.OrgPolicyMetaData;
@@ -96,7 +97,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("postPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004");
+			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Map the input into an org policy 
@@ -107,37 +108,37 @@ public class OrgInfoReleasePolicyController {
 		try {
 			inputPolicy = mapper.readValue(entity, OrgInfoReleasePolicy.class);
 		} catch(JsonParseException e) {
-			return ArpsiUtility.locError(400, "ERR0005");
+			return ArpsiUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch(JsonMappingException e) {
-			return ArpsiUtility.locError(400, "ERR0006");
+			return ArpsiUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(400, "ERR0007");
+			return ArpsiUtility.locError(400, "ERR0007",LogCriticality.info);
 		}
 		
 		// If we make it here, we have the input policy in inputPolicy
 		
 		if (inputPolicy == null) {
-			return ArpsiUtility.locError(400, "ERR0008");
+			return ArpsiUtility.locError(400, "ERR0008",LogCriticality.info);
 		}
 		
 		// Verify that the input contains the required fields according to the API spec
 		
 		if (inputPolicy.getDescription() == null || inputPolicy.getDescription().equals("")) {
-			return ArpsiUtility.locError(400, "ERR0009");
+			return ArpsiUtility.locError(400, "ERR0009",LogCriticality.info);
 		}
 		if (inputPolicy.getUserPropertyArray() == null || inputPolicy.getUserPropertyArray().isEmpty()) {
-			return ArpsiUtility.locError(400, "ERR0048");
+			return ArpsiUtility.locError(400, "ERR0048",LogCriticality.info);
 		}
 		if (inputPolicy.getRelyingPartyPropertyArray() == null || inputPolicy.getRelyingPartyPropertyArray().isEmpty()) {
-			return ArpsiUtility.locError(400, "ERR0049");
+			return ArpsiUtility.locError(400, "ERR0049",LogCriticality.info);
 		}
 		if (inputPolicy.getResourceHolderId() == null) {
-			return ArpsiUtility.locError(400,"ERR0012");
+			return ArpsiUtility.locError(400,"ERR0012",LogCriticality.info);
 		}
 		
 		// We also require one or both of an info release statement or an all other info statement
 		if ((inputPolicy.getArrayOfInfoReleaseStatement() == null || inputPolicy.getArrayOfInfoReleaseStatement().isEmpty()) && (inputPolicy.getAllOtherOrgInfoReleaseStatement() == null)) {
-			return ArpsiUtility.locError(400, "ERR0050");
+			return ArpsiUtility.locError(400, "ERR0050",LogCriticality.info);
 		}
 		
 		// there are no defaults to manage creation of here as there are in the COPSU -- everything here is 
@@ -146,7 +147,7 @@ public class OrgInfoReleasePolicyController {
 		// Establish a Hibernate session to operate on this stuff
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500, "ERR0018");
+			return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// It is actually perfectly legal to have multiple copies of the exact same policy in the ARPSI, useful
@@ -206,8 +207,7 @@ public class OrgInfoReleasePolicyController {
 		}
 		// Now, maxpriority is the maximum priority value stored.  
 		// Use it, save the policy, and commit the transaction
-		// TODO: deal with potential thread collisions here with more explicit pessimistic locking to avoid
-		// priority collisions.
+	
 		orp.setPriority(maxpriority + 1);
 		Transaction tx = sess.beginTransaction();
 		sess.save(orp);
@@ -216,7 +216,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			return buildResponse(Status.OK,orp.toJSON());
 		} catch (JsonProcessingException e) {
-			return ArpsiUtility.locError(500, "ERR0016");
+			return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -231,7 +231,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("getPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004");
+			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Now we are authorized
@@ -241,7 +241,7 @@ public class OrgInfoReleasePolicyController {
 		
 		if (policy_id == null || policy_id.equals("")) {
 			// Fail
-			return ArpsiUtility.locError(500, "ERR0017");
+			return ArpsiUtility.locError(500, "ERR0017",LogCriticality.error);
 		}
 		
 		// Check for request parameters
@@ -251,7 +251,7 @@ public class OrgInfoReleasePolicyController {
 		// Set up for hibernate request
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500,"ERR0018");
+			return ArpsiUtility.locError(500,"ERR0018",LogCriticality.error);
 		}
 		
 		// Determination of prior policy version number
@@ -308,10 +308,10 @@ public class OrgInfoReleasePolicyController {
 		if (resultList == null || resultList.size() < 1) {
 			// return a 404
 			sess.close();
-			return ArpsiUtility.locError(404, "ERR0019");
+			return ArpsiUtility.locError(404, "ERR0019",LogCriticality.info);
 		} else if (resultList.size() > 1 && (requestedVersion == null || !(requestedVersion.equals("allPolicies") || requestedVersion.equals("allVersions")))) {
 			sess.close();
-			return ArpsiUtility.locError(409, "ERR0020");
+			return ArpsiUtility.locError(409, "ERR0020",LogCriticality.info);
 		} else {
 			ListOfOrgReturnedPolicy lorp = new ListOfOrgReturnedPolicy();
 			for (OrgReturnedPolicy o : resultList) {
@@ -320,7 +320,7 @@ public class OrgInfoReleasePolicyController {
 			try {
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (JsonProcessingException j) {
-				return ArpsiUtility.locError(500,"ERR0016");
+				return ArpsiUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				if (sess != null) {
 					sess.close();
@@ -358,7 +358,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("getPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004");
+			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		
@@ -369,7 +369,7 @@ public class OrgInfoReleasePolicyController {
 		
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500, "ERR0018");
+			return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		sess.setHibernateFlushMode(FlushMode.MANUAL);  // we are read only
 		
@@ -393,7 +393,7 @@ public class OrgInfoReleasePolicyController {
 		// Take into consideration the RH (which is a unique value)
 		if (request.getParameter("resource-holder") == null || request.getParameter("resource-holder-type") == null) {
 			sess.close();
-			return ArpsiUtility.locError(400, "ERR0051");
+			return ArpsiUtility.locError(400, "ERR0051",LogCriticality.info);
 		}
 		queryBuilder.append("AND policy.resourceHolderId.RHValue = :rhvalue AND policy.resourceHolderId.RHType = :rhtype");
 		boolean createdByLimit = false;
@@ -415,7 +415,7 @@ public class OrgInfoReleasePolicyController {
 			resultList = (List<OrgReturnedPolicy>) searchQuery.list();
 		} catch (Exception e) {
 			sess.close();
-			return ArpsiUtility.locError(500, "ERR0051");
+			return ArpsiUtility.locError(500, "ERR0051",LogCriticality.error);
 		}
 		
 		// now we have a (possibly very long) list of every possible matching policy in the database.
@@ -480,13 +480,13 @@ public class OrgInfoReleasePolicyController {
 			if (sess != null) {
 				sess.close();
 			}
-			return ArpsiUtility.locError(404, "ERR0019");
+			return ArpsiUtility.locError(404, "ERR0019",LogCriticality.info);
 		} else {
 			// 200 result
 			try {
 				return buildResponse(Status.OK,retval.toJSON());
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR0016");
+				return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				if (sess != null) {
 					sess.close();
@@ -509,7 +509,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("putPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004");
+			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		
@@ -519,11 +519,11 @@ public class OrgInfoReleasePolicyController {
 		try {
 			inputPolicy = mapper.readValue(entity,  OrgInfoReleasePolicy.class);
 		} catch (JsonParseException j) {
-			return ArpsiUtility.locError(400,"ERR0005");
+			return ArpsiUtility.locError(400,"ERR0005",LogCriticality.info);
 		} catch (JsonMappingException j) {
-			return ArpsiUtility.locError(400, "ERR0006");
+			return ArpsiUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0007");
+			return ArpsiUtility.locError(500,"ERR0007",LogCriticality.error);
 		}
 		
 		// Now we have the input policy
@@ -532,7 +532,7 @@ public class OrgInfoReleasePolicyController {
 		
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500, "ERR0018");
+			return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -545,12 +545,12 @@ public class OrgInfoReleasePolicyController {
 		if (originals == null || originals.isEmpty()) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(404, "ERR0019");
+			return ArpsiUtility.locError(404, "ERR0019",LogCriticality.info);
 		}
 		if (originals.size() > 1) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(409, "ERR0020");
+			return ArpsiUtility.locError(409, "ERR0020",LogCriticality.info);
 		}
 		
 		OrgReturnedPolicy original = originals.get(0);
@@ -558,7 +558,7 @@ public class OrgInfoReleasePolicyController {
 		if (inputPolicy.getResourceHolderId() != null && inputPolicy.getResourceHolderId().getRHValue() != null && ! inputPolicy.getResourceHolderId().getRHValue().equals(original.getPolicy().getResourceHolderId().getRHValue())) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(400, "ERR0021","resourceHolder");
+			return ArpsiUtility.locError(400, "ERR0021",LogCriticality.info,"resourceHolder");
 		}
 		
 		ObjectMapper copier = new ObjectMapper();
@@ -570,15 +570,12 @@ public class OrgInfoReleasePolicyController {
 		} catch (Exception e) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(500, "ERR0022");
+			return ArpsiUtility.locError(500, "ERR0022",LogCriticality.error);
 		}
 		
 		// Update createTime in the policy
 		newPolicy.getPolicyMetaData().setCreateTime(System.currentTimeMillis());
 
-		// Update creator
-		// TODO:  For now, creator is constant so this is moot.  Later, need to pull creator from authN context
-		
 		// Increment version number
 		newPolicy.getPolicyMetaData().getPolicyId().setVersion(String.valueOf(Integer.parseInt(newPolicy.getPolicyMetaData().getPolicyId().getVersion()) + 1));
 		
@@ -612,7 +609,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			return buildResponse(Status.OK,newPolicy.toJSON());
 		} catch (JsonProcessingException e) {
-			return ArpsiUtility.locError(500,"ERR0016");
+			return ArpsiUtility.locError(500,"ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -627,17 +624,17 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("deletePolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004");
+			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Authorization verified.
 		if (policy_id == null || policy_id.equals("")) {
-			return ArpsiUtility.locError(400, "ERR0017");
+			return ArpsiUtility.locError(400, "ERR0017",LogCriticality.info);
 		}
 
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500,"ERR0018");
+			return ArpsiUtility.locError(500,"ERR0018",LogCriticality.error);
 		}
 		Transaction tx = sess.beginTransaction();
 		
@@ -647,11 +644,11 @@ public class OrgInfoReleasePolicyController {
 		if (resultList == null || resultList.isEmpty()) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(404, "ERR0019");
+			return ArpsiUtility.locError(404, "ERR0019",LogCriticality.info);
 		} else if (resultList.size() > 1) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(409, "ERR0020");
+			return ArpsiUtility.locError(409, "ERR0020",LogCriticality.info);
 		} else {
 			// delete it
 			if (request.getParameter("expungeOnDelete") != null && request.getParameter("expungeOnDelete").equals("true")) {

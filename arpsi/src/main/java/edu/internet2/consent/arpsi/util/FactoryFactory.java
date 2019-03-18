@@ -5,6 +5,8 @@ import java.io.File;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import edu.internet2.consent.arpsi.model.LogCriticality;
+
 public class FactoryFactory {
 	public static SessionFactory factory;
 	public static synchronized SessionFactory getSessionFactory() {
@@ -13,7 +15,7 @@ public class FactoryFactory {
 			if (cfile.exists()) 
 				factory = new Configuration().configure(cfile).buildSessionFactory();
 			else {
-				ArpsiUtility.infoLog("LOG0016");
+				ArpsiUtility.locLog("LOG0016",LogCriticality.debug);
 				factory = new Configuration().configure().buildSessionFactory();
 			}
 		}

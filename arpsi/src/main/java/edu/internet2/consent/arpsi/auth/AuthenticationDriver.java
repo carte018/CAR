@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
 
 import edu.internet2.consent.arpsi.cfg.ArpsiConfig;
+import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
 import org.apache.commons.codec.binary.Base64;
 
@@ -19,19 +20,19 @@ public class AuthenticationDriver {
 		try {
 			validator = config.getProperty("arpsi.basicauth.validator.class", true);
 		} catch (Exception e) {
-			throw new RuntimeException(ArpsiUtility.locError(500,"ERR0029").getEntity().toString());
+			throw new RuntimeException(ArpsiUtility.locError(500,"ERR0029",LogCriticality.error).getEntity().toString());
 		}
 		Class<BasicAuthHandler> validatorClass = null;
 		try {
 			validatorClass = (Class<BasicAuthHandler>) Class.forName(validator);
 		} catch (Exception e) {
-			throw new RuntimeException(ArpsiUtility.locError(500, "ERR0030", validator).getEntity().toString());
+			throw new RuntimeException(ArpsiUtility.locError(500, "ERR0030", LogCriticality.error, validator).getEntity().toString());
 		}
 		BasicAuthHandler v;
 		try {
 			v = (BasicAuthHandler) (validatorClass.newInstance());
 		} catch (Exception e) {
-			throw new RuntimeException(ArpsiUtility.locError(500,"ERR0031", validator).getEntity().toString());
+			throw new RuntimeException(ArpsiUtility.locError(500,"ERR0031", LogCriticality.error, validator).getEntity().toString());
 		}
 		
 		// Get credential information from headers

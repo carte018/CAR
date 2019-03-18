@@ -35,6 +35,7 @@ import edu.internet2.consent.arpsi.model.DecisionsForInfoDiscriminator;
 import edu.internet2.consent.arpsi.model.DecisionsForInfoStatement;
 import edu.internet2.consent.arpsi.model.InfoId;
 import edu.internet2.consent.arpsi.model.InfoIdPlusValues;
+import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.model.OrgDirectiveOnValues;
 import edu.internet2.consent.arpsi.model.OrgInfoReleaseStatement;
 import edu.internet2.consent.arpsi.model.OrgReleaseDirective;
@@ -93,7 +94,7 @@ public class OrgInfoReleaseDecisionController {
 		try {
 			config = ArpsiUtility.init("postPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004");
+			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 	
 		// Authorized.  Now we parse the input
@@ -104,11 +105,11 @@ public class OrgInfoReleaseDecisionController {
 		try {
 			inputRequest = mapper.readValue(entity,  DecisionRequestObject.class);
 		} catch (JsonParseException e) {
-			return ArpsiUtility.locError(400,"ERR0005");
+			return ArpsiUtility.locError(400,"ERR0005",LogCriticality.info);
 		} catch (JsonMappingException me) {
-			return ArpsiUtility.locError(400, "ERR0006");
+			return ArpsiUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception ioe) {
-			return ArpsiUtility.locError(500, "ERR0007");
+			return ArpsiUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 
 		// Now the input is in inputRequest
@@ -116,19 +117,19 @@ public class OrgInfoReleaseDecisionController {
 		// validate the input for required request data
 		
 		if (inputRequest == null) {
-			return ArpsiUtility.locError(400, "ERR0008");
+			return ArpsiUtility.locError(400, "ERR0008",LogCriticality.info);
 		}
 		if (inputRequest.getUserId() == null) {
-			return ArpsiUtility.locError(400,"ERR0010");
+			return ArpsiUtility.locError(400,"ERR0010",LogCriticality.info);
 		}
 		if (inputRequest.getRelyingPartyId() == null) {
-			return ArpsiUtility.locError(400, "ERR0011");
+			return ArpsiUtility.locError(400, "ERR0011",LogCriticality.info);
 		}
 		if (inputRequest.getResourceHolderId() == null) {
-			return ArpsiUtility.locError(400,"ERR0012");
+			return ArpsiUtility.locError(400,"ERR0012",LogCriticality.info);
 		}
 		if (inputRequest.getArrayOfInfoIdsPlusValues() == null) {
-			return ArpsiUtility.locError(400, "ERR0035");
+			return ArpsiUtility.locError(400, "ERR0035",LogCriticality.info);
 		}
 		
 		// Arrays of properties are not required, although not passing them may make some policies 
@@ -176,7 +177,7 @@ public class OrgInfoReleaseDecisionController {
 
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500,"ERR0018");
+			return ArpsiUtility.locError(500,"ERR0018",LogCriticality.error);
 		}
 		
 		// Now things get unpleasant
@@ -295,7 +296,7 @@ public class OrgInfoReleaseDecisionController {
 		
 		
 		ArrayList<PendingDecision> rv = new ArrayList<PendingDecision>();
-		ArpsiUtility.infoLog("LOG0017",inUser,inRP);
+		ArpsiUtility.locLog("LOG0017",LogCriticality.debug,inUser,inRP);
 		// For each of the possibly matching policies...
 		for (OrgReturnedPolicy checkPolicy : retList) {
 			// If the policy has a catch-all and we don't have one yet, record it
@@ -329,16 +330,16 @@ public class OrgInfoReleaseDecisionController {
 				}
 			}
 			if (userMatch) {
-				ArpsiUtility.infoLog("LOG0018",checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
+				ArpsiUtility.locLog("LOG0018",LogCriticality.info,checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
 				// We matched on user information -- see if we match on RP now
 				for (RelyingPartyProperty rp : checkPolicy.getPolicy().getRelyingPartyPropertyArray()) {
-					ArpsiUtility.infoLog("LOG0020",rp.getRpPropName(),rp.getRpPropValue(),"RP identity: " + inRPType + "/" + inRP);
+					ArpsiUtility.locLog("LOG0020",LogCriticality.info,rp.getRpPropName(),rp.getRpPropValue(),"RP identity: " + inRPType + "/" + inRP);
 					if (inRPType.matches(rp.getRpPropName()) && inRP.matches(rp.getRpPropValue())) {
 						rpMatch = true;
 						continue;
 					} else {
 						for (RelyingPartyProperty irp : inputRequest.getArrayOfRelyingPartyProperty()) {
-							ArpsiUtility.infoLog("LOG0020",irp.getRpPropName(),irp.getRpPropValue(),rp.getRpPropName()+","+rp.getRpPropValue());
+							ArpsiUtility.locLog("LOG0020",LogCriticality.info,irp.getRpPropName(),irp.getRpPropValue(),rp.getRpPropName()+","+rp.getRpPropValue());
 							if (irp.getRpPropName().matches(rp.getRpPropName()) && irp.getRpPropValue().matches(rp.getRpPropValue())) {
 								rpMatch = true;
 								continue;
@@ -349,11 +350,11 @@ public class OrgInfoReleaseDecisionController {
 						continue;
 				}
 			} else {
-				ArpsiUtility.infoLog("LOG0019",checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
+				ArpsiUtility.locLog("LOG0019",LogCriticality.info,checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
 			}
 			if (!userMatch || !rpMatch) {
 				// we failed to match on either user or RP
-				ArpsiUtility.locError(200, "ERR0907");
+				ArpsiUtility.locError(200, "ERR0907",LogCriticality.debug);
 				continue;
 			}
 			// Otherwise, we have an applicable policy -- check to see if it fulfills any of the info requests
@@ -514,7 +515,7 @@ public class OrgInfoReleaseDecisionController {
 		try {
 			return buildResponse(Status.OK,dro.toJSON());
 		} catch (JsonProcessingException e) {
-			return ArpsiUtility.locError(500, "ERR0016");
+			return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
 		} finally {
 			if (sess != null) {
 				sess.close();

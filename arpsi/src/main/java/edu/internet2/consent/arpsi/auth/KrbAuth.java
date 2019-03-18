@@ -1,6 +1,7 @@
 package edu.internet2.consent.arpsi.auth;
 
 import edu.internet2.consent.arpsi.cfg.ArpsiConfig;
+import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
 import com.sun.security.auth.module.Krb5LoginModule;
 import javax.security.auth.Subject;
@@ -21,7 +22,7 @@ public class KrbAuth implements edu.internet2.consent.arpsi.auth.BasicAuthHandle
 		try {
 			return checkAuthentication(unscopedUser, credential, realm, defaultService);
 		} catch (Exception e) {
-			ArpsiUtility.locError(500, "ERR0032", this.getClass().getName());  // log
+			ArpsiUtility.locError(500, "ERR0032", LogCriticality.error, this.getClass().getName());  // log
 			return false;
 		}
 	}
