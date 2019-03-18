@@ -1,6 +1,7 @@
 package edu.internet2.consent.copsu.auth;
 
 import edu.internet2.consent.copsu.cfg.CopsuConfig;
+import edu.internet2.consent.copsu.model.LogCriticality;
 import edu.internet2.consent.copsu.util.CopsuUtility;
 import com.sun.security.auth.module.Krb5LoginModule;
 import javax.security.auth.Subject;
@@ -21,7 +22,7 @@ public class KrbAuth implements BasicAuthHandler {
 		try {
 			return checkAuthentication(unscopedUser, credential, realm, defaultService);
 		} catch (Exception e) {
-			CopsuUtility.locError(500, "ERR0032", this.getClass().getName());  // log
+			CopsuUtility.locError(500, "ERR0032", LogCriticality.error, this.getClass().getName());  // log
 			return false;
 		}
 	}

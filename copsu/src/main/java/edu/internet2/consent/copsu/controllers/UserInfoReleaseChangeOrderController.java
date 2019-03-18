@@ -1,4 +1,4 @@
-package edu.internet2.consent.copsu.controllers;
+ package edu.internet2.consent.copsu.controllers;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +30,7 @@ import edu.internet2.consent.copsu.cfg.CopsuConfig;
 import edu.internet2.consent.copsu.model.ChangeOrder;
 import edu.internet2.consent.copsu.model.ChangeOrderMetaData;
 import edu.internet2.consent.copsu.model.ListOfReturnedChangeOrder;
+import edu.internet2.consent.copsu.model.LogCriticality;
 import edu.internet2.consent.copsu.model.ReturnedChangeOrder;
 import edu.internet2.consent.copsu.model.UserId;
 import edu.internet2.consent.copsu.util.CopsuUtility;
@@ -66,11 +67,11 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			config = CopsuUtility.init("getChangeOrder", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004");
+			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018");
+			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		Query<ReturnedChangeOrder> coQuery = sess.createQuery("from ReturnedChangeOrder where changeOrderMetaData.changeOrderId = :changeId",ReturnedChangeOrder.class);
@@ -85,11 +86,11 @@ public class UserInfoReleaseChangeOrderController {
 				return resp;
 			} catch (Exception e) {
 				sess.close();
-				return CopsuUtility.locError(500, "ERR0044",e.getMessage());
+				return CopsuUtility.locError(500, "ERR0044",LogCriticality.error,e.getMessage());
 			}
 		} else {
 			sess.close();
-			return CopsuUtility.locError(404, "ERR0019");
+			return CopsuUtility.locError(404, "ERR0019",LogCriticality.info);
 		}
 	}
 	
@@ -114,7 +115,7 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			config = CopsuUtility.init("getChangeOrder", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004");
+			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Now we can do the work
@@ -141,7 +142,7 @@ public class UserInfoReleaseChangeOrderController {
 		
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018");
+			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		Query<ReturnedChangeOrder> coQuery = sess.createQuery(sb.toString(),ReturnedChangeOrder.class);
@@ -163,7 +164,7 @@ public class UserInfoReleaseChangeOrderController {
 		ListOfReturnedChangeOrder list = new ListOfReturnedChangeOrder();
 		if (returnedList == null || returnedList.isEmpty()) {
 			sess.close();
-			return CopsuUtility.locError(404, "ERR0019");
+			return CopsuUtility.locError(404, "ERR0019",LogCriticality.info);
 		}
 		for (ReturnedChangeOrder ro : returnedList) {
 			list.addChangeOrder(ro);
@@ -171,7 +172,7 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			return buildResponse(Status.OK,list.toJSON());
 		} catch (JsonProcessingException j) {
-			return CopsuUtility.locError(500, "ERR0016");
+			return CopsuUtility.locError(500, "ERR0016",LogCriticality.error);
 		} finally {
 			sess.close();
 		}
@@ -191,7 +192,7 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			config = CopsuUtility.init("postChangeOrder", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004");
+			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Input is a JSON serialized ChangeOrder
@@ -215,58 +216,58 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			inputChangeOrder = mapper.readValue(entity, ChangeOrder.class);
 		} catch (JsonParseException e) {
-			return CopsuUtility.locError(400, "ERR0005");
+			return CopsuUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return CopsuUtility.locError(400, "ERR0006");
+			return CopsuUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return CopsuUtility.locError(500, "ERR0007");
+			return CopsuUtility.locError(500, "ERR0007",LogCriticality.info);
 		}
 		
 		// Otherwise, we mapped the input JSON to a change order
 		
 		if (inputChangeOrder == null) {
-			return CopsuUtility.locError(400, "ERR0008");
+			return CopsuUtility.locError(400, "ERR0008",LogCriticality.info);
 		}
 		
 		// And it's not empty.  Verify that it has the required fields
 		
 		if (inputChangeOrder.getDescription() == null) {
-			return CopsuUtility.locError(400, "ERR0009");
+			return CopsuUtility.locError(400, "ERR0009",LogCriticality.info);
 		}
 		if (inputChangeOrder.getChangeOrderType() == null) {
-			return CopsuUtility.locError(400, "ERR0038");
+			return CopsuUtility.locError(400, "ERR0038",LogCriticality.info);
 		}
 		if (inputChangeOrder.getUserIdArray() == null) {
-			return CopsuUtility.locError(400, "ERR0010");
+			return CopsuUtility.locError(400, "ERR0010",LogCriticality.info);
 		}
 		if (inputChangeOrder.getRelyingPartyIdArray() == null) {
-			return CopsuUtility.locError(400,"ERR0011");
+			return CopsuUtility.locError(400,"ERR0011",LogCriticality.info);
 		}
 		if (inputChangeOrder.getPolicyIdArray() == null) {
-			return CopsuUtility.locError(400, "ERR0017");
+			return CopsuUtility.locError(400, "ERR0017",LogCriticality.info);
 		}
 		if (inputChangeOrder.getResourceHolderId() == null) {
-			return CopsuUtility.locError(400,"ERR0012");
+			return CopsuUtility.locError(400,"ERR0012",LogCriticality.info);
 		}
 		
 		// The rest is optional, but we must have at least one of either info release statements or all other info release statement
 		if ((inputChangeOrder.getArrayOfInfoReleaseStatement()==null || inputChangeOrder.getArrayOfInfoReleaseStatement().isEmpty()) && (inputChangeOrder.getAllOtherInfoReleaseStatement() == null)) {
-			return CopsuUtility.locError(400, "ERR0039");
+			return CopsuUtility.locError(400, "ERR0039",LogCriticality.info);
 		}
 		
 		// And there is a constraint on the change order type and the list of values offered
 		switch(inputChangeOrder.getChangeOrderType()) {
 		case createPolicyFromNewUserConfig:
-			return CopsuUtility.locError(400, "ERR0040");
+			return CopsuUtility.locError(400, "ERR0040",LogCriticality.info);
 		case fixErrorInPolicy:
 			if (inputChangeOrder.getUserIdArray().isEmpty() || inputChangeOrder.getUserIdArray().size() > 1 || inputChangeOrder.getRelyingPartyIdArray().isEmpty() || inputChangeOrder.getRelyingPartyIdArray().size() > 1) {
-				return CopsuUtility.locError(400,"ERR0041");
+				return CopsuUtility.locError(400,"ERR0041",LogCriticality.info);
 			}
 			break;
 		case changePoliciesAboutSpecificRP:
 			// Only one RP allowed
 			if (inputChangeOrder.getRelyingPartyIdArray().isEmpty() || inputChangeOrder.getRelyingPartyIdArray().size() > 1 || inputChangeOrder.getRelyingPartyIdArray().get(0).equals("allRPs")) {
-				return CopsuUtility.locError(400, "ERR0042");
+				return CopsuUtility.locError(400, "ERR0042",LogCriticality.info);
 			}
 			break;
 		}
@@ -293,7 +294,7 @@ public class UserInfoReleaseChangeOrderController {
 		
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018");
+			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		
@@ -309,7 +310,7 @@ public class UserInfoReleaseChangeOrderController {
 		if (! checkList.isEmpty()) {
 			// Collision
 			sess.close();
-			return CopsuUtility.locError(409, "ERR0043");
+			return CopsuUtility.locError(409, "ERR0043",LogCriticality.info);
 		}
 		
 		// We know we have a unique change Order number now
@@ -337,13 +338,13 @@ public class UserInfoReleaseChangeOrderController {
 			// If there is an exception during the application, we must roll back the transaction
 			// We assume here that the apply() method in the returned change order has already rolled back any changes it made based on its exception
 			// And return a failure
-			return CopsuUtility.locError(500, "ERR0037", "Change order application failure: " + e.getMessage());
+			return CopsuUtility.locError(500, "ERR0037", LogCriticality.error, "Change order application failure: " + e.getMessage());
 		}
 		try {
 			return buildResponse(Status.OK,rco.toJSON());
 		} catch (Exception e) {
 			// JSON parsing error
-			return CopsuUtility.locError(500, "ERR0016");
+			return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
 		}
 	} 
 }

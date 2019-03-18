@@ -32,6 +32,7 @@ import edu.internet2.consent.copsu.model.DirectiveOnValues;
 import edu.internet2.consent.copsu.model.InfoId;
 import edu.internet2.consent.copsu.model.InfoIdPlusValues;
 import edu.internet2.consent.copsu.model.InfoReleaseStatement;
+import edu.internet2.consent.copsu.model.LogCriticality;
 import edu.internet2.consent.copsu.model.ReleaseDirective;
 import edu.internet2.consent.copsu.model.ReturnedPolicy;
 import edu.internet2.consent.copsu.model.ValueObject;
@@ -90,7 +91,7 @@ public class UserInfoReleaseDecisionController {
 		try {
 			config = CopsuUtility.init("postDecisionRequest", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004");
+			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		// Parse the input document
 		ObjectMapper mapper = new ObjectMapper();
@@ -99,34 +100,34 @@ public class UserInfoReleaseDecisionController {
 		try {
 			inputRequest = mapper.readValue(entity, DecisionRequestObject.class);
 		} catch (JsonParseException pe) {
-			return CopsuUtility.locError(400, "ERR0005");
+			return CopsuUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException me) {
-			return CopsuUtility.locError(400, "ERR0006");
+			return CopsuUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception ioe) {
-			return CopsuUtility.locError(500, "ERR0007");
+			return CopsuUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// Now we have the inputRequest parsed -- check for mandatory fields in the JSON
 		
 		if (inputRequest == null) {
 			// Null input is invalid
-			return CopsuUtility.locError(400, "ERR0008");
+			return CopsuUtility.locError(400, "ERR0008",LogCriticality.info);
 		}
 		
 		if (inputRequest.getUserId() == null) {
-			return CopsuUtility.locError(400, "ERR0010");
+			return CopsuUtility.locError(400, "ERR0010",LogCriticality.info);
 		}
 		
 		if (inputRequest.getRelyingPartyId() == null) {
-			return CopsuUtility.locError(400, "ERR0011");
+			return CopsuUtility.locError(400, "ERR0011",LogCriticality.info);
 		}
 		
 		if (inputRequest.getResourceHolderId() == null) {
-			return CopsuUtility.locError(400, "ERR0012");
+			return CopsuUtility.locError(400, "ERR0012",LogCriticality.info);
 		}
 		
 		if (inputRequest.getArrayOfInfoIdsPlusValues() == null) {
-			return CopsuUtility.locError(400, "ERR0035");
+			return CopsuUtility.locError(400, "ERR0035",LogCriticality.info);
 		}
 		
 		// Required inputs are present.
@@ -138,7 +139,7 @@ public class UserInfoReleaseDecisionController {
 		try {
 			NewEntityUtilities.createNewRPTemplateForUser(inputRequest.getUserId());
 		} catch (Exception e) {
-			CopsuUtility.infoLog("LOG",e.getMessage());
+			CopsuUtility.locLog("LOG",LogCriticality.info,e.getMessage());
 			// ignore -- failure to create the new RP template is not an error if one happens to exist
 			// We handle failsafe later.
 		}
@@ -292,7 +293,7 @@ public class UserInfoReleaseDecisionController {
 				if (!foundReleaseDirective) {
 					// If no directive can be descried for this case, we have an error
 					sess.close();
-					return CopsuUtility.locError(404, "ERR0036",iiv,iid.getInfoValue());
+					return CopsuUtility.locError(404, "ERR0036",LogCriticality.error,iiv,iid.getInfoValue());
 				}
 			}
 			// For iid (one of the requested info IDs) we now have the breakout of what gets what response
@@ -362,17 +363,17 @@ public class UserInfoReleaseDecisionController {
 		} catch (Exception e) {
 			// leak prevention
 			sess.close();
-			return CopsuUtility.locError(500, "ERR0037",e.getMessage());
+			return CopsuUtility.locError(500, "ERR0037",LogCriticality.error,e.getMessage());
 		} 
 		// And return
 		try {
-			sess.close();
 			// Log what we've done
-			CopsuUtility.infoLog("LOG0013",dro.getDecisionId(),applicablePolicy.getPolicyMetaData().getPolicyId().getBaseId(),applicablePolicy.getPolicyMetaData().getPolicyId().getVersion());
+			CopsuUtility.locLog("LOG0013",LogCriticality.info,dro.getDecisionId(),applicablePolicy.getPolicyMetaData().getPolicyId().getBaseId(),applicablePolicy.getPolicyMetaData().getPolicyId().getVersion());
 			return buildResponse(Status.OK,dro.toJSON());
 		} catch (Exception e) {
+			return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+		} finally {
 			sess.close();
-			return CopsuUtility.locError(500, "ERR0016");
 		}
 	}
 }

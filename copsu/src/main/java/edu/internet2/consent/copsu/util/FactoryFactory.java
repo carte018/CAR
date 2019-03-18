@@ -5,6 +5,8 @@ import java.io.File;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+import edu.internet2.consent.copsu.model.LogCriticality;
+
 public class FactoryFactory {
 	public static SessionFactory factory;
 	public static synchronized SessionFactory getSessionFactory() {
@@ -13,7 +15,7 @@ public class FactoryFactory {
 			if (cfile.exists()) 
 				factory = new Configuration().configure(cfile).buildSessionFactory();
 			else {
-				CopsuUtility.debugLog("ERR0037", "Failed to open /etc/car/copsu/hibernate.cfg.xml -- using local config");
+				CopsuUtility.locLog("ERR0037", LogCriticality.debug, "Failed to open /etc/car/copsu/hibernate.cfg.xml -- using local config");
 				factory = new Configuration().configure().buildSessionFactory();
 			}
 		}
