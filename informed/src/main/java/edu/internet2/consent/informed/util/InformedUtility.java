@@ -15,8 +15,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-import edu.internet2.consent.informed.auth.AuthenticationDriver;
 import edu.internet2.consent.informed.cfg.InformedConfig;
+import edu.internet2.consent.informed.model.LogCriticality;
+import edu.internet2.consent.informed.auth.AuthenticationDriver;
 import edu.internet2.consent.informed.model.ErrorModel;
 
 public class InformedUtility {
@@ -65,19 +66,19 @@ public class InformedUtility {
 		try {
 			config = InformedConfig.getInstance();
 		} catch (Exception c) {
-			locError(500,"ERR0001");
+			locError(500,"ERR0001",LogCriticality.error);
 			throw new RuntimeException(defRB.getString("ERR0001"));
 		}
 		
 		// We have a configuration object -- use it with the input request info to do authorization
 		if (! isAuthorized(request,headers,entity,config)) {
 			// no authorization to use the interface at all
-			locError(500,"ERR0002");
+			locError(500,"ERR0002",LogCriticality.error);
 			throw new RuntimeException(defRB.getString("ERR0002"));
 		}
 		
 		if (! isAuthorized(operation,request,headers,entity,config)) {
-			locError(500,"ERR0003");
+			locError(500,"ERR0003",LogCriticality.error);
 			throw new RuntimeException(defRB.getString("ERR0003"));
 		}
 		String sl = null;
@@ -91,14 +92,42 @@ public class InformedUtility {
 		
 	}
 	
-	public static Response locError(int retcode, String errcode) {
+	// Process criticality comparisons
+	private static boolean isLog(LogCriticality crit) {
+		// Determine log level and then return isLog(crit,level)
+		InformedConfig config = InformedConfig.getInstance();
+		String level = "error";
+		if (config != null) {
+			String nlevel = config.getProperty("logLevel", false);
+			if (nlevel != null) {
+				level = nlevel;
+			}
+		}
+		return isLog(crit,level);
+	}
+	
+	private static boolean isLog(LogCriticality crit, String level) {
+		// Return true if criticality is at or above level
+		if (crit.equals(LogCriticality.error)
+				|| (crit.equals(LogCriticality.info) && (level.contentEquals("info") || level.equals("debug")))
+				|| (crit.equals(LogCriticality.debug)&& (level.contentEquals("debug")))) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	public static Response locError(int retcode, String errcode,LogCriticality crit) {
 		// return the Response object to use for an error return.  Along the way, write a log message.
-		LOG.error("ERROR ecode=" + errcode + ": " + locRB.getString(errcode));
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.error("ERROR ecode=" + errcode + ": " + locRB.getString(errcode));
 		return new ErrorModel(retcode,locRB.getString(errcode)).toResponse();
 	}
 	
 	
-	public static Response locError(int retcode, String errcode, String... args) {
+	public static Response locError(int retcode, String errcode, LogCriticality crit, String... args) {
 		// Return the Response object to use for an error return.  With substitution.
 		String raw=locRB.getString(errcode);
 		if (raw != null && args != null && args.length > 0 && args[0] != null) {
@@ -107,15 +136,21 @@ public class InformedUtility {
 					raw = raw.replaceAll("\\{"+i+"\\}", args[i]);
 			}
 		}
-		LOG.error("ERROR ecode=" + errcode + ": " + raw);
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.error("ERROR ecode=" + errcode + ": " + raw);
 		return new ErrorModel(retcode,raw).toResponse();
 	}
 	
-	public static void debugLog(String errcode) {
-		LOG.debug("DEBUG ecode=" + errcode + " "+ locDB.getString(errcode));
+	public static void locLog(String errcode, LogCriticality crit) {
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " "+ locDB.getString(errcode));
 	}
 	
-	public static void debugLog(String errcode, String...strings) {
+	public static void locLog(String errcode, LogCriticality crit, String...strings) {
 		String ret = locDB.getString(errcode);
 		if (ret != null && strings != null && strings.length > 0) {
 			for (int i=0; i<strings.length; i++) {
@@ -123,19 +158,10 @@ public class InformedUtility {
 					ret = ret.replaceAll("\\{"+i+"\\}",strings[i]);
 			}
 		}
-		LOG.debug("DEBUG ecode=" + errcode + " " + ret);
-	}
-	public static void infoLog(String errcode) {
-		LOG.info("INFO ecode=" + errcode + " " + locDB.getString(errcode));
-	}
-	public static void infoLog(String errcode, String...strings) {
-		String ret = locDB.getString(errcode);
-		if (ret != null) {
-			for (int i=0; i<strings.length; i++) {
-				ret = ret.replaceAll("\\{"+i+"\\}", strings[i]);
-			}
-		}
-		LOG.info("INFO ecode=" + errcode + " " + ret);
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " " + ret);
 	}
 	
 	public static Session getHibernateSession() {

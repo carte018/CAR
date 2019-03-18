@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
+import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedInfoTypeList;
 import edu.internet2.consent.informed.model.ReturnedRHInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
@@ -101,7 +102,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("deleteInfotypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -110,7 +111,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Perform the delete operation in a transaction
@@ -151,13 +152,13 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getInfotypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Get the entries (if there are any)
@@ -167,13 +168,13 @@ public class RHICController {
 		
 		if (retlist.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retlist));
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -191,13 +192,13 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getInfotypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004", LogCriticality.error);
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018", LogCriticality.error);
 		}
 		
 		// Get the entries (if there are any)
@@ -209,13 +210,13 @@ public class RHICController {
 		// if none are returned, we 404, otherwise, we return the list
 		if (retlist.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retlist));
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -232,7 +233,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getInfotypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		// Unescape
 		String rhvalue = InformedUtility.idUnEscape(rhvaluein);
@@ -240,7 +241,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Retrieve the requested object if it exists
@@ -255,13 +256,13 @@ public class RHICController {
 		if (retlist.isEmpty()) {
 			// return a 404
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			// return the returned object (we assume we cannot have duplicate returns
 			try {
 				return buildResponse(Status.OK,retlist.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -279,7 +280,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("putInfotypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004", LogCriticality.error);
 		}
 		
 		// Unescape
@@ -293,11 +294,11 @@ public class RHICController {
 		try {
 			ritl = mapper.readValue(entity, ReturnedInfoTypeList.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005", LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006", LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007", LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -305,7 +306,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -350,7 +351,7 @@ public class RHICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -366,7 +367,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("deleteMetainformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -375,7 +376,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -416,12 +417,12 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getMetainformation", request,  headers,  null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,  "ERR0004");
+			return InformedUtility.locError(500,  "ERR0004", LogCriticality.error);
 		}
 		
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500,  "ERR0018");
+			return InformedUtility.locError(500,  "ERR0018",LogCriticality.error);
 		}
 		Query<ReturnedRHMetaInformation> retQuery = sess.createQuery("from ReturnedRHMetaInformation where state = :state",ReturnedRHMetaInformation.class);
 		retQuery.setParameter("state", "active");  // only retrieve active entries
@@ -430,13 +431,13 @@ public class RHICController {
 		
 		if (lrhmi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(lrhmi));
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -452,7 +453,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getMetainformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -461,7 +462,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018", LogCriticality.error);
 		}
 		
 		Query<ReturnedRHMetaInformation> retQuery = sess.createQuery("from ReturnedRHMetaInformation where rhidentifier.rhtype = :rhtype and rhidentifier.rhid = :rhid and state = :state",ReturnedRHMetaInformation.class);
@@ -473,12 +474,12 @@ public class RHICController {
 		
 		if (lrhmi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
 				return buildResponse(Status.OK,lrhmi.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -493,7 +494,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("putMetainformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004", LogCriticality.error);
 		}
 		
 		// Unescape
@@ -507,11 +508,11 @@ public class RHICController {
 		try {
 			ritl = mapper.readValue(entity, ReturnedRHMetaInformation.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005", LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006", LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007", LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -519,7 +520,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -570,7 +571,7 @@ public class RHICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -584,7 +585,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("deleteRPList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		// Unescape
 		String rhvalue = InformedUtility.idUnEscape(rhvaluein);
@@ -592,7 +593,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Get a transaction
@@ -631,14 +632,14 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getRPList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		Query<ReturnedRHRPList> retQuery = sess.createQuery("from ReturnedRHRPList",ReturnedRHRPList.class);
 
@@ -647,13 +648,13 @@ public class RHICController {
 		
 		if (rrpl.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rrpl));
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -668,7 +669,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getRPList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		// Unescape
 		String rhvalue = InformedUtility.idUnEscape(rhvaluein);
@@ -676,7 +677,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		Query<ReturnedRHRPList> retQuery = sess.createQuery("from ReturnedRHRPList where rhidentifier.rhtype = :rhtype and rhidentifier.rhid = :rhid",ReturnedRHRPList.class);
 		retQuery.setParameter("rhtype", rhtype);
@@ -686,12 +687,12 @@ public class RHICController {
 		
 		if (rrpl.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				return buildResponse(Status.OK,rrpl.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -706,7 +707,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("putRPList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -719,11 +720,11 @@ public class RHICController {
 		try {
 			rrpl = mapper.readValue(entity, ReturnedRHRPList.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -731,7 +732,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -771,7 +772,7 @@ public class RHICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -786,7 +787,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("deleteIIList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Unescape
@@ -795,7 +796,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		// Get a transaction
@@ -835,14 +836,14 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getIIList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		Query<ReturnedRHInfoItemList> retQuery = sess.createQuery("from ReturnedRHInfoItemList",ReturnedRHInfoItemList.class);
@@ -852,13 +853,13 @@ public class RHICController {
 		
 		if (rhil.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rhil));
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -875,7 +876,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("getIIList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Unescape
@@ -884,7 +885,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		Query<ReturnedRHInfoItemList> retQuery = sess.createQuery("from ReturnedRHInfoItemList where rhidentifier.rhtype = :rhtype and rhidentifier.rhid = :rhid",ReturnedRHInfoItemList.class);
@@ -895,12 +896,12 @@ public class RHICController {
 		
 		if (rhil.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				return buildResponse(Status.OK,rhil.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500, "ERR0016");
+				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -917,7 +918,7 @@ public class RHICController {
 		try {
 			config = InformedUtility.init("putIIList", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Unescape
@@ -931,11 +932,11 @@ public class RHICController {
 		try {
 			rril = mapper.readValue(entity, ReturnedRHInfoItemList.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -943,7 +944,7 @@ public class RHICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -983,7 +984,7 @@ public class RHICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 }

@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
 import edu.internet2.consent.informed.model.ActivityStreamEntry;
+import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.util.InformedUtility;
 
 @Path("activitystream")
@@ -51,7 +52,7 @@ public class ActivityStreamController {
 		try {
 			config = InformedUtility.init("postActivityStreamEntry", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Deserialize the input
@@ -62,17 +63,17 @@ public class ActivityStreamController {
 		try {
 			entry = mapper.readValue(entity, ActivityStreamEntry.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Override timestamp if needed
@@ -98,7 +99,7 @@ public class ActivityStreamController {
 		try {
 			return buildResponse(Status.OK,entry.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -124,13 +125,13 @@ public class ActivityStreamController {
 		try {
 			config = InformedUtility.init("getActivityStreamEntries", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		Query<ActivityStreamEntry> retQuery = null;
 		if (type == null) {
@@ -147,13 +148,13 @@ public class ActivityStreamController {
 		
 		if (lase.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper om = new ObjectMapper();
 				return buildResponse(Status.OK,om.writeValueAsString(lase));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}

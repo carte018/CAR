@@ -13,6 +13,7 @@ import java.time.temporal.ChronoUnit;
 
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
+import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.util.InformedUtility;
 import com.sun.security.auth.module.Krb5LoginModule;
 import javax.security.auth.Subject;
@@ -38,7 +39,7 @@ public class KrbAuth implements BasicAuthHandler {
 		try {
 			return checkAuthentication(unscopedUser, credential, realm, defaultService);
 		} catch (Exception e) {
-			InformedUtility.locError(500, "ERR0032", this.getClass().getName());  // log
+			InformedUtility.locError(500, "ERR0032", LogCriticality.error, this.getClass().getName());  // log
 			return false;
 		}
 	}
@@ -51,7 +52,7 @@ public class KrbAuth implements BasicAuthHandler {
 
 				cache = manager.createCache("creds", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,ResourcePoolsBuilder.heap(1000)).withExpiry(ep));
 			} catch (Exception e) {
-				InformedUtility.locError(500,"ERR0066",e.getMessage());
+				InformedUtility.locError(500,"ERR0066",LogCriticality.error,e.getMessage());
 			}
 		}
 		

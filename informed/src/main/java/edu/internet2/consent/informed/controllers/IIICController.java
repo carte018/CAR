@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
+import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
 import edu.internet2.consent.informed.util.InformedUtility;
@@ -73,7 +74,7 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("deleteIIMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004", LogCriticality.error);
 		}
 		
 		// Unescape
@@ -82,7 +83,7 @@ public class IIICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		// Get a transaction
@@ -127,13 +128,13 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("getValueMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018", LogCriticality.error);
 		}
 
 		Query<ReturnedValueMetaInformation> retQuery = sess.createQuery("from ReturnedValueMetaInformation",ReturnedValueMetaInformation.class);
@@ -143,13 +144,13 @@ public class IIICController {
 		
 		if (rvmi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rvmi));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -166,13 +167,13 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("getInfoItemMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		Query<ReturnedInfoItemMetaInformation> retQuery = sess.createQuery("from ReturnedInfoItemMetaInformation where state=:state",ReturnedInfoItemMetaInformation.class);
@@ -182,13 +183,13 @@ public class IIICController {
 		
 		if (riimi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(riimi));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -204,7 +205,7 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("getInfoItemMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Unescape
@@ -213,7 +214,7 @@ public class IIICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		Query<ReturnedValueMetaInformation> retQuery = sess.createQuery("from ReturnedValueMetaInformation where infoitemname = :iiname and infoitemvalue = :iivalue and state = :state",ReturnedValueMetaInformation.class);
@@ -225,12 +226,12 @@ public class IIICController {
 		
 		if (rvmi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				return buildResponse(Status.OK,rvmi.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -247,7 +248,7 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("getInfoItemMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Unescape
@@ -256,7 +257,7 @@ public class IIICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		Query<ReturnedInfoItemMetaInformation> retQuery = sess.createQuery("from ReturnedInfoItemMetaInformation where rhidentifier.rhtype = :rhtype and rhidentifier.rhid = :rhid and iiidentifier.iitype = :iitype and iiidentifier.iiid = :iiid and state = :state",ReturnedInfoItemMetaInformation.class);
@@ -270,12 +271,12 @@ public class IIICController {
 		
 		if (riimi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				return buildResponse(Status.OK,riimi.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -290,7 +291,7 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("putValueMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -304,11 +305,11 @@ public class IIICController {
 		try {
 			rvmi = mapper.readValue(entity, ReturnedValueMetaInformation.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -316,7 +317,7 @@ public class IIICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -365,7 +366,7 @@ public class IIICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 	
@@ -379,7 +380,7 @@ public class IIICController {
 		try {
 			config = InformedUtility.init("putIIMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -393,11 +394,11 @@ public class IIICController {
 		try {
 			riimi = mapper.readValue(entity, ReturnedInfoItemMetaInformation.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -405,7 +406,7 @@ public class IIICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -458,7 +459,7 @@ public class IIICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 }

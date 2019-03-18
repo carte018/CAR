@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
+import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.util.InformedUtility;
 
@@ -66,7 +67,7 @@ public class URICController {
 		try {
 			config = InformedUtility.init("deleteURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Unescape
@@ -75,7 +76,7 @@ public class URICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		// Get a transaction
@@ -117,14 +118,14 @@ public class URICController {
 		try {
 			config = InformedUtility.init("getURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		Query<ReturnedUserRPMetaInformation> retQuery = sess.createQuery("from ReturnedUserRPMetaInformation",ReturnedUserRPMetaInformation.class);
@@ -134,13 +135,13 @@ public class URICController {
 		
 		if (rurpmi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				ObjectMapper mapper = new ObjectMapper();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rurpmi));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -157,7 +158,7 @@ public class URICController {
 		try {
 			config = InformedUtility.init("getURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		// Unescape
@@ -166,7 +167,7 @@ public class URICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		Query<ReturnedUserRPMetaInformation> retQuery = sess.createQuery("from ReturnedUserRPMetaInformation where rpidentifier.rptype = :rptype and rpidentifier.rpid = :rpid and useridentifier.usertype = :usertype and useridentifier.userid = :userid",ReturnedUserRPMetaInformation.class);
@@ -179,12 +180,12 @@ public class URICController {
 		
 		if (rurpmi.isEmpty()) {
 			sess.close();
-			return InformedUtility.locError(404, "ERR0065");
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
 				return buildResponse(Status.OK,rurpmi.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016");
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
 			} finally {
 				sess.close();
 			}
@@ -201,7 +202,7 @@ public class URICController {
 		try {
 			config = InformedUtility.init("putURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004");
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		//Unescape
@@ -215,11 +216,11 @@ public class URICController {
 		try {
 			rurpmi = mapper.readValue(entity, ReturnedUserRPMetaInformation.class);
 		} catch (JsonParseException e) {
-			return InformedUtility.locError(400, "ERR0005");
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return InformedUtility.locError(400, "ERR0006");
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007");
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// now we are authorized and we have a valid object
@@ -227,7 +228,7 @@ public class URICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018");
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// Start a transaction
@@ -270,7 +271,7 @@ public class URICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016");
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
 		}
 	}
 }
