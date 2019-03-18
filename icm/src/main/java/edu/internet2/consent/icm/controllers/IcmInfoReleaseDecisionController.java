@@ -355,11 +355,11 @@ public class IcmInfoReleaseDecisionController {
 		
 		// Load the query string with values
 		
-		LOG.info("Query String is: " + sbq.toString());
+		//IcmUtility.locLog("LOG9006", LogCriticality.debug, sbq.toString());
 		
 		Query<IcmReturnedPolicy> matchQuery = sess.createQuery(sbq.toString(),IcmReturnedPolicy.class);
 
-		LOG.info("Query String remains: " + sbq.toString());
+		//IcmUtility.locLog("LOG9007",  LogCriticality.debug, sbq.toString());
 		
 		matchQuery.setParameter("rhvalue", inputRequest.getResourceHolderId().getRHValue());
 		matchQuery.setParameter("rhtype",  inputRequest.getResourceHolderId().getRHType());
@@ -539,7 +539,7 @@ public class IcmInfoReleaseDecisionController {
 		HashMap<DecisionsForInfoDiscriminator, String> doavBuilt = new HashMap<DecisionsForInfoDiscriminator, String>();
 		for (ResolvedDecision rd : resolvedDecisions) {
 			// DEBUG only -- rgc
-			LOG.info("RDSET: attr " + rd.getInfoId().getInfoValue() +" value " + rd.getValue() + " is " + rd.getDirective().toString());
+			IcmUtility.locLog("LOG9003",LogCriticality.debug, rd.getInfoId().getInfoValue(),rd.getValue(),rd.getDirective().toString());
 	
 			DecisionsForInfoDiscriminator did = new DecisionsForInfoDiscriminator();
 			did.setInfoId(rd.getInfoId());
@@ -626,7 +626,7 @@ public class IcmInfoReleaseDecisionController {
 										}
 								}
 								// DEBUG only -- rgc
-								LOG.info("DECISION: " + cdfis.getInfoId().getInfoValue() + "("+rd.getValue()+") => "+cdov.getReleaseDecision().toString());
+								IcmUtility.locLog("LOG9005", LogCriticality.debug, cdfis.getInfoId().getInfoValue(),rd.getValue(),cdov.getReleaseDecision().toString());
 								finalPid.setBaseId(cdov.getPolicyId().getBaseId());
 								finalPid.setVersion(cdov.getPolicyId().getVersion());
 								break cdfisLoop;
@@ -667,7 +667,7 @@ public class IcmInfoReleaseDecisionController {
 			// Regardless, use it
 			dovBuilt.get(did).getReturnedValuesList().add(rd.getValue());
 			// DEBUG only -- rgc
-			LOG.info("DOVBUILT: " + rd.getValue() + " gets " + finalDirective);
+			IcmUtility.locLog("LOG9004", LogCriticality.debug, rd.getValue(),finalDirective);
 			if (!doavBuilt.containsKey(did) && finalOtherDirective != null) {
 				doavBuilt.put(did, finalOtherDirective);
 			}
