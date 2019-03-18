@@ -41,6 +41,7 @@ import edu.internet2.consent.icm.model.UserPolicyMetadata;
 import edu.internet2.consent.icm.model.UserReleaseDirective;
 import edu.internet2.consent.icm.model.UserReturnedPolicy;
 import edu.internet2.consent.icm.util.IcmUtility;
+import edu.internet2.consent.icm.model.LogCriticality;
 
 @Path("/user-info-release-policies")
 public class UserInfoReleasePoliciesController {
@@ -344,7 +345,7 @@ public class UserInfoReleasePoliciesController {
 			return buildResponse(Status.fromStatusCode(status),ur.toJSON());
 			
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -383,7 +384,7 @@ public class UserInfoReleasePoliciesController {
 			// otherwise, return an empty response because there's no content to return
 			return buildResponse(Status.NO_CONTENT,"");
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -428,7 +429,7 @@ public class UserInfoReleasePoliciesController {
 			
 			return buildResponse(Status.fromStatusCode(response.getStatusLine().getStatusCode()),ulr.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -478,7 +479,7 @@ public class UserInfoReleasePoliciesController {
 			}
 			return buildResponse(Status.fromStatusCode(status),ulr.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -531,7 +532,7 @@ public class UserInfoReleasePoliciesController {
 			return buildResponse(Status.fromStatusCode(status),urp.toJSON());
 			
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);

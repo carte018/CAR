@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.icm.model.IcmReturnedPolicy;
 import edu.internet2.consent.icm.model.ListOfReturnedPrecedenceObject;
+import edu.internet2.consent.icm.model.LogCriticality;
 import edu.internet2.consent.icm.model.PATCH;
 import edu.internet2.consent.icm.model.PrecedenceInstruction;
 import edu.internet2.consent.icm.model.ReturnedPrecedenceObject;
@@ -60,7 +61,7 @@ public class IcmPolicyPrecedenceController {
 		try {
 			config = IcmUtility.init("getPrecedence", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004");
+			return IcmUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
 		// Now we are authorized
@@ -76,7 +77,7 @@ public class IcmPolicyPrecedenceController {
 		// Hibernate
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018");
+			return IcmUtility.locError(500, "ERR0018", LogCriticality.error);
 		}
 		
 		ListOfReturnedPrecedenceObject lorp = new ListOfReturnedPrecedenceObject();
@@ -88,11 +89,11 @@ public class IcmPolicyPrecedenceController {
 			
 			if (retList == null || retList.isEmpty()) {
 				sess.close();
-				return IcmUtility.locError(404, "ERR0019");
+				return IcmUtility.locError(404, "ERR0019", LogCriticality.info);
 			}
 			if (retList.size() > 1) {
 				sess.close();
-				return IcmUtility.locError(409, "ERR0020");
+				return IcmUtility.locError(409, "ERR0020", LogCriticality.info);
 			}
 			
 			ReturnedPrecedenceObject retobj = new ReturnedPrecedenceObject();
@@ -107,7 +108,7 @@ public class IcmPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return IcmUtility.locError(500, "ERR0016");
+				return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
 			}
 		}
 		
@@ -149,7 +150,7 @@ public class IcmPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return IcmUtility.locError(500, "ERR0016");
+				return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
 			}
 		}
 		
@@ -159,7 +160,7 @@ public class IcmPolicyPrecedenceController {
 		
 		if (retList == null || retList.isEmpty()) {
 			sess.close();
-			return IcmUtility.locError(404, "ERR0019");
+			return IcmUtility.locError(404, "ERR0019", LogCriticality.error);
 		}
 		
 		for (IcmReturnedPolicy irp : retList) {
@@ -176,7 +177,7 @@ public class IcmPolicyPrecedenceController {
 			sess.close();
 			return buildResponse(Status.OK,lorp.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0016");
+			return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
 		}
 	}
 	
@@ -192,7 +193,7 @@ public class IcmPolicyPrecedenceController {
 		try {
 			config = IcmUtility.init("patchPrecedence", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004");
+			return IcmUtility.locError(500,"ERR0004", LogCriticality.error);
 		}		
 		
 		List<PrecedenceInstruction>piList = null;
@@ -202,18 +203,18 @@ public class IcmPolicyPrecedenceController {
 			ObjectMapper mapper = new ObjectMapper();
 			piList = mapper.readValue(entity,  new TypeReference<List<PrecedenceInstruction>>(){});
 		} catch (JsonParseException e) {
-			return IcmUtility.locError(400, "ERR0005");
+			return IcmUtility.locError(400, "ERR0005", LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return IcmUtility.locError(400,"ERR0006");
+			return IcmUtility.locError(400,"ERR0006", LogCriticality.info);
 		} catch (Exception e) {
-			return IcmUtility.locError(400, "ERR0007");
+			return IcmUtility.locError(400, "ERR0007", LogCriticality.info);
 		}
 		
 		// Hibernate
 
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018");
+			return IcmUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 
 		Transaction tx = (Transaction) sess.beginTransaction();
@@ -230,7 +231,7 @@ public class IcmPolicyPrecedenceController {
 			if (sourceList == null || sourceList.isEmpty()) {
 				tx.rollback();
 				sess.close();
-				return IcmUtility.locError(400, "ERR0044",sourceId);
+				return IcmUtility.locError(400, "ERR0044",LogCriticality.info,sourceId);
 			}
 			
 			IcmReturnedPolicy source = sourceList.get(0);
@@ -242,7 +243,7 @@ public class IcmPolicyPrecedenceController {
 			if (targetList == null || targetList.isEmpty()) {
 				tx.rollback();
 				sess.close();
-				return IcmUtility.locError(400, "ERR0045",targetId);
+				return IcmUtility.locError(400, "ERR0045",LogCriticality.info,targetId);
 			}
 			
 			IcmReturnedPolicy target = targetList.get(0);
@@ -252,7 +253,7 @@ public class IcmPolicyPrecedenceController {
 			if (target.getReturnedPolicyIdentifier().equals(source.getReturnedPolicyIdentifier())) {
 				tx.rollback();
 				sess.close();
-				return IcmUtility.locError(400, "ERR0046");
+				return IcmUtility.locError(400, "ERR0046", LogCriticality.info);
 			}
 			
 			long sourcePriority = source.getPriority();
@@ -279,7 +280,7 @@ public class IcmPolicyPrecedenceController {
 				default:
 					tx.rollback();
 					sess.close();
-					return IcmUtility.locError(400, "ERR0047",pi.getOperation());
+					return IcmUtility.locError(400, "ERR0047", LogCriticality.info, pi.getOperation());
 				}
 			} else {
 				// other direction
@@ -301,7 +302,7 @@ public class IcmPolicyPrecedenceController {
 				default:
 					tx.rollback();
 					sess.close();
-					return IcmUtility.locError(400, "ERR0047",pi.getOperation());
+					return IcmUtility.locError(400, "ERR0047", LogCriticality.info, pi.getOperation());
 				}
 			}
 		}
@@ -329,7 +330,7 @@ public class IcmPolicyPrecedenceController {
 			sess.close();
 			return buildResponse(Status.OK,lorp.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0016");
+			return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
 		}
 	}
 }

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.icm.model.InfoId;
 import edu.internet2.consent.icm.model.InfoIdPlusValues;
+import edu.internet2.consent.icm.model.LogCriticality;
 import edu.internet2.consent.icm.model.ResolvedDecision;
 import edu.internet2.consent.icm.cfg.IcmConfig;
 import edu.internet2.consent.icm.model.AllOtherValuesConst;
@@ -103,7 +104,7 @@ public class IcmInfoReleaseDecisionController {
 		try {
 			config = IcmUtility.init("postRequest", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004");
+			return IcmUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
 		String copsuHost = config.getProperty("copsu.server.name", true);
@@ -117,29 +118,29 @@ public class IcmInfoReleaseDecisionController {
 		try {
 			inputRequest = mapper.readValue(entity,  DecisionRequestObject.class);
 		} catch (JsonParseException e) {
-			return IcmUtility.locError(400, "ERR0005");
+			return IcmUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
-			return IcmUtility.locError(400, "ERR0006");
+			return IcmUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0007");
+			return IcmUtility.locError(500, "ERR0007",LogCriticality.error);
 		}
 		
 		// Validate the input request
 		
 		if (inputRequest == null) {
-			return IcmUtility.locError(400, "ERR0008");
+			return IcmUtility.locError(400, "ERR0008",LogCriticality.info);
 		}
 		if (inputRequest.getUserId() == null) {
-			return IcmUtility.locError(400, "ERR0010");
+			return IcmUtility.locError(400, "ERR0010",LogCriticality.info);
 		}
 		if (inputRequest.getRelyingPartyId() == null) {
-			return IcmUtility.locError(400, "ERR0011");
+			return IcmUtility.locError(400, "ERR0011",LogCriticality.info);
 		}
 		if (inputRequest.getResourceHolderId() == null) {
-			return IcmUtility.locError(400, "ERR0012");
+			return IcmUtility.locError(400, "ERR0012",LogCriticality.info);
 		}
 		if (inputRequest.getArrayOfInfoIdsPlusValues() == null) {
-			return IcmUtility.locError(400, "ERR0035");
+			return IcmUtility.locError(400, "ERR0035",LogCriticality.info);
 		}
 		
 		// While an array of properties is not required for user or relying party, lacking them will make 
@@ -158,7 +159,7 @@ public class IcmInfoReleaseDecisionController {
 		// Hibernate
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018");
+			return IcmUtility.locError(500, "ERR0018",LogCriticality.error);
 		}
 		
 		// And now, the unpleasantness.
@@ -229,7 +230,7 @@ public class IcmInfoReleaseDecisionController {
 			copsuEntity = convert.writeValueAsString(copsuRequest);
 		} catch (Exception e) {
 			// Fail if we cannot create the copsu request
-			return IcmUtility.locError(500, "ERR0054");
+			return IcmUtility.locError(500, "ERR0054",LogCriticality.error);
 		}
 		try {
 			response = IcmUtility.sendRequest(httpClient, "POST", copsuHost, copsuPort, sb.toString(), copsuEntity, authzHeader);
@@ -237,15 +238,15 @@ public class IcmInfoReleaseDecisionController {
 			int status = IcmUtility.extractStatusCode(response);
 			
 			if (status >= 300)
-				return IcmUtility.locError(status,"ERR0055");
+				return IcmUtility.locError(status,"ERR0055",LogCriticality.error);
 			
 			ObjectMapper om = new ObjectMapper();
 			copsuDecision = om.readValue(rbody,edu.internet2.consent.copsu.model.DecisionResponseObject.class);
-			IcmUtility.infoLog("LOG0016",copsuDecision.getDecisionId());
+			IcmUtility.locLog("LOG0016",LogCriticality.info,copsuDecision.getDecisionId());
 
 		} catch (Exception e) {
 			// If we except along the way, fail
-			return IcmUtility.locError(500, "ERR0056",e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -268,14 +269,14 @@ public class IcmInfoReleaseDecisionController {
 			int status2 = IcmUtility.extractStatusCode(response2);
 			
 			if (status2 >= 300) 
-				return IcmUtility.locError(status2, "ERR0059");
+				return IcmUtility.locError(status2, "ERR0059",LogCriticality.error);
 			
 			ObjectMapper om2 = new ObjectMapper();
 			arpsiDecision = om2.readValue(rbody2, DecisionResponseObject.class);
-			IcmUtility.infoLog("LOG0017",arpsiDecision.getDecisionId());
+			IcmUtility.locLog("LOG0017",LogCriticality.info,arpsiDecision.getDecisionId());
 		} catch (Exception e) {
 			// If we except along the way, fail
-			return IcmUtility.locError(500, "ERR0060");
+			return IcmUtility.locError(500, "ERR0060",LogCriticality.error);
 		} finally {
 			HttpClientUtils.closeQuietly(response2);
 			HttpClientUtils.closeQuietly(httpClient2);
@@ -551,7 +552,7 @@ public class IcmInfoReleaseDecisionController {
 			
 			if (rd.getDirective().equals(IcmReleaseDirective.valueOf("ARPSI"))) {
 				// find it in the ARPSI returned policy
-				IcmUtility.infoLog("LOG9000",rd.getInfoId().getInfoValue() + "," + rd.getValue());
+				IcmUtility.locLog("LOG9000",LogCriticality.debug,rd.getInfoId().getInfoValue() + "," + rd.getValue());
 				did.setPolicySource("ARPSI");
 				adfisLoop:
 				for (DecisionsForInfoStatement adfis : arpsiDecision.getArrayOfInfoDecisionStatement()) {
@@ -566,7 +567,7 @@ public class IcmInfoReleaseDecisionController {
 									finalPid = adov.getPolicyId();
 									break adfisLoop;
 								} else {
-									IcmUtility.infoLog("LOG9002","ADOV(0)->"+adov.getValuesList().get(0), "RD->"+rd.getValue());
+									IcmUtility.locLog("LOG9002",LogCriticality.debug,"ADOV(0)->"+adov.getValuesList().get(0), "RD->"+rd.getValue());
 								}
 							} catch (Exception e) {
 								//ignore and fall through to the fallback if we cannot evaluate
@@ -585,10 +586,10 @@ public class IcmInfoReleaseDecisionController {
 				}
 				if (finalDirective == null) {
 					// This is an error -- the ARPSI did not return a result we can use
-					return IcmUtility.locError(500, "ERR0061",rd.getInfoId().getInfoValue(),rd.getValue());
+					return IcmUtility.locError(500, "ERR0061",LogCriticality.error,rd.getInfoId().getInfoValue(),rd.getValue());
 				}
 				did.setDirective(finalDirective);
-				IcmUtility.infoLog("LOG9001",rd.getInfoId().getInfoValue() + "," + rd.getValue(),finalDirective);
+				IcmUtility.locLog("LOG9001",LogCriticality.debug,rd.getInfoId().getInfoValue() + "," + rd.getValue(),finalDirective);
 			} else {
 				// Return the value from the COPSU
 				did.setPolicySource("COPSU");
@@ -644,7 +645,7 @@ public class IcmInfoReleaseDecisionController {
 				}
 				if (finalDirective == null) {
 					// This is an error -- the COPSU did not return a result we can use
-					return IcmUtility.locError(500, "ERR0062",rd.getInfoId().getInfoValue(),rd.getValue());
+					return IcmUtility.locError(500, "ERR0062",LogCriticality.error,rd.getInfoId().getInfoValue(),rd.getValue());
 				}
 				did.setDirective(finalDirective);
 			}
@@ -709,7 +710,7 @@ public class IcmInfoReleaseDecisionController {
 		try {
 			return buildResponse(Status.OK,dro.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0016");
+			return IcmUtility.locError(500, "ERR0016",LogCriticality.error);
 		} finally {
 			if (sess != null) {
 				sess.close();

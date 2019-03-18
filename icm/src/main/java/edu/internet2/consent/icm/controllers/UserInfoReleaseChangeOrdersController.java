@@ -21,6 +21,7 @@ import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import edu.internet2.consent.icm.cfg.IcmConfig;
+import edu.internet2.consent.icm.model.LogCriticality;
 import edu.internet2.consent.icm.util.IcmUtility;
 
 @Path("/user-info-release-change-orders")
@@ -91,7 +92,7 @@ public class UserInfoReleaseChangeOrdersController {
 			
 
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0064",e.getMessage());
+			return IcmUtility.locError(500, "ERR0064",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -124,7 +125,7 @@ public class UserInfoReleaseChangeOrdersController {
 			return buildResponse(Status.fromStatusCode(status),rbody);
 		
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0064", e.getMessage());
+			return IcmUtility.locError(500, "ERR0064", LogCriticality.error, e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -154,7 +155,7 @@ public class UserInfoReleaseChangeOrdersController {
 			int status = IcmUtility.extractStatusCode(response);
 			return buildResponse(Status.fromStatusCode(status),rbody);
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0064", e.getMessage());
+			return IcmUtility.locError(500, "ERR0064", LogCriticality.error, e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);

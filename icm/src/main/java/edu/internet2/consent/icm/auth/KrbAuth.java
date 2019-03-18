@@ -1,6 +1,7 @@
 package edu.internet2.consent.icm.auth;
 
 import edu.internet2.consent.icm.cfg.IcmConfig;
+import edu.internet2.consent.icm.model.LogCriticality;
 import edu.internet2.consent.icm.util.IcmUtility;
 import com.sun.security.auth.module.Krb5LoginModule;
 import javax.security.auth.Subject;
@@ -22,7 +23,7 @@ public class KrbAuth implements BasicAuthHandler {
 		try {
 			return checkAuthentication(unscopedUser, credential, realm, defaultService);
 		} catch (Exception e) {
-			IcmUtility.locError(500, "ERR0032", this.getClass().getName());  // log
+			IcmUtility.locError(500, "ERR0032", LogCriticality.error, this.getClass().getName());  // log
 			return false;
 		}
 	}
