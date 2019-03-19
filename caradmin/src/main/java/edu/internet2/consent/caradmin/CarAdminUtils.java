@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.internet2.consent.arpsi.model.OrgInfoReleasePolicy;
 import edu.internet2.consent.arpsi.model.OrgReturnedPolicy;
 import edu.internet2.consent.arpsi.model.ReturnedPrecedenceObject;
+import edu.internet2.consent.caradmin.AdminConfig;
 import edu.internet2.consent.icm.model.IcmInfoReleasePolicy;
 import edu.internet2.consent.icm.model.IcmReturnedPolicy;
 import edu.internet2.consent.icm.model.ListOfReturnedPrecedenceObject;
@@ -95,13 +96,13 @@ public class CarAdminUtils {
 	
 	public static void locDebugErr(String message) {
 		AdminConfig config = AdminConfig.getInstance();
-		if (config.getProperty("caradmin.logging.debug", false) != null && config.getProperty("caramin.logging.debug", false) == "true")
+		if (config.getProperty("caradmin.logging.debug", false) != null && config.getProperty("caramin.logging.debug", false).contentEquals("true"))
 			LOG.error("ERROR ecode=" + message + ":" + locRB.getString(message));
 	}
 	public static void locDebugErr(String errcode, String... args) {
 		// Return the Response object to use for na error return with substitution(s).
 		AdminConfig config = AdminConfig.getInstance();
-		if (config.getProperty("caradmin.logging.debug", false) != null && config.getProperty("caradmin.logging.debug", false) == "true") {
+		if (config.getProperty("caradmin.logging.debug", false) != null && config.getProperty("caradmin.logging.debug", false).contentEquals("true")) {
 			String raw = locRB.getString(errcode);
 			if (raw != null && args != null && args.length > 0 && args[0] != null) {
 				for (int i=0; i<args.length; i++) {
@@ -113,10 +114,38 @@ public class CarAdminUtils {
 		}
 	}
 	
-	public static void locError(String message) {
-		LOG.error("ERROR ecode=" + message + ":" + locRB.getString(message));
+	// Process criticality comparisons
+	private static boolean isLog(LogCriticality crit) {
+		// Determine log level and then return isLog(crit,level)
+		AdminConfig config = AdminConfig.getInstance();
+		String level = "error";
+		if (config != null) {
+			String nlevel = config.getProperty("logLevel", false);
+			if (nlevel != null) {
+				level = nlevel;
+			}
+		}
+		return isLog(crit,level);
 	}
-	public static void locError(String errcode, String... args) {
+	
+	private static boolean isLog(LogCriticality crit, String level) {
+		// Return true if criticality is at or above level
+		if (crit.equals(LogCriticality.error)
+				|| (crit.equals(LogCriticality.info) && (level.contentEquals("info") || level.equals("debug")))
+				|| (crit.equals(LogCriticality.debug)&& (level.contentEquals("debug")))) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	public static void locError(String message,LogCriticality crit) {
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.error(crit.toString().toUpperCase() + " ecode=" + message + ":" + locRB.getString(message));
+	}
+	public static void locError(String errcode, LogCriticality crit,String... args) {
 		// Return the Response object to use for an error return.  With substitution.
 		String raw=locRB.getString(errcode);
 		if (raw != null && args != null && args.length > 0 && args[0] != null) {
@@ -125,15 +154,21 @@ public class CarAdminUtils {
 					raw = raw.replace("{"+i+"}", args[i]);
 			}
 		}
-		LOG.error("ERROR ecode=" + errcode + ": " + raw);
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.error(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
 		
 	}
 	
-	public static void locLog(String message) {
-		LOG.info("INFO ecode=" + message + ":" + locDB.getString(message));
+	public static void locLog(String message,LogCriticality crit) {
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.info(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
 	}
 	
-	public static void locLog(String errcode, String... args) {
+	public static void locLog(String errcode, LogCriticality crit, String... args) {
 		String raw = locDB.getString(errcode);
 		if (raw != null && args != null && args.length > 0 && args[0] != null) {
 			for (int i=0; i<args.length; i++) {
@@ -141,6 +176,10 @@ public class CarAdminUtils {
 					raw = raw.replace("{"+i+"}",  args[i]);
 			}
 		}
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
 	}
 	
 	public static String getLocalComponent(String key) {
@@ -441,7 +480,7 @@ public class CarAdminUtils {
 		try {
 			json = rpmi.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0019");
+			CarAdminUtils.locError("ERR0019",LogCriticality.error);
 			throw new RuntimeException(e);
 		}
 		
@@ -453,7 +492,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response); // Must consume response content, even when we don't care
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0010",e.getMessage());
+			CarAdminUtils.locError("ERR0010",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -476,7 +515,7 @@ public class CarAdminUtils {
 		try {
 			json = r.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0009");
+			CarAdminUtils.locError("ERR0009",LogCriticality.error);
 			throw new RuntimeException(e);
 		}
 		
@@ -488,7 +527,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0010",e.getMessage());
+			CarAdminUtils.locError("ERR0010", LogCriticality.error, e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -563,7 +602,7 @@ public class CarAdminUtils {
 		try {
 			json = om.writeValueAsString(iirp);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0046");;
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
 			throw new RuntimeException(x);
 		}
 		HttpClient httpClient = HttpClientBuilder.create().build();
@@ -575,7 +614,7 @@ public class CarAdminUtils {
 			String rbody = CarAdminUtils.extractBody(response);			
 
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -596,7 +635,7 @@ public class CarAdminUtils {
 		try {
 			json = om.writeValueAsString(oirp);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0046");
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
 			throw new RuntimeException(x);
 		}
 		
@@ -608,7 +647,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -628,7 +667,7 @@ public class CarAdminUtils {
 		try {
 			json = om.writeValueAsString(oirp);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0046");
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
 			throw new RuntimeException(x);
 		}
 		
@@ -641,7 +680,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -662,7 +701,7 @@ public class CarAdminUtils {
 		try {
 			json = om.writeValueAsString(oirp);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0046");;
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
 			throw new RuntimeException(x);
 		}
 		
@@ -674,7 +713,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -693,7 +732,7 @@ public class CarAdminUtils {
 		try {
 			json = om.writeValueAsString(e);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0046");
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
 			throw new RuntimeException(x);
 		}
 		
@@ -705,7 +744,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -730,7 +769,7 @@ public class CarAdminUtils {
 		try {
 			json = r.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0046");
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
 			throw new RuntimeException(e);
 		}
 		HttpClient httpClient = HttpClientBuilder.create().build();
@@ -741,7 +780,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0047",e.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -764,7 +803,7 @@ public class CarAdminUtils {
 		try {
 			json = r.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0007");
+			CarAdminUtils.locError("ERR0007",LogCriticality.error);
 			// Cannot continue
 			throw new RuntimeException(e);
 		}
@@ -777,7 +816,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0008",e.getMessage());
+			CarAdminUtils.locError("ERR0008",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -844,7 +883,7 @@ public class CarAdminUtils {
 		try {
 			json = rr.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0061");
+			CarAdminUtils.locError("ERR0061",LogCriticality.error);
 			throw new RuntimeException(e);
 		}
 		
@@ -859,7 +898,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -882,7 +921,7 @@ public class CarAdminUtils {
 		try {
 			json = rr.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0062");
+			CarAdminUtils.locError("ERR0062",LogCriticality.error);
 			throw new RuntimeException(e);
 		}
 		
@@ -896,7 +935,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception x) {
-			CarAdminUtils.locError("ERR0047",x.getMessage());
+			CarAdminUtils.locError("ERR0047",LogCriticality.error,x.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -1004,7 +1043,7 @@ public class CarAdminUtils {
 		try {
 			json = ritl.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0052");
+			CarAdminUtils.locError("ERR0052",LogCriticality.error);
 			throw new RuntimeException(e);
 		}
 		HttpClient httpClient = HttpClientBuilder.create().build();
@@ -1015,7 +1054,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0053",e.getMessage());
+			CarAdminUtils.locError("ERR0053",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -1043,7 +1082,7 @@ public class CarAdminUtils {
 		try {
 			json = rriil.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0020");
+			CarAdminUtils.locError("ERR0020",LogCriticality.error);
 			// no continuing now
 			throw new RuntimeException(e);
 		}
@@ -1055,7 +1094,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0021",e.getMessage());
+			CarAdminUtils.locError("ERR0021",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -1084,7 +1123,7 @@ public class CarAdminUtils {
 		try {
 			json = rriil.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0024");
+			CarAdminUtils.locError("ERR0024",LogCriticality.error);
 			// no continuing now
 			throw new RuntimeException(e);
 		}
@@ -1097,7 +1136,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0025",e.getMessage());
+			CarAdminUtils.locError("ERR0025",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -1117,7 +1156,7 @@ public class CarAdminUtils {
 		try {
 			json = riimi.toJSON();
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0028");
+			CarAdminUtils.locError("ERR0028",LogCriticality.error);
 			// no continuing now
 			throw new RuntimeException(e);
 		}
@@ -1130,7 +1169,7 @@ public class CarAdminUtils {
 			@SuppressWarnings("unused")
 			String rbody = CarAdminUtils.extractBody(response);
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0029",e.getMessage());
+			CarAdminUtils.locError("ERR0029",LogCriticality.error,e.getMessage());
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -1256,7 +1295,7 @@ public class CarAdminUtils {
 				return;
 			}
 		} catch (Exception e) {
-			locError("ERR0006","Exception message " + e.getMessage());
+			locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
 			return;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1296,7 +1335,7 @@ public class CarAdminUtils {
 			ReturnedInfoItemMetaInformation ri = om.readValue(rbody, ReturnedInfoItemMetaInformation.class);
 			return ri;
 		} catch (Exception e) {
-			locError("ERR0006","Exception message " + e.getMessage());
+			locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1334,7 +1373,7 @@ public class CarAdminUtils {
 			ReturnedRHInfoItemList ri = om.readValue(rbody,  ReturnedRHInfoItemList.class);
 			return ri;
 		} catch (Exception e) {
-			locError("ERR0006","Exception message " + e.getMessage());
+			locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1382,7 +1421,7 @@ public class CarAdminUtils {
 				return null;
 			}
 		} catch (Exception e) {
-			locError("ERR0045","Exception message " + e.getMessage());
+			locError("ERR0045",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1430,7 +1469,7 @@ public class CarAdminUtils {
 				return null;
 			}
 		} catch (Exception e) {
-			locError("ERR0042","Exception message " + e.getMessage());
+			locError("ERR0042",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1480,7 +1519,7 @@ public class CarAdminUtils {
 				return null;
 			}
 		} catch (Exception e) {
-			locError("ERR0039","Exception message " + e.getMessage());
+			locError("ERR0039",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1528,7 +1567,7 @@ public class CarAdminUtils {
 				return null;
 			}
 		} catch (Exception e) {
-			locError("ERR0013","Exception message " + e.getMessage());
+			locError("ERR0013",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1575,7 +1614,7 @@ public class CarAdminUtils {
 				return null;
 			}
 		} catch (Exception e) {
-			locError("ERR0003","Exception message " + e.getMessage());
+			locError("ERR0003",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1618,7 +1657,7 @@ public class CarAdminUtils {
 			ReturnedRHMetaInformation lr = om.readValue(rbody, ReturnedRHMetaInformation.class);
 			return lr;
 		} catch (Exception e) {
-			locError("ERR0003","Exception message " + e.getMessage());
+			locError("ERR0003",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1666,7 +1705,7 @@ public class CarAdminUtils {
 			ReturnedRPMetaInformation lr = om.readValue(rbody, ReturnedRPMetaInformation.class);
 			return lr;
 		} catch (Exception e) {
-			locError("ERR0003","Exception message " + e.getMessage());
+			locError("ERR0003",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1713,7 +1752,7 @@ public class CarAdminUtils {
 			ReturnedRPOptionalInfoItemList lr = om.readValue(rbody,  ReturnedRPOptionalInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
-			locError("ERR0003","Exception message " + e.getMessage());
+			locError("ERR0003",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1830,7 +1869,7 @@ public class CarAdminUtils {
 			retval = om.readValue(rbody, new TypeReference<List<IcmReturnedPolicy>>() {});
 			return retval;
 		} catch (Exception e) {
-			locError("ERR0036","Exception message " + e.getMessage());
+			locError("ERR0036",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1872,7 +1911,7 @@ public class CarAdminUtils {
 				return alr.get(0);
 			}
 		} catch (Exception e) {
-			locError("ERR0036","Exception message " + e.getMessage());
+			locError("ERR0036",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1917,7 +1956,7 @@ public class CarAdminUtils {
 				return alr.get(0);
 			}	
 		} catch (Exception e) {
-			locError("ERR0036","Exception message " + e.getMessage());
+			locError("ERR0036",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1961,7 +2000,7 @@ public class CarAdminUtils {
 				retval = om.readValue(rbody,  new TypeReference<List<OrgReturnedPolicy>>() {});
 				return retval;
 			} catch (Exception e) {
-				locError("ERR0036","Exception message " + e.getMessage());
+				locError("ERR0036",LogCriticality.error,"Exception message " + e.getMessage());
 				return null;  // on error, just fail
 			} finally {
 				HttpClientUtils.closeQuietly(response);
@@ -2007,7 +2046,7 @@ public class CarAdminUtils {
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody,  ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
-			locError("ERR0003","Exception message " + e.getMessage());
+			locError("ERR0003",LogCriticality.error,"Exception message " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);

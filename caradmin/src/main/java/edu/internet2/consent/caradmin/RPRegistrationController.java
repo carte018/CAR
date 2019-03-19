@@ -1311,12 +1311,12 @@ public class RPRegistrationController {
 		
 		// Collect the RP list
 		//
-		CarAdminUtils.locError("ERR0014",rhid);
+		CarAdminUtils.locError("ERR0014",LogCriticality.debug,rhid);
 		ArrayList<ReturnedRPMetaInformation> arpmi = CarAdminUtils.getAllRPsForRH(rhtype, rhid);
 		if (arpmi != null) 
-			CarAdminUtils.locError("ERR0015",String.valueOf(arpmi.size()));
+			CarAdminUtils.locError("ERR0015",LogCriticality.debug,String.valueOf(arpmi.size()));
 		else {
-			CarAdminUtils.locError("ERR0015","0");
+			CarAdminUtils.locError("ERR0015",LogCriticality.debug,"0");
 			arpmi = new ArrayList<ReturnedRPMetaInformation>();
 		}
 		
@@ -1353,7 +1353,7 @@ public class RPRegistrationController {
 			ObjectMapper om = new ObjectMapper();
 			retval.addObject("JSON",om.writeValueAsString(irpm));
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0018");
+			CarAdminUtils.locError("ERR0018",LogCriticality.error);
 			// continue, but searches will fail
 		}
 		

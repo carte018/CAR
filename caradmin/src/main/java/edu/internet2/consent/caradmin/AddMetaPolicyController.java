@@ -258,13 +258,13 @@ public class AddMetaPolicyController {
 			// Reap from hasone hash
 			for(String key : hasone.keySet()) {
 				aiirs.add(hasone.get(key));
-				CarAdminUtils.locError("ERR0058",String.valueOf(hasone.get(key).getArrayOfIcmDirectiveOnValues().size()));
+				CarAdminUtils.locError("ERR0058",LogCriticality.debug,String.valueOf(hasone.get(key).getArrayOfIcmDirectiveOnValues().size()));
 			}
 			
-			CarAdminUtils.locError("ERR0057",String.valueOf(hasone.keySet().size()));
+			CarAdminUtils.locError("ERR0057",LogCriticality.debug,String.valueOf(hasone.keySet().size()));
 			ObjectMapper om = new ObjectMapper();
 			try {
-				CarAdminUtils.locError("ERR0060",om.writeValueAsString(aiirs));
+				CarAdminUtils.locError("ERR0060",LogCriticality.debug,om.writeValueAsString(aiirs));
 			} catch (Exception e) {
 					// ignore
 			}
@@ -292,7 +292,7 @@ public class AddMetaPolicyController {
 			}
 			// And send it to the database
 			try {
-				CarAdminUtils.locError("ERR0059",om.writeValueAsString(iirp));
+				CarAdminUtils.locError("ERR0059",LogCriticality.debug,om.writeValueAsString(iirp));
 			} catch (Exception e) {
 				// ignore
 			}

@@ -157,10 +157,10 @@ public class RHRegistrationController {
 					aiii.add(iii);
 					
 					// while we're at it, process those that have changed
-					CarAdminUtils.locError("ERR0033",formnumber,String.valueOf(i));
+					CarAdminUtils.locError("ERR0033",LogCriticality.debug,formnumber,String.valueOf(i));
 					if (req.getParameter("ii_modified_"+formnumber+"_"+i) != null && req.getParameter("ii_modified_"+formnumber+"_"+i).equals("true")) {
 						// This one was modified, so update its ii metainfo while we're here
-						CarAdminUtils.locError("ERR0034");
+						CarAdminUtils.locError("ERR0034",LogCriticality.debug);
 						ReturnedInfoItemMetaInformation riimi = new ReturnedInfoItemMetaInformation();
 						RHIdentifier rhi = new RHIdentifier();
 						rhi.setRhtype(rhtype);
@@ -454,7 +454,7 @@ public class RHRegistrationController {
 //			return retval;
 		} else if (req.getParameter("formname") != null && req.getParameter("formname").matches("^iiform_.*$")) {
 			// This is an edit form for IIs of some type
-			CarAdminUtils.locError("ERR0049","Called to update ii metainformation");
+			CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Called to update ii metainformation");
 			String iitype = req.getParameter("formname");
 			iitype = iitype.replaceAll("^iiform_", "");
 			
@@ -495,17 +495,17 @@ public class RHRegistrationController {
 				if ((req.getParameter("iiasnd_"+i) != null && req.getParameter("iiasnd_"+i).equals("true")) != riimi.getAsnd()) {
 					needsupdate=true;
 					riimi.setAsnd((req.getParameter("iiasnd_"+i) != null && req.getParameter("iiasnd_"+i).equals("true")));
-					CarAdminUtils.locError("ERR0049","Setting asnd to "+riimi.getAsnd());
+					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Setting asnd to "+riimi.getAsnd());
 				}
 				if ((req.getParameter("iimultivalued_"+i) != null && req.getParameter("iimultivalued_"+i).equals("true")) != riimi.getMultivalued()) {
 					needsupdate=true;
 					riimi.setMultivalued((req.getParameter("iimultivalued_"+i) != null && req.getParameter("iimultivalued_"+i).equals("true")));
-					CarAdminUtils.locError("ERR0049","Setting multivalued to " + riimi.getMultivalued());
+					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Setting multivalued to " + riimi.getMultivalued());
 				}
 				if ((req.getParameter("iisensitive_"+i) != null && req.getParameter("iisensitive_"+i).equals("true")) != riimi.getSensitivity()) {
 					needsupdate=true;
 					riimi.setSensitivity((req.getParameter("iisensitive_"+i) != null && req.getParameter("iisensitive_"+i).equals("true")));
-					CarAdminUtils.locError("ERR0049","Setting sensitivitivy to " + riimi.getSensitivity());
+					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Setting sensitivitivy to " + riimi.getSensitivity());
 				}
 				
 				if (needsupdate) {
