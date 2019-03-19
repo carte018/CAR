@@ -71,7 +71,7 @@ public class CarUtility {
 		try {
 			config = CarConfig.getInstance();
 		} catch (Exception c) {
-			locError("ERR0001");
+			locError("ERR0001",LogCriticality.error);
 			throw new RuntimeException(defRB.getString("ERR0001"));
 		}
 		
@@ -116,15 +116,17 @@ public class CarUtility {
 		return retval;
 	}
 	
+	// Special processing for debug messages (separate from normal logging)
+	
 	public static void locDebugErr(String message) {
 		CarConfig config = CarConfig.getInstance();
-		if (config.getProperty("car.logging.debug", false) != null && config.getProperty("car.logging.debug", false) == "true")
+		if (config.getProperty("car.logging.debug", false) != null && (config.getProperty("car.logging.debug", false).contentEquals("true") || config.getProperty("logLevel", false).contentEquals("true")))
 			LOG.error("ERROR ecode=" + message + ":" + locRB.getString(message));
 	}
 	public static void locDebugErr(String errcode, String... args) {
 		// Return the Response object to use for na error return with substitution(s).
 		CarConfig config = CarConfig.getInstance();
-		if (config.getProperty("car.logging.debug", false) != null && config.getProperty("car.logging.debug", false) == "true") {
+		if (config.getProperty("car.logging.debug", false) != null && (config.getProperty("car.logging.debug", false).contentEquals("true") || config.getProperty("logLevel", false).contentEquals("true"))) {
 			String raw = locRB.getString(errcode);
 			if (raw != null && args != null && args.length > 0 && args[0] != null) {
 				for (int i=0; i<args.length; i++) {
@@ -136,10 +138,41 @@ public class CarUtility {
 		}
 	}
 	
-	public static void locError(String message) {
-		LOG.error("ERROR ecode=" + message + ":" + locRB.getString(message));
+	// Process criticality comparisons
+	private static boolean isLog(LogCriticality crit) {
+		// Determine log level and then return isLog(crit,level)
+		CarConfig config = CarConfig.getInstance();
+		String level = "error";
+		if (config != null) {
+			String nlevel = config.getProperty("logLevel", false);
+			if (nlevel != null) {
+				level = nlevel;
+			}
+		}
+		return isLog(crit,level);
 	}
-	public static void locError(String errcode, String... args) {
+	
+	private static boolean isLog(LogCriticality crit, String level) {
+		// Return true if criticality is at or above level
+		if (crit.equals(LogCriticality.error)
+				|| (crit.equals(LogCriticality.info) && (level.contentEquals("info") || level.equals("debug")))
+				|| (crit.equals(LogCriticality.debug)&& (level.contentEquals("debug")))) {
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+	
+	// Normal error logging - now with criticality
+	
+	public static void locError(String message, LogCriticality crit) {
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.error(crit.toString().toUpperCase() + " ecode=" + message + ":" + locRB.getString(message));
+	}
+	public static void locError(String errcode, LogCriticality crit, String... args) {
 		// Return the Response object to use for an error return.  With substitution.
 		String raw=locRB.getString(errcode);
 		if (raw != null && args != null && args.length > 0 && args[0] != null) {
@@ -148,15 +181,20 @@ public class CarUtility {
 					raw = raw.replace("{"+i+"}", args[i]);
 			}
 		}
-		LOG.error("ERROR ecode=" + errcode + ": " + raw);
-		
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.error(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
 	}
 	
-	public static void locLog(String message) {
-		LOG.info("INFO ecode=" + message + ":" + locDB.getString(message));
+	public static void locLog(String message, LogCriticality crit) {
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.info(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
 	}
 	
-	public static void locLog(String errcode, String... args) {
+	public static void locLog(String errcode, LogCriticality crit, String... args) {
 		String raw = locDB.getString(errcode);
 		if (raw != null && args != null && args.length > 0 && args[0] != null) {
 			for (int i=0; i<args.length; i++) {
@@ -164,6 +202,10 @@ public class CarUtility {
 					raw = raw.replace("{"+i+"}",  args[i]);
 			}
 		}
+		if (crit == null)
+			crit = LogCriticality.error;
+		if (isLog(crit))
+			LOG.info(crit.toString().toUpperCase() + " ecode=" +errcode + ":" + raw);
 	}
 	
 	public static String getLocalComponent(String key) {
@@ -438,11 +480,11 @@ public class CarUtility {
 			if (lr != null)
 				return (ArrayList<InfoItemIdentifier>) lr;
 			else {
-				CarUtility.locError("ERR1132");
+				CarUtility.locError("ERR1132", LogCriticality.info);
 				return null;
 			}			
 		} catch (Exception e) {
-			CarUtility.locError("ERR1133", rbody);
+			CarUtility.locError("ERR1133", LogCriticality.error, rbody);
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -580,7 +622,7 @@ public class CarUtility {
 		}
 		
 		// Note for posterity
-		CarUtility.locError("ERR1135",value?"true":"false");
+		CarUtility.locError("ERR1135",LogCriticality.info, value?"true":"false");
 		// and perform the put
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpResponse response = null;
@@ -590,7 +632,7 @@ public class CarUtility {
 			response = CarUtility.sendRequest(httpClient, "PUT", informedhost, informedport, sb.toString(), ujson, authzheader);
 			rbody = CarUtility.extractBody(response);
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locError("ERR0081", LogCriticality.debug, "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -624,10 +666,10 @@ public class CarUtility {
 			ObjectMapper om = new ObjectMapper();
 			ReturnedUserRPMetaInformation lr = om.readValue(rbody, ReturnedUserRPMetaInformation.class);
 			if (lr == null)
-				locError("ERR1116","serialization returned null ReturnedUserRPMetaInformation");
+				locError("ERR1116", LogCriticality.info, "serialization returned null ReturnedUserRPMetaInformation");
 			return lr;
 		} catch (Exception e) {
-			locError("ERR1116",e.getMessage());
+			locError("ERR1116",LogCriticality.error, e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -847,7 +889,7 @@ public class CarUtility {
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody, ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0074",e.getMessage());
+			CarUtility.locError("ERR0074", LogCriticality.error, e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -886,7 +928,7 @@ public class CarUtility {
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody, ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0074",e.getMessage());
+			CarUtility.locError("ERR0074", LogCriticality.error, e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -956,7 +998,7 @@ public class CarUtility {
 			if (status < 300) 
 				retval = true;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locError("ERR0081", LogCriticality.debug,  "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
@@ -995,7 +1037,7 @@ public class CarUtility {
 			retval.addAll(retlist);
 			return retval;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1029,7 +1071,7 @@ public class CarUtility {
 				return null;
 			return retlist.get(0);			
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1068,7 +1110,7 @@ public class CarUtility {
 			retval = retlist.get(0);
 			return retval;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1099,7 +1141,7 @@ public class CarUtility {
 			retval = om.readValue(rbody, edu.internet2.consent.arpsi.model.DecisionResponseObject.class);
 			return retval;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locError("ERR0081", LogCriticality.debug, "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			HttpClientUtils.closeQuietly(response);
@@ -1125,7 +1167,7 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		rbody = CarUtility.extractBody(response);
 		int status = CarUtility.extractStatusCode(response);
 		if (status >= 300)  {
-			CarUtility.locError("ERR1134",String.valueOf(status));
+			CarUtility.locError("ERR1134",LogCriticality.info, String.valueOf(status));
 			return null;
 		}
 		ObjectMapper om = new ObjectMapper();
@@ -1133,7 +1175,7 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		retval = om.readValue(rbody, IcmDecisionResponseObject.class);
 		return retval;		
 	} catch (Exception e) {
-		CarUtility.locError("ERR0081", "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+		CarUtility.locError("ERR0081", LogCriticality.debug, "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		return null;  // null on any failure
 	} finally {
 		HttpClientUtils.closeQuietly(response);
@@ -1270,15 +1312,15 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		ArrayList<String> retval = new ArrayList<String>();
 		if (source == null || source.isEmpty()) {
 			// no source data?
-			CarUtility.locError("ERR0080");
+			CarUtility.locError("ERR0080",LogCriticality.info);
 			return retval;
 		}
 		if (target == null || target.isEmpty()) {
 			// If we have nothing to filter with, return the empty list
-			CarUtility.locError("ERR0076");
+			CarUtility.locError("ERR0076",LogCriticality.info);
 			return(retval);
 		} else {
-			CarUtility.locError("ERR0079",""+source.size(),""+target.size());
+			CarUtility.locError("ERR0079",LogCriticality.info,""+source.size(),""+target.size());
 		}
 		
 		for (String value : source) {

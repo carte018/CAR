@@ -89,7 +89,7 @@ public class CacheScrubber extends TimerTask {
 		status = "Scrubbing RPs";
 		
 		// And start scrubbing with the RP metainformation
-		CarUtility.locError("ERR1123");
+		CarUtility.locError("ERR1123",LogCriticality.debug);
 		RPMetaInformationCache rpmic = RPMetaInformationCache.getInstance();
 		Iterator<Entry<String,CachedRPMetaInformation>> iter = rpmic.getCache().iterator();
 		long c = 0;
@@ -136,7 +136,7 @@ public class CacheScrubber extends TimerTask {
 		status = "Scrubbing IIs";
 		
 		// And then scrub the II metainformation in the same fashion
-		CarUtility.locError("ERR1124");
+		CarUtility.locError("ERR1124",LogCriticality.debug);
 		InfoItemMetaInformationCache iimic = InfoItemMetaInformationCache.getInstance();
 		Iterator<Entry<String,CachedInfoItemMetaInformation>> iiter = iimic.getCache().iterator();
 		c = 0;
@@ -161,7 +161,7 @@ public class CacheScrubber extends TimerTask {
 		status = "Scrubbing values";
 		
 		// And finally the value metainformation
-		CarUtility.locError("ERR1125");
+		CarUtility.locError("ERR1125",LogCriticality.debug);
 		ValueMetaInformationCache vmic = ValueMetaInformationCache.getInstance();
 		Iterator<Entry<String,CachedValueMetaInformation>> viter = vmic.getCache().iterator();
 		c = 0;
@@ -183,7 +183,7 @@ public class CacheScrubber extends TimerTask {
 			}
 		}
 		lastvalsize = c - n;
-		CarUtility.locError("ERR1126");
+		CarUtility.locError("ERR1126",LogCriticality.debug);
 		status = "Idle";
 		runcount += 1;
 		lastrunduration = System.currentTimeMillis() - lastrunstart;

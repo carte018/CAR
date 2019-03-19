@@ -313,7 +313,7 @@ public class CarmaController {
 		
 		// Now we add the tourist information (whileImAway and allOtherInfo)
 		newPolicy.setWhileImAwayDirective(WhileImAwayDirective.valueOf(req.getParameter("whileImAway")));
-		CarUtility.locError("ERR1118","whileImAway",req.getParameter("whileImAway"));
+		CarUtility.locError("ERR1118",LogCriticality.debug,"whileImAway",req.getParameter("whileImAway"));
 		UserAllOtherInfoReleaseStatement uaoirs = new UserAllOtherInfoReleaseStatement();
 		edu.internet2.consent.icm.model.AllOtherInfoId aoii = new edu.internet2.consent.icm.model.AllOtherInfoId();
 		aoii.setAllOtherInfoType(AllOtherInfoTypeConst.allOtherInfoType);
@@ -322,7 +322,7 @@ public class CarmaController {
 		UserDirectiveAllOtherValues udaov = new UserDirectiveAllOtherValues();
 		udaov.setAllOtherValues(AllOtherValuesConst.allOtherValues);
 		udaov.setUserReleaseDirective(UserReleaseDirective.valueOf(req.getParameter("allOtherInfo")));
-		CarUtility.locError("ERR1118","allOtherInfo",req.getParameter("allOtherInfo"));
+		CarUtility.locError("ERR1118",LogCriticality.debug,"allOtherInfo",req.getParameter("allOtherInfo"));
 		uaoirs.setUserDirectiveAllOtherValues(udaov);
 		newPolicy.setUserAllOtherInfoReleaseStatement(uaoirs);
 				
@@ -623,12 +623,12 @@ public class CarmaController {
 						httpMap.put(iiid.getIiid(), riimi.getHttpHeader());
 					}
 				} else {
-					CarUtility.locError("ERR1130",iiid.getIiid() + " under " + rhidentifier.getRhid());
+					CarUtility.locError("ERR1130",LogCriticality.info,iiid.getIiid() + " under " + rhidentifier.getRhid());
 				}
 				
 			}
 		} else {
-			CarUtility.locError("ERR1131",rhidentifier.getRhtype() + "," + rhidentifier.getRhid());
+			CarUtility.locError("ERR1131",LogCriticality.info,rhidentifier.getRhtype() + "," + rhidentifier.getRhid());
 		}
 		
 		// Then construct the set of values
@@ -721,7 +721,7 @@ public class CarmaController {
 						for (String reg : subl.getValuelist()) {
 							if (v.matches(reg)) {
 								matters=true;
-								CarUtility.locError("ERR0810",v,i,reg,"optional");
+								CarUtility.locError("ERR0810",LogCriticality.debug,v,i,reg,"optional");
 								break outer3;
 							}
 						}
@@ -733,7 +733,7 @@ public class CarmaController {
 							for (String reg : subl.getValuelist()) {
 								if (v.matches(reg)) {
 									matters=true;
-									CarUtility.locError("ERR0810",v,i,reg,"required");
+									CarUtility.locError("ERR0810",LogCriticality.debug,v,i,reg,"required");
 									break outer4;
 								}
 							}
@@ -877,7 +877,7 @@ public class CarmaController {
 			String ii = iipv.getInfoId().getInfoValue();
 			ArrayList<String> dispAdded = new ArrayList<String>();
 			for (String v : iipv.getInfoItemValues()) {
-				CarUtility.locError("ERR1134","value processing: " + v + " for " + ii);
+				CarUtility.locError("ERR1134",LogCriticality.debug,"value processing: " + v + " for " + ii);
 				// for every ii/value pair
 				InjectedInfoItem j = new InjectedInfoItem();
 				j.setDisplayName(adisp.get(ii));
@@ -1533,15 +1533,15 @@ public class CarmaController {
 		String ut = config.getProperty("car.userIdentifier", false);
 		if (ut == null) {
 			u.setUserType("eduPersonPrincipalName");
-			CarUtility.locError("ERR1134","set User Type to default (eduPersonPrincipalName)");
+			CarUtility.locError("ERR1134",LogCriticality.debug,"set User Type to default (eduPersonPrincipalName)");
 
 		} else {
 			u.setUserType(ut);
-			CarUtility.locError("ERR1134","UserType from config is " + ut);
+			CarUtility.locError("ERR1134",LogCriticality.debug,"UserType from config is " + ut);
 		}
 		u.setUserValue(request.getRemoteUser());
 		UserReturnedPolicy newRPPolicy = CarUtility.getNewRPTemplate(u, config);
-		CarUtility.locError("ERR1134","Retrieved policy.");
+		CarUtility.locError("ERR1134",LogCriticality.debug,"Retrieved policy.");
 		String newRPBaseId = newRPPolicy.getPolicyMetaData().getPolicyId().getBaseId();
 		
 		constructedPolicy.setDescription("Default policy for NewRPTemplate");
@@ -1626,7 +1626,7 @@ public class CarmaController {
 		//CarUtility.postCOPSUPolicy(entity, config);
 		CarUtility.putCOPSUPolicy(newRPBaseId, constructedPolicy, config);
 		
-		CarUtility.locError("ERR1134","newRPPolicy JSON is: " + entity);
+		CarUtility.locError("ERR1134",LogCriticality.info,"newRPPolicy JSON is: " + entity);
 		return new ModelAndView("redirect:new_rp?success=Preferences Updated");
 			
 	}
