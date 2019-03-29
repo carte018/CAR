@@ -76,13 +76,24 @@ public class CarUtility {
 		}
 		
 		String sl = null;
-		if ((sl = config.getProperty("serverLanguage", false)) != null) {
+		if ((sl = config.getProperty("car.defaultLocale", false)) != null) {
 				locRB = ResourceBundle.getBundle("i18n.errors",new Locale(sl));  // override if found
 				locDB = ResourceBundle.getBundle("i18n.logs",new Locale(sl));
-				locCB = ResourceBundle.getBundle("i18n.components", new Locale(sl));
 		}
+		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request)));
 		return(config);
 		
+	}
+	public static String prefLang(HttpServletRequest req) {
+		CarConfig config = CarConfig.getInstance();
+		String defloc = config.getProperty("car.defaultLocale", true);
+		String retval = defloc;
+		try {
+			retval = req.getLocale().getLanguage();
+		} catch (Exception e) {
+			// ignore
+		}
+		return retval;
 	}
 	
 	public static String localize(InternationalizedString is, String loc) {
@@ -90,7 +101,7 @@ public class CarUtility {
 		CarConfig config = CarConfig.getInstance();
 		String defloc = config.getProperty("car.defaultLocale", true);
 		String defval = null;
-		if (loc != null && ! loc.equalsIgnoreCase("")) {
+		if (loc != null && ! loc.equalsIgnoreCase("") && is != null) {
 			// specific locale
 			for (LocaleString ls : is.getLocales()) {
 				if (ls.getLocale().equals(loc)) {

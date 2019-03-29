@@ -71,6 +71,7 @@ import edu.internet2.consent.icm.model.UserReturnedPolicy;
 import edu.internet2.consent.informed.model.InfoItemIdentifier;
 import edu.internet2.consent.informed.model.InfoItemValueList;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
+import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRPProperty;
@@ -498,7 +499,6 @@ public class MainController {
 			// Retrieve RP metainformation and parse out the RP attribute information
 			
 			ReturnedRPMetaInformation rpmetainformation = CarUtility.getRPMetaInformation(rhid, rpid, config);
-			
 			// Handle unrecognized RP
 			if (rpmetainformation == null || rpmetainformation.getRpproperties() == null) {
 				// unrecognized RP
@@ -1228,6 +1228,18 @@ public class MainController {
 					}
 				}
 				
+				// Marshal the preferred language for interpolating internationalized strings
+				String preflang = CarUtility.prefLang(request);
+				
+				// Marshal the RH info for display purposes
+				ArrayList<ReturnedRHMetaInformation> arhmi = CarUtility.getRHMetaInformation(config);
+				String rhdisplayname="";
+				for (ReturnedRHMetaInformation mi : arhmi) {
+					if (mi.getRhidentifier().getRhid().contentEquals(rpmetainformation.getRhidentifier().getRhid())) {
+						rhdisplayname = CarUtility.localize(mi.getDisplayname(),preflang);
+					}
+				}
+				
 				ModelAndView debugReturn = new ModelAndView("intercept");
 				if (! useCrypto) {
 					debugReturn.addObject("actionUrl",CarUtility.interceptUrl(config)+"?conversation="+sconvo);
@@ -1296,42 +1308,60 @@ public class MainController {
 				} catch (Exception ign) {
 					debugReturn.addObject("permitNo","");
 				}
+				
+				// Optimize for reuse
+				String locrpdisp = rpmetainformation.getRpidentifier().getRpid();
+				String locrpdesc = rpmetainformation.getRpidentifier().getRpid();
+				if (rpmetainformation.getDisplayname() != null)
+					locrpdisp = CarUtility.localize(rpmetainformation.getDisplayname(),preflang);
+				if (rpmetainformation.getDescription() != null)
+					locrpdesc = CarUtility.localize(rpmetainformation.getDescription(),preflang);
+				
 				debugReturn.addObject("hasMay",hasMay);
 				debugReturn.addObject("hasMustDecisions",hasMustDecisions);
 				debugReturn.addObject("hasNoChoice",hasNoChoice);
 				debugReturn.addObject("page-title",CarUtility.getLocalComponent("page-title"));
-				//TODO:  this is assuming the first locale is the right locale -- needs to be extrapolated so that injects can be totally i18n'd
-				debugReturn.addObject("title-choice",CarUtility.getLocalComponent("title-choice",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
-				debugReturn.addObject("title-nochoice",CarUtility.getLocalComponent("title-nochoice",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
-				debugReturn.addObject("intro",CarUtility.getLocalComponent("intro",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
+				debugReturn.addObject("title-choice",CarUtility.getLocalComponent("title-choice",locrpdisp));
+				debugReturn.addObject("title-nochoice",CarUtility.getLocalComponent("title-nochoice",locrpdisp));
+				debugReturn.addObject("intro",CarUtility.getLocalComponent("intro",locrpdisp));
 				debugReturn.addObject("hasChoices",haschoices);
 				debugReturn.addObject("hasUserChoices",hasUserChoices);
 				debugReturn.addObject("rpiconurl",rpmetainformation.getIconurl());
-				debugReturn.addObject("rpdisplayname",rpmetainformation.getDisplayname().getLocales().get(0).getValue());
+				debugReturn.addObject("rpdisplayname",locrpdisp);
+				debugReturn.addObject("rhdisplayname",rhdisplayname);
 				// TODO:  This is a hack to get around the issue that the current DDL is confusing displayname and description in the metainformation -- this works for this case, but won't for others -- fix this after the demo
-				debugReturn.addObject("rpdescription",rpmetainformation.getDescription()==null?null:rpmetainformation.getDescription().getLocales().get(0).getValue());
+				debugReturn.addObject("rpdescription",rpmetainformation.getDescription()==null?null:locrpdesc);
 				debugReturn.addObject("rpprivacyurl",rpmetainformation.getPrivacyurl());
-				debugReturn.addObject("header_nochoice",CarUtility.getLocalComponent("header_nochoice",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
+				debugReturn.addObject("header_nochoice",CarUtility.getLocalComponent("header_nochoice",CarUtility.localize(rpmetainformation.getDisplayname(),preflang)));
 				debugReturn.addObject("acknowledge_show_false",CarUtility.getLocalComponent("acknowledge_show_false"));
 				debugReturn.addObject("acknowledge_show_true",CarUtility.getLocalComponent("acknowledge_show_true"));
 				debugReturn.addObject("continue_button_false",CarUtility.getLocalComponent("continue_button_false"));
 				debugReturn.addObject("continue_button_true",CarUtility.getLocalComponent("continue_button_true"));
 				debugReturn.addObject("save_prompt",CarUtility.getLocalComponent("save_prompt"));
 				
-				debugReturn.addObject("header_must", CarUtility.getLocalComponent("header_must",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
-				debugReturn.addObject("header_may",CarUtility.getLocalComponent("header_may", rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
+				debugReturn.addObject("header_must", CarUtility.getLocalComponent("header_must",locrpdisp));
+				debugReturn.addObject("header_may",CarUtility.getLocalComponent("header_may", locrpdisp));
 				debugReturn.addObject("choice_edit",CarUtility.getLocalComponent("choice_edit"));
 				debugReturn.addObject("choice_dont_edit",CarUtility.getLocalComponent("choice_dont_edit"));
-				debugReturn.addObject("header_must_and_may",CarUtility.getLocalComponent("header_must_and_may",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
+				debugReturn.addObject("header_must_and_may",CarUtility.getLocalComponent("header_must_and_may",locrpdisp));
 				
-				debugReturn.addObject("release_what",CarUtility.getLocalComponent("release_what",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
+				debugReturn.addObject("release_what",CarUtility.getLocalComponent("release_what",locrpdisp));
 				debugReturn.addObject("save_true_suppress",CarUtility.getLocalComponent("save_true_suppress"));
 				debugReturn.addObject("save_true_show_again",CarUtility.getLocalComponent("save_true_show_again"));
 				debugReturn.addObject("save_false",CarUtility.getLocalComponent("save_false"));
 				debugReturn.addObject("nochoice_nodisplay",CarUtility.getLocalComponent("nochoice_nodisplay"));
 				debugReturn.addObject("nochoice_display",CarUtility.getLocalComponent("nochoice_display"));
 				debugReturn.addObject("recommends",CarUtility.getLocalComponent("recommends"));
-				debugReturn.addObject("show_required",CarUtility.getLocalComponent("show_required",rpmetainformation.getDisplayname().getLocales().get(0).getValue()));
+				debugReturn.addObject("show_required",CarUtility.getLocalComponent("show_required",locrpdisp));
+				debugReturn.addObject("held-by",CarUtility.getLocalComponent("held-by"));
+				debugReturn.addObject("edit-presets",CarUtility.getLocalComponent("edit-presets"));
+				debugReturn.addObject("update-settings",CarUtility.getLocalComponent("update-settings"));
+				debugReturn.addObject("privacy-policy",CarUtility.getLocalComponent("privacy-policy"));
+				debugReturn.addObject("mandatory-header",CarUtility.getLocalComponent("mandatory-header"));
+				debugReturn.addObject("dont-show",CarUtility.getLocalComponent("dont-show"));
+				debugReturn.addObject("self-service-description",CarUtility.getLocalComponent("self-service-description"));
+				debugReturn.addObject("save-continue",CarUtility.getLocalComponent("save-continue"));
+				debugReturn.addObject("cancel",CarUtility.getLocalComponent("cancel"));
 				
 				debugReturn.addObject("areason",areason);
 				

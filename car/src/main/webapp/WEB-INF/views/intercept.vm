@@ -4,9 +4,9 @@
 		<h1>$intro</h1>
 		
 		<div id="sidebar" class="content-section">
-			<h3>Requested information held by:</h3>
+			<h3>${held-by}:</h3>
 			<div class="resource-holder-name" style="margin-top: -0.75em">
-				Duke Office of Information Technology
+				$rhdisplayname
 			</div>
 			<div style="text-align: center; color: #001a57; font-size: 2em; margin: 0.75em 0;">&#8681;</div>
 			#if($rpiconurl)
@@ -18,7 +18,7 @@
 			#end
 
 			#if($rpprivacyurl)
-				<div><a href="$rpprivacyurl" id="rp-privacy-link" target="_blank">${rpdisplayname}'s privacy policy</a></div>
+				<div><a href="$rpprivacyurl" id="rp-privacy-link" target="_blank">${rpdisplayname}'s ${privacy-policy}</a></div>
 			#end <span style="clear: both;"></span>
 			
 		</div>
@@ -33,7 +33,7 @@
 						<h3>$title-nochoice</h3>
 					#end
 					#if($hasMustDecisions) 
-						<h5>Edit Duke's presets:</h5>
+						<h5>${edit-presets}:</h5>
 						<table class="consent-table" id="must-decision-table">
 							<thead>
 							<tr>
@@ -48,7 +48,7 @@
 						</table>
 					#end
 					#if($hasMay)
-						<h5>Update your settings:</h5>
+						<h5>${update-settings}:</h5>
 						<table class="consent-table" id="may-decision-table">
 							<thead>
 							<tr>
@@ -65,7 +65,7 @@
 				</div>
 			#end
 			#if($hasNoChoice)
-				<div style="margin-bottom: 2em"><p><a href="#" id="required-toggle"><span id="required-expand">+</span> Information that must be provided in order to use this site</a></p>
+				<div style="margin-bottom: 2em"><p><a href="#" id="required-toggle"><span id="required-expand">+</span> ${mandatory-header}</a></p>
 					<div class="content-section" id="required-info" style="display:none;">
 						<ul class="simple-list" id="nochoicelist">
 														
@@ -78,11 +78,11 @@
 				<div class="form-set">
 					<input id="remember-show" name="remember" value="saveandshow" type="checkbox" #if($userShowAgain && $userShowAgain.equals("true"))checked#end style="display: none;"></input>
 					<input id="remember-hide" name="remember" value="saveandhide" type="checkbox" #if(! $userShowAgain || $userShowAgain.equals("false"))checked#end></input>
-					<label	for="remember" class="inline">Don't show this screen the next time I log into $rpdisplayname</label>
-					<!-- RGC - remove for pilot <p style="margin-top: -0.15em; margin-bottom: -0.5em"><small><em>You can update your existing settings for this site and others at any time at <a href="#" id="selfservicelink">privacy.duke.edu</a></small></p> -->
+					<label	for="remember" class="inline">${dont-show} $rpdisplayname</label>
+					<!-- RGC - remove for pilot <p style="margin-top: -0.15em; margin-bottom: -0.5em"><small><em>${self-service-description} <a href="#" id="selfservicelink">privacy.duke.edu</a></small></p> -->
 				</div>
-				<button class="active" id="button_accept_and_continue">Save and Continue<i class="button-icon-right fa fa-arrow-right"></i></button>
-				<button class="passive" id="button_cancel">Cancel<i class="button-icon-right fa fa-times"></i></button>
+				<button class="active" id="button_accept_and_continue">${save-continue}<i class="button-icon-right fa fa-arrow-right"></i></button>
+				<button class="passive" id="button_cancel">${cancel}<i class="button-icon-right fa fa-times"></i></button>
 			</div> 
     </div>
     
