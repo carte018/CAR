@@ -113,7 +113,8 @@ public class CacheScrubber extends TimerTask {
 						n += 1;
 						CarUtility.locDebugErr("ERR1128",rhid,rptype+"|"+rpid);
 					} else {
-						CarUtility.locDebugErr("ERR1129",rhid,rptype+"|"+rpid,foo.getDisplayname().getLocales().get(0).getValue());
+						if (foo.getDisplayname() != null && foo.getDisplayname().getLocales() != null && ! foo.getDisplayname().getLocales().isEmpty()) 
+							CarUtility.locDebugErr("ERR1129",rhid,rptype+"|"+rpid,foo.getDisplayname().getLocales().get(0).getValue());
 					}
 				} else {
 					String[] p = e.getKey().split("\\|",2);
@@ -126,7 +127,8 @@ public class CacheScrubber extends TimerTask {
 						n += 1;
 						CarUtility.locDebugErr("ERR1128",rhid,rpid);
 					} else {
-						CarUtility.locDebugErr("ERR1129",rhid,rpid,foo.getDisplayname().getLocales().get(0).getValue());
+						if (foo.getDisplayname() != null && foo.getDisplayname().getLocales() != null && ! foo.getDisplayname().getLocales().isEmpty()) 
+							CarUtility.locDebugErr("ERR1129",rhid,rpid,foo.getDisplayname().getLocales().get(0).getValue());
 					}
 				}
 			}
