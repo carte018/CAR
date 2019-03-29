@@ -112,10 +112,21 @@ public class RPRegistrationController {
 			LocaleString dls = new LocaleString();
 			dls.setLocale(req.getParameter("lang"));
 			dls.setValue(req.getParameter("displayname"));
+			//
+			// Since IDMS-4191, displayname and description may be null initially
+			//
+			if (rrpmi.getDisplayname() == null) 
+				rrpmi.setDisplayname(new InternationalizedString());
+			if (rrpmi.getDisplayname().getLocales() == null)
+				rrpmi.getDisplayname().setLocales(new ArrayList<LocaleString>());
 			rrpmi.getDisplayname().getLocales().add(dls);
 			LocaleString cls = new LocaleString();
 			cls.setLocale(req.getParameter("lang"));
 			cls.setValue(req.getParameter("description"));
+			if (rrpmi.getDescription() == null)
+				rrpmi.setDescription(new InternationalizedString());
+			if (rrpmi.getDescription().getLocales() == null)
+				rrpmi.getDescription().setLocales(new ArrayList<LocaleString>());
 			rrpmi.getDescription().getLocales().add(cls);
 			CarAdminUtils.putRelyingPartyMetaInformation(rrpmi);  // actually update the rp metainfo
 			component = "rpmi";
@@ -168,39 +179,57 @@ public class RPRegistrationController {
 			}
 			// Otherwise replace the values for displayname and description for this language (if it exists)
 			boolean updated = false;
-			for (LocaleString displs : rrpmi.getDisplayname().getLocales()) {
-				if (displs.getLocale().equalsIgnoreCase(chlang)) {
-					// Match
-					updated = true;
-					displs.setValue(req.getParameter("displayname"));
+			//
+			// NPE protection
+			//
+			if (rrpmi.getDisplayname() != null && rrpmi.getDisplayname().getLocales() != null)
+				for (LocaleString displs : rrpmi.getDisplayname().getLocales()) {
+					if (displs.getLocale().equalsIgnoreCase(chlang)) {
+					// 		Match
+						updated = true;
+						displs.setValue(req.getParameter("displayname"));
+					}
 				}
-			}
 			if (! updated) {
 				// We need to add another locale
 				LocaleString nls = new LocaleString();
 				nls.setLocale(chlang);
 				nls.setValue(req.getParameter("displayname"));
 				InternationalizedString is = rrpmi.getDisplayname();
+				// NPE protection
+				if (is == null) 
+					is = new InternationalizedString();
 				ArrayList<LocaleString> isl = (ArrayList<LocaleString>) is.getLocales();
+				// NPE protection
+				if (isl == null)  
+					isl = new ArrayList<LocaleString>();
 				isl.add(nls);
 				is.setLocales(isl);
 				rrpmi.setDisplayname(is);
 			}
 			updated = false;
-			for (LocaleString descls : rrpmi.getDescription().getLocales()) {
-				if (descls.getLocale().equalsIgnoreCase(chlang)) {
-					// Match
-					updated = true;
-					descls.setValue(req.getParameter("description"));
+			// NPE protection
+			if (rrpmi.getDescription() != null && rrpmi.getDescription().getLocales() != null)
+				for (LocaleString descls : rrpmi.getDescription().getLocales()) {
+					if (descls.getLocale().equalsIgnoreCase(chlang)) {
+						// Match
+						updated = true;
+						descls.setValue(req.getParameter("description"));
+					}
 				}
-			}
+			
 			if (! updated) {
 				// We need to add another locale
 				LocaleString nls = new LocaleString();
 				nls.setLocale(chlang);
 				nls.setValue(req.getParameter("description"));
 				InternationalizedString is = rrpmi.getDescription();
+				// NPE protection
+				if (is == null) 
+					is = new InternationalizedString();
 				ArrayList<LocaleString> isl = (ArrayList<LocaleString>) is.getLocales();
+				if (isl == null) 
+					isl = new ArrayList<LocaleString>();
 				isl.add(nls);
 				is.setLocales(isl);
 				rrpmi.setDescription(is);
