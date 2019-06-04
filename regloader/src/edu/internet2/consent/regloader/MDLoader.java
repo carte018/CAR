@@ -45,6 +45,7 @@ import org.opensaml.saml.saml2.metadata.EntityDescriptor;
 import org.opensaml.saml.saml2.metadata.Extensions;
 import org.opensaml.saml.saml2.metadata.RequestedAttribute;
 import org.opensaml.saml.saml2.metadata.SPSSODescriptor;
+import org.opensaml.saml.saml2.metadata.impl.ExtensionsImpl;
 import org.w3c.dom.Element;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -223,6 +224,7 @@ public class MDLoader {
 		
 		Iterator<EntityDescriptor> it = fsmp.iterator();
 		while (it.hasNext()) {
+						
 			// Foreach entity in the metadata blob...
 			ReturnedRPMetaInformation rrpmi = new ReturnedRPMetaInformation();
 			
@@ -231,22 +233,22 @@ public class MDLoader {
 			
 			if (ed.getIDPSSODescriptor(SAMLConstants.SAML20P_NS) != null) {
 				// Ignore this -- it's an IDP entry
-				// System.out.println(entity + " is an IDP -- ignoring");
+				System.out.println(entity + " is an IDP -- ignoring");
 				continue;
 			} 
 			if (ed.getAttributeAuthorityDescriptor(SAMLConstants.SAML20P_NS) != null) {
 				// ignore attribute authorities
-				// System.out.println(entity + " is an Attribute Authority -- skipping");
+				System.out.println(entity + " is an Attribute Authority -- skipping");
 				continue;
 			}
 			if (ed.getSPSSODescriptor(SAMLConstants.SAML20P_NS) == null && ed.getSPSSODescriptor(SAMLConstants.SAML11P_NS) == null) {
 				// Ignore this -- it's something odd
-				// System.out.println(entity + " seems to be something we don't understand");
+				System.out.println(entity + " seems to be something we don't understand");
 				continue;
 			}
 			
 			// This must be an SP description
-			
+						
 			// We assume since we're parsing SAML metadata that we can use entityId as our identifier type in all cases
 			RPIdentifier rpi = new RPIdentifier();
 			rpi.setRptype("entityId");
@@ -288,6 +290,8 @@ public class MDLoader {
 			Extensions spx = spd.getExtensions();
 			
 			if (spx == null) {
+				entities.add(ed.getEntityID()); // add to the entity list anyway
+				mdloaded.put(rrpmi.getRpidentifier().getRpid(),rrpmi);
 				continue;  // if no extensions, no extensions
 			}
 			
@@ -317,20 +321,20 @@ public class MDLoader {
 							l.setLocale(((DisplayName) uichild).getXMLLang());
 							l.setValue(((DisplayName)uichild).getValue());
 							displayname.getLocales().add(l);
-							// System.out.println("DisplayName:  " + ((DisplayName)uichild).getXMLLang() + " = " + ((DisplayName)uichild).getValue());;
+							System.out.println("DisplayName:  " + ((DisplayName)uichild).getXMLLang() + " = " + ((DisplayName)uichild).getValue());;
 						} else if (uichild instanceof Description) {
 							spdescription.put(((Description) uichild).getXMLLang(),((Description) uichild).getValue());
 							LocaleString l = new LocaleString();
 							l.setLocale(((Description)uichild).getXMLLang());
 							l.setValue(((Description)uichild).getValue());
 							description.getLocales().add(l);
-							// System.out.println("Description: " + ((Description)uichild).getXMLLang() + " = " + ((Description)uichild).getValue());							
+							System.out.println("Description: " + ((Description)uichild).getXMLLang() + " = " + ((Description)uichild).getValue());							
 						} else if (uichild instanceof PrivacyStatementURL) {
 							privacyurl = ((PrivacyStatementURL) uichild).getValue();
-							// System.out.println("PrivacyURL: " + ((PrivacyStatementURL)uichild).getXMLLang() + " = " + ((PrivacyStatementURL)uichild).getValue());
+							System.out.println("PrivacyURL: " + ((PrivacyStatementURL)uichild).getXMLLang() + " = " + ((PrivacyStatementURL)uichild).getValue());
 						} else if (uichild instanceof Logo) {
 							logourl = ((Logo)uichild).getURL();
-							// System.out.println("Logo: " + ((Logo)uichild).getXMLLang() + " = " + ((Logo)uichild).getURL());
+							System.out.println("Logo: " + ((Logo)uichild).getXMLLang() + " = " + ((Logo)uichild).getURL());
 						}
 					}
 					// Sometimes we don't have any information
@@ -353,7 +357,7 @@ public class MDLoader {
 			
 			for (XMLObject spdchild : spd.getOrderedChildren()) {
 				 if (spdchild instanceof AttributeConsumingService) {
-					 //	System.out.println("FOUND ATTRIBUTECONSUMINGSERVICE");
+					 System.out.println("FOUND ATTRIBUTECONSUMINGSERVICE");
 						for (XMLObject acschild : spdchild.getOrderedChildren()) {
 							if (acschild instanceof RequestedAttribute) {
 								String handle = ((RequestedAttribute)acschild).getFriendlyName();
@@ -413,7 +417,7 @@ public class MDLoader {
 			// Attributes in this case should be tags like entity-category and assurance-certification
 			for (XMLObject mainchild : mainEx.getOrderedChildren()) {
 				if (mainchild instanceof RegistrationInfo) {
-				//	System.out.println("Registration Authority: " + ((RegistrationInfo) mainchild).getRegistrationAuthority());
+					System.out.println("Registration Authority: " + ((RegistrationInfo) mainchild).getRegistrationAuthority());
 					ReturnedRPProperty rrpp = new ReturnedRPProperty();
 					rrpp.setRppropertyname("RegistrationAuthority");
 					rrpp.setRppropertyvalue(((RegistrationInfo) mainchild).getRegistrationAuthority());
@@ -460,7 +464,7 @@ public class MDLoader {
 			rrpmi.setRpproperties(arrpp);
 			mdloaded.put(rrpmi.getRpidentifier().getRpid(),rrpmi);
 
-			//System.out.println("SP " + ed.getEntityID());
+			System.out.println("SP " + ed.getEntityID());
 			
 				
 			entities.add(ed.getEntityID());
@@ -475,6 +479,8 @@ public class MDLoader {
 		
 		if (hmrp == null) {
 			System.out.println("retrieveCurrentRPRegistration("+icmhost+","+icmport+","+rhtype+","+rhid+","+icmuser+","+icmcred+") returned null");
+		} else {
+			System.out.println("retrieveCurrentRPRegistration("+icmhost+","+icmport+","+rhtype+","+rhid+","+icmuser+","+icmcred+") returned " + hmrp.size() + " entries");
 		}
 
 		// At this point, we have the list of entity IDs in the metadata in 
@@ -492,7 +498,7 @@ public class MDLoader {
 		//
 		// We now use this information to:
 		//
-		// * if dryrun, only report what woudl be done, don't actually do it
+		// * if dryrun, only report what would be done, don't actually do it
 		// * find entries in metadata not in database and create them in database
 		// * if not onlynew, find entries in both places and merge them
 		
@@ -501,6 +507,7 @@ public class MDLoader {
 		
 		// Start by finding new entries
 		for (String e : entities) {
+			System.out.println("Operating on RP: " + e);
 			// for every SP entity ID in the metadata being imported
 			if (rpid != null && ! rpid.equals("")) {
 				if (! e.equals(rpid)) {
@@ -517,8 +524,10 @@ public class MDLoader {
 				System.out.println("     PrivacyURL: " + mdloaded.get(e).getPrivacyurl());
 				System.out.println("     IconURL: " + mdloaded.get(e).getIconurl());
 				System.out.println("     Properties:");
-				for (ReturnedRPProperty r : mdloaded.get(e).getRpproperties()) {
-					System.out.println("          " + r.getRppropertyname() + " = " + r.getRppropertyvalue());
+				if (mdloaded.get(e).getRpproperties() != null) {
+					for (ReturnedRPProperty r : mdloaded.get(e).getRpproperties()) {
+						System.out.println("          " + r.getRppropertyname() + " = " + r.getRppropertyvalue());
+					}
 				}
 				if (requirediis.containsKey(e)) {
 					System.out.println("     Required Attrs:");
