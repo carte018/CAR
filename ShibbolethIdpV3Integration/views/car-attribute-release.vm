@@ -1,0 +1,7 @@
+<html>
+<body onload="document.form1.submit()">
+   <form method="POST" action="$environment.getProperty("car.carma.url")" name="form1">
+      <input type="hidden" name="json" value="$carContext.getRequest($request, $environment, $flowExecutionUrl)" />
+   </form>
+</body>
+</html>

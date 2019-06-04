@@ -1,0 +1,7 @@
+ <!-- Custom bean definition for the JWTUtils bean used by the CAR integration -->
+ 
+    <bean id="JWTUtils" class="edu.duke.oit.idms.idp.car.JWTUtils"
+      p:carIdPPrivateKeyResource="%{car.idp.private.key}"
+      p:carCarmaCertificateResource="%{car.carma.cert}"
+      init-method="initialize"
+    />

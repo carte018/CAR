@@ -1,0 +1,34 @@
+<!-- Relying Party override mechanism to control when to rely on CAR -->
+<!-- If you wish to configure the CAR intercept globally, you may, or you may 
+	 configure it only for those relying parties specified in an override.  
+	 Choose one of the approaches below, but not both (as one supersedes the other).
+ -->
+ 
+ <!--  Global configuration (use CAR for all RPs) -->
+ 
+ <bean id="shibboleth.DefaultRelyingParty" parent="RelyingParty">
+        <property name="profileConfigurations">
+            <list>
+                <ref bean="Shibboleth.SSO"/>
+                <ref bean="SAML1.AttributeQuery"/>
+               <!-- <ref bean="SAML1.ArtifactResolution" /> -->
+                <bean parent="SAML2.SSO" p:postAuthenticationFlows="car-attribute-release" />
+               <!-- <ref bean="SAML2.ECP" /> -->
+               <!-- <ref bean="SAML2.Logout" /> -->
+                <ref bean="SAML2.AttributeQuery"/>
+               <!-- <ref bean="SAML2.ArtifactResolution" /> -->
+            </list>
+        </property>
+</bean>
+ 
+ <!--  Alternately, configuration to use CAR for only specific RPs -->
+ 
+<util:list id="shibboleth.RelyingPartyOverrides">
+	<bean c:relyingPartyIds="#{{'rp1-entity-id','rp2-entity-id',...}}" parent="RelyingPartyByName">
+      <property name="profileConfigurations">
+        <list>
+          <bean p:postAuthenticationFlows="car-attribute-release" parent="SAML2.SSO"/>
+        </list>
+      </property>
+    </bean>
+</util:list>
