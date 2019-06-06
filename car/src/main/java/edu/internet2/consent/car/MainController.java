@@ -423,6 +423,9 @@ public class MainController {
 		
 		CarConfig config = CarUtility.init(request);
 		
+		// Marshal the preferred language for interpolating internationalized strings
+		String preflang = CarUtility.prefLang(request);
+		
 		// We have two cases, determined by the presence or absence of data in the Session.
 		// Get a session (creating a new one if needed)
 		
@@ -583,11 +586,20 @@ public class MainController {
 				InfoItemIdentifier iii = iivl.getInfoitemidentifier();  // release identifier
 				String sourceAttribute = iivl.getSourceitemname();
 				// Set up the reason string
+				if (iivl != null && iivl.getInfoitemidentifier() != null && iivl.getReason() != null) {
+					areason.put(iivl.getInfoitemidentifier().getIiid(), CarUtility.localize(iivl.getReason(),preflang));
+				} else {
+					areason.put(iivl.getInfoitemidentifier().getIiid(),"");  // default to no reason
+				}
+
+				/* Deprecated
 				if (iivl != null && iivl.getInfoitemidentifier() != null && iivl.getReason() != null && iivl.getReason().getLocales() != null && ! iivl.getReason().getLocales().isEmpty()) {
 					areason.put(iivl.getInfoitemidentifier().getIiid(),iivl.getReason().getLocales().get(0).getValue());
 				} else {
 					areason.put(iivl.getInfoitemidentifier().getIiid(), "");  // default to no reason
 				}
+				*/
+				
 				ArrayList<String> mappedValues = new ArrayList<String>();
 				if (sourceAttribute != iii.getIiid()) {
 					// This is a mapping case -- map the value list from the other attribute
@@ -630,11 +642,20 @@ public class MainController {
 				InfoItemIdentifier iii = iivl.getInfoitemidentifier();  // release identifier
 				String sourceAttribute = iivl.getSourceitemname();
 				// Set up the reason string
+				if (iivl != null && iivl.getInfoitemidentifier() != null && iivl.getReason() != null) {
+					areason.put(iivl.getInfoitemidentifier().getIiid(), CarUtility.localize(iivl.getReason(),preflang));
+				} else {
+					areason.put(iivl.getInfoitemidentifier().getIiid(),"");  // default to no reason
+				}
+				
+				/* Deprecated
 				if (iivl != null && iivl.getInfoitemidentifier() != null && iivl.getReason() != null && iivl.getReason().getLocales() != null && ! iivl.getReason().getLocales().isEmpty()) {
 					areason.put(iivl.getInfoitemidentifier().getIiid(),iivl.getReason().getLocales().get(0).getValue());
 				} else {
 					areason.put(iivl.getInfoitemidentifier().getIiid(), "");  // default to no reason
 				}
+				*/
+				
 				ArrayList<String> mappedValues = new ArrayList<String>();
 				if (sourceAttribute != iii.getIiid()) {
 					// This is a mapping case -- map the value list from the other attribute
@@ -1000,6 +1021,17 @@ public class MainController {
 					// get info item metainformation
 					ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,  aid, config);
 					String attrDisplayName = null;
+					
+					if (riimi != null && riimi.getDisplayname() != null) {
+						String localized = CarUtility.localize(riimi.getDisplayname(), preflang);
+						CarUtility.locError("ERR0085", LogCriticality.debug,aid,localized);
+						attrDisplayName = localized;
+					} else {
+						CarUtility.locError("ERR0086", LogCriticality.info,aid);
+						attrDisplayName=aid;
+					}
+					
+					/* Deprecated
 					if (riimi != null && riimi.getDisplayname() != null && riimi.getDisplayname().getLocales() != null && ! riimi.getDisplayname().getLocales().isEmpty()) {
 						CarUtility.locError("ERR0085",LogCriticality.debug,aid,riimi.getDisplayname().getLocales().get(0).getValue());;
 						attrDisplayName = riimi.getDisplayname().getLocales().get(0).getValue();
@@ -1007,6 +1039,8 @@ public class MainController {
 						CarUtility.locError("ERR0086",LogCriticality.info,aid);
 						attrDisplayName = aid;
 					}
+					*/
+					
 					for (DecisionsForInfoStatement ids : arpsiResponse.getArrayOfInfoDecisionStatement()) {
 						if (ids.getInfoId().getInfoValue().equals(aid)) {
 							// this is a significant one
@@ -1072,6 +1106,16 @@ public class MainController {
 						for (IcmDecisionOnValues idov : idfis.getArrayOfDecisionOnValues()) {
 							String attrDisplayName=null;
 							ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config);
+							if (riimi != null && riimi.getDisplayname() != null) {
+								String localized = CarUtility.localize(riimi.getDisplayname(),preflang);
+								CarUtility.locError("ERR0085", LogCriticality.debug,idfis.getInfoId().getInfoValue(),localized);
+								attrDisplayName = localized;
+							} else {
+								CarUtility.locError("ERR0086", LogCriticality.debug,idfis.getInfoId().getInfoValue());
+								attrDisplayName = idfis.getInfoId().getInfoValue();
+							}
+							
+							/* Deprecated
 							if (riimi != null && riimi.getDisplayname() != null && riimi.getDisplayname().getLocales() != null && ! riimi.getDisplayname().getLocales().isEmpty()) {
 								CarUtility.locError("ERR0085",LogCriticality.debug,idfis.getInfoId().getInfoValue(),riimi.getDisplayname().getLocales().get(0).getValue());;
 								attrDisplayName = riimi.getDisplayname().getLocales().get(0).getValue();
@@ -1079,6 +1123,7 @@ public class MainController {
 								CarUtility.locError("ERR0086",LogCriticality.debug,idfis.getInfoId().getInfoValue());
 								attrDisplayName = idfis.getInfoId().getInfoValue();
 							}
+							*/
 							
 							if (idov.getReleaseDecision().equals(UserReleaseDirective.permit) || idov.getReleaseDecision().equals(UserReleaseDirective.deny)) {
 								// this is a may or a nochoice case we care about
@@ -1243,9 +1288,7 @@ public class MainController {
 						denyMay.get(id.getAttrDisplayName()).add(id.getAttrDisplayValue());
 					}
 				}
-				
-				// Marshal the preferred language for interpolating internationalized strings
-				String preflang = CarUtility.prefLang(request);
+
 				
 				// Marshal the RH info for display purposes
 				ArrayList<ReturnedRHMetaInformation> arhmi = CarUtility.getRHMetaInformation(config);

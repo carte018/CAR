@@ -364,6 +364,8 @@ public class CarmaController {
 		ModelAndView retval = new ModelAndView("rp");
 		CarConfig config = CarUtility.init(req);
 		
+		String preflang = CarUtility.prefLang(req);
+		
 		String baseId = req.getParameter("baseId");
 		
 		if (baseId == null || baseId.equals("")) {
@@ -478,11 +480,19 @@ public class CarmaController {
 				adisp.put(id,iimi.getDescription().getLocales().get(0).getValue());
 				} else {*/  /* Now we use displayname, not description */
 				if (iimi != null && ! iimi.isAsnd()) {
+					if (iimi != null && iimi.getDisplayname() != null) {
+						adisp.put(id, CarUtility.localize(iimi.getDisplayname(), preflang));
+					} else {
+						adisp.put(id,id);
+					}
+					/* Deprecated
 					if (iimi != null && iimi.getDisplayname()!= null && iimi.getDisplayname().getLocales() != null && ! iimi.getDisplayname().getLocales().isEmpty()) {
 						adisp.put(id,iimi.getDisplayname().getLocales().get(0).getValue());
 					} else {
 						adisp.put(id, id);
 					}
+					*/
+					
 					// 	Handle policytype
 					policytype.put(id, iimi.getPolicytype());
 				}
@@ -496,11 +506,20 @@ public class CarmaController {
 				adisp.put(id, iimi.getDescription().getLocales().get(0).getValue());
 				} else {*/ /* Now we use displayname, not description */
 				if (iimi != null && ! iimi.isAsnd()) {
+					if (iimi != null && iimi.getDisplayname() != null) {
+						adisp.put(id, CarUtility.localize(iimi.getDisplayname(),preflang));
+					} else {
+						adisp.put(id, id);
+					}
+					
+					/* Deprecated
 					if (iimi != null && iimi.getDisplayname()!=null && iimi.getDisplayname().getLocales()!= null && ! iimi.getDisplayname().getLocales().isEmpty()) {
 						adisp.put(id, iimi.getDisplayname().getLocales().get(0).getValue());
 					} else {
 						adisp.put(id, id);
 					}
+					*/
+					
 					// 	Handle policytype
 					policytype.put(id, iimi.getPolicytype());
 				}
@@ -984,9 +1003,14 @@ public class CarmaController {
 					if (rim.getInfoitemidentifier().getIiid().equals(ii)) {
 						for (String vm : rim.getValuelist()) {
 							if (v.matches(vm)) {
+								if (rim.getReason() != null) {
+									reason = CarUtility.localize(rim.getReason(),preflang);
+								}
+								/* Deprecated
 								if (rim.getReason() != null && rim.getReason().getLocales() != null && ! rim.getReason().getLocales().isEmpty()) {
 									reason = rim.getReason().getLocales().get(0).getValue();
-								}
+								} 
+								*/
 								break;
 							}
 						}
@@ -997,9 +1021,15 @@ public class CarmaController {
 						if (rrm.getInfoitemidentifier().getIiid().equals(ii)) {
 							for (String vm : rrm.getValuelist()) {
 								if (v.matches(vm)) {
+									if (rrm.getReason() != null) {
+										reason = CarUtility.localize(rrm.getReason(),preflang);
+									}
+									
+									/* Deprecated
 									if (rrm.getReason() != null && rrm.getReason().getLocales() != null && ! rrm.getReason().getLocales().isEmpty()) {
 										reason = rrm.getReason().getLocales().get(0).getValue();
 									}
+									*/
 									break;
 								}
 							}
@@ -1283,6 +1313,8 @@ public class CarmaController {
 		
 		CarConfig config = CarUtility.init(req);
 		
+		String preflang = CarUtility.prefLang(req);
+		
 		// Get a list of the RHs supported by this CAR instance
 		ArrayList<ReturnedRHMetaInformation> rhma = CarUtility.getRHMetaInformation(config);
 
@@ -1316,12 +1348,20 @@ public class CarmaController {
 				if (rpmi == null) {
 					continue;
 				}
-				// TODO:  This is locked into locale(0) -- should be done differently
+				if (rpmi.getDisplayname() != null) {
+					iup.setRpName(CarUtility.localize(rpmi.getDisplayname(),preflang));
+				} else {
+					iup.setRpName(rpmi.getRpidentifier().getRpid());
+				}
+				
+				/* Deprecated
 				if (rpmi.getDisplayname() != null && rpmi.getDisplayname().getLocales() != null && ! rpmi.getDisplayname().getLocales().isEmpty()) {
 					iup.setRpName(rpmi.getDisplayname().getLocales().get(0).getValue());
 				} else {
 					iup.setRpName(rpmi.getRpidentifier().getRpid());
 				}
+				*/
+				
 				String urpid = rpmi.getRpidentifier().getRpid();
 				String rpUrl = urpid.replaceAll("http.*//", "");
 				rpUrl = rpUrl.replaceAll("/.*$","");
@@ -1385,6 +1425,8 @@ public class CarmaController {
 		
 		CarConfig config = CarConfig.getInstance();
 		
+		String preflang = CarUtility.prefLang(request);
+		
 		// Collect a list of the resource holders that may be of interest.
 		// In future, we'll support better inter-RH mappings, but for now, we do at least
 		// need to pick up the RHs that may be of import.
@@ -1415,10 +1457,19 @@ public class CarmaController {
 				for (InfoItemIdentifier iii : aliii) {
 					ReturnedInfoItemMetaInformation i = CarUtility.getInfoItemMetaInformation(rhmi.getRhidentifier().getRhid(), iii.getIiid(), config);
 					NewRPDisplayObject nrdo = new NewRPDisplayObject();
+					if (i.getDisplayname() != null) {
+						nrdo.setAttribute(CarUtility.localize(i.getDisplayname(),preflang));
+					} else {
+						nrdo.setAttribute(i.getIiidentifier().getIiid());
+					}
+					
+					/* Deprecated
 					if (i.getDisplayname() != null && i.getDisplayname().getLocales() != null && ! i.getDisplayname().getLocales().isEmpty())
 						nrdo.setAttribute(i.getDisplayname().getLocales().get(0).getValue());
 					else
 						nrdo.setAttribute(i.getIiidentifier().getIiid());
+					*/
+					
 					nrdo.setInfoType(i.getIiidentifier().getIitype());
 					nrdo.setInfoValue(i.getIiidentifier().getIiid());
 					String [] vals = {"value unavailable"};
@@ -1461,10 +1512,18 @@ public class CarmaController {
 					for (InfoItemIdentifier ii : aliii) {
 						if (ii.getIiid().equalsIgnoreCase(attr)) {
 							ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhmi.getRhidentifier().getRhid(), ii.getIiid(), config);
+							if (riimi.getDisplayname() != null) {
+								attrName = CarUtility.localize(riimi.getDisplayname(),preflang);
+							} else {
+								attrName = ii.getIiid();
+							}
+							
+							/* Deprecated
 							if (riimi.getDisplayname() != null && riimi.getDisplayname().getLocales() != null && ! riimi.getDisplayname().getLocales().isEmpty())
 								attrName = riimi.getDisplayname().getLocales().get(0).getValue();
 							else
 								attrName = ii.getIiid();
+							*/
 						}
 					}
 				}
