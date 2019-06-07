@@ -1388,7 +1388,7 @@ public class MainController {
 				debugReturn.addObject("rpiconurl",rpmetainformation.getIconurl());
 				debugReturn.addObject("rpdisplayname",locrpdisp);
 				debugReturn.addObject("rhdisplayname",rhdisplayname);
-				// TODO:  This is a hack to get around the issue that the current DDL is confusing displayname and description in the metainformation -- this works for this case, but won't for others -- fix this after the demo
+
 				debugReturn.addObject("rpdescription",rpmetainformation.getDescription()==null?null:locrpdesc);
 				debugReturn.addObject("rpprivacyurl",rpmetainformation.getPrivacyurl());
 				debugReturn.addObject("header_nochoice",CarUtility.getLocalComponent("header_nochoice",CarUtility.localize(rpmetainformation.getDisplayname(),preflang)));

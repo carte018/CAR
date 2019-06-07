@@ -30,7 +30,7 @@
 		</div>
 	#end
      
-       	<h1>Manage Information Sharing for $localizedRPDisplayName</h1>
+       	<h1>$manage_heading $localizedRPDisplayName</h1>
  
   	<div id="sidebar">
   		<div class="content-section">
@@ -43,9 +43,9 @@
           <img src="$rpMetaInformation.getIconurl()" style="width: 80px; float: right; margin: 1em;">
           #end
           #if($privu)
-          <p><a href="$rpMetaInformation.getPrivacyurl()" target="_blank">privacy policy</a></p>
+          <p><a href="$rpMetaInformation.getPrivacyurl()" target="_blank">$privacy_policy_label</a></p>
           #else
-          <p><i>no privacy policy</i></p>
+          <p><i>$no_privacy</i></p>
           #end
           <div style="clear: both;"></div>
           
@@ -53,28 +53,28 @@
       
       </div>
       <div class="content-section">
-      	<h2>History</h2>
+      	<h2>$history</h2>
       	<ul id="rp-history" class="simple-list">
-      		<li>Updated: $updateDate</li>
-      		<li>Policy Version: $version</li>
+      		<li>$updated_label: $updateDate</li>
+      		<li>$policy_version: $version</li>
       	</ul>
       </div>
     </div>
       <div id="left">
         <div class="content-section">
-      	<h2>Information Requested by $localizedRPDisplayName</h2>
+      	<h2>$requested_heading $localizedRPDisplayName</h2>
         #if (! $injectedDecisions.isEmpty())
-        <p>You can choose whether the following information is shared with $localizedRPDisplayName:</p>
+        <p>$requested_description $localizedRPDisplayName:</p>
         
         
       <div id="view-preferences">
         
         <table class="display full-width smaller-text">
           <tr>
-            <th>Item</th>
-            <th class="no-wrap">Current Value</th>
-            <th class="no-wrap">Current Choice</th>
-            <th class="no-wrap">Duke Recommends</th>
+            <th>$item</th>
+            <th class="no-wrap">$current_value</th>
+            <th class="no-wrap">$current_choice</th>
+            <th class="no-wrap">$short_institution $recommends</th>
             
           </tr>
           #set($seen = {})
@@ -127,12 +127,12 @@
 		  #end	
 		  #end
 		  <tr>
-		  	<th colspan=4>Additional Settings</th>
+		  	<th colspan=4>$additional_heading</th>
 		  </tr>
 		  <tr>
-		  <td><div class="label">All other information</div>
-		  <div class="sublabel">If $localizedRPDisplayName requests information not listed above</div></td>
-		  <td>(any values)</td>
+		  <td><div class="label">$all_other_heading/div>
+		  <div class="sublabel">$all_other_prefix $localizedRPDisplayName $all_other_suffix</div></td>
+		  <td>($any_values)</td>
 		  #set($current=$userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective())
 		  #if($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("askme"))
 		  <td class="$current">ask me</td>
@@ -142,23 +142,23 @@
 		  <td class="askMe">ask me</td>
 		  </tr>	
 		  <tr>
-		  <td><div class="label">While I'm Away</div>
-		  <div class="sublabel">If your choice above is "ask me" but you're not available to answer when $localizedRPDisplayName requests information about you</div></td>
-		  <td>(any values)</td>
+		  <td><div class="label">$while_away_heading</div>
+		  <div class="sublabel">$while_away_prefix $localizedRPDisplayName $while_away_suffix</div></td>
+		  <td>($any_values)</td>
 		  #set($current=$userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective())
 		  <td class="$current">$userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective()</td>
 		  <td class="deny">deny</td>
 		  </tr>
         </table>
         <br>
-        <button id="editButton" class="active">Edit<i class="button-icon-right fa fa-edit"></i></button>
-        <button id="returnButton" class="passive">Cancel<i class="button-icon-right fa fa-times"></i></button>
+        <button id="editButton" class="active">$edit_label<i class="button-icon-right fa fa-edit"></i></button>
+        <button id="returnButton" class="passive">$cancel_label<i class="button-icon-right fa fa-times"></i></button>
       </div>  
       #else 
       <div id="view-preferences">
-      	<p>$localizedRPDisplayName does not request any optional information</p>
+      	<p>$localizedRPDisplayName $no_optional</p>
       	<br>
-      		<button id="returnButton" class="passive">Cancel<i class="button-icon-right fa fa-times"></i></button>
+      		<button id="returnButton" class="passive">$cancel_label<i class="button-icon-right fa fa-times"></i></button>
       </div>
       #end
         
@@ -169,10 +169,10 @@
         <table id="settings-table" class="display full-width smaller-text">
           <tr>
             <th>&nbsp;</th>
-            <th>Permit <div style="font-weight: normal"><i>provide information</i></div></th>
-            <th>Deny <div style="font-weight: normal"><i>do not provide</i></div></th>
-            <th>Ask Me <div style="font-weight: normal"><i>prompt me to decide</i></div></th>
-            <th>Use Recommendation <div style="font-weight: normal"><i>follow Duke's recommendation</i></div></th>      
+            <th>Permit <div style="font-weight: normal"><i>$permit_description</i></div></th>
+            <th>Deny <div style="font-weight: normal"><i>$deny_description</i></div></th>
+            <th>Ask Me <div style="font-weight: normal"><i>$askme_description</i></div></th>
+            <th>Use Recommendation <div style="font-weight: normal"><i>$userec_prefix ${short_institution}'s $userec_suffix</i></div></th>      
           </tr>
         #set($seen={})
         #foreach ($attr in $injectedDecisions.keySet())   
@@ -283,8 +283,8 @@
   		</tbody>
   		<tbody>
   		<tr>
-  		<td><div class="label">While I'm Away</div>
-  		    <div class="sublabel">If your choice above is "ask me" but you're not available to answer when $localizedRPDisplayName requests information about you</div></td>
+  		<td><div class="label">$while_away_heading</div>
+  		    <div class="sublabel">$while_away_prefix $localizedRPDisplayName $while_away_suffix</div></td>
   		    <td class="policy-option no-wrap">
   		    permit
   		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("permit"))
@@ -317,8 +317,8 @@
         </table>
         </form>
          <div>
-        <button id="saveButton" class="active">Save<i class="button-icon-right fa fa-arrow-right"></i></button>
-        <button id="cancelButton" class="passive">Cancel<i class="button-icon-right fa fa-times"></i></button>
+        <button id="saveButton" class="active">$save_label<i class="button-icon-right fa fa-arrow-right"></i></button>
+        <button id="cancelButton" class="passive">$cancel_label<i class="button-icon-right fa fa-times"></i></button>
         </div>
         <div style="clear: left;"></div>
         <br>
@@ -327,20 +327,20 @@
       
      #if(!$hasMandatory)
      <div class="content-section">
-     <h2>Information Required by $localizedRPDisplayName</h2>
-     <p>$localizedRPDisplayName does not automatically receive any required information about users</p>
+     <h2>$required_heading $localizedRPDisplayName</h2>
+     <p>$localizedRPDisplayName $no_required</p>
      </div>
      #end
      #if($hasMandatory)
       
         <div class="content-section">
-        <h2>Information Required by $localizedRPDisplayName</h2>
-        <p>Duke will release the following information about users of $localizedRPDisplayName:</p>
+        <h2>$required_heading $localizedRPDisplayName</h2>
+        <p>$short_institution $required_description $localizedRPDisplayName:</p>
         
         <table class="data-table display full-width">
           <tr>
-            <th>Attribute</th>
-            <th class="no-wrap">Current Value(s)</th>
+            <th>$item</th>
+            <th class="no-wrap">${current_value}(s)</th>
           </tr>
           #foreach($mkey in $mandatory.keySet())
           <tr>

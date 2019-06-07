@@ -29,16 +29,14 @@
 			$noticemsg
 		</div>
 	#end
-		<h1>My Sites and Services</h1>
+		<h1>$mysss</h1>
 
 	<div id="sidebar">
 		<div class="content-section">
-			<h2>About these Sites</h2>
-				This page shows participating sites that have requested information about you, either because
-				you have visited them or for administrative reasons.  You can review and (where possible) manage
-				what information about you will be shared with these sites.
+			<h2>$aboutsite_header</h2>
+				$aboutsite_body
 		</div>
-		<button id="addrpbutton" class="active">Add A Site<i class="fa button-icon-right fa-plus"></i></button>
+		<button id="addrpbutton" class="active">$add_site<i class="fa button-icon-right fa-plus"></i></button>
 		
 	</div>
 	<div id="left">
@@ -64,7 +62,7 @@
     						#end
     							<thead>
     							<tr>
-    							<th>Name</th><th>URL</th><th>Updated</th><th></th>
+    							<th>$name_heading</th><th>$url_heading</th><th>$updated_heading</th><th></th>
     							</tr>
     							</thead>
     							<tbody>
@@ -73,7 +71,7 @@
     								<td>$policy.getRpName()</td>
     								<td>$policy.getRpUrl()</td>
     								<td>$policy.getPolicyUpdateDate()</td>
-    								<td><a href="/car/carma/editpolicy?baseId=$policy.getBaseId()">manage</a></td>
+    								<td><a href="/car/carma/editpolicy?baseId=$policy.getBaseId()">$manage_link</a></td>
     							</tr>
 							#end
 							</tbody>

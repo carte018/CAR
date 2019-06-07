@@ -1075,6 +1075,42 @@ public class CarmaController {
 		retval.addObject("page-title","Manage policies");
 		retval.addObject("baseId",baseId);
 		
+		// Bulk component injections
+		
+		retval.addObject("manage_heading",CarUtility.getLocalComponent("manage_heading"));
+		retval.addObject("requested_heading",CarUtility.getLocalComponent("requested_heading"));
+		retval.addObject("required_heading",CarUtility.getLocalComponent("required_heading"));
+		retval.addObject("cancel_label",CarUtility.getLocalComponent("cancel_label"));
+		retval.addObject("no_optional",CarUtility.getLocalComponent("no_optional"));
+		retval.addObject("required_description",CarUtility.getLocalComponent("required_description"));
+		retval.addObject("requested_description",CarUtility.getLocalComponent("requested_description"));
+		retval.addObject("all_other_prefix",CarUtility.getLocalComponent("all_other_prefix"));
+		retval.addObject("all_other_suffix",CarUtility.getLocalComponent("all_other_suffix"));
+		retval.addObject("while_away_prefix",CarUtility.getLocalComponent("while_away_prefix"));
+		retval.addObject("while_away_suffix",CarUtility.getLocalComponent("while_away_suffix"));
+		retval.addObject("no_required",CarUtility.getLocalComponent("no_required"));
+		retval.addObject("history",CarUtility.getLocalComponent("history"));
+		retval.addObject("updated_label",CarUtility.getLocalComponent("updated_label"));
+		retval.addObject("policy_version",CarUtility.getLocalComponent("policy_version"));
+		retval.addObject("privacy_policy_label",CarUtility.getLocalComponent("privacy_policy_label"));
+		retval.addObject("short_institution",CarUtility.getLocalComponent("short_institution"));
+		retval.addObject("recommends",CarUtility.getLocalComponent("recommends"));
+		retval.addObject("current_value",CarUtility.getLocalComponent("current_value"));
+		retval.addObject("current_choice",CarUtility.getLocalComponent("current_choice"));
+		retval.addObject("additional_heading",CarUtility.getLocalComponent("additional_heading"));
+		retval.addObject("while_away_heading",CarUtility.getLocalComponent("while_away_heading"));
+		retval.addObject("all_other_heading",CarUtility.getLocalComponent("all_other_heading"));
+		retval.addObject("any_values",CarUtility.getLocalComponent("any_values"));
+		retval.addObject("permit_description",CarUtility.getLocalComponent("permit_description"));
+		retval.addObject("deny_description",CarUtility.getLocalComponent("deny_description"));
+		retval.addObject("askme_description",CarUtility.getLocalComponent("askme_description"));
+		retval.addObject("userec_prefix",CarUtility.getLocalComponent("userec_prefix"));
+		retval.addObject("userec_suffix",CarUtility.getLocalComponent("userec_suffix"));
+		retval.addObject("save_label",CarUtility.getLocalComponent("save_label"));
+		retval.addObject("item",CarUtility.getLocalComponent("item"));
+		retval.addObject("no_privacy",CarUtility.getLocalComponent("no_privacy"));
+		retval.addObject("edit_label",CarUtility.getLocalComponent("edit_label"));
+
 		return retval;
 
 	}
@@ -1411,6 +1447,16 @@ public class CarmaController {
 				retval.addObject("successmsg","Policy successfully added");
 		}
 		
+		// Additional injections
+		
+		retval.addObject("mysss",CarUtility.getLocalComponent("mysss"));
+		retval.addObject("manage_link",CarUtility.getLocalComponent("manage_link"));
+		retval.addObject("name_heading",CarUtility.getLocalComponent("name_heading"));
+		retval.addObject("url_heading",CarUtility.getLocalComponent("url_heading"));
+		retval.addObject("updated_heading",CarUtility.getLocalComponent("updated_heading"));
+		retval.addObject("add_site",CarUtility.getLocalComponent("add_site"));
+		retval.addObject("aboutsite_header",CarUtility.getLocalComponent("aboutsite_header"));
+		retval.addObject("aboutsite_body",CarUtility.getLocalComponent("aboutsite_body"));
 		return retval;
 	}
 	
@@ -1423,7 +1469,7 @@ public class CarmaController {
 	public ModelAndView newRPGet(HttpServletRequest request) {
 		ModelAndView model = new ModelAndView("newRPPage");
 		
-		CarConfig config = CarConfig.getInstance();
+		CarConfig config = CarUtility.init(request);
 		
 		String preflang = CarUtility.prefLang(request);
 		
@@ -1567,7 +1613,10 @@ public class CarmaController {
 		others.setInfoType("allOtherInfoType");
 		others.setInfoValue("allOtherInfoValue");
 		String otherDecision = newRPPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString();
+		others.getDecisions().put(CarUtility.getLocalComponent("not_above"),otherDecision);
+		/*
 		others.getDecisions().put("Information not listed above", otherDecision);
+		*/
 		
 		model.addObject("activetab","preference");
 		model.addObject("decisions",decisions);
@@ -1590,6 +1639,27 @@ public class CarmaController {
 			model.addObject("logouturl","/Shibboleth.sso/Logout?return=https://shib.oit.duke.edu/cgi-bin/logout.pl");
 		else 
 			model.addObject("logouturl",logouturl);
+		
+		// Add internationalized items
+		
+		model.addObject("new_site_prefs",CarUtility.getLocalComponent("new_site_prefs"));
+		model.addObject("permit_description",CarUtility.getLocalComponent("permit_description"));
+		model.addObject("deny_description",CarUtility.getLocalComponent("deny_description"));
+		model.addObject("askme_description",CarUtility.getLocalComponent("askme_description"));
+		model.addObject("userec_prefix",CarUtility.getLocalComponent("userec_prefix"));
+		model.addObject("userec_suffix",CarUtility.getLocalComponent("userec_suffix"));
+		model.addObject("not_above",CarUtility.getLocalComponent("not_above"));
+		model.addObject("notpresent_header",CarUtility.getLocalComponent("notpresent_header"));
+		model.addObject("notpresent_description",CarUtility.getLocalComponent("notpresent_description"));
+		model.addObject("permit_longdescr",CarUtility.getLocalComponent("permit_longdescr"));
+		model.addObject("deny_longdescr",CarUtility.getLocalComponent("deny_longdescr"));
+		model.addObject("userec_longprefix",CarUtility.getLocalComponent("userec_longprefix"));
+		model.addObject("userec_longsuffix",CarUtility.getLocalComponent("userec_longsuffix"));
+		model.addObject("save_label",CarUtility.getLocalComponent("save_label"));
+		model.addObject("new_site_subheading",CarUtility.getLocalComponent("new_site_subheading"));
+		model.addObject("whatis_header",CarUtility.getLocalComponent("whatis_header"));
+		model.addObject("whatis_body",CarUtility.getLocalComponent("whatis_body"));
+		
 		return model;
 	}
 	

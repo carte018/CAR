@@ -29,29 +29,28 @@
 			$noticemsg
 		</div>
 	#end
-<h1>New Site Preferences</h1>
+<h1>$new_site_prefs</h1>
 <div id="sidebar">
 	<div class="content-section">
-	<h2>What is this?</h2>
-<p>By default, we will ask you how to proceed when a new site or service requests information about you. If you would like to avoid being asked or set general guidelines for how we should respond to new sites, you can indicate your preferences here.</p>
-<p>You can adjust preferences for specific sites at the <a href="/car/carma/selfservice/sites">Sites and Services</a> page.</p>
+	<h2>$whatis_header</h2>
+		$whatis_body
 </div>
 </div>
 
 <div id="left">
 	<div class="content-section">
 	
-	<h2>If a new site asks for your information, how would you like us to respond?</h2>
+	<h2>$new_site_subheading</h2>
 	<form name="postData" id="newRPForm" method="POST" action="new_rp">
 	<!--<table id="settings-table" class="display smaller-text">-->
 	<table class="display full-width smaller-text">
 		<thead>
 		<tr>
 			<th>&nbsp;</th>
-			<th>Permit<div style="font-weight: normal;"><i>provide information</i></div></th>
-			<th>Deny<div style="font-weight: normal;"><i>do not provide</i></div></th>
-			<th>Ask Me<div style="font-weight: normal;"><i>prompt me to decide</i></div></th>
-			<th>Use Recommendation<div style="font-weight: normal;"><i>follow ${institution_name}'s recommendation</i></div></th>
+			<th>Permit<div style="font-weight: normal;"><i>$permit_description</i></div></th>
+			<th>Deny<div style="font-weight: normal;"><i>$deny_description</i></div></th>
+			<th>Ask Me<div style="font-weight: normal;"><i>$askme_description</i></div></th>
+			<th>Use Recommendation<div style="font-weight: normal;"><i>$userec_prefix ${institution_name}'s $userec_suffix</i></div></th>
 		</tr>
 		</thead>
 		#set ($attrnum = 0)
@@ -123,7 +122,7 @@
 		<tbody>
 		<tr>
 		<td><div class="label">Other Information</div>
-			<div class="sublabel"><i>Information not listed above</i></div>
+			<div class="sublabel"><i>$not_above</i></div>
 		<td class="policy-option">
 			permit
 			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("permit"))
@@ -161,28 +160,28 @@
 	</table>
 	</div>
 	<div class="content-section">
-	<h2>How should we handle your "ask me" choices if you aren't available to ask?</h2>
-		<p>When your information is requested at login, we can prompt you to make a decision.  If your information is requested when you are not using a site or service (e.g., during a routine update process), what should we do about your "ask me" choices?</p>
+	<h2>$notpresent_header</h2>
+		<p>$notpresent_description</p>
 		
 		<ul class="simple-list">
 			#if ($whileImAwayDecision.equals("permit"))
-			<li><input type="radio" name="WhileImAwayDecision" value="permit" checked="checked">&nbsp;<b>Permit</b> - provide the requested information</li>
+			<li><input type="radio" name="WhileImAwayDecision" value="permit" checked="checked">&nbsp;<b>Permit</b> - $permit_longdescr</li>
 			#else
-			<li><input type="radio" name="WhileImAwayDecision" value="permit">&nbsp;<b>Permit</b> - provide the requested information</li>
+			<li><input type="radio" name="WhileImAwayDecision" value="permit">&nbsp;<b>Permit</b> - $permit_longdescr</li>
 			#end
 			#if ($whileImAwayDecision.equals("deny"))
-			<li><input type="radio" name="WhileImAwayDecision" value="deny" checked="checked">&nbsp;<b>Deny</b> - do not provide the requested information</li>
+			<li><input type="radio" name="WhileImAwayDecision" value="deny" checked="checked">&nbsp;<b>Deny</b> - $deny_longdescr</li>
 			#else
-			<li><input type="radio" name="WhileImAwayDecision" value="deny">&nbsp;<b>Deny</b> - do not provide the requested information</li>
+			<li><input type="radio" name="WhileImAwayDecision" value="deny">&nbsp;<b>Deny</b> - $deny_longdescr</li>
 			#end
 			#if ($whileImAwayDecision.equals("useAdvice"))
-			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice" checked="checked">&nbsp;<b>Use Recommendation</b> - provide the requested information at ${institution_name}'s discretion</li>
+			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice" checked="checked">&nbsp;<b>Use Recommendation</b> - $userec_longprefix ${institution_name}'s $userec_longsuffix</li>
 			#else
-			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice">&nbsp;<b>Use Recommendation</b> - provide the requested information at ${institution_name}'s discretion</li>
+			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice">&nbsp;<b>Use Recommendation</b> - $userec_longprefix ${institution_name}'s $userec_longsuffix</li>
 			#end
 		</ul>
 	</div>
-	<button class="active" onClick="document.getElementById('newRPForm').submit();">Save<i class="fa button-icon-right fa-arrow-right"></i></button>
+	<button class="active" onClick="document.getElementById('newRPForm').submit();">$save_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 	
 	</form> 
 </div>
