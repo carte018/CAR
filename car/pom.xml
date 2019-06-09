@@ -274,6 +274,7 @@
         </plugins>
     </build>
   <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <com-thoughtworks-xstream-version>1.4.9</com-thoughtworks-xstream-version>
     <swagger-core-version>1.5.8</swagger-core-version>
     <jetty-version>9.2.9.v20150224</jetty-version>

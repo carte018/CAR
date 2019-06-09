@@ -41,6 +41,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.ehcache.Cache.Entry;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -402,12 +403,12 @@ public class MainController {
 	// POST handler is where all the action happens
 	// For now, this is monolithic -- may change to separate methods to handle first and second POST but for now, only one
 	
-	@RequestMapping(value="/filteranddecide", method=RequestMethod.POST)
+	@RequestMapping(value="/filteranddecide", method=RequestMethod.POST, produces="text/html;charset=utf-8")
 	public ModelAndView handleFilterAndDecide2(HttpServletRequest request) {
 		return handleFilterAndDecide(request, false);  // default behavior for /filteranddecide and /reflex
 	}
 	
-	@RequestMapping(value="/cryptofilteranddecide", method=RequestMethod.POST)
+	@RequestMapping(value="/cryptofilteranddecide", method=RequestMethod.POST, produces="text/html;charset=utf-8")
 	public ModelAndView cryptoFilterAndDecide(HttpServletRequest request) {
 		return handleFilterAndDecide(request, true); // default behavior for /cryptofilteranddecide and /reflex2
 	}
