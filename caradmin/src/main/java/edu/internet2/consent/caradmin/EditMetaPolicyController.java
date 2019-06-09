@@ -55,7 +55,7 @@ public class EditMetaPolicyController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -323,7 +323,7 @@ public class EditMetaPolicyController {
 		
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -365,7 +365,6 @@ public class EditMetaPolicyController {
 		ArrayList<ReturnedRHMetaInformation> arrm = CarAdminUtils.getAllDefinedResourceHolders();
 		Collections.sort(arrm,new ReturnedRHMetaInformationComparator());
 		
-		//retval.addObject("authuser",req.getRemoteUser());
 		retval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
 		retval.addObject("availablerhs",arrm);
 		retval.addObject("activetab","rhregistration");
@@ -543,15 +542,46 @@ public class EditMetaPolicyController {
 			if (req.getParameter("state").equals("0")) {
 				// failure
 				if (req.getParameter("component").equals("addorgpolicy")) {
-					retval.addObject("failmsg","Failed to add new institutional policy -- check input values");
+					retval.addObject("failmsg",CarAdminUtils.getLocalComponent("add_failed_msg"));
 				}
 			} else if (req.getParameter("state").equals("1")) {
 				// success
 				if (req.getParameter("component").equals("addorgpolicy")) {
-					retval.addObject("successmsg","Successfully added new institutional policy");
+					retval.addObject("successmsg",CarAdminUtils.getLocalComponent("add_succeeded_msg"));
 				}
 			}
 		}
+		
+		CarAdminUtils.injectStrings(retval, new String[] { "meta_policy_label",
+															"version_label",
+															"instructions_heading",
+															"instructions_body_metapol_edit",
+															"policy_descr_label",
+															"rps_label",
+															"apply_heading",
+															"all_rps_label",
+															"all_rps2_label",
+															"rps_with_label",
+															"matching_label",
+															"some_rps_label",
+															"specific_rp_label",
+															"one_rp_label",
+															"users_any_label",
+															"all_users_label",
+															"users_with_label",
+															"some_users_label",
+															"directives_heading",
+															"item_type_heading",
+															"item_id_heading",
+															"directive_heading",
+															"values_heading",
+															"basis_heading",
+															"other_values_label",
+															"add_item_label",
+															"all_other_heading",
+															"update_policy_label"
+															
+		});
 		return retval;
 	}
 }

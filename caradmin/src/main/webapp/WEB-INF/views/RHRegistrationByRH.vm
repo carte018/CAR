@@ -33,39 +33,39 @@
 	<div id="sidebar">
 
 		<div class="content-section">
-			<h2>Overview</h2>
+			<h2>$overview_heading</h2>
 			<table class="stats">
 				<tr>
-					<td class="stat-label">Information Items</td>
+					<td class="stat-label">$info_items_heading</td>
 					<td class="stat-value">$ihash.size()</td>
 				</tr>
 				<tr>
-					<td class="stat-label">Relying Parties</td>
+					<td class="stat-label">$rps_label</td>
 					<td class="stat-value">$armi.size()</td>
 				</tr>
 				<tr>
-					<td class="stat-label">Active Relying Parties</td>
+					<td class="stat-label">$active_rps_label</td>
 					<td class="stat-value">$activerpct</td>
 				</tr>
 				<tr>
-					<td class="stat-label">Active Users</td>
+					<td class="stat-label">$active_users_label</td>
 					<td class="stat-value">$userct</td>
 				</tr>
 				<tr>
-					<td class="stat-label">Organizational Policies</td>
+					<td class="stat-label">$orgpol_label</td>
 					<td class="stat-value">$orgpolct</td>
 				</tr>
 				<tr>
-					<td class="stat-label">Meta Policies</td>
+					<td class="stat-label">$metapol_label</td>
 					<td class="stat-value">$metapolct</td>
 				</tr>
 			</table>
 		</div>		
-		<button id="policy_review_button" class="active" style="width:100%;">Review Policies<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<button id="policy_review_button" class="active" style="width:100%;">$review_policies_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 		<br><br>
-		<button id="language_report_button" class="active" style="width:100%;">Review Languages<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<button id="language_report_button" class="active" style="width:100%;">$review_lang_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 		<br><br>
-		<button id="archive_rh_button" class="passive" style="width:100%;">Archive Resource Holder<i class="fa button-icon-right fa-trash"></i></button>
+		<button id="archive_rh_button" class="passive" style="width:100%;">$archive_rh_label<i class="fa button-icon-right fa-trash"></i></button>
 	</div>
 	
 		<div id="left">
@@ -74,7 +74,7 @@
 					<h2 class="header-edit">
 						<a id="rh_edit_icon"><i class="fa fa-edit"></i></a>
 					</h2>
-					<h2>Resource Holder Metainformation</h2>
+					<h2>$rh_metainfo_label</h2>
   					#set($formnumber=$formnumber+1)
 					<h3 id="h3-dispname">$x.getDisplayname()</h3>
 					<p id="p-descr">$x.getDescription()</p>
@@ -102,7 +102,7 @@
 									<h3><a href="#" class="langtoggle" id="h3_$dlang">$dlang</a></h3>
 									<div class="hidden" id="div_rh_h3_$dlang">
 										<div class="form-set">
-											<label for="displayname">Display Name</label>
+											<label for="displayname">$displaynmame_label</label>
 											#if($displayhash.get($dlang))
 												<input type="text" name="displayname" value="$displayhash.get($dlang)">
 											#else
@@ -110,14 +110,14 @@
 											#end
 										</div>
 										<div class="form-set">
-											<label for="description">Description</label>
+											<label for="description">$description_label</label>
 											#if($descrhash.get($dlang))
 												<input type="text" name="description" value="$descrhash.get($dlang)">
 											#else
 												<input type="text" name="description" value="">
 											#end
 										</div>
-										<button class="active">Update<i class="button-icon-right fa fa-arrow-right"></i></button>
+										<button class="active">$update_label<i class="button-icon-right fa fa-arrow-right"></i></button>
 										#if($displayhash.size() > 1 || $descrhash.size() > 1)
 											<button class="active langdelete" id="langdelete_${dlang}_rh">Delete<i class="button-icon-right fa fa-trash"></i></button>
 										#end
@@ -145,15 +145,15 @@
 									</select>
 								</div>
 								<div class="form-set">
-									<label for="displayname">Display Name</label>
+									<label for="displayname">$displayname_label</label>
 									<input type="text" name="displayname" value="">
 								</div>
 								<div class="form-set">
-									<label for="description">Description</label>
+									<label for="description">$description_label</label>
 									<input type="text" name="description" value="">
 								</div>
 								<br>
-								<button class="active">Update<i class="button-icon-right fa fa-arrow-right"></i></button>
+								<button class="active">$update_label<i class="button-icon-right fa fa-arrow-right"></i></button>
 							</form>
 						</div>
 					#end							
@@ -188,7 +188,7 @@
 								<a id="rh_edit_icon_$itype" href="#" class="ii_edit_toggle"><i class="fa fa-edit"></i></a>
 							</h2>
 							<h2 class="header-edit hidden" id="ii_heading_save_icon_$itype">
-								<a id="rh_save_icon_$itype" href="#" class="ii_edit_save">Save Changes</a>
+								<a id="rh_save_icon_$itype" href="#" class="ii_edit_save">$save_changes_label</a>
 							</h2>							
 							<h2><a href="#" class="ii_heading" id="ii_heading_minus_$itype">-&nbsp;$ihead ($current.keySet().size())</a></h2>
 						</div>
@@ -208,11 +208,11 @@
 							#end
 							<thead>
 								<tr>
-									<th>Identifier</th>
-									<th>Display Name</th>
-									<th>Presentation</th>
-									<th>Policy</th>
-									<th>Properties</th>
+									<th>$id_heading</th>
+									<th>$displayname_heading</th>
+									<th>$presentation_heading</th>
+									<th>$policy_heading</th>
+									<th>$properties_heading</th>
 								</tr>
 							</thead>
 							<tbody id="tbody_view_$itype">
@@ -254,11 +254,11 @@
 							#end
 							<thead>
 								<tr>
-									<th>Identifier</th>
-									<th>Display Name</th>
-									<th>Presentation</th>
-									<th>Policy</th>
-									<th>Properties</th>
+									<th>$id_heading</th>
+									<th>$displayname_heading</th>
+									<th>$presentation_heading</th>
+									<th>$policy_heading</th>
+									<th>$properties_heading</th>
 								</tr>
 							</thead>
 							<tbody id="tbody_edit_$itype">
@@ -320,11 +320,11 @@
 									<input type="hidden" name="rhid" value="$x.getRhidentifier()">
 									<h3>Add $itype</h3>
 									<div class="form-set">
-										<label for="iiid">Identifier</label>
+										<label for="iiid">$id_heading</label>
 										<input type="text" name="iiid" placeholder="Item Identifier">
 									</div>
 									<div class="form-set">
-										<label for="displaynametable">Display Name</label>
+										<label for="displaynametable">$displayname_heading</label>
 										<table name="displaynametable">
 											<tr>
 												<td>
@@ -341,7 +341,7 @@
 										</table>
 									</div>
 									<div class="form-set">
-										<label for="descriptiontable">Description</label>
+										<label for="descriptiontable">$description_label</label>
 										<table name="descriptiontable">
 											<tr>
 												<td>
@@ -358,7 +358,7 @@
 										</table>
 									</div>
 									<div class="form-set">
-										<label for="prestype">Presentation Type</label>
+										<label for="prestype">$presentation_heading</label>
 										<select name="prestype">
 											<option value="TRANSPARENT">TRANSPARENT</option>
 											<option value="ENCODED">ENCODED</option>
@@ -366,7 +366,7 @@
 										</select>
 									</div>
 									<div class="form-set">
-										<label for="policytype">Policy Type</label>
+										<label for="policytype">$policy_heading</label>
 										<select name="policytype">
 											<option value="PEV">On Every Value (PEV)</option>
 											<option value="PAO">On Attribute Only (PAO)</option>
@@ -384,7 +384,7 @@
 										<input type="checkbox" name="sensitivity" value="true">
 										<label for="sensitivity" class="inline">Sensitive?</label>
 									</div>
-									<button class="active submitaddii">Add<i class="fa button-icon-right fa-sync-alt"></i></button>
+									<button class="active submitaddii">$add_item_label<i class="fa button-icon-right fa-sync-alt"></i></button>
 								</form>
 							</div>
 					</div>
@@ -396,7 +396,7 @@
 			<!-- Add an Information Item (in general) panel -->
 			
 		<div class="content-section">
-		<h2>Add Information Item</h2>
+		<h2>$add_item_heading</h2>
 		<form id="additemform" method="POST" action="#">
 		<input type="hidden" name="formname" value="additemform">
 		<input type="hidden" name="rhtype" value="$x.getRhtype()">
@@ -406,7 +406,7 @@
 				<tr>
 					<td>
 						<div class="form-set">
-							<label for="iitype">Type</label>
+							<label for="iitype">$type_heading</label>
 							<select name="iitype"style="width:100%">
 								#foreach($itype in $iitypes)
 									<option value="$itype">$itype</option>
@@ -414,12 +414,12 @@
 							</select>
 						</div>
 						<div class="form-set">
-							<label for="iiid">Identifier</label>
+							<label for="iiid">$id_heading</label>
 							<input type="text" name="iiid" placeholder="Item Identifier" style="width: 100%;">
 						</div>
 						<div class="form-set">
 							<label for="displaynamelang" class="visually-hidden">Display Name Language</label>
-							<label for="displaynamevalue">Display Name</label>
+							<label for="displaynamevalue">$displayname_heading</label>
 							<select name="displaynamelang" class="iblock">
 								#foreach($l in $languages)
 									<option value="$l">$l</option>
@@ -429,7 +429,7 @@
 						</div>
 						<div class="form-set">
 							<label for="descriptionlang" class="visually-hidden">Description Language</label>
-							<label for="descriptionvalue">Description</label>
+							<label for="descriptionvalue">$description_label</label>
 							<select name="descriptionlang" class="iblock">
 								#foreach($l in $languages)
 									<option value="$l">$l</option>
@@ -440,7 +440,7 @@
 					</td>
 					<td style="padding-left: 2em; vertical-align: top;">
 						<div class="form-set">
-							<label for="prestype">Value Presentation</label>
+							<label for="prestype">$presentation_heading</label>
 							<select name="prestype" class="iblock" style="width: 90%;">
 								<option value="TRANSPARENT">Transparent (display raw value)</option>
 								<option value="ENCODED">Encoded (use display value)</option>
@@ -448,7 +448,7 @@
 							</select>
 						</div>
 						<div class="form-set">
-							<label for="policytype">Policy Application</label>
+							<label for="policytype">$policy_heading</label>
 							<select name="policytype" class="iblock" style="width: 90%">
 								<option value="PAO">Policy by item (PAO)</option>
 								<option value="PEV">Policy by value (PEV)</option>
@@ -470,7 +470,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<button class="active">Add Information Item<i class="fa button-icon-right fa-plus"></i></button>
+		<button class="active">$add_item_heading<i class="fa button-icon-right fa-plus"></i></button>
 	</form>	
 	</div>
 	

@@ -29,10 +29,8 @@
 
 <div id="sidebar">
 	<div class="content-section">
-		<h2>Instructions</h2>
-		<p>Meta policies control which other policies (institutional or user policies) take precedence in a given situation.</p>
-		<p>Meta policies need not map one-to-one onto institutional policies.  The CAR system evaluates user and institutional policies separately, then evaluates meta policies to select which previously-evaluated policies are applied when rendering decisions.</p>
-		<p>It is advisable to ensure that meta policies specifying "Follow User Consent" are in place for any situations in which institutional policy indicates a lawful basis of "Consent"</p>
+		<h2>$instructions_heading</h2>
+		$instructions_body_metapol_add
 	</div>
 </div>
 
@@ -45,40 +43,40 @@
 	
 		<div class="content-section">
 			<div class="form-set">
-				<h2>Policy Description</h2>
+				<h2>$policy_descr_label</h2>
 				<input type="text" name="policydescription" placeholder="Policy Description">
 			</div>
 		</div>
 		<div class="content-section">
-			<h2>Relying Parties</h2>
-			<p>Apply this policy to:</p>
+			<h2>$rps_label</h2>
+			<p>$apply_heading:</p>
 			<div class="form-set">
 				<input type="radio" name="rpstrategy" value="allRPs" id="rpstrategy1" class="rpstrategy">
 				<span id="selectedrpstrategy1" class="hidden inline">
-				<label class="inline" for="rpstrategy1">All RPs of type <select name="specrptype1">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
+				<label class="inline" for="rpstrategy1">$all_rps_label <select name="specrptype1">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
 				</span>
 				<span id="unselectedrpstrategy1" class="inline">
-					<label class="inline" for="rpstrategy1">All RPs</label>
+					<label class="inline" for="rpstrategy1">$all_rps2_label</label>
 				</span>
 			</div>
 			<div class="form-set">
 				<input type="radio" name="rpstrategy" value="matchedRPs" id="rpstrategy2" class="rpstrategy">
 				<span id="selectedrpstrategy2" class="hidden inline">
-				<label class="inline" for="rpstrategy2">RPs where <input type="text" name="rpproperty" placeholder="RP Property Name"></label>
-				<label class="inline">matches <input type="text" name="rpmatch" placeholder="Regular Expression"></label>
+				<label class="inline" for="rpstrategy2">$rps_with_label <input type="text" name="rpproperty" placeholder="RP Property Name"></label>
+				<label class="inline">$matching_label <input type="text" name="rpmatch" placeholder="Regular Expression"></label>
 				</span>
 				<span id="unselectedrpstrategy2" class="inline">
-				<label class="inline" for="rpstrategy2">Only Some RPs</label>
+				<label class="inline" for="rpstrategy2">$some_rps_label</label>
 				</span>
 			</div>
 			<div class="form-set">
 				<input type="radio" name="rpstrategy" value="oneRP" id="rpstrategy3" class="rpstrategy">
 				<span id="selectedrpstrategy3" class="hidden inline">
-				<label class="inline" for="rpstrategy3">Specific RP <select name="specrptype">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
+				<label class="inline" for="rpstrategy3">$specific_rp_label <select name="specrptype">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
 				<label class="inline"><select name="specrpid" style="width:100%;word-wrap:break-word;display:inline;">#foreach($i in $rpids)<option value="$i">$i</option>#end</select></label>
 				</span>
 				<span id="unselectedrpstrategy3" class="inline">
-				<label class="inline" for="rpstrategy3">Only one RP</label>
+				<label class="inline" for="rpstrategy3">$one_rp_label</label>
 				</span>
 			</div>
 		</div>
@@ -89,36 +87,36 @@
 			<div class="form-set">
 				<input type="radio" name="userstrategy" value="allUsers" id="userstrategy1" class="userstrategy">
 				<span id="selecteduserstrategy1" class="hidden inline">
-					<label class="inline" for="userstrategy1">Users with any value of <input type="text" name="userproperty1" placeholder="User Property Name"></label>
+					<label class="inline" for="userstrategy1">$users_any_label <input type="text" name="userproperty1" placeholder="User Property Name"></label>
 				</span>
 				<span id="unselecteduserstrategy1" class="inline">
-					<label class="inline" for="userstrategy1">All Users</label>
+					<label class="inline" for="userstrategy1">$all_users_label</label>
 				</span>
 			</div>
 			<div class="form-set">
 				<input type="radio" name="userstrategy" value="matchedUsers" id="userstrategy2" class="userstrategy">
 				<span id="selecteduserstrategy2" class="hidden inline">
-				<label class="inline" for="userstrategy2">Users with <input type="text" name="userproperty" placeholder="User Property Name"></label>
-				<label class="inline">matching <input type="text" name="usermatch" placeholder="Regular Expression"></label>
+				<label class="inline" for="userstrategy2">$users_with_label <input type="text" name="userproperty" placeholder="User Property Name"></label>
+				<label class="inline">$matching_label <input type="text" name="usermatch" placeholder="Regular Expression"></label>
 				</span>
 				<span id="unselecteduserstrategy2" class="inline">
-				<label class="inline" for="userstrategy2">Only some users</label>
+				<label class="inline" for="userstrategy2">$some_users_label</label>
 				</span>
 			</div>
 		</div>
 		
 
 		<div class="content-section">
-			<h2>Directives</h2>
+			<h2>$directives_heading</h2>
 			#set($dirct=0)
 			<input type="hidden" name="directivecount" id="directivecount" value="0">
 			<table class="display full-width wrappingtable" id="directivetable">
 				<thead>
 					<tr>
-						<th class="wrappingtd">Item Type</th>
-						<th class="wrappingtd">Item Id</th>
-						<th class="wrappingtd">Directive</th>
-						<th class="wrappingtd">Value(s)</th>
+						<th class="wrappingtd">$item_type_heading</th>
+						<th class="wrappingtd">$item_id_heading</th>
+						<th class="wrappingtd">$directive_heading</th>
+						<th class="wrappingtd">$values_heading</th>
 						<th class="wrappingtd" style="width: 10%;"></th>
 					</tr>
 				</thead>
@@ -133,12 +131,12 @@
 				</tbody>
 			</table>
 			<br>
-			<button class="active" id="addItemButton">Add Item<i class="fa button-icon-right fa-plus"></i></button>
+			<button class="active" id="addItemButton">$add_item_label<i class="fa button-icon-right fa-plus"></i></button>
 		</div>
 		<div class="content-section">
-			<h2>All Other Items</h2>
+			<h2>$all_other_heading</h2>
 			<div class="form-set">
-				<label for="all-other-items-directive">Directive</label>
+				<label for="all-other-items-directive">$directive_heading</label>
 				<select name="all-other-items-directive" id="all-other-items-directive">
 					<option value="continue">Continue applying lower-priority policies</option>
 					<option value="COPSU">Follow user consent</option>
@@ -146,7 +144,7 @@
 				</select>
 			</div>
 		</div>    
-		<button class="active" id="createButton">Create Policy<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<button class="active" id="createButton">$create_policy_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 	</form>
 </div>
 		

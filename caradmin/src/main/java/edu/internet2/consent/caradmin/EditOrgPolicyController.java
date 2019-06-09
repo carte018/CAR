@@ -66,7 +66,7 @@ public class EditOrgPolicyController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -84,7 +84,7 @@ public class EditOrgPolicyController {
 			if (req.getParameter("policydescription") != null) {
 				oirp.setDescription(req.getParameter("policydescription"));
 			} else {
-				oirp.setDescription("");  // Must have a descripition of some sort
+				oirp.setDescription("");  // Must have a description of some sort
 			}
 			
 			ResourceHolderId rhi = new ResourceHolderId();
@@ -339,7 +339,7 @@ public class EditOrgPolicyController {
 		
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -569,15 +569,50 @@ public class EditOrgPolicyController {
 			if (req.getParameter("state").equals("0")) {
 				// failure
 				if (req.getParameter("component").equals("addorgpolicy")) {
-					retval.addObject("failmsg","Failed to add new institutional policy -- check input values");
+					retval.addObject("failmsg",CarAdminUtils.getLocalComponent("add_failed_msg"));
 				}
 			} else if (req.getParameter("state").equals("1")) {
 				// success
 				if (req.getParameter("component").equals("addorgpolicy")) {
-					retval.addObject("successmsg","Successfully added new institutional policy");
+					retval.addObject("successmsg",CarAdminUtils.getLocalComponent("add_succeeded_msg"));
 				}
 			}
 		}
+		
+		// Bulk injection of internationalized strings to build display
+
+		CarAdminUtils.injectStrings(retval, new String [] {"institutional_policy_label",
+											 "version_label",
+											 "policy_descr_label",
+											 "instructions_heading",
+											 "instructions_body_orgpol_edit",
+											 "rps_label",
+											 "apply_heading",
+											 "all_rps_label",
+											 "some_rps_label",
+											 "one_rp_label",
+											 "rps_with_label",
+											 "matching_label",
+											 "users_with_label",
+											 "users_label",
+											 "all_users_label",
+											 "all_rps2_label",
+											 "specific_rp_label",
+											 "users_any_label",
+											 "some_users_label",
+											 "directives_heading",
+											 "item_type_heading",
+											 "item_id_heading",
+											 "directive_heading",
+											 "values_heading",
+											 "basis_heading",
+											 "other_values_label",
+											 "add_item_label",
+											 "update_policy_label",
+											 "all_other_heading",
+											 "instructions_heading",
+											 "instructions_body"});
+		
 		return retval;
 	}
 }

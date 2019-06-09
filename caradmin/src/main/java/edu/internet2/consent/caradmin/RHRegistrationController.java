@@ -57,7 +57,7 @@ public class RHRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -249,7 +249,7 @@ public class RHRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -590,7 +590,7 @@ public class RHRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -624,7 +624,7 @@ public class RHRegistrationController {
 		
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -779,6 +779,31 @@ public class RHRegistrationController {
 			if (req.getParameter("component") != null && req.getParameter("component").equals("createrh"))
 				retval.addObject("failmsg","Failed to create resource holder");
 		}
+		
+		CarAdminUtils.injectStrings(retval, new String[] {"overview_heading",
+															"info_items_heading",
+															"rps_label",
+															"active_rps_label",
+															"active_users_label",
+															"orgpol_label",
+															"metapol_label",
+															"review_policies_label",
+															"review_lang_label",
+															"archive_rh_label",
+															"rh_metainfo_label",
+															"displayname_label",
+															"description_label",
+															"update_label",
+															"save_changes_label",
+															"id_heading",
+															"displayname_heading",
+															"presentation_heading",
+															"policy_heading",
+															"properties_heading",
+															"add_item_label",
+															"add_item_heading",
+															"type_heading"
+		});
 		return(retval);
 		
 	}

@@ -64,7 +64,7 @@ public class AddMetaPolicyController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -333,7 +333,7 @@ public class AddMetaPolicyController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -363,7 +363,6 @@ public class AddMetaPolicyController {
 		ArrayList<ReturnedRHMetaInformation> arrm = CarAdminUtils.getAllDefinedResourceHolders();
 		Collections.sort(arrm,new ReturnedRHMetaInformationComparator());
 		
-		//retval.addObject("authuser",req.getRemoteUser());
 		retval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
 		retval.addObject("availablerhs",arrm);
 		retval.addObject("activetab","rhregistration");
@@ -402,6 +401,33 @@ public class AddMetaPolicyController {
 				}
 			}
 		}
+		CarAdminUtils.injectStrings(retval, new String[] { "instructions_heading",
+															"instructions_body_metapol_add",
+															"policy_descr_label",
+															"rps_label",
+															"apply_heading",
+															"all_rps_label",
+															"all_rps2_label",
+															"rps_with_label",
+															"some_rps_label",
+															"specific_rp_label",
+															"one_rp_label",
+															"users_any_label",
+															"all_users_label",
+															"users_with_label",
+															"some_users_label",
+															"item_type_heading",
+															"item_id_heading",
+															"directives_heading",
+															"directive_heading",
+															"values_heading",
+															"basis_heading",
+															"other_values_label",
+															"add_item_label",
+															"all_other_heading",
+															"create_policy_label",
+															"matching_label"});
+															
 		return retval;
 	}
 }

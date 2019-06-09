@@ -41,6 +41,8 @@ import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -93,9 +95,11 @@ public class CarAdminUtils {
 		if ((sl = config.getProperty("serverLanguage", false)) != null) {
 				locRB = ResourceBundle.getBundle("i18n.errors",new Locale(sl));  // override if found
 				locDB = ResourceBundle.getBundle("i18n.logs",new Locale(sl));
-				locCB = ResourceBundle.getBundle("i18n.components", new Locale(sl));
 		}
-		
+		// Errors and logs are in the server's default language
+		// Web components are in the preferred user language (or the default if that doesn't exist
+		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request))); 
+
 		String admins = null;
 		if ((admins = config.getProperty("AdminEPPNs", false)) != null) {
 			if (! admins.contains(request.getRemoteUser())) {
@@ -108,6 +112,28 @@ public class CarAdminUtils {
 		}
 		return(config);
 		
+	}
+	
+	public static String prefLang(HttpServletRequest req) {
+		AdminConfig  config = AdminConfig.getInstance();
+		String defloc = config.getProperty("caradmin.defaultlocale", true);
+		String retval = defloc;
+		try {
+			retval = req.getLocale().getLanguage();
+		} catch (Exception e) {
+			// ignore
+		}
+		return retval;
+	}
+	
+	public static void injectString(ModelAndView mv, String tag) {
+		mv.addObject(tag,getLocalComponent(tag));
+	}
+	
+	public static void injectStrings(ModelAndView mv, String[] tags) {
+		for (String t : tags) {
+			injectString(mv,t);
+		}
 	}
 	
 	public static void locDebugErr(String message) {
