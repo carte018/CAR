@@ -27,14 +27,14 @@
 		</div>
 	#end
 	
-	<h1>Resource Holders</h1>
+	<h1>$rh_total_heading</h1>
 	<div id="sidebar">
 		<div class="content-section">
-			<h2>New Resource Holder</h2>
+			<h2>$new_rh_heading</h2>
 			<form id="newrhform" method="POST" action="#">
 			<div class="form-set">
-				<label for="rhid">Identifier <span class="required">*</span></label>
-				<label for="rhtype" class="visually-hidden">Resource Holder Type</label>
+				<label for="rhid">$id_heading <span class="required">*</span></label>
+				<label for="rhtype" class="visually-hidden">$rh_type_label</label>
 				<select name="rhtype">
 					#foreach($vtype in $rhidtypes)
 						<option value="$vtype">$vtype</option>
@@ -47,8 +47,8 @@
 				<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
 				<input type="hidden" name="formname" value="newrhform">
 			<div class="form-set">
-				<label for="displaynamevalue1">Display Name <span class="required">*</span></label>
-				<label for="displaynamelanguage1" class="visually-hidden">Display Name Language</label>
+				<label for="displaynamevalue1">$displayname_label <span class="required">*</span></label>
+				<label for="displaynamelanguage1" class="visually-hidden">$dn_lang_label</label>
 				<select name="displaynamelanguage1">
 					#foreach($vlang in $languages)
 						<option value="$vlang">$vlang</option>
@@ -57,8 +57,8 @@
 				<input type="text" name="displaynamevalue1" placeholder="Display Name">
 			</div>
 			<div class="form-set">
-				<label for="descriptionvalue1">Description</label>
-				<label for="descriptionlanguage1" class="visually-hidden">Description Language</label>
+				<label for="descriptionvalue1">$description_label</label>
+				<label for="descriptionlanguage1" class="visually-hidden">$descr_lang_label</label>
 				<select name="descriptionlanguage1">
 					#foreach($vdesclang in $languages)
 						<option value="$vdesclang">$vdesclang</option>
@@ -66,7 +66,7 @@
 				</select>
 				<input type="text" name="descriptionvalue1" placeholder="Description">
 			</div>
-			<button class="active" type="submit">Create New RH<i class="button-icon-right fa fa-arrow-right"></i></button>
+			<button class="active" type="submit">$create_rh_label<i class="button-icon-right fa fa-arrow-right"></i></button>
 
 			</form>
 		</div>

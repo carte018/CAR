@@ -815,16 +815,12 @@ public class RHRegistrationController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
-		//TODO:  This is only for testing -- eventually, we should only use R?HRegistrationMain here regardless
-		if (req.getParameter("full") != null && req.getParameter("full").equalsIgnoreCase("true")) {
-			retval = new ModelAndView("RHRegistration");
-		} else {
-			retval = new ModelAndView("RHRegistrationMain");
-		}
+		retval = new ModelAndView("RHRegistrationMain");
+		
 		
 		// Marshall the list of Registered RHs first
 		//
@@ -885,6 +881,17 @@ public class RHRegistrationController {
 				retval.addObject("failmsg","Failed to create resource holder");
 		}
 
+		CarAdminUtils.injectStrings(retval, new String [] { "rh_total_heading",
+															"new_rh_heading",
+															"id_heading",
+															"rh_type_label",
+															"displayname_label",
+															"dn_lang_label",
+															"description_label",
+															"descr_lang_label",
+															"create_rh_label"
+															
+		});
 		return(retval);
 	}
 }
