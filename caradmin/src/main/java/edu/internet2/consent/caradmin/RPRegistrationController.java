@@ -1299,7 +1299,7 @@ public class RPRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1382,7 +1382,7 @@ public class RPRegistrationController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1465,6 +1465,18 @@ public class RPRegistrationController {
 				retval.addObject("failmsg","Failed to archive relying party");
 			}
 		}
+		
+		CarAdminUtils.injectStrings(retval,new String[] { "new_rp_heading",
+															"rh_heading",
+															"id_heading",
+															"displayname_label",
+															"description_label",
+															"create_rp_label",
+															"rps_for_label",
+															"search_label",
+															"filter_label"
+															
+		});
 		return (retval);
 	}
 	@RequestMapping(value="/rpregistration-old",method=RequestMethod.GET)
@@ -1475,7 +1487,7 @@ public class RPRegistrationController {
 		
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1495,6 +1507,8 @@ public class RPRegistrationController {
 		retval.addObject("activetab","rpregistration");
 		retval.addObject("lang",locale);
 		retval.addObject("logouturl",config.getProperty("logouturl", false));
+		
+		
 		return(retval);
 	}
 	
@@ -1511,7 +1525,7 @@ public class RPRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1565,7 +1579,7 @@ public class RPRegistrationController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1645,6 +1659,22 @@ public class RPRegistrationController {
 				retval.addObject("failmsg","Failed to create relying party");
 			}
 		}
+		
+		CarAdminUtils.injectStrings(retval, new String[] { "rps_label",
+															"new_rp_heading",
+															"rh_heading",
+															"id_heading",
+															"rp_type_label",
+															"displayname_label",
+															"dn_lang_label",
+															"description_label",
+															"descr_lang_label",
+															"create_rp_label",
+															"rh_heading",
+															"rp_heading",
+															"total_label"
+															
+		});
 		return(retval);
 	}
 }

@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
 
  *#
-		<h1>Relying Parties ($airpmi.size() total)</h1>
+		<h1>$rps_label ($airpmi.size() $total_label)</h1>
 		
 		#if($successmsg)
 			<div class="message success">
@@ -28,14 +28,14 @@
 		#end
 		<div id="sidebar">
 			<div class="content-section">
-				<h2>New Relying Party</h2>
+				<h2>$new_rp_heading</h2>
 				
 				<form id="newrpform" method="POST" action="#">
 					<input type="hidden" name="formname" value="newrpform">
 					<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
 					<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
 					<div class="form-set">
-						<label for="rhidentification">Resource Holder<span class="required">*</span></label>
+						<label for="rhidentification">$rh_heading<span class="required">*</span></label>
 						<select name="rhidentification" style="max-width: 95%">
 							#foreach($vtype in $rhlist)
 								<option value="$vtype">$vtype</option>
@@ -43,8 +43,8 @@
 						</select>
 					</div>
 					<div class="form-set">
-						<label for="rpid">Identifier<span class="required">*</span></label>
-						<label for="rptype" class="visually-hidden">Relying Party Type</label>
+						<label for="rpid">$id_heading<span class="required">*</span></label>
+						<label for="rptype" class="visually-hidden">$rp_type_label</label>
 						<select name="rptype">
 							#foreach ($vtype in $rpidtypes)
 								<option value="$vtype">$vtype</option>
@@ -54,8 +54,8 @@
 					</div>
 					
 					<div class="form-set">
-						<label for="displaynamevalue_1">Display Name<span class="required">*</span></label>
-						<label for="displaynamelang_1" class="visually-hidden">Display Name Language</label>
+						<label for="displaynamevalue_1">$displayname_label<span class="required">*</span></label>
+						<label for="displaynamelang_1" class="visually-hidden">$dn_lang_label</label>
 						<select name="displaynamelang_1">
 							#foreach($vlang in $languages)
 								<option value="$vlang">$vlang</option>
@@ -65,7 +65,7 @@
 					</div>
 					
 					<div class="form-set">
-						<label for="descriptionvalue_1">Description</label>
+						<label for="descriptionvalue_1">$description_label</label>
 						<label for="descriptionlang_1" class="visually-hidden">Description Language</label>
 						<select name="descriptionlang_1">
 							#foreach($vdesclang in $languages)
@@ -75,7 +75,7 @@
 						<input type="text" name="descriptionvalue_1" placeholder="Description">
 					</div>
 
-					<button id="createrpbutton" class="active">Create New Relying Party<i class="fa button-icon-right fa-arrow-right"></i></button>
+					<button id="createrpbutton" class="active">$create_rp_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 				</form>
 			</div>
 		</div>
@@ -85,8 +85,8 @@
 				<table id="rp-list" class="display full-width dataTable no-footer" role="grid" aria-describedby="rp-list_info">
 					<thead>
 						<tr>
-							<th>Resource Holder</th>
-							<th>Relying Party</th>
+							<th>$rh_heading</th>
+							<th>$rp_heading</th>
 						</tr>
 					</thead>
 					<tbody id="list_body">

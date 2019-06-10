@@ -18,14 +18,14 @@
 		
 		<div id="sidebar">
 			<div class="content-section">
-				<h2>New Relying Party</h2>
-				<h3>Resource Holder</h3>
+				<h2>$new_rp_heading</h2>
+				<h3>$rh_heading</h3>
 				<p>$rhdisplayname</p>
 				<form id="newrpform" method="POST" action="#">
 					<input type="hidden" name="formname" value="newrpform">
 					<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
 					<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
-					<h3>Identifier</h3>
+					<h3>$id_heading</h3>
 					<table>
 						<tr>
 							<td>
@@ -40,7 +40,7 @@
 							</td>
 						</tr>
 					</table>
-					<h3>Display Name</h3>
+					<h3>$displayname_label</h3>
 					<table id="displaynametable" name="displaynametable">
 						<tr>
 							<td>
@@ -55,7 +55,7 @@
 							</td>
 						</tr>
 					</table>				
-					<h3>Description</h3>				
+					<h3>$description_label</h3>				
 					<table id="descriptiontable" name="descriptiontable">
 						<tr>
 							<td>
@@ -72,18 +72,18 @@
 					</table>
 					<br><br>
 					<div class="form-set">
-						<button id="createrpbutton" class="active">Create New RP</button>
+						<button id="createrpbutton" class="active">$create_rp_label</button>
 					</div>
 				</form>
 			</div>
 		</div>
 		<div id="left">
 			<div class="content-section">
-				<h2>Relying Parties for $rhdisplayname</h2>
+				<h2>$rps_for_label $rhdisplayname</h2>
 				<div class="form-set">
-					<label for="searchstring">Search/Filter</label>
+					<label for="searchstring">$search_label</label>
 					<input type="text" name="searchstring" id="searchinput" placeholder="Search string">
-					<button id="filterbutton" class="visually-hidden">Filter list</button>
+					<button id="filterbutton" class="visually-hidden">$filter_label</button>
 				</div>
 
 				<div id="div_list" class="rplist">
