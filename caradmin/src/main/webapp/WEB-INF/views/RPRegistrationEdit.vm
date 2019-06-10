@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
 
  *#
-		<h1>Relying Party: $rpdisplayname ($rpmi.getRpidentifier().getRptype() / $rpmi.getRpidentifier().getRpid())</h1>
+		<h1>$rp_heading: $rpdisplayname ($rpmi.getRpidentifier().getRptype() / $rpmi.getRpidentifier().getRpid())</h1>
 		
 		<form id="delregistration-form" method="POST" action="/caradmin/rpdelregistration/$rpmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rpmi.getRhidentifier().getRhid())/$rpmi.getRpidentifier().getRptype()/$CarAdminUtils.idEscape($rpmi.getRpidentifier().getRpid())">
 		</form>
@@ -30,40 +30,40 @@
 			</div>
 		#end
 		<div class="message notice">
-			If you are using automated metadata import mechanisms to populate information about this relaying party, changes you make here may be overwritten with your next metadata import.
+			$auto_warning
 		</div>
  		<div id="sidebar">
 			<div class="content-section"> 
-				<h2>Resource Holder</h2>
+				<h2>$rh_heading</h2>
 				<p>$rhdisplayname</p>
 			</div>
 	
 			<div class="content-section">
 				<h2 class="header-edit"><a href="#" class="icedit" id="ic_edit_icon"><i class="fa fa-edit"></i></a></h2>
-				<h2>Informed Content</h2>
+				<h2>$ic_heading</h2>
 				<div id="ic-view">
 					<div class="form-set">
-	        			<label>Icon URL</label>
+	        			<label>$icon_label</label>
         				<div style="word-break: break-word">
 	        				#if($rpmi.getIconurl() && $rpmi.getIconurl().length() > 0)
         						<a href="$rpmi.getIconurl()" target="blank">$rpmi.getIconurl()&nbsp;<i class="fa fa-external-link-square-alt"></i></a>
         					#else
-	        					[not provided]
+	        					[$not_provided_label]
         					#end
         				</div>
 					</div>
 					<div class="form-set">
-						<label>Privacy URL</label>
+						<label>$privacy_label</label>
 						<div style="word-break: break-word">
 							#if($rpmi.getPrivacyurl() && $rpmi.getPrivacyurl().length() > 0)
 								<a href="$rpmi.getPrivacyurl()" target="blank">$rpmi.getPrivacyurl()&nbsp;<i class="fa fa-external-link-square-alt"></i></a>
 							#else
-								[not provided]
+								[$not_provided_label]
 							#end
 						</div>
 					</div>
 					<div class="form-set">
-						<label>Default Show Again</label>
+						<label>$default_sa_label</label>
 						<div>	
 							#if($rpmi.getDefaultshowagain() && $rpmi.getDefaultshowagain().equalsIgnoreCase("true"))
 								Show
@@ -83,7 +83,7 @@
  						<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
  						<input type="hidden" name="formname" value="ic_edit_form">
  						<div class="form-set">
-		        			<label for="iconurl">Icon URL</label>
+		        			<label for="iconurl">$icon_label</label>
 		        			#if($rpmi.getIconurl() && $rpmi.getIconurl().length() > 0)
 		        				<input name="iconurl" type="text" value="$rpmi.getIconurl()">
 		        			#else
@@ -91,7 +91,7 @@
 		        			#end
 						</div>
 						<div class="form-set">
-							<label for="privacyurl">Privacy URL</label>
+							<label for="privacyurl">$privacy_label</label>
 							#if($rpmi.getPrivacyurl() && $rpmi.getPrivacyurl().length() > 0)
 								<input name="privacyurl" type="text" value="$rpmi.getPrivacyurl()">
 							#else
@@ -99,7 +99,7 @@
 							#end
 						</div>
 						<div class="form-set">
-							<label for="defaultshowagain">Default Show Again</label>
+							<label for="defaultshowagain">$default_sa_label</label>
 							#if($rpmi.getDefaultshowagain().equals("true"))
 								<select name="defaultshowagain"><option value="true" selected>Show</option><option value="false">Hide</option><option value="never">Never Show</option></select>
 							#elseif($rpmi.getDefaultshowagain().equals("never"))
@@ -109,7 +109,7 @@
 							#end							
 						</div>
 						<div class="form-set">
-							<button class="active">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+							<button class="active">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 						</div>
 					</form>
 				</div>
@@ -117,16 +117,16 @@
 			<div class="content-section">
 				<div id="rpprop-view">
 					<h2 class="header-edit"><a class="rppropedit" href="#" id="rpprop_edit_icon"><i class="fa fa-edit"></i></a></h2>
-					<h2 style="display:inline-block;">Properties</h2>
+					<h2 style="display:inline-block;">$properties_heading</h2>
 					<div class="form-set">
 						#if(! $rpmi.getRpproperties() || $rpmi.getRpproperties().isEmpty())
-							<p>No properties defined.</p>
+							<p>$no_properties_label.</p>
 						#else
 							<table class="display wrappingtable full-width">
 								<thead>
 									<tr>
-										<th>Property</th>
-										<th>Value</th>
+										<th>$property_label</th>
+										<th>$value_label</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -143,7 +143,7 @@
 				</div>
 				<div id="rpprop-edit" class="hidden">
 					<h2 class="header-edit"><a class="rppropedit" href="#" id="rpprop_edit_icon"><i class="fa fa-edit"></i></a></h2>
-					<h2 style="display:inline-block;">Properties</h2>
+					<h2 style="display:inline-block;">$properties_heading</h2>
 					<div>
 						<form id="rpprop-edit-form" method="POST" action="#">
 							<input type="hidden" name="rhtype" value="$rpmi.getRhidentifier().getRhtype()">
@@ -157,9 +157,9 @@
 							<table class="display wrappingtable full-width">
 								<thead>
  									<tr>
- 										<th>Property</th>
- 										<th>Value</th>
- 										<th>Action</th>
+ 										<th>$property_label</th>
+ 										<th>$value_label</th>
+ 										<th>$action_label</th>
  									</tr>
  								</thead>
  								<tbody id="rpprop-body">
@@ -175,20 +175,20 @@
  								</tbody>
  							</table>
  							<br>
- 							<button id="addpropbutton" class="active">Add Property<i class="fa button-icon-right fa-plus"></i></button>
+ 							<button id="addpropbutton" class="active">$add_property_label<i class="fa button-icon-right fa-plus"></i></button>
  						</form>
  					</div>
  				</div>
 			</div>
 			<!-- buttons -->
-			<button id="language-report-button" class="active" style="width: 100%;">Review Languages<i class="fa button-icon-right fa-arrow-right"></i></button>
+			<button id="language-report-button" class="active" style="width: 100%;">$review_lang_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 			<br><br>
-			<button id="archive-rp-button" class="passive" style="width: 100%;">Archive Relying Party<i class="fa button-icon-right fa-trash"></i></button>
+			<button id="archive-rp-button" class="passive" style="width: 100%;">$archive_rp_label<i class="fa button-icon-right fa-trash"></i></button>
  		</div>
  		<div id="left">
  			<div class="content-section">
  				<h2 class="header-edit"><a id="rp_info_edit_icon" class="rpiedit" href="#"><i class="fa fa-edit"></i></a></h2>
- 				<h2>Relying Party Information</h2>
+ 				<h2>$rp_info_label</h2>
 	 			<div id="rpi-view">
  					<h3 style="word-break: break-word">$rpdisplayname</h3>
 					<p style="word-break: break-word">$rpdescription</p>
@@ -221,7 +221,7 @@
 									<h3><a href="#" id="h3_$dlang" class="langtoggle">$dlang</a></h3>
 									<div class="hidden" id="div_rp_h3_$dlang">
 										<div class="form-set">
-											<label for="displayname">Display Name</label>
+											<label for="displayname">$displayname_label</label>
 											#if($displayhash.get($dlang))
 												<input type="text" name="displayname" value="$displayhash.get($dlang)">
 											#else
@@ -230,14 +230,14 @@
 										</div>
 										
 										<div class="form-set">
-											<label for="description">Description</label>
+											<label for="description">$description_label</label>
 											#if($descrhash.get($dlang))
 												<input type="text" name="description" value="$descrhash.get($dlang)">
 											#else
 												<input type="text" name="description" value="">
 											#end
 										</div>
-										<button class="active">Update <i class="fa button-icon-right fa-arrow-right"></i></button>
+										<button class="active">$update_label <i class="fa button-icon-right fa-arrow-right"></i></button>
 										#if($displayhash.size()>1 || $descrhash.size()>1)
 											<button class="active langdelete" id="langdelete_${dlang}_rp">Delete<i class="button-icon-right fa fa-trash"></i></button>
 										#end
@@ -249,7 +249,7 @@
 						#end
 					#end
 					#if($ulangs.size() > 0) 
-						<button class="active addrpilang" id="button_addrplang">Add a Language<i class="button-icon-right fa fa-plus"></i></button>
+						<button class="active addrpilang" id="button_addrplang">$add_lang_label<i class="button-icon-right fa fa-plus"></i></button>
 						<div id="div_rplang_add" class="content-section hidden">
 							<form id="form_rplang_add" method="POST" action="#">
 								<input type="hidden" name="formname" value="form_rplang_add">
@@ -259,7 +259,7 @@
 								<input type="hidden" name="rhid" value="$rpmi.getRhidentifier()">
 								<h3>Add a Language</h3>
 								<div class="form-set">
-									<label for="lang">Language</label>
+									<label for="lang">$lang_label</label>
 									<select name="lang">
 										#foreach($u in $ulangs)
 											<option value="$u">$u</option>
@@ -267,11 +267,11 @@
 									</select>
 								</div>
 								<div class="form-set">
-									<label for="displayname">Display Name</label>
+									<label for="displayname">$displayname_label</label>
 									<input type="text" name="displayname" placeholder="Display Name">
 								</div>
 								<div class="form-set">
-									<label for="description">Description</label>
+									<label for="description">$description_label</label>
 									<input type="text" name="description" placeholder="Description">
 								</div>
 								<button class="active">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
@@ -297,18 +297,18 @@
 			 					<input type="hidden" name="formname" value="form-required-$t"> 
 			 				
 	 							<h2 class="header-edit hidden" id="h2-icon-required-edit-$t"><a href="#" id="icon-required-edit-$t" class="item-edit-icon"><i class="fa fa-edit"></i></a></h2>
-	 							<h2 class="editiitype hidden" id="h2-required-edit-minus-$t"><a href="#" class="ii-heading-minus" id="a-required-edit-minus-$t">-&nbsp;Required $ihead ($rprhash.get($t).getRequiredlist().size())</a></h2>
-	 							<h2 class="editiitype" id="h2-required-edit-plus-$t"><a href="#" class="ii-heading-plus" id="a-required-edit-plus-$t">+&nbsp;Required $ihead ($rprhash.get($t).getRequiredlist().size())</a></h2>
-	 						<!--	<h2 class="editiitype" id="h2-required-edit-$t">Required $ihead ($rprhash.get($t).getRequiredlist().size())</h2>-->
- 								<!--<h3 class="clickable editiitype" id="h3-required-edit-$t">Required <i class="fa fa-edit"></i></h3>-->
+	 							<h2 class="editiitype hidden" id="h2-required-edit-minus-$t"><a href="#" class="ii-heading-minus" id="a-required-edit-minus-$t">-&nbsp;$required_label $ihead ($rprhash.get($t).getRequiredlist().size())</a></h2>
+	 							<h2 class="editiitype" id="h2-required-edit-plus-$t"><a href="#" class="ii-heading-plus" id="a-required-edit-plus-$t">+&nbsp;$required_label $ihead ($rprhash.get($t).getRequiredlist().size())</a></h2>
+	 						<!--	<h2 class="editiitype" id="h2-required-edit-$t">$required_label $ihead ($rprhash.get($t).getRequiredlist().size())</h2>-->
+ 								<!--<h3 class="clickable editiitype" id="h3-required-edit-$t">$required_label <i class="fa fa-edit"></i></h3>-->
  								<div id="div-iitable-required-$t" class="hidden">
 								<table class="display tablesorter wrappingtable full-width smaller" id="table-view-required-$t">
 									<thead>
 										<tr>
-											<th>Id</th>
-											<th>Source</th>
-											<th>Reason</th>
-											<th>Values</th>
+											<th>$id_label</th>
+											<th>$source_label</th>
+											<th>$reason_label</th>
+											<th>$values_label</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -326,7 +326,7 @@
 													<td></td>
 												#end
 												#if ($rrivl.getValuelist().contains(".*"))
-													<td class="wrappingtd">All values</td>
+													<td class="wrappingtd">$all_values_label</td>
 												#else
 													<td class="wrappingtd">
 														#foreach($s in $rrivl.getValuelist())
@@ -341,11 +341,11 @@
 								<table class="display wrappingtable full-width smaller hidden" id="table-edit-required-$t">
 									<thead>
 										<tr>
-											<th>Id</th>
-											<th>Source</th>
-											<th>Reason</th>
-											<th>Values</th>
-											<th>Delete?</th>
+											<th>$id_label</th>
+											<th>$source_label</th>
+											<th>$reason_label</th>
+											<th>$values_label</th>
+											<th>$action_label</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -381,14 +381,14 @@
 												#end
 												<td><input type="text" name="values_$ct" value="$list"></td>
 											#end
-											<td><a href="#" class="item_delete" id="delete_req_${t}_$ct">Delete</a></td>
+											<td><a href="#" class="item_delete" id="delete_req_${t}_$ct">$delete_label</a></td>
 										</tr>
 									#end	
 									</tbody>									
 								</table>
 								<input type="hidden" name="itemcount" value="$ct">
 								<br>
-								<button class="active hidden" id="button-update-required-$t">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+								<button class="active hidden" id="button-update-required-$t">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 								</div>
 								</form>	
 			 				</div>
@@ -407,17 +407,17 @@
 			 						
 			 					<input type="hidden" name="formname" value="form-optional-$t"> 
 			 					<h2 class="header-edit hidden" id="h2-icon-optional-edit-$t"><a href="#" id="icon-optional-edit-$t" class="item-edit-icon"><i class="fa fa-edit"></i></a></h2>
-	 							<h2 class="editiitype hidden" id="h2-optional-edit-minus-$t"><a href="#" class="ii-heading-minus" id="a-optional-edit-minus-$t">-&nbsp;Optional $ihead ($rpohash.get($t).getOptionallist().size())</a></h2>
-	 							<h2 class="editiitype" id="h2-optional-edit-plus-$t"><a href="#" class="ii-heading-plus" id="a-optional-edit-plus-$t">+&nbsp;Optional $ihead ($rpohash.get($t).getOptionallist().size())</a></h2>
+	 							<h2 class="editiitype hidden" id="h2-optional-edit-minus-$t"><a href="#" class="ii-heading-minus" id="a-optional-edit-minus-$t">-&nbsp;$optional_label $ihead ($rpohash.get($t).getOptionallist().size())</a></h2>
+	 							<h2 class="editiitype" id="h2-optional-edit-plus-$t"><a href="#" class="ii-heading-plus" id="a-optional-edit-plus-$t">+&nbsp;$optional_label $ihead ($rpohash.get($t).getOptionallist().size())</a></h2>
 
 				 				<div id="div-iitable-optional-$t" class="hidden">
 								<table class="display tablesorter wrappingtable full-width smaller" id="table-view-optional-$t">
 									<thead>
 										<tr>
-											<th>Id</th>
-											<th>Source</th>
-											<th>Reason</th>
-											<th>Values</th>
+											<th>$id_label</th>
+											<th>$source_label</th>
+											<th>$reason_label</th>
+											<th>$values_label</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -435,7 +435,7 @@
 													<td></td>
 												#end
 												#if ($rrivl.getValuelist() && $rrivl.getValuelist().contains(".*"))
-													<td class="wrappingtd">All values</td>
+													<td class="wrappingtd">$all_values_label</td>
 												#else
 													<td class="wrappingtd">
 														#foreach($s in $rrivl.getValuelist())
@@ -450,11 +450,11 @@
 								<table class="display wrappingtable full-width smaller hidden" id="table-edit-optional-$t">
 									<thead>
 										<tr>
-											<th>Id</th>
-											<th>Source</th>
-											<th>Reason</th>
-											<th>Values</th>
-											<th>Delete?</th>
+											<th>$id_label</th>
+											<th>$source_label</th>
+											<th>$reason_label</th>
+											<th>$values_label</th>
+											<th>$action_label</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -491,14 +491,14 @@
 												#end
 												<td><input type="text" name="values_$ct" value="$list"></td>
 											#end
-											<td><a href="#" class="item_delete" id="delete_opt_${t}_$ct">Delete</a></td>
+											<td><a href="#" class="item_delete" id="delete_opt_${t}_$ct">$delete_label</a></td>
 										</tr>
 									#end	
 									</tbody>									
 								</table>
 								<input type="hidden" name="itemcount" value="$ct">
 								<br>
-								<button class="active hidden" id="button-update-optional-$t">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+								<button class="active hidden" id="button-update-optional-$t">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 								</div>
 								</form>
 								
@@ -511,7 +511,7 @@
  			
  			<!-- Add form -->
  			<div class="content-section">
- 				<h2>Add Information Item Request</h2>
+ 				<h2>$add_ii_heading</h2>
  				<form id="additemform" method="POST" action="#">
  					<input type="hidden" name="formname" value="additemform">
  					<input type="hidden" name="rhtype" value="$rhmi.getRhidentifier().getRhtype()">
@@ -524,7 +524,7 @@
  							<tr>
  								<td>
  									<div class="form-set">
- 										<label for="iitype">Type</label>
+ 										<label for="iitype">$type_heading</label>
  										<select id="add-ii-type" name="iitype" style="width:100%">
  											#foreach($t in $rhiitypes)
  												<option value="$t">$t</option>
@@ -532,13 +532,13 @@
  										</select>
  									</div>
  									<div class="form-set">
- 										<label for="iiid">Identifier</label>
+ 										<label for="iiid">$id_heading</label>
  										<select id="add-ii-id" name="iiid" style="width: 100%">
  										
  										</select>
  									</div>
  									<div class="form-set">
- 										<label for="required">Disposition</label>
+ 										<label for="required">$disposition_label</label>
  										<select name="required" style="width: 100%">
  											<option value="optional">Optional</option>
  											<option value="required">Required</option>
@@ -547,14 +547,14 @@
  								</td>
  								<td style="padding-left: 2em; vertical-align: top;">
  									<div class="form-set">
- 										<label for="sourceii">Source Infomation Item</label>
+ 										<label for="sourceii">$source_item_label</label>
  										<select id="add-ii-source" name="sourceii" style="width: 90%;">
  										
  										</select>
  									</div>
  									<div class="form-set">
  										<label for="reasonlang" class="visually-hidden">Reason Language</label>
- 										<label for="reason">RP Reason for Request</label>
+ 										<label for="reason">$rp_reason_label</label>
  										<select class="iblock" name="reasonlang">
  											#foreach($l in $languages)
  												<option value="$l">$l</option>
@@ -563,14 +563,14 @@
  										<input class="iblock" type="text" name="reason" placeholder="Reason for request">
  									</div>
  									<div class="form-set">
- 										<label for="values">Values</label>
+ 										<label for="values">$values_label</label>
  										<input class="iblock" type="text" name="values" placeholder="Regular Expression" style="width: 90%;">
  									</div>
  								</td>
  							</tr>
  						</tbody>
  					</table>
- 					<button class="active">Add Item Request<i class="fa button-icon-right fa-plus"></i></button>
+ 					<button class="active">$add_ii_heading<i class="fa button-icon-right fa-plus"></i></button>
  				</form>
  			</div>
 		</div>

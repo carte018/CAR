@@ -54,7 +54,7 @@ public class RPRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -93,7 +93,7 @@ public class RPRegistrationController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1088,7 +1088,7 @@ public class RPRegistrationController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -1253,6 +1253,43 @@ public class RPRegistrationController {
 			}
 		}
 
+		CarAdminUtils.injectStrings(retval, new String[] { "rp_heading",
+															"auto_warning",
+															"rh_heading",
+															"ic_heading",
+															"icon_label",
+															"not_provided_label",
+															"privacy_label",
+															"default_sa_label",
+															"properties_heading",
+															"no_properties_label",
+															"property_label",
+															"value_label",
+															"action_label",
+															"add_property_label",
+															"review_lang_label",
+															"archive_rp_label",
+															"rp_info_label",
+															"displayname_label",
+															"description_label",
+															"update_label",
+															"add_lang_label",
+															"lang_label",
+															"required_label",
+															"optional_label",
+															"id_label",
+															"source_label",
+															"reason_label",
+															"values_label",
+															"all_values_label",
+															"delete_label",
+															"add_ii_heading",
+															"type_heading",
+															"id_heading",
+															"disposition_label",
+															"source_item_label",
+															"rp_reason_label"
+		});
 		return retval;
 	}
 

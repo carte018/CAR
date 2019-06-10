@@ -52,7 +52,7 @@ public class RPLocaleReviewController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -289,7 +289,7 @@ public class RPLocaleReviewController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -336,6 +336,21 @@ public class RPLocaleReviewController {
 		} else if (req.getParameter("state") != null) {
 			retval.addObject("failmsg","Failed to update langauge mappings");
 		}
+		
+		CarAdminUtils.injectStrings(retval, new String[] { "rp_metainfo_label",
+															"displayname_label",
+															"missing_label",
+															"description_label",
+															"property_label",
+															"update_label",
+															"required_metainfo_label",
+															"no_required_label",
+															"reason_label",
+															"optional_metainfo_label",
+															"no_optional_label",
+															"lang_report_heading"
+															
+		});
 		return retval;
 	}
 }

@@ -14,7 +14,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
 
  *#
-<h1>Language Report: $displayname</h1>
+<h1>$lang_report_heading: $displayname</h1>
 #if($successmsg)
 <div class="message success">
 	$successmsg
@@ -28,7 +28,7 @@
 
 <div class="content-section">
 	<h2 class="header-edit"><a href="#" id="rpmlangedit"><i class="fa fa-edit"></i></a></h2>
-	<h2>Relying Party Metainformation</h2>
+	<h2>$rp_metainfo_label</h2>
 	<table id="rpmviewtable" class="display full-width">
 		<thead>
 			<tr>
@@ -42,22 +42,22 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td class="wrappingtd">Display Name</td>
+				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
 						<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)</td>
 					#else
-						<td class="wrappingtd langnotok">missing</td>
+						<td class="wrappingtd langnotok">$missing_label</td>
 					#end
 				#end
 			</tr>
 			<tr>
-				<td class="wrappingtd">Description</td>
+				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
 						<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)</td>
 					#else
-						<td class="wrappingtd langnotok">missing</td>
+						<td class="wrappingtd langnotok">$missing_label</td>
 					#end
 				#end
 			</tr>
@@ -75,7 +75,7 @@
 		<thead>
 			<tr>
 				#set($colcount=1)
-				<th class="wrappingtd">Property</th>
+				<th class="wrappingtd">$property_label</th>
 				#foreach($l in $languages)
 					#set($colcount=$colcount+1)
 					<th class="wrappingtd">$l</th>
@@ -84,7 +84,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td class="wrappingtd">Display Name</td>
+				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
 						<td><input type="text" name="rpdisplayname_$l" value="$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)"></td>
@@ -94,7 +94,7 @@
 				#end
 			</tr>
 			<tr>
-				<td class="wrappingtd">Description</td>
+				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
 						<td><input type="text" name="rpdescription_$l" value="$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)"></td>
@@ -106,22 +106,22 @@
 		</tbody>
 	</table>
 	<br>
-	<button id="rpmeditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+	<button id="rpmeditbutton" class="active hidden">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 	</form>
 </div>
 
 <div class="content-section">
 
 	<h2 class="header-edit"><a href="#" id="rprilangedit"><i class="fa fa-edit"></i></a></h2>
-	<h2>Required Information Item Metainformation</h2>
+	<h2>$required_metainfo_label</h2>
 	#if(! $rpriil || $rpriil.isEmpty())
-		<p>No required information items to display.</p>
+		<p>$no_required_label.</p>
 	#else
 		<table id="rpriviewtable" class="display full-width wrappingtable">
 			<thead>
 				<tr>
 					#set($colcount=1)
-					<th class="wrappingtd">Property</th>
+					<th class="wrappingtd">$property_label</th>
 					#foreach($l in $languages)
 						#set($colcount=$colcount+1)
 						<th class="wrappingtd">$l</th>
@@ -131,12 +131,12 @@
 			<tbody>
 				#foreach($rpi in $rpriil.getRequiredlist())
 					<tr>
-						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() $reason_label</td>
 						#foreach($l in $languages)
 							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
 								<td class="wrappingtd langok">$CarAdminUtils.localize($rpi.getReason(),$l,false)</td>
 							#else
-								<td class="wrappingtd langnotok">missing</td>
+								<td class="wrappingtd langnotok">$missing_label</td>
 							#end
 						#end
 					</tr>
@@ -155,7 +155,7 @@
 			<thead>
 				<tr>
 					#set($colcount=1)
-					<th class="wrappingtd">Property</th>
+					<th class="wrappingtd">$property_label</th>
 					#foreach($l in $languages)
 						#set($colcount=$colcount+1)
 						<th class="wrappingtd">$l</th>
@@ -169,7 +169,7 @@
 						#set($icount=$icount+1)
 						<input type="hidden" name="iitype_$icount" value="$rpi.getInfoitemidentifier().getIitype()">
 						<input type="hidden" name="iiid_$icount" value="$rpi.getInfoitemidentifier().getIiid()">
-						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() $reason_label</td>
 						#foreach($l in $languages)
 							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
 								<td><input type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
@@ -183,7 +183,7 @@
 		</table>
 		<input type="hidden" name="icount" value="$icount">
 		<br>
-		<button id="rprieditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<button id="rprieditbutton" class="active hidden">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 		</form>
 	#end	
 
@@ -192,15 +192,15 @@
 <div class="content-section">
 
 	<h2 class="header-edit"><a href="#" id="rpoilangedit"><i class="fa fa-edit"></i></a></h2>
-	<h2>Optional Information Item Metainformation</h2>
+	<h2>$optional_metainfo_label</h2>
 	#if(! $rpoiil || $rpoiil.isEmpty())
-		<p>No optional information items to display.</p>
+		<p>$no_optional_label.</p>
 	#else
 			<table id="rpoiviewtable" class="display full-width wrappingtable">
 			<thead>
 				<tr>
 					#set($colcount=1)
-					<th class="wrappingtd">Property</th>
+					<th class="wrappingtd">$property_label</th>
 					#foreach($l in $languages)
 						#set($colcount=$colcount+1)
 						<th class="wrappingtd">$l</th>
@@ -210,12 +210,12 @@
 			<tbody>
 				#foreach($rpi in $rpoiil.getOptionallist())
 					<tr>
-						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() $reason_label</td>
 						#foreach($l in $languages)
 							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
 								<td class="wrappingtd langok">$CarAdminUtils.localize($rpi.getReason(),$l,false)</td>
 							#else
-								<td class="wrappingtd langnotok">missing</td>
+								<td class="wrappingtd langnotok">$missing_label</td>
 							#end
 						#end
 					</tr>
@@ -234,7 +234,7 @@
 			<thead>
 				<tr>
 					#set($colcount=1)
-					<th class="wrappingtd">Property</th>
+					<th class="wrappingtd">$property_label</th>
 					#foreach($l in $languages)
 						#set($colcount=$colcount+1)
 						<th class="wrappingtd">$l</th>
@@ -248,7 +248,7 @@
 						#set($icount=$icount+1)
 						<input type="hidden" name="iitype_$icount" value="$rpi.getInfoitemidentifier().getIitype()">
 						<input type="hidden" name="iiid_$icount" value="$rpi.getInfoitemidentifier().getIiid()">
-						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() Reason</td>
+						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() $reason_label</td>
 						#foreach($l in $languages)
 							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
 								<td><input type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
@@ -262,7 +262,7 @@
 		</table>
 		<input type="hidden" name="icount" value="$icount">
 		<br>
-		<button id="rpoieditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<button id="rpoieditbutton" class="active hidden">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 		</form>
 	#end
 </div>
