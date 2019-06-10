@@ -47,7 +47,7 @@ public class RHLocalReviewController {
 		
 		if (CarAdminUtils.init(req) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -187,7 +187,7 @@ public class RHLocalReviewController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -242,6 +242,16 @@ public class RHLocalReviewController {
 			retval.addObject("successmsg","Successfully updated language mappings");
 		}
 		
+		CarAdminUtils.injectStrings(retval, new String[] { "rh_metainfo_label",
+															"displayname_label",
+															"description_label",
+															"update_label",
+															"ii_metainfo_label",
+															"no_info_msg",
+															"property_label",
+															"missing_label"
+															
+		});
 		return retval;
 	}
 }

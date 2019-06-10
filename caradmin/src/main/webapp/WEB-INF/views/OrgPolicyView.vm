@@ -30,9 +30,9 @@
 		<table class="display full-width">
 			<thead>
 				<tr>
-					<th>Resource Holder</th>
-					<th>Organizational Policies</th>
-					<th>Meta Policies</th>
+					<th>$rh_heading</th>
+					<th>$opol_count_label</th>
+					<th>$mpol_count_label</th>
 				</tr>
 			</thead>
 			<tbody>

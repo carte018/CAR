@@ -610,8 +610,8 @@ public class EditOrgPolicyController {
 											 "add_item_label",
 											 "update_policy_label",
 											 "all_other_heading",
-											 "instructions_heading",
-											 "instructions_body"});
+											 "instructions_heading"
+										});
 		
 		return retval;
 	}

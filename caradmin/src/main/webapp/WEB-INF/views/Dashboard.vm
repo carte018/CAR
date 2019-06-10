@@ -30,15 +30,15 @@
 			#set($ugrand=$ugrand+$iv.getUsercount())
 			#set($polgrand=$polgrand+$iv.getUserpolcount()+$iv.getArpsipolcount()+$iv.getCarmapolcount())
 		#end
-		<h2>Grand Totals</h2>
+		<h2>$grand_totals_heading</h2>
 		<div name="grands">
 			<table class="stats">
-				<tr><td class="stat-label">Resource Holders</td><td class="stat-value">$rhgrand</td></tr>
-				<tr><td class="stat-label">Information Items</td><td class="stat-value">$iigrand</td></tr>
-				<tr><td class="stat-label">Relying Parties</td><td class="stat-value">$rpgrand</td></tr>
-				<tr><td class="stat-label">In-Use RPs</td><td class="stat-value">$activegrand</td></tr>
-				<tr><td class="stat-label">Users</td><td class="stat-value">$ugrand</td></tr>
-				<tr><td class="stat-label">Policies</td><td class="stat-value">$polgrand</td></tr>
+				<tr><td class="stat-label">$rh_total_heading</td><td class="stat-value">$rhgrand</td></tr>
+				<tr><td class="stat-label">$info_items_heading</td><td class="stat-value">$iigrand</td></tr>
+				<tr><td class="stat-label">$rps_label</td><td class="stat-value">$rpgrand</td></tr>
+				<tr><td class="stat-label">$active_rps_label</td><td class="stat-value">$activegrand</td></tr>
+				<tr><td class="stat-label">$users_label</td><td class="stat-value">$ugrand</td></tr>
+				<tr><td class="stat-label">$policies_label</td><td class="stat-value">$polgrand</td></tr>
 			</table>
 		</div>
 	</div>
@@ -46,7 +46,7 @@
 
 <div id="left">
 	<div class="content-section">
-		<h2>Recent</h2>
+		<h2>$recent_label</h2>
 		<ul class="log">
 			#foreach($entry in $activitylist)
 				#set($foo=$date.setTime($entry.getTimestamp()))
@@ -55,14 +55,14 @@
 		</ul>
 	</div>
 	<div class="content-section">
-			<h2>Policies</h2>
+			<h2>$policies_label</h2>
 			<table class="display full-width">
 			<thead>
 				<tr>
-					<th class="wrappingtd">Resource Holder</th>
-					<th class="wrappingtd">Organizational Policies</th>
-					<th class="wrappingtd">Meta Policies</th>
-					<th class="wrappingtd">User Policies</th>
+					<th class="wrappingtd">$rh_heading</th>
+					<th class="wrappingtd">$opol_count_label</th>
+					<th class="wrappingtd">$mpol_count_label</th>
+					<th class="wrappingtd">$upol_count_label</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -77,6 +77,6 @@
 			</tbody>
 		</table>
 	</div>
-	<p><a href="#">back to top</a></p>
+	<p><a href="#">$back_link</a></p>
 </div>
 		

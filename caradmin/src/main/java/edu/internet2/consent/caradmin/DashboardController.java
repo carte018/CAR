@@ -47,7 +47,7 @@ public class DashboardController {
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -188,6 +188,20 @@ public class DashboardController {
 		
 		retval.addObject("logouturl",config.getProperty("logouturl", false));
 		
+		CarAdminUtils.injectStrings(retval, new String[] { "grand_totals_heading",
+														  "rh_total_heading",
+														  "info_items_heading",
+														  "rps_label",
+														  "active_rps_label",
+														  "users_label",
+														  "policies_label",
+														  "recent_label",
+														  "rh_heading",
+														  "opol_count_label",
+														  "mpol_count_label",
+														  "upol_count_label",
+														  "back_link"
+		});
 		return retval;
 	}
 }

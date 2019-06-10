@@ -51,7 +51,7 @@ public class OrgPolicyViewController {
 		
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -87,6 +87,12 @@ public class OrgPolicyViewController {
 		retval.addObject("activetab","policies");
 		retval.addObject("lang",req.getLocale().getLanguage());
 		retval.addObject("logouturl",config.getProperty("logouturl", false));
+		
+		CarAdminUtils.injectStrings(retval, new String[] { "rh_heading",
+															"opol_count_label",
+															"mpol_count_label"
+															
+		});
 		return retval;
 		
 	}
@@ -99,7 +105,7 @@ public class OrgPolicyViewController {
 			
 			if (CarAdminUtils.init(req) == null) {
 				ModelAndView eval = new ModelAndView("errorPage");
-				eval.addObject("message","You are not authorized to access this service");
+				eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 				return eval;
 			}
 			
@@ -158,7 +164,7 @@ public class OrgPolicyViewController {
 		
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
-			eval.addObject("message","You are not authorized to access this service");
+			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
@@ -237,6 +243,34 @@ public class OrgPolicyViewController {
 		} else if (req.getParameter("success") != null) {
 			retval.addObject("successmsg",req.getParameter("success"));
 		}
+		
+		CarAdminUtils.injectStrings(retval, new String[] { "managing_heading",
+															"instructions_body_orgpol_view",
+															"add_orgpol_label",
+															"add_mpol_label",
+															"instpol_heading",
+															"metainfo_heading",
+															"created_label",
+															"status_label",
+															"pid_label",
+															"version_label",
+															"affected_heading",
+															"property_label",
+															"matching_label",
+															"target_heading",
+															"directives_heading",
+															"item_type_heading",
+															"item_id_heading",
+															"directive_heading",
+															"values_heading",
+															"basis_heading",
+															"other_values_label",
+															"all_values_label",
+															"unspecified_label",
+															"any_request_label",
+															"mpol_count_label"
+															
+		});
 		return retval;
 		
 	}

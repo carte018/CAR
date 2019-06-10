@@ -29,82 +29,77 @@
 
 <div id="sidebar">
 	<div class="content-section">
-		<h2>Managing Policies</h2>
-			<h3>Institutional Policies</h3>
-				<p>Organizational administrative policy about information exchange.  Users may see these as "institutional recommendations" when consent is employed.</p>
-			<h3>User Policies</h3>
-				<p>User-defined preferences as obtained from intercept exchanges or self-service.</p>
-			<h3>Meta Policies</h3>
-				<p>These policies determine whether institutional or user policy should prevail in a given situation.</p>
+		<h2>$managing_heading</h2>
+			$instructions_body_orgpol_view
 	</div>
 
-	<button style="width: 100%;" id="addpolbutton" class="active">Add Institutional Policy<i class="fa button-icon-right fa-plus"></i></button>
+	<button style="width: 100%;" id="addpolbutton" class="active">$add_orgpol_label<i class="fa button-icon-right fa-plus"></i></button>
 	<br><br>
-	<button style="width: 100%;" id="addmetabutton" class="active">Add Meta Policy<i class="fa button-icon-right fa-plus"></i></button>
+	<button style="width: 100%;" id="addmetabutton" class="active">$add_mpol_label<i class="fa button-icon-right fa-plus"></i></button>
 </div>
 <div id="left">
 	<div class="content-section">
-		<h2>Institutional Policies</h2>
+		<h2>$instpol_heading</h2>
 		<ol class="orgpollist">
 			#foreach($pol in $policies)
 				#set($did="detail_$pol.getPolicyMetaData().getPolicyId().getBaseId()")
 				#set($ph=$daterec.setTime($pol.getPolicyMetaData().getCreateTime()))
 				<li class="clickableli" id="$pol.getPolicyMetaData().getPolicyId().getBaseId()">
-				<div id="wdiv_$pol.getPolicyMetaData().getPolicyId().getBaseId()" style="margin: 0.2em; background-color: #eee; max-width: 60%;"><a href="#" class="toggledetails" id="toggledetails_$pol.getPolicyMetaData().getPolicyId().getBaseId()">+</a>&nbsp;$pol.getPolicy().getDescription() <a style="float: right;" href="#" class="orgpolicydelbutton" id="orgpolicydel_$pol.getPolicyMetaData().getPolicyId().getBaseId()">Delete</a>
+				<div id="wdiv_$pol.getPolicyMetaData().getPolicyId().getBaseId()" style="margin: 0.2em; background-color: #eee; max-width: 80%;"><a href="#" class="toggledetails" id="toggledetails_$pol.getPolicyMetaData().getPolicyId().getBaseId()">+</a>&nbsp;$pol.getPolicy().getDescription() <a style="float: right;" href="#" class="orgpolicydelbutton" id="orgpolicydel_$pol.getPolicyMetaData().getPolicyId().getBaseId()">Delete</a>
 				<div class="hiddendetail content-section" id="$did">
 					#set($pi=$pol.getPolicyMetaData().getPolicyId())
 					<!--$pol.getPolicyMetaData().getPolicyId().getBaseId()-->
 					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editorgpolicy/$pi.getBaseId()"><i class="fa fa-edit"></i></a></h2>
-					<h3>MetaInformation</h3>
+					<h3>$metainfo_heading</h3>
 					<div name="meta_$pi" class="indent1div">
 						<div name="cdiv_$pi">
-							<label for="cdate_$pi">Created: </label>
+							<label for="cdate_$pi">$created_label: </label>
 							<span name="cdate_$pi">$formatrec.format($daterec)</span>
 						</div>
 						<div name="sdiv_$pi">
-							<label for="state_$pi">Status: </label>
+							<label for="state_$pi">$status_label: </label>
 							<span name="state_$pi">$pol.getPolicyMetaData().getState()</span>
 						</div>
 						<div name="piddiv_$pi">
-							<label for="polid_$pi">PolicyID: </label>
+							<label for="polid_$pi">$pid_label: </label>
 							<span name="polid_$pi">$pol.getPolicyMetaData().getPolicyId().getBaseId()</span>
-							<label for "polver_$pi">Version: </label>
+							<label for "polver_$pi">$version_label: </label>
 							<span name="polver_$pi">$pol.getPolicyMetaData().getPolicyId().getVersion()</span>
 						</div>
 						
 					</div>
-					<h3>Affected Users:</h3>
+					<h3>$affected_heading:</h3>
 					<div name="users_$pi" class="indent2div">
 						#set($upropcount=0)
 						#foreach($uprop in $pol.getPolicy().getUserPropertyArray())
-							<label for="uprop_$pi_$upropcount">Property: </label>
+							<label for="uprop_$pi_$upropcount">$property_label: </label>
 							<span name="uprop_$pi_$upropcount">$uprop.getUserPropName()</span>
-							<label for="upropval_$pi_$upropcount">Matches: </label>
+							<label for="upropval_$pi_$upropcount">$matching_label: </label>
 							<span name="upropval_$pi_$upropcount">$uprop.getUserPropValue()</span>
 							#set($upropcount=$upropcount+1)
 						#end
 					</div>
-					<h3>Target RPs:</h3>
+					<h3>$target_heading:</h3>
 					<div name="rps_$pi" class="indent2div">
 						#set($rppropcount=0)
 						#foreach($rpprop in $pol.getPolicy().getRelyingPartyPropertyArray())
-							<label for="rpprop_$pi_$rppropcount">Property: </label>
+							<label for="rpprop_$pi_$rppropcount">$property_label: </label>
 							<span name="rpprop_$pi_$rppropcount">$rpprop.getRpPropName()</span>
-							<label for "rppropval_$pi_$rppropcount">Matches: </label>
+							<label for "rppropval_$pi_$rppropcount">$matching_label: </label>
 							<span name="rppropval_$pi_$rppropcount">$rpprop.getRpPropValue()</span>
 							#set($rppropcount=$rppropcount+1)
 						#end
 					</div>
-					<h3>Release Directives:</h3>
+					<h3>$directives_heading:</h3>
 					<div name="relps_$pi" class="indent2div">
 						<table name="relpols_$pi" class="display full-width wrappingtable">
 							<thead>
 								<tr>
-									<th class="wrappingtd">Item Type</th>
-									<th class="wrappingtd">Item ID</th>
-									<th>Directive</th>
-									<th class="wrappingtd">Values</th>
-									<th class="wrappingtd">Basis</th>
+									<th class="wrappingtd">$item_type_heading</th>
+									<th class="wrappingtd">$item_id_heading</th>
+									<th>$directive_heading</th>
+									<th class="wrappingtd">$values_heading</th>
+									<th class="wrappingtd">$basis_heading</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -158,9 +153,9 @@
 									</td>
 									<td class="wrappingtd">
 										#if($relpol.getArrayOfOrgDirectiveOnValues() && ! $relpol.getArrayOfOrgDirectiveOnValues().isEmpty())
-											All other values
+											$other_values_label
 										#else
-											All values
+											$all_values_label
 										#end
 									</td>
 									<td class="wrappingtd">
@@ -168,7 +163,7 @@
 											$relpol.getOrgDirectiveAllOtherValues().getOrgPolicyBasis()
 										#else
 											#if ($replol.getOrgDirectiveAllOtherValues().getOrgReleaseDirective()=="permit")
-												<em>unspecified</em>
+												<em>$unspecified_label</em>
 											#else
 												n/a
 											#end
@@ -179,13 +174,13 @@
 							#if($pol.getPolicy().getAllOtherOrgInfoReleaseStatement())
 								<tr>
 									<td colspan="2" class="wrappingtd">
-										Any Other Request
+										$any_request_label
 									</td>
 									<td>
 											$pol.getPolicy().getAllOtherOrgInfoReleaseStatement().getOrgDirectiveAllOtherValues().getOrgReleaseDirective()
 									</td>
 									<td class="wrappingtd">
-										All values
+										$all_values_label
 									</td>
 									<td class="wrappingtd">
 										&nbsp;
@@ -203,65 +198,65 @@
 	</div>
 
 	<div class="content-section">
-		<h2>Meta Policies</h2>
+		<h2>$mpol_count_label</h2>
 		<ol class="metapollist">
 			#foreach($pol in $icmpolicies)
 				#set($did="detail_$pol.getPolicyMetaData().getPolicyId().getBaseId()")
 				#set($ph=$daterec.setTime($pol.getPolicyMetaData().getCreateTime()))
 				<li class="clickableli" id="$pol.getPolicyMetaData().getPolicyId().getBaseId()">
-				<div id="wdiv_$pol.getPolicyMetaData().getPolicyId().getBaseId()" style="margin: 0.2em; background-color: #eee; max-width: 60%;"><a href="#" class="toggledetails" id="toggledetails_$pol.getPolicyMetaData().getPolicyId().getBaseId()">+</a>&nbsp;$pol.getPolicy().getDescription() <a style="float: right;" href="#" class="metapolicydelbutton" id="metapolicydel_$pol.getPolicyMetaData().getPolicyId().getBaseId()">Delete</a>
+				<div id="wdiv_$pol.getPolicyMetaData().getPolicyId().getBaseId()" style="margin: 0.2em; background-color: #eee; max-width: 80%;"><a href="#" class="toggledetails" id="toggledetails_$pol.getPolicyMetaData().getPolicyId().getBaseId()">+</a>&nbsp;$pol.getPolicy().getDescription() <a style="float: right;" href="#" class="metapolicydelbutton" id="metapolicydel_$pol.getPolicyMetaData().getPolicyId().getBaseId()">Delete</a>
 				
 				<div class="hiddendetail content-section" id="$did">
 					#set($pi=$pol.getPolicyMetaData().getPolicyId())
 					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editmetapolicy/$pi.getBaseId()"><i class="fa fa-edit"></i></a></h2>
-					<h3>MetaInformation</h3>
+					<h3>$metainfo_heading</h3>
 					<div name="meta_$pi" class="indent1div">
 						<div name="cdiv_$pi">
-							<label for="cdate_$pi">Created: </label>
+							<label for="cdate_$pi">$created_label: </label>
 							<span name="cdate_$pi">$formatrec.format($daterec)</span>
 						</div>
 						<div name="sdiv_$pi">
-							<label for="state_$pi">Status: </label>
+							<label for="state_$pi">$status_label: </label>
 							<span name="state_$pi">$pol.getPolicyMetaData().getState()</span>
 						</div>
 						<div name="piddiv_$pi">
-							<label for="polid_$pi">PolicyID: </label>
+							<label for="polid_$pi">$pid_label: </label>
 							<span name="polid_$pi">$pol.getPolicyMetaData().getPolicyId().getBaseId()</span>
-							<label for "polver_$pi">Version: </label>
+							<label for "polver_$pi">$version_label: </label>
 							<span name="polver_$pi">$pol.getPolicyMetaData().getPolicyId().getVersion()</span>
 						</div>
 						
 					</div>
-					<h3>Affected Users:</h3>
+					<h3>$affected_heading:</h3>
 					<div name="users_$pi" class="indent2div">
 						#set($upropcount=0)
 						#foreach($uprop in $pol.getPolicy().getUserPropertyArray())
-							<label for="uprop_$pi_$upropcount">Property: </label>
+							<label for="uprop_$pi_$upropcount">$property_label: </label>
 							<span name="uprop_$pi_$upropcount">$uprop.getUserPropName()</span>
-							<label for="upropval_$pi_$upropcount">Matches: </label>
+							<label for="upropval_$pi_$upropcount">$matching_label: </label>
 							<span name="upropval_$pi_$upropcount">$uprop.getUserPropValue()</span>
 							#set($upropcount=$upropcount+1)
 						#end
 					</div>
-					<h3>Target RPs:</h3>
+					<h3>$target_heading:</h3>
 					<div name="rps_$pi" class="indent2div">
 						#set($rppropcount=0)
 						#foreach($rpprop in $pol.getPolicy().getRelyingPartyPropertyArray())
-							<label for="rpprop_$pi_$rppropcount">Property: </label>
+							<label for="rpprop_$pi_$rppropcount">$property_label: </label>
 							<span name="rpprop_$pi_$rppropcount">$rpprop.getRpPropName()</span>
-							<label for "rppropval_$pi_$rppropcount">Matches: </label>
+							<label for "rppropval_$pi_$rppropcount">$matching_label: </label>
 							<span name="rppropval_$pi_$rppropcount">$rpprop.getRpPropValue()</span>
 							#set($rppropcount=$rppropcount+1)
 						#end
 					</div>
-					<h3>Release Directives:</h3>
+					<h3>$directives_heading:</h3>
 					<div name="relps_$pi" class="indent2div">
 						<table name="relpols_$pi" class="display">
 							<thead>
 								<tr>
-									<th>Item</th>
-									<th>Directive</th>
-									<th>Values</th>
+									<th>$item_id_heading</th>
+									<th>$directive_heading</th>
+									<th>$values_heading</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -298,9 +293,9 @@
 									</td>
 									<td>
 										#if($relpol.getArrayOfIcmDirectiveOnValues() && ! $relpol.getArrayOfIcmDirectiveOnValues().isEmpty())
-											All other values
+											$other_values_label
 										#else
-											All values
+											$all_values_label
 										#end
 									</td>
 								</tr>
@@ -308,13 +303,13 @@
 							#if($pol.getPolicy().getAllOtherOrgInfoReleaseStatement())
 								<tr>
 									<td>
-										Any Other Request
+										$any_request_label
 									</td>
 									<td>
 											$pol.getPolicy().getAllOtherOrgInfoReleaseStatement().getIcmDirectiveAllOtherValues().getIcmReleaseDirective()
 									</td>
 									<td>
-										All values
+										$all_values_label
 									</td>
 								</tr>
 							#end

@@ -29,7 +29,7 @@
 <div class="content-section">
 
 <h2 class="header-edit"><a href="#" id="rhmlangedit"><i class="fa fa-edit"></i></a></h2>
-<h2>Resource Holder Metainformation</h2>
+<h2>$rh_metainfo_label</h2>
 	<table id="rhmviewtable" class="display full-width">
 		<thead>
 			<tr>
@@ -43,7 +43,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td class="wrappingtd">Display Name</td>
+				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false))
 						<td class="wrappingtd langok">$CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false)</td>
@@ -53,7 +53,7 @@
 				#end
 			</tr>
 			<tr>
-				<td class="wrappingtd">Description</td>
+				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false))
 						<td class="wrappingtd langok">$CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false)</td>
@@ -82,7 +82,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td class="wrappingtd">Display Name</td>
+				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false))
 						<td><input type="text" name="rhdisplayname_$l" value="$CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false)"></td>
@@ -92,7 +92,7 @@
 				#end
 			</tr>
 			<tr>
-				<td class="wrappingtd">Description</td>
+				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
 					#if($CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false))
 						<td><input type="text" name="rhdescription_$l" value="$CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false)"></td>
@@ -104,21 +104,21 @@
 		</tbody>
 	</table>
 	<br>
-	<button id="rhmeditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+	<button id="rhmeditbutton" class="active hidden">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 	</form>
 </div>
 
 <div class="content-section">
 	<h2 class="header-edit"><a href="#" id="rhilangedit"><i class="fa fa-edit"></i></a></h2>
-	<h2>Information Item Metainformation</h2>
+	<h2>$ii_metainfo_label</h2>
 	#if(! $arimi || $arimi.isEmpty())
-		<p>No information items to display.</p>
+		<p>${no_info_msg}.</p>
 	#else
 		<table id="rhiviewtable" class="display full-width">
 			<thead>
 				<tr>
 					#set($colcount=1)
-					<th class="wrappingtd">Property</th>
+					<th class="wrappingtd">$property_label</th>
 					#foreach($l in $languages)
 						#set($colcount=$colcount+1)
 						<th class="wrappingtd">$l</th>
@@ -130,22 +130,22 @@
 			#foreach($i in $arimi)
 				#if($i && $i.getIiidentifier())
 					<tr>
-						<td class="wrappingtd">Display Name: $i.getIiidentifier().getIiid()</label></td>
+						<td class="wrappingtd">$displayname_label: $i.getIiidentifier().getIiid()</label></td>
 						#foreach($l in $languages)
 							#if($i.getDisplayname() && $CarAdminUtils.localize($i.getDisplayname(),$l,false))
 								<td class="wrappingtd langok">$CarAdminUtils.localize($i.getDisplayname(),$l,false)</td>
 							#else
-								<td class="wrappingtd langnotok">missing</td>
+								<td class="wrappingtd langnotok">$missing_label</td>
 							#end
 						#end
 					</tr>
 					<tr>
-						<td class="wrappingtd">Description: $i.getIiidentifier().getIiid()</td>
+						<td class="wrappingtd">$description_label: $i.getIiidentifier().getIiid()</td>
 						#foreach($l in $languages)
 							#if($i.getDescription() && $CarAdminUtils.localize($i.getDescription(),$l,false))
 								<td class="wrappingtd langok">$CarAdminUtils.localize($i.getDescription(),$l,false)</td>
 							#else
-								<td class="wrappingtd langnotok">missing</td>
+								<td class="wrappingtd langnotok">$missing_label</td>
 							#end
 						#end
 					</tr>
@@ -185,7 +185,7 @@
 				<input type="hidden" name="iid_$icount" value="$i.getIiidentifier().getIiid()">
 				#if($i && $i.getIiidentifier())
 					<tr>
-						<td class="wrappingtd">Display Name: $i.getIiidentifier().getIiid()</label></td>
+						<td class="wrappingtd">$displayname_label: $i.getIiidentifier().getIiid()</label></td>
 						#foreach($l in $languages)
 							#if($i.getDisplayname() && $CarAdminUtils.localize($i.getDisplayname(),$l,false))
 								<td><input type="text" name="iidisplayname_${icount}_$l" value="$CarAdminUtils.localize($i.getDisplayname(),$l,false)"></td>
@@ -195,7 +195,7 @@
 						#end
 					</tr>
 					<tr>
-						<td class="wrappingtd">Description: $i.getIiidentifier().getIiid()</td>
+						<td class="wrappingtd">$description_label: $i.getIiidentifier().getIiid()</td>
 						#foreach($l in $languages)
 							#if($i.getDescription() && $CarAdminUtils.localize($i.getDescription(),$l,false))
 								<td><input type="text" name="iidescription_${icount}_$l" value="$CarAdminUtils.localize($i.getDescription(),$l,false)"></td>
@@ -217,7 +217,7 @@
 		</table>
 		<input type="hidden" name="icount" value="$icount">
 		<br>
-		<button id="rhieditbutton" class="active hidden">Update<i class="fa button-icon-right fa-arrow-right"></i></button>
+		<button id="rhieditbutton" class="active hidden">$update_label<i class="fa button-icon-right fa-arrow-right"></i></button>
 		</form>
 	#end		
 </div>
