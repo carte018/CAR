@@ -165,7 +165,7 @@ public class CarmaController {
 		String baseId = req.getParameter("baseId");
 		if (baseId == null) {
 			ModelAndView e = new ModelAndView("errorPage");
-			e.addObject("message", "Missing baseId");
+			e.addObject("message", CarUtility.getLocalComponent("missing_baseid"));
 			return e;
 		}
 		
@@ -178,13 +178,13 @@ public class CarmaController {
 			policyUser = urp.getUserInfoReleasePolicy().getUserId().getUserValue();
 		} catch (Exception e) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Unable to retrieve user from policy: " + baseId);
+			err.addObject("message",CarUtility.getLocalComponent("unable_user") + ": " + baseId);
 			return err;
 		}
 		
 		if (! policyUser.equalsIgnoreCase(req.getRemoteUser())) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Logged in user: " + req.getRemoteUser() + " does not match owner of policy: " + policyUser);
+			err.addObject("message",CarUtility.getLocalComponent("logged_user") + ": " + req.getRemoteUser() + " does not match owner of policy: " + policyUser);
 			return err;
 		}
 		
@@ -193,20 +193,17 @@ public class CarmaController {
 		sconvo = req.getParameter("conversation");
 		if (sconvo == null) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Your browser did not provide needed information.  Typically, this indicates a bug.");
+			err.addObject("message",CarUtility.getLocalComponent("missing_convo"));
 			return err;
 		}
 		HttpSession sess = req.getSession(false);
 		if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
 			// CSRF failure
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","CSRF violation.  Your session with the server may have expired (sessions expire after 10 minutes of inactivity).");
+			err.addObject("message",CarUtility.getLocalComponent("csrf_fail"));
 			return err;
 		}
-	//	UserInfoReleasePolicy uirp = urp.getUserInfoReleasePolicy();
 
-	//	ArrayList<UserInfoReleaseStatement> auir = (ArrayList<UserInfoReleaseStatement>) uirp.getArrayOfInfoReleaseStatement();
-		
 		// Merge the settings we receive with the settings in the arraylist of info release statements.
 
 		// The previous approach was:
@@ -370,7 +367,7 @@ public class CarmaController {
 		
 		if (baseId == null || baseId.equals("")) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Empty or missing policy ID is not allowed");
+			err.addObject("message",CarUtility.getLocalComponent("empty_policy_fail"));
 			return err;
 		}
 		
@@ -392,7 +389,7 @@ public class CarmaController {
 		
 		if (urp == null) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Policy ID: " + baseId + " not found");
+			err.addObject("message","Policy ID: " + baseId + CarUtility.getLocalComponent("not_found"));
 			return err;
 		}
 
@@ -403,13 +400,13 @@ public class CarmaController {
 			policyUser = urp.getUserInfoReleasePolicy().getUserId().getUserValue();
 		} catch (Exception e) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Unable to retrieve user from policy: " + baseId);
+			err.addObject("message",CarUtility.getLocalComponent("retrieve_user_fail") + ": " + baseId);
 			return err;
 		}
 		
 		if (! policyUser.equalsIgnoreCase(user)) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Logged in user: " + user + " does not match owner of policy: " + policyUser);
+			err.addObject("message",CarUtility.getLocalComponent("logged_user") + " " + user + CarUtility.getLocalComponent("user_match_fail") + ": " + policyUser);
 			return err;
 		}
 		
@@ -1111,6 +1108,8 @@ public class CarmaController {
 		retval.addObject("no_privacy",CarUtility.getLocalComponent("no_privacy"));
 		retval.addObject("edit_label",CarUtility.getLocalComponent("edit_label"));
 
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		return retval;
 
 	}
@@ -1131,6 +1130,8 @@ public class CarmaController {
 		retval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
 		retval.addObject("logouturl",config.getProperty("car.carma.logouturl", false));
 
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		return retval;
 		
 
@@ -1156,14 +1157,14 @@ public class CarmaController {
 		sconvo = req.getParameter("conversation");
 		if (sconvo == null) {
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","Your browser did not provide needed information.  Typically, this indicates a bug.");
+			err.addObject("message",CarUtility.getLocalComponent("missing_convo"));
 			return err;
 		}
 		HttpSession sess = req.getSession(false);
 		if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
 			// CSRF failure
 			ModelAndView err = new ModelAndView("errorPage");
-			err.addObject("message","CSRF violation.  Your session with the server may have expired (sessions expire after 10 minutes of inactivity).");
+			err.addObject("message",CarUtility.getLocalComponent("csrf_fail"));
 			return err;
 		}
 		
@@ -1336,6 +1337,15 @@ public class CarmaController {
 			retval.addObject("successmsg",req.getParameter("success"));
 		}
 		
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("add_site_heading",CarUtility.getLocalComponent("add_site_heading"));
+		retval.addObject("about_add_heading",CarUtility.getLocalComponent("about_add_heading"));
+		retval.addObject("about_add_site",CarUtility.getLocalComponent("about_add_site"));
+		retval.addObject("site_service",CarUtility.getLocalComponent("site_service"));
+		retval.addObject("resource_holder",CarUtility.getLocalComponent("resource_holder"));
+		retval.addObject("add",CarUtility.getLocalComponent("add"));
+		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
+		
 		return retval;
 	}
 	//
@@ -1414,9 +1424,7 @@ public class CarmaController {
 		
 		// At this point, we should have policyMap populated
 	
-		
-		// Test injections
-		
+				
 		retval.addObject("locale",config.getProperty("car.defaultLocale", true));
 		
 		retval.addObject("rplistHeading",CarUtility.getLocalComponent("mysites"));
@@ -1457,6 +1465,9 @@ public class CarmaController {
 		retval.addObject("add_site",CarUtility.getLocalComponent("add_site"));
 		retval.addObject("aboutsite_header",CarUtility.getLocalComponent("aboutsite_header"));
 		retval.addObject("aboutsite_body",CarUtility.getLocalComponent("aboutsite_body"));
+		
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		return retval;
 	}
 	
@@ -1660,6 +1671,8 @@ public class CarmaController {
 		model.addObject("whatis_header",CarUtility.getLocalComponent("whatis_header"));
 		model.addObject("whatis_body",CarUtility.getLocalComponent("whatis_body"));
 		
+		model.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		model.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		return model;
 	}
 	

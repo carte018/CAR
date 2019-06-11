@@ -20,20 +20,19 @@
   <head>
           <link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">
   
-   <!-- <script rel="stylesheet" src="https://shib.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->
-   		<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>
+    		<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>
         <!--<script type="text/javascript" src="/caradmin/resources/js/jquery.min.js"></script>-->
         <script type="text/javascript" src="/car/resources/js/main.js"></script>
-        <title>Institutional Privacy Settings</title>
+        <title>$top_heading</title>
   </head>
 
   <body>
     <div id="header">
       <div id="logo"><img src="https://shib.oit.duke.edu/idms-assets/dist/public/images/duke.png"></div>
-      <h1>Institutional Privacy Settings</h1>
+      <h1>$top_heading</h1>
 
       <div id="login-details">
-        $authuser&nbsp;&nbsp;<a href="$logouturl">sign out</a>
+        $authuser&nbsp;&nbsp;<a href="$logouturl">$sign_out</a>
       </div>
     </div>
 
@@ -92,7 +91,7 @@
     <body>
     <div id="header">
       <div id="logo"><img src="https://shib.oit.duke.edu/idms-assets/dist/public/images/duke.png"></div>
-      <h1>Institutional Privacy Settings</h1>
+      <h1>$top_heading</h1>
 
 
     </div>

@@ -29,18 +29,11 @@
 			$noticemsg
 		</div>
 	#end
-		<h1>Add a Site</h1>
+		<h1>$add_site_heading</h1>
 		<div id="sidebar">
 			<div class="content-section">
-				<h2>About Adding Sites Manually</h2>
-				In most cases, sites will be added to your preferences list automatically, as you visit
-				them and specify your preferences.  For various reasons, you may want or need to establish 
-				preferences for a site or service without actually visiting it -- for example, you might 
-				need to set preferences for the use of your personal information before a service tries 
-				to access it in your absence.  Listed here are all the sites and services for which you 
-				don't currently have specific preferences specified.  Click the "Add" link next to any 
-				one of them will take you into an editor where you can specify your specific preferences 
-				for that site.
+				<h2>$about_add_heading</h2>
+				$about_add_site
 			</div>
 		</div>
 		<div id="left">
@@ -52,9 +45,9 @@
 				#end
 						<thead>
 							<tr>
-								<th>Site/Service</th>
-								<th>Resource Holder</th>
-								<th>Add?</th>
+								<th>$site_service</th>
+								<th>$resource_holder</th>
+								<th>$add?</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -69,7 +62,7 @@
 									<input type="hidden" id="usertype_$ctr" value=$item.getUsertype()">
 									<td>$item.getRpdisp()</td>
 									<td>$item.getRhdisp()</td>
-									<td><a class="adder" id="adder_$ctr" href="#">Add</a></td>
+									<td><a class="adder" id="adder_$ctr" href="#">$add</a></td>
 								</tr>
 							#end
 						</tbody>

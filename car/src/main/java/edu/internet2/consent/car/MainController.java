@@ -1423,6 +1423,8 @@ public class MainController {
 				debugReturn.addObject("save-continue",CarUtility.getLocalComponent("save-continue"));
 				debugReturn.addObject("cancel",CarUtility.getLocalComponent("cancel"));
 				
+				debugReturn.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				debugReturn.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 				debugReturn.addObject("areason",areason);
 				
 				// And pass in the sconvo value, just in case
@@ -1868,6 +1870,8 @@ public class MainController {
 				CarUtility.locError("ERR0805",LogCriticality.error,CarUtility.exceptionStacktraceToString(ign));
 			}
 			// and after a best effort at updating, send the response onward
+			resultView.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			resultView.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 			return resultView;
 		}
 	}
