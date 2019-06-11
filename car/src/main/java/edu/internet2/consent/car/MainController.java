@@ -1425,6 +1425,8 @@ public class MainController {
 				
 				debugReturn.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
 				debugReturn.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
+				debugReturn.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
+
 				debugReturn.addObject("areason",areason);
 				
 				// And pass in the sconvo value, just in case
@@ -1872,6 +1874,8 @@ public class MainController {
 			// and after a best effort at updating, send the response onward
 			resultView.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
 			resultView.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
+			resultView.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
+
 			return resultView;
 		}
 	}
