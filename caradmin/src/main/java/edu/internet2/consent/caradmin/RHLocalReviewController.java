@@ -249,7 +249,10 @@ public class RHLocalReviewController {
 															"ii_metainfo_label",
 															"no_info_msg",
 															"property_label",
-															"missing_label"
+															"missing_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return retval;

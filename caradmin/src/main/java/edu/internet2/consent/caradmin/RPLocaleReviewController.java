@@ -348,7 +348,10 @@ public class RPLocaleReviewController {
 															"reason_label",
 															"optional_metainfo_label",
 															"no_optional_label",
-															"lang_report_heading"
+															"lang_report_heading",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return retval;

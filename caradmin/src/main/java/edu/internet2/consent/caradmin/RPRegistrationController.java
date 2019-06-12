@@ -1288,7 +1288,10 @@ public class RPRegistrationController {
 															"id_heading",
 															"disposition_label",
 															"source_item_label",
-															"rp_reason_label"
+															"rp_reason_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 		});
 		return retval;
 	}
@@ -1474,7 +1477,10 @@ public class RPRegistrationController {
 															"create_rp_label",
 															"rps_for_label",
 															"search_label",
-															"filter_label"
+															"filter_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return (retval);
@@ -1672,7 +1678,10 @@ public class RPRegistrationController {
 															"create_rp_label",
 															"rh_heading",
 															"rp_heading",
-															"total_label"
+															"total_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return(retval);

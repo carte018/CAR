@@ -579,7 +579,10 @@ public class EditMetaPolicyController {
 															"other_values_label",
 															"add_item_label",
 															"all_other_heading",
-															"update_policy_label"
+															"update_policy_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return retval;

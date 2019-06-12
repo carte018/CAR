@@ -426,7 +426,10 @@ public class AddMetaPolicyController {
 															"add_item_label",
 															"all_other_heading",
 															"create_policy_label",
-															"matching_label"});
+															"matching_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"});
 															
 		return retval;
 	}

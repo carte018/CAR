@@ -19,9 +19,10 @@
   <head>
           <link rel="stylesheet" type="text/css" href="/caradmin/resources/css/main.css">
   
-   <!-- <script rel="stylesheet" src="https://shib.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->
-   		<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>
-        <!--<script type="text/javascript" src="/caradmin/resources/js/jquery.min.js"></script>-->
+   
+   		<!--<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->
+   		
+        <script rel="stylesheet" src="/caradmin/resources/js/bundle.js"></script>
         <script type="text/javascript" src="/caradmin/resources/js/main.js"></script>
         
         #if($listsortingdnd)
@@ -31,16 +32,16 @@
 		<script src="/caradmin/resources/js/spin.min.js"></script>
 		#end
 		
-        <title>CAR Admin</title>
+        <title>$top_heading</title>
   </head>
 
   <body>
     <div id="header">
-      <div id="logo"><img src="https://shib.oit.duke.edu/idms-assets/dist/public/images/duke.png"></div>
-      <h1>CAR Admin</h1>
+      <div id="logo"><img src="$top_logo_url"></div>
+      <h1>$top_heading</h1>
 
       <div id="login-details">
-        $authuser&nbsp;&nbsp;<a href="$logouturl">sign out</a>
+        $authuser&nbsp;&nbsp;<a href="$logouturl">$sign_out</a>
       </div>
     </div>
 
@@ -61,11 +62,6 @@
               <li><a href="#">Style</a></li>
             </ul>
         </li>
-   <!--     <li><a href="/caradmin/orgpolicyview" #if($activetab=="policies")class="active-tab"#end>Policies</a>
-        	<ul class="dropdown-content">
-        		<li><a href="/caradmin/orgpolicyview/entityId/urn:mace:incommon:duke.edu"#if($activetab=="policies")class="active-tab"#end>Duke IDP (InCommon Federated)</a></li>
-        	</ul>
-        </li> -->
       </ul>
     </div>
     <div id="main">

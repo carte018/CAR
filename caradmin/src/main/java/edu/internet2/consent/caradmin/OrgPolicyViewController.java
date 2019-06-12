@@ -90,7 +90,10 @@ public class OrgPolicyViewController {
 		
 		CarAdminUtils.injectStrings(retval, new String[] { "rh_heading",
 															"opol_count_label",
-															"mpol_count_label"
+															"mpol_count_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return retval;
@@ -268,7 +271,10 @@ public class OrgPolicyViewController {
 															"all_values_label",
 															"unspecified_label",
 															"any_request_label",
-															"mpol_count_label"
+															"mpol_count_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return retval;

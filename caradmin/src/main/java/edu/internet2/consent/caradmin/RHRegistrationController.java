@@ -802,7 +802,10 @@ public class RHRegistrationController {
 															"properties_heading",
 															"add_item_label",
 															"add_item_heading",
-															"type_heading"
+															"type_heading",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 		});
 		return(retval);
 		
@@ -889,7 +892,10 @@ public class RHRegistrationController {
 															"dn_lang_label",
 															"description_label",
 															"descr_lang_label",
-															"create_rh_label"
+															"create_rh_label",
+															"top_heading",
+															"sign_out",
+															"top_logo_url"
 															
 		});
 		return(retval);

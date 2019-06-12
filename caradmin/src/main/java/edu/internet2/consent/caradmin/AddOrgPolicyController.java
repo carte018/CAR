@@ -423,7 +423,10 @@ public class AddOrgPolicyController {
 														"all_other_heading",
 														"create_policy_label",
 														"matching_label",
-														"new_orgpol_heading"
+														"new_orgpol_heading",
+														"top_heading",
+														"sign_out",
+														"top_logo_url"
 														
 		});
 		return retval;

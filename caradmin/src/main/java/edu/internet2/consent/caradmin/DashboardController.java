@@ -200,7 +200,10 @@ public class DashboardController {
 														  "opol_count_label",
 														  "mpol_count_label",
 														  "upol_count_label",
-														  "back_link"
+														  "back_link",
+														  "top_heading",
+														  "sign_out",
+														  "top_logo_url"
 		});
 		return retval;
 	}
