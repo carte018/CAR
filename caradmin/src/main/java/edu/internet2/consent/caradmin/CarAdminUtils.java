@@ -66,6 +66,11 @@ import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
+import edu.internet2.consent.informed.model.SupportedIIType;
+import edu.internet2.consent.informed.model.SupportedLanguage;
+import edu.internet2.consent.informed.model.SupportedRHType;
+import edu.internet2.consent.informed.model.SupportedRPType;
+import edu.internet2.consent.informed.model.SupportedUserType;
 import edu.internet2.consent.informed.model.ActivityStreamEntry;
 
 public class CarAdminUtils {
@@ -268,46 +273,281 @@ public class CarAdminUtils {
 	// one for support(ed|able) RP types, and one for support(ed|able) II types,
 	// and also support(ed|able) user types.
 	
-	// TODO:  Factor these out and make them configurable
 	public static ArrayList<String> getSupportedLanguages() {
-			// Return list of supported languages (eventually from some datbase config)
-			// for now hard-coded as english and spanish
+			// Return list of supported languages 
 			//
+			ArrayList<String> defval = new ArrayList<String>();
+			defval.add("en");
+			defval.add("es");
+			defval.add("de");
+			defval.add("fr");
+			
 			ArrayList<String> retval = new ArrayList<String>();
-			retval.add("en");
-			retval.add("es");
-			retval.add("de");
-			return retval;
+			ArrayList<SupportedLanguage> asl = new ArrayList<SupportedLanguage>();
+			
+			AdminConfig config = AdminConfig.getInstance();
+			
+			String informedhost = config.getProperty("caradmin.informed.hostname", true);
+			String informedport = config.getProperty("caradmin.informed.port", true);
+			
+			StringBuilder sb = new StringBuilder();
+
+			sb.append("/consent/v1/informed/supported/languages/"); 
+			
+			HttpClient httpClient = HttpClientBuilder.create().build();
+			HttpResponse response = null;
+			String rbody = null;
+			String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+			try {
+				response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+				rbody = CarAdminUtils.extractBody(response);
+				int status = CarAdminUtils.extractStatusCode(response);
+				if (status >= 300) {
+					try {
+						EntityUtils.consumeQuietly(response.getEntity());
+					} catch (Exception x) {
+						// ignore
+					}
+					return defval;
+				}
+				ObjectMapper om = new ObjectMapper();
+				asl = om.readValue(rbody, new TypeReference<List<SupportedLanguage>>(){});
+				
+				if (asl == null || asl.isEmpty()) {
+					// No returned values
+					return defval;
+				}
+				
+				for (SupportedLanguage sl : asl) {
+					retval.add(sl.getLang());
+				}
+				
+				return retval;
+			} catch (Exception e) {
+				return defval;
+			} finally {
+				HttpClientUtils.closeQuietly(response);
+				HttpClientUtils.closeQuietly(httpClient);
+			}
 	}
 	
 	public static ArrayList<String> getSupportedRHIDTypes() {
+		
+		ArrayList<String> defval = new ArrayList<String>();
+		defval.add("entityId");
+		
 		ArrayList<String> retval = new ArrayList<String>();
-		retval.add("entityId");
-		return retval;
+		ArrayList<SupportedRHType> asr = new ArrayList<SupportedRHType>();
+		
+		AdminConfig config = AdminConfig.getInstance();
+		
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/supported/rhtypes/"); 
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String rbody = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+			rbody = CarAdminUtils.extractBody(response);
+			int status = CarAdminUtils.extractStatusCode(response);
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+				}
+				return defval;
+			}
+			ObjectMapper om = new ObjectMapper();
+			asr = om.readValue(rbody, new TypeReference<List<SupportedRHType>>(){});
+			
+			if (asr == null || asr.isEmpty()) {
+				// No returned values
+				return defval;
+			}
+			
+			for (SupportedRHType sr : asr) {
+				retval.add(sr.getRhtype());
+			}
+			
+			return retval;
+		} catch (Exception e) {
+			return defval;
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
 	}
 	
 	public static ArrayList<String> getSupportedRPIDTypes() {
+		ArrayList<String> defval = new ArrayList<String>();
+		defval.add("entityId");
+		defval.add("extractId");
+		defval.add("requesterId");
+		
 		ArrayList<String> retval = new ArrayList<String>();
-		retval.add("entityId");
-		retval.add("extractId");
-		retval.add("requesterId");
-		return retval;
+		ArrayList<SupportedRPType> asr = new ArrayList<SupportedRPType>();
+		
+		AdminConfig config = AdminConfig.getInstance();
+		
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/supported/rptypes/"); 
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String rbody = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+			rbody = CarAdminUtils.extractBody(response);
+			int status = CarAdminUtils.extractStatusCode(response);
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+				}
+				return defval;
+			}
+			ObjectMapper om = new ObjectMapper();
+			asr = om.readValue(rbody, new TypeReference<List<SupportedRPType>>(){});
+			
+			if (asr == null || asr.isEmpty()) {
+				// No returned values
+				return defval;
+			}
+			
+			for (SupportedRPType sr : asr) {
+				retval.add(sr.getRptype());
+			}
+			
+			return retval;
+		} catch (Exception e) {
+			return defval;
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
 	}
 	
 	public static ArrayList<String> getSupportedIITypes() {
-			ArrayList<String> retval = new ArrayList<String>();
-			retval.add("attribute");
-			retval.add("operation");
-			retval.add("database_field");
+		ArrayList<String> defval = new ArrayList<String>();
+		defval.add("attribute");
+		defval.add("operation");
+		defval.add("database_field");
+		
+		ArrayList<String> retval = new ArrayList<String>();
+		ArrayList<SupportedIIType> asr = new ArrayList<SupportedIIType>();
+		
+		AdminConfig config = AdminConfig.getInstance();
+		
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/supported/iitypes/"); 
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String rbody = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+			rbody = CarAdminUtils.extractBody(response);
+			int status = CarAdminUtils.extractStatusCode(response);
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+				}
+				return defval;
+			}
+			ObjectMapper om = new ObjectMapper();
+			asr = om.readValue(rbody, new TypeReference<List<SupportedIIType>>(){});
+			
+			if (asr == null || asr.isEmpty()) {
+				// No returned values
+				return defval;
+			}
+			
+			for (SupportedIIType sr : asr) {
+				retval.add(sr.getIitype());
+			}
+			
 			return retval;
+		} catch (Exception e) {
+			return defval;
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
 	}
 	
 	
 	public static ArrayList<String> getSupportedUserTypes() {
-			ArrayList<String> retval = new ArrayList<String>();
-			retval.add("eduPersonPrincipalName");
-			retval.add("duDukeID");
+		ArrayList<String> defval = new ArrayList<String>();
+		defval.add("eduPersonPrincipalName");
+		defval.add("duDukeID");
+		
+		ArrayList<String> retval = new ArrayList<String>();
+		ArrayList<SupportedUserType> asr = new ArrayList<SupportedUserType>();
+		
+		AdminConfig config = AdminConfig.getInstance();
+		
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/supported/utypes/"); 
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String rbody = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+			rbody = CarAdminUtils.extractBody(response);
+			int status = CarAdminUtils.extractStatusCode(response);
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+				}
+				return defval;
+			}
+			ObjectMapper om = new ObjectMapper();
+			asr = om.readValue(rbody, new TypeReference<List<SupportedUserType>>(){});
+			
+			if (asr == null || asr.isEmpty()) {
+				// No returned values
+				return defval;
+			}
+			
+			for (SupportedUserType sr : asr) {
+				retval.add(sr.getUtype());
+			}
+			
 			return retval;
+		} catch (Exception e) {
+			return defval;
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
 	}
 	
 	public static String buildAuthorizationHeader(AdminConfig config, String service) {

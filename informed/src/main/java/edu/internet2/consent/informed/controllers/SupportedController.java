@@ -47,6 +47,7 @@ import edu.internet2.consent.informed.model.SupportedIIType;
 import edu.internet2.consent.informed.model.SupportedLanguage;
 import edu.internet2.consent.informed.model.SupportedRHType;
 import edu.internet2.consent.informed.model.SupportedRPType;
+import edu.internet2.consent.informed.model.SupportedUserType;
 import edu.internet2.consent.informed.util.InformedUtility;
 
 @Path("/supported")
@@ -97,6 +98,20 @@ public class SupportedController {
 		return buildResponse(Status.OK,"");
 	}
 	
+	@OPTIONS
+	@Path("/utypes/")
+	public Response optionsUsertypes(@Context HttpServletRequest request, @Context HttpHeaders headers)
+	{
+		return buildResponse(Status.OK,"");
+	}
+	@OPTIONS
+	@Path("/utypes/{utype}")
+	public Response optionsUsertypes2(@Context HttpServletRequest request, @Context HttpHeaders headers) 
+	{
+		return buildResponse(Status.OK,"");
+	}
+	
+	
 	
 	@OPTIONS
 	@Path("/rhtypes/")
@@ -129,6 +144,227 @@ public class SupportedController {
 		return buildResponse(Status.OK,"");
 	}
 	
+	// Get list of supported user types
+	@GET
+	@Path("/utypes/")
+	public Response getSupportedUtypes(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity)
+	{
+		// init
+		@SuppressWarnings("unused")
+		InformedConfig config = null;
+		try {
+			config = InformedUtility.init("getSupportedUtypes", request,  headers, null);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR004", LogCriticality.error);
+		}
+		
+		// Hibernate sesssion
+		
+		Session sess = InformedUtility.getHibernateSession();
+		if (sess == null) {
+			return InformedUtility.locError(500,  "ERR0018", LogCriticality.error);
+		}
+		
+		// Get the entire list
+		
+		Query<SupportedUserType> retQuery = sess.createQuery("from SupportedUserType",SupportedUserType.class);
+		List<SupportedUserType> utl = retQuery.list();
+		
+		if (utl == null || utl.isEmpty()) {
+			sess.close();
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
+		} else {
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				return buildResponse(Status.OK,mapper.writeValueAsString(utl));
+			} catch (Exception e) {
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+			} finally {
+				sess.close();
+			}
+		}
+	}
+	
+	@GET
+	@Path("/utypes/{utype}")
+	public Response getSingularSupportedUserType(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("utype") String utype)
+	{
+		// init
+		@SuppressWarnings("unused")
+		InformedConfig config = null;
+		try {
+			config = InformedUtility.init("getSupportedUtypes", request,  headers, null);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR004", LogCriticality.error);
+		}
+		
+		// Hibernate sesssion
+		
+		Session sess = InformedUtility.getHibernateSession();
+		if (sess == null) {
+			return InformedUtility.locError(500,  "ERR0018", LogCriticality.error);
+		}
+		
+		// Get the entire list
+		
+		Query<SupportedUserType> retQuery = sess.createQuery("from SupportedUserType where utype = :utype",SupportedUserType.class);
+		retQuery.setParameter("utype", utype);
+		
+		List<SupportedUserType> utl = retQuery.list();
+		
+		if (utl == null || utl.isEmpty()) {
+			sess.close();
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
+		} else {
+			try {
+				ObjectMapper mapper = new ObjectMapper();
+				return buildResponse(Status.OK,mapper.writeValueAsString(utl.get(0)));
+			} catch (Exception e) {
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+			} finally {
+				sess.close();
+			}
+		}
+	}
+	
+	// Matching POST
+	@POST
+	@Path("/utypes/")
+	public Response postSupportedUserTypes(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity)
+	{
+		// init first
+		@SuppressWarnings("unused")
+		InformedConfig config = null;
+		try {
+			config = InformedUtility.init("postSupportedUserTypes", request, headers, null);
+		} catch (Exception e) {
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+		}
+
+		// parse out the input into an instance
+		ObjectMapper om = new ObjectMapper();
+		SupportedUserType sl = null;
+		try {
+			sl = om.readValue(entity,SupportedUserType.class);
+		} catch (JsonParseException e) {
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
+		} catch (JsonMappingException e) {
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.info);
+		}
+		
+		// Get a Hibernate session
+		Session sess = InformedUtility.getHibernateSession();
+		if (sess == null) {
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+		}
+		
+		Query<SupportedUserType> checkQuery = sess.createQuery("from SupportedUserType",SupportedUserType.class);
+		List<SupportedUserType> als = checkQuery.list();
+		
+		if (als.contains(sl)) {
+			return InformedUtility.locError(409, "ERR0067",LogCriticality.info);
+		}
+	
+		// Create anew
+		Transaction tx = sess.beginTransaction();
+		
+		try {
+			sess.save(sl);
+			tx.commit();
+			sess.close();
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException("Transaction rollback: ",e);
+		} finally {
+			if (sess.isOpen()) {
+				sess.close();
+			}
+		}
+		
+		// And return
+		try {
+			return buildResponse(Status.OK,sl.toJSON());
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+		}
+	}
+	
+	// Matching PUT
+	@PUT
+	@Path("/utypes/{utype}") 
+	public Response putSupportedUserTypes(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("utype") String utype) 
+	{
+		// init first
+		@SuppressWarnings("unused")
+		InformedConfig config = null;
+		try {
+			config = InformedUtility.init("putSupportedUserTypes", request, headers, null);
+		} catch (Exception e) {
+			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+		}
+
+		// parse out the input into an instance
+		ObjectMapper om = new ObjectMapper();
+		SupportedUserType sl = null;
+		try {
+			sl = om.readValue(entity,SupportedUserType.class);
+		} catch (JsonParseException e) {
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
+		} catch (JsonMappingException e) {
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+		}
+		
+		
+		// Get a Hibernate session
+		Session sess = InformedUtility.getHibernateSession();
+		if (sess == null) {
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+		}
+		
+		// Create transaction
+		Transaction tx = sess.beginTransaction();
+		
+		Query<SupportedUserType> getQuery = sess.createQuery("from SupportedUserType where utype = :utype",SupportedUserType.class);
+		if (getQuery != null) {
+			getQuery.setParameter("utype", utype);
+		}
+		
+		List<SupportedUserType> als = getQuery.list();
+		
+		try {
+			if (! als.contains(sl)) {
+			// 	return InformedUtility.locError(404, "ERR0068");
+			// 	In this case, a PUT will result in POST behavior of the object does not already exist
+			// 	Save the input object as a new object
+				sess.save(sl);
+				tx.commit();
+				sess.close();
+			} else {
+			// 	Update the object
+				als.get(0).setUtype(sl.getUtype());
+				als.get(0).setDescription(sl.getDescription());
+				tx.commit();
+				sess.close();  // there is no versioning here
+			}
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException("Transaction rollback",e);
+		} finally {
+			if (sess.isOpen())
+				sess.close();
+		}
+			
+		// And return
+		try {
+			return buildResponse(Status.OK,sl.toJSON());
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+		}
+	}
 	
 	// Get for list of supported languages
 	@GET
