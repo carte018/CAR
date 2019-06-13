@@ -197,6 +197,7 @@ public class IcmPolicyPrecedenceController {
 		}
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@PATCH
 	@Path("/")
 	public Response patchRoot(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity) {
@@ -280,14 +281,16 @@ public class IcmPolicyPrecedenceController {
 			if (! forward) {
 				switch(pi.getOperation()) {
 				case "moveAfter":
-					Query<IcmReturnedPolicy> afterUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority + 1 where o.priority > :targetp and o.priority < :sourcep",IcmReturnedPolicy.class);
+					//Query<IcmReturnedPolicy> afterUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority + 1 where o.priority > :targetp and o.priority < :sourcep",IcmReturnedPolicy.class);
+					Query afterUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority + 1 where o.priority > :targetp and o.priority < :sourcep");
 					afterUpdate.setParameter("targetp",targetPriority);
 					afterUpdate.setParameter("sourcep",  sourcePriority);
 					afterUpdate.executeUpdate();
 					source.setPriority(targetPriority + 1);
 					break;
 				case "moveBefore":
-					Query<IcmReturnedPolicy> beforeUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority + 1 where o.priority >= :targetp and o.priority < :sourcep",IcmReturnedPolicy.class);
+					//Query<IcmReturnedPolicy> beforeUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority + 1 where o.priority >= :targetp and o.priority < :sourcep",IcmReturnedPolicy.class);
+					Query beforeUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority + 1 where o.priority >= :targetp and o.priority < :sourcep");
 					beforeUpdate.setParameter("targetp",  targetPriority);
 					beforeUpdate.setParameter("sourcep",  sourcePriority);
 					beforeUpdate.executeUpdate();
@@ -302,14 +305,16 @@ public class IcmPolicyPrecedenceController {
 				// other direction
 				switch(pi.getOperation()) {
 				case "moveAfter":
-					Query<IcmReturnedPolicy> afterUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority - 1 where o.priority <= :targetp and o.priority > :sourcep",IcmReturnedPolicy.class);
+					//Query<IcmReturnedPolicy> afterUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority - 1 where o.priority <= :targetp and o.priority > :sourcep",IcmReturnedPolicy.class);
+					Query afterUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority - 1 where o.priority <= :targetp and o.priority > :sourcep");
 					afterUpdate.setParameter("targetp",  targetPriority);
 					afterUpdate.setParameter("sourcep",  sourcePriority);
 					afterUpdate.executeUpdate();
 					source.setPriority(targetPriority);
 					break;
 				case "moveBefore":
-					Query<IcmReturnedPolicy> beforeUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority - 1 where o.priority < :targetp and o.priority > :sourcep",IcmReturnedPolicy.class);
+					//Query<IcmReturnedPolicy> beforeUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority - 1 where o.priority < :targetp and o.priority > :sourcep",IcmReturnedPolicy.class);
+					Query beforeUpdate = sess.createQuery("update IcmReturnedPolicy o set o.priority = o.priority - 1 where o.priority < :targetp and o.priority > :sourcep");
 					beforeUpdate.setParameter("targetp", targetPriority);
 					beforeUpdate.setParameter("sourcep", sourcePriority);
 					beforeUpdate.executeUpdate();

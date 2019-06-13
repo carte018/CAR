@@ -219,6 +219,7 @@ public class OrgPolicyPrecedenceController {
 			}
 		}
 		
+		@SuppressWarnings("rawtypes")
 		@PATCH
 		@Path("/")
 		public Response patchRoot(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity) {
@@ -322,7 +323,8 @@ public class OrgPolicyPrecedenceController {
 				switch(pi.getOperation()) {
 				case "moveAfter":
 					// Perform a moveAfter operation
-					Query<OrgReturnedPolicy> afterUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority + 1 where o.priority > :targetpriority and o.priority < :sourcepriority",OrgReturnedPolicy.class);
+					//Query<OrgReturnedPolicy> afterUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority + 1 where o.priority > :targetpriority and o.priority < :sourcepriority",OrgReturnedPolicy.class);
+					Query afterUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority + 1 where o.priority > :targetpriority and o.priority < :sourcepriority");
 					afterUpdate.setParameter("targetpriority", targetPriority);
 					afterUpdate.setParameter("sourcepriority",  sourcePriority);
 					afterUpdate.executeUpdate();
@@ -330,7 +332,8 @@ public class OrgPolicyPrecedenceController {
 					break;
 				case "moveBefore":
 					// Perform a moveBefore operation
-					Query<OrgReturnedPolicy> beforeUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority + 1 where o.priority >= :targetpriority and o.priority < :sourcepriority",OrgReturnedPolicy.class);
+					//Query<OrgReturnedPolicy> beforeUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority + 1 where o.priority >= :targetpriority and o.priority < :sourcepriority",OrgReturnedPolicy.class);
+					Query beforeUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority + 1 where o.priority >= :targetpriority and o.priority < :sourcepriority");
 					beforeUpdate.setParameter("targetpriority", targetPriority);
 					beforeUpdate.setParameter("sourcepriority",  sourcePriority);
 					beforeUpdate.executeUpdate();
@@ -347,7 +350,8 @@ public class OrgPolicyPrecedenceController {
 					switch(pi.getOperation()) {
 					case "moveAfter":
 						// Perform a moveAfter operation
-						Query<OrgReturnedPolicy> afterUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority - 1 where o.priority <= :targetpriority and o.priority > :sourcepriority",OrgReturnedPolicy.class);
+						//Query<OrgReturnedPolicy> afterUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority - 1 where o.priority <= :targetpriority and o.priority > :sourcepriority",OrgReturnedPolicy.class);
+						Query afterUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority - 1 where o.priority <= :targetpriority and o.priority > :sourcepriority");
 						afterUpdate.setParameter("targetpriority", targetPriority);
 						afterUpdate.setParameter("sourcepriority",  sourcePriority);
 						afterUpdate.executeUpdate();
@@ -355,7 +359,8 @@ public class OrgPolicyPrecedenceController {
 						break;
 					case "moveBefore":
 						// Perform a moveBefore operation
-						Query<OrgReturnedPolicy> beforeUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority - 1 where o.priority < :targetpriority and o.priority > :sourcepriority",OrgReturnedPolicy.class);
+						//Query<OrgReturnedPolicy> beforeUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority - 1 where o.priority < :targetpriority and o.priority > :sourcepriority",OrgReturnedPolicy.class);
+						Query beforeUpdate = sess.createQuery("update OrgReturnedPolicy o set o.priority = o.priority - 1 where o.priority < :targetpriority and o.priority > :sourcepriority");
 						beforeUpdate.setParameter("targetpriority", targetPriority);
 						beforeUpdate.setParameter("sourcepriority",  sourcePriority);
 						beforeUpdate.executeUpdate();

@@ -1207,7 +1207,7 @@ public class CarAdminUtils {
 			throw new RuntimeException(e);
 		}
 		
-		json = "=" + json + "]";  // upconvert to array
+		json = "[" + json + "]";  // upconvert to array
 		
 		HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpResponse response = null;
