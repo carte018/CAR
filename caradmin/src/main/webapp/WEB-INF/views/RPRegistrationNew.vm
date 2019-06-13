@@ -34,6 +34,8 @@
 					<input type="hidden" name="formname" value="newrpform">
 					<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
 					<input type="hidden" id="descriptioncount" name="descriptioncount" value="1">
+					<input type="hidden" name="conversation" value="$sconvo">
+                	<input type="hidden" name="csrftoken" value="$csrftoken">
 					<div class="form-set">
 						<label for="rhidentification">$rh_heading<span class="required">*</span></label>
 						<select name="rhidentification" style="max-width: 95%">

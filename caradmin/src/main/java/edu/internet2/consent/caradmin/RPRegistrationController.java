@@ -21,7 +21,10 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +51,17 @@ import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
 @Controller
 public class RPRegistrationController {
 	
+    private String sconvo;
+    private int convo;
+
+
+    private String generateCSRFToken() {
+            String foo = RandomStringUtils.random(32,true,true);
+            String bar = Base64.encodeBase64URLSafeString(foo.getBytes());
+            return bar;
+    }
+
+
 	@RequestMapping(value="/rpdelregistration/{rhtype}/{rhid}/{rptype}/{rpid}",method=RequestMethod.POST)
 	public ModelAndView handlePostDeleteRPRegistration(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhid") String rhidin, @PathVariable("rptype") String rptype, @PathVariable("rpid") String rpidin) {
 		ModelAndView retval = new ModelAndView("redirect:/rpregistration/?state=1&component=rparchive");
@@ -58,6 +72,22 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Validate CSRF protection
+        // First, get the conversation number
+        sconvo = req.getParameter("conversation");
+        if (sconvo == null) {
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
+                return err;
+        }
+        HttpSession sess = req.getSession(false);
+        if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
+                // CSRF failure
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
+                return err;
+        }
+
 		String rhid = CarAdminUtils.idUnEscape(rhidin);
 		String rpid = CarAdminUtils.idUnEscape(rpidin);
 		
@@ -97,6 +127,22 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Validate CSRF protection
+        // First, get the conversation number
+        sconvo = req.getParameter("conversation");
+        if (sconvo == null) {
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
+                return err;
+        }
+        HttpSession sess = req.getSession(false);
+        if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
+                // CSRF failure
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
+                return err;
+        }
+
 		if (req.getParameter("formname") != null && req.getParameter("formname").equalsIgnoreCase("rpdisplayname_edit_form")) {
 			// Update the displayname InternationalizedString value
 			InternationalizedString newval = new InternationalizedString();
@@ -1092,6 +1138,33 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Establish session for CSRF protection
+        HttpSession sess = req.getSession(true);
+        String csrftoken = generateCSRFToken();
+        // Establish a conversation numer
+        if (req.getParameter("conversation") != null) {
+                sconvo = (String) req.getParameter("conversation");
+        } else {
+                if (sess.getAttribute("maxconv") != null) {
+                        convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                } else {
+                        // start at 0
+                        convo = 0;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                }
+        }
+        sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+        sess.setMaxInactiveInterval(1200);  // 20 minutes max
+
+        // Marshall injections for the page
+
+        // CSRF protection
+        retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+        retval.addObject("sconvo",sconvo);  // for formulating URLs
+
 		// Grab the RH metainformation for the RH in question
 		ReturnedRHMetaInformation rhmi = CarAdminUtils.getResourceHolderMetaInformation(rhtype,rhid);
 		String lang = req.getLocale().getLanguage();
@@ -1306,6 +1379,22 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Validate CSRF protection
+        // First, get the conversation number
+        sconvo = req.getParameter("conversation");
+        if (sconvo == null) {
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
+                return err;
+        }
+        HttpSession sess = req.getSession(false);
+        if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
+                // CSRF failure
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
+                return err;
+        }
+
 		ReturnedRPMetaInformation rpmi = new ReturnedRPMetaInformation();
 		
 		RHIdentifier rhi = new RHIdentifier();
@@ -1389,6 +1478,33 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Establish session for CSRF protection
+        HttpSession sess = req.getSession(true);
+        String csrftoken = generateCSRFToken();
+        // Establish a conversation numer
+        if (req.getParameter("conversation") != null) {
+                sconvo = (String) req.getParameter("conversation");
+        } else {
+                if (sess.getAttribute("maxconv") != null) {
+                        convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                } else {
+                        // start at 0
+                        convo = 0;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                }
+        }
+        sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+        sess.setMaxInactiveInterval(1200);  // 20 minutes max
+
+        // Marshall injections for the page
+
+        // CSRF protection
+        retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+        retval.addObject("sconvo",sconvo);  // for formulating URLs
+
 		// Here, we've been handed an RH and asked to return a page listing all the RPs for that 
 		// RH, along with a way to add a new one from scratch.
 		// We only include the information necessary to list the RP at this point -- click-thru for editing data about it
@@ -1497,6 +1613,33 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Establish session for CSRF protection
+        HttpSession sess = req.getSession(true);
+        String csrftoken = generateCSRFToken();
+        // Establish a conversation numer
+        if (req.getParameter("conversation") != null) {
+                sconvo = (String) req.getParameter("conversation");
+        } else {
+                if (sess.getAttribute("maxconv") != null) {
+                        convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                } else {
+                        // start at 0
+                        convo = 0;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                }
+        }
+        sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+        sess.setMaxInactiveInterval(1200);  // 20 minutes max
+
+        // Marshall injections for the page
+
+        // CSRF protection
+        retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+        retval.addObject("sconvo",sconvo);  // for formulating URLs
+
 		// For RP registration main page, return a queue of links to RHs whose RPs can be regsitered
 		// RP registration is then a per-RH operation with /rpregistration/{type}/{id}
 		//
@@ -1535,6 +1678,22 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Validate CSRF protection
+        // First, get the conversation number
+        sconvo = req.getParameter("conversation");
+        if (sconvo == null) {
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
+                return err;
+        }
+        HttpSession sess = req.getSession(false);
+        if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
+                // CSRF failure
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
+                return err;
+        }
+
 		// Add the RP to the list
 		ReturnedRPMetaInformation rpmi = new ReturnedRPMetaInformation();
 		RHIdentifier rhi = new RHIdentifier();
@@ -1589,6 +1748,33 @@ public class RPRegistrationController {
 			return eval;
 		}
 		
+        // Establish session for CSRF protection
+        HttpSession sess = req.getSession(true);
+        String csrftoken = generateCSRFToken();
+        // Establish a conversation numer
+        if (req.getParameter("conversation") != null) {
+                sconvo = (String) req.getParameter("conversation");
+        } else {
+                if (sess.getAttribute("maxconv") != null) {
+                        convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                } else {
+                        // start at 0
+                        convo = 0;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                }
+        }
+        sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+        sess.setMaxInactiveInterval(1200);  // 20 minutes max
+
+        // Marshall injections for the page
+
+        // CSRF protection
+        retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+        retval.addObject("sconvo",sconvo);  // for formulating URLs
+
 		ArrayList<ReturnedRHMetaInformation> rhmia = CarAdminUtils.getAllDefinedResourceHolders();
 		
 		// Iterate over the RHs and populate an injectable list

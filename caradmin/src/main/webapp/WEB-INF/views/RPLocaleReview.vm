@@ -70,6 +70,8 @@
 	<input type="hidden" name="rpid" value="$rrpmi.getRpidentifier().getRpid()">
 	<input type="hidden" name="rptype" value="$rrpmi.getRpidentifier().getRptype()">
 	<input type="hidden" name="defaultlanguage" value="$lang">
+	<input type="hidden" name="conversation" value="$sconvo">
+    <input type="hidden" name="csrftoken" value="$csrftoken">
 	
 	<table id="rpmedittable" class="display full-width hidden wrappingtable">
 		<thead>
@@ -150,6 +152,8 @@
 		<input type="hidden" name="rptype" value="$rrpmi.getRpidentifier().getRptype()">
 		<input type="hidden" name="rpid" value="$rrpmi.getRpidentifier().getRpid()">
 		<input type="hidden" name="defaultlanguage" value="$lang">
+		<input type="hidden" name="conversation" value="$sconvo">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
 		
 		<table id="rpriedittable" class="display full-width hidden wrappingtable">
 			<thead>
@@ -229,6 +233,8 @@
 		<input type="hidden" name="rptype" value="$rrpmi.getRpidentifier().getRptype()">
 		<input type="hidden" name="rpid" value="$rrpmi.getRpidentifier().getRpid()">
 		<input type="hidden" name="defaultlanguage" value="$lang">
+		<input type="hidden" name="conversation" value="$sconvo">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
 		
 		<table id="rpoiedittable" class="display full-width hidden wrappingtable">
 			<thead>

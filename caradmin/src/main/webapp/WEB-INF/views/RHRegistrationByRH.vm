@@ -15,6 +15,8 @@
 
  *#
 	<form id="delete_rh_form" method="POST" action="/caradmin/delregistration/$injectedrhlist.get(0).getRhtype()/$CarAdminUtils.idEscape($injectedrhlist.get(0).getRhidentifier())/">
+	 <input type="hidden" name="conversation" value="$sconvo">
+     <input type="hidden" name="csrftoken" value="$csrftoken">
 	</form>
 	
 	#if($successmsg) 
@@ -98,11 +100,13 @@
 									<input type="hidden" name="is_delete" id="is_delete_$dlang" value="false">
 									<input type="hidden" name="formname" value="form_${dlang}_edit">
 									<input type="hidden" name="rhtype" value="$x.getRhtype()">
-									<input type="hidden" name="rhid" value="$x.getRhidentifier()">							
+									<input type="hidden" name="rhid" value="$x.getRhidentifier()">	
+									<input type="hidden" name="conversation" value="$sconvo">
+                					<input type="hidden" name="csrftoken" value="$csrftoken">						
 									<h3><a href="#" class="langtoggle" id="h3_$dlang">$dlang</a></h3>
 									<div class="hidden" id="div_rh_h3_$dlang">
 										<div class="form-set">
-											<label for="displayname">$displaynmame_label</label>
+											<label for="displayname">$displayname_label</label>
 											#if($displayhash.get($dlang))
 												<input type="text" name="displayname" value="$displayhash.get($dlang)">
 											#else
@@ -135,6 +139,8 @@
 								<input type="hidden" name="formname" value="form_rhlang_add">
 								<input type="hidden" name="rhtype" value="$x.getRhtype()">
 								<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+								<input type="hidden" name="conversation" value="$sconvo">
+                				<input type="hidden" name="csrftoken" value="$csrftoken">
 								<h3>Add a Language</h3>
 								<div class="form-set">
 									<label for="lang">Language</label>
@@ -177,6 +183,8 @@
 				<input type="hidden" name="formname" value="iiform_$itype">
 				<input type="hidden" name="rhtype" value="$x.getRhtype()">
 				<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+				<input type="hidden" name="conversation" value="$sconvo">
+                <input type="hidden" name="csrftoken" value="$csrftoken">
 
 						#set($ihead=$itype.substring(0,1).toUpperCase()+$itype.substring(1)+"s")
 						#if($current && ! $current.isEmpty())
@@ -318,6 +326,8 @@
 									<input type="hidden" name="formname" value="form-add-ii-$itype">
 									<input type="hidden" name="rhtype" value="$x.getRhtype()">
 									<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+									<input type="hidden" name="conversation" value="$sconvo">
+                					<input type="hidden" name="csrftoken" value="$csrftoken">
 									<h3>Add $itype</h3>
 									<div class="form-set">
 										<label for="iiid">$id_heading</label>
@@ -401,6 +411,8 @@
 		<input type="hidden" name="formname" value="additemform">
 		<input type="hidden" name="rhtype" value="$x.getRhtype()">
 		<input type="hidden" name="rhid" value="$x.getRhidentifier()">
+		<input type="hidden" name="conversation" value="$sconvo">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
 		<table style="width:100%, vertical-align: top;">
 			<tbody>
 				<tr>

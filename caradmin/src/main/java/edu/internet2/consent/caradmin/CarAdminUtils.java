@@ -1193,7 +1193,7 @@ public class CarAdminUtils {
 		
 		AdminConfig config = AdminConfig.getInstance();
 		String icmhost = config.getProperty("caradmin.icm.hostname", true);
-		String icmport = config.getProperty("cardmin.icm.port",true);
+		String icmport = config.getProperty("caradmin.icm.port",true);
 		
 		StringBuilder sb = new StringBuilder();
 		
@@ -1461,7 +1461,7 @@ public class CarAdminUtils {
 	public static void archiveOrgPolicy(RHIdentifier rhi, String baseid) {
 		AdminConfig config = AdminConfig.getInstance();
 		String icmhost = config.getProperty("caradmin.icm.hostname", true);
-		String icmport = config.getProperty("caradin.icm.port", true);
+		String icmport = config.getProperty("caradmin.icm.port", true);
 		
 		StringBuilder sb = new StringBuilder();
 

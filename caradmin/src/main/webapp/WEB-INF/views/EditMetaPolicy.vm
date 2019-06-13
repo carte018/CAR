@@ -39,6 +39,9 @@
 
 	<form id="updatempform" method="POST" action="#">
 	
+	 	<input type="hidden" name="conversation" value="$sconvo">
+     	<input type="hidden" name="csrftoken" value="$csrftoken">
+	
 		<input type="hidden" name="formname" value="editmpform">
 		<input type="hidden" name="policyid" value="$policytoedit.getPolicyMetaData().getPolicyId().getBaseId()">
 		<input type="hidden" name="rhtype" value="$policytoedit.getPolicy().getResourceHolderId().getRHType()">

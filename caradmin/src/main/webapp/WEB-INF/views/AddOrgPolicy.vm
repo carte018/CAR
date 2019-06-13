@@ -39,6 +39,9 @@
 	<form id="newopform" method="POST" action="#">
 	
 		<input type="hidden" name="formname" value="newopform">
+		<input type="hidden" name="conversation" value="$sconvo">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
+		
 	
 		<div class="content-section">
 			<div class="form-set">

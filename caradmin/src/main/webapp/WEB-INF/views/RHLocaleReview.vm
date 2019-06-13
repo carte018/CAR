@@ -68,7 +68,9 @@
 	<input type="hidden" name="formname" value="rhmeditform">
 	<input type="hidden" name="rhtype" value="$rhmetainfo.getRhidentifier().getRhtype()">
 	<input type="hidden" name="rhid" value="$rhmetainfo.getRhidentifier().getRhid()">
-	
+	<input type="hidden" name="conversation" value="$sconvo">
+    <input type="hidden" name="csrftoken" value="$csrftoken">
+    
 	<table id="rhmedittable" class="display full-width hidden">
 		<thead>
 			<tr>
@@ -165,7 +167,8 @@
 		<input type="hidden" name="formname" value="rhieditform">
 		<input type="hidden" name="rhtype" value="$rhmetainfo.getRhidentifier().getRhtype()">
 		<input type="hidden" name="rhid" value="$rhmetainfo.getRhidentifier().getRhid()">
-		
+		<input type="hidden" name="conversation" value="$sconvo">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
 		<table id="rhiedittable" class="display full-width hidden">
 			<thead>
 				<tr>

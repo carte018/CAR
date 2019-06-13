@@ -43,7 +43,9 @@
 		<input type="hidden" name="policyid" value="$policytoedit.getPolicyMetaData().getPolicyId().getBaseId()">
 		<input type="hidden" name="rhtype" value="$policytoedit.getPolicy().getResourceHolderId().getRHType()">
 		<input type="hidden" name="rhid" value="$policytoedit.getPolicy().getResourceHolderId().getRHValue()">
-		
+		<input type="hidden" name="conversation" value="$sconvo">
+        <input type="hidden" name="csrftoken" value="$csrftoken">
+                                                                   
 		<div class="content-section">
 			<div class="form-set">
 				<h2>$policy_descr_label</h2>

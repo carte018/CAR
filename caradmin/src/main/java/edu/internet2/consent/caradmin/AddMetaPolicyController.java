@@ -22,7 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,6 +60,16 @@ import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
 @Controller
 public class AddMetaPolicyController {
 
+	private String sconvo;
+	private int convo;
+	
+	
+	private String generateCSRFToken() {
+		String foo = RandomStringUtils.random(32,true,true);
+		String bar = Base64.encodeBase64URLSafeString(foo.getBytes());
+		return bar;
+	}
+	
 	@RequestMapping(value="/addmetapolicy/{rhtype}/{rhid:.+}",method=RequestMethod.POST)
 	public ModelAndView handlePostAddMetaPolicy(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhid") String rhidin) {
 		String returl = "redirect:/orgpolicyview/"+rhtype+"/"+rhidin;
@@ -66,6 +79,22 @@ public class AddMetaPolicyController {
 			ModelAndView eval = new ModelAndView("errorPage");
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
+		}
+		
+		// Validate CSRF protection
+		// First, get the conversation number
+		sconvo = req.getParameter("conversation");
+		if (sconvo == null) {
+			ModelAndView err = new ModelAndView("errorPage");
+			err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
+			return err;
+		}
+		HttpSession sess = req.getSession(false);
+		if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
+			// CSRF failure
+			ModelAndView err = new ModelAndView("errorPage");
+			err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
+			return err;
 		}
 		
 		if (req.getParameter("formname") != null && req.getParameter("formname").equals("newopform")) {
@@ -357,6 +386,33 @@ public class AddMetaPolicyController {
 			}
 			typeidmap.put(type,val);
 		}
+		
+		// Establish session for CSRF protection
+		HttpSession sess = req.getSession(true);
+		String csrftoken = generateCSRFToken();
+		// Establish a conversation numer
+		if (req.getParameter("conversation") != null) {
+			sconvo = (String) req.getParameter("conversation");
+		} else {
+			if (sess.getAttribute("maxconv") != null) {
+				convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+				sconvo = String.valueOf(convo);
+				sess.setAttribute("maxconv", sconvo);
+			} else {
+				// start at 0
+				convo = 0;
+				sconvo = String.valueOf(convo);
+				sess.setAttribute("maxconv", sconvo);
+			}
+		}
+		sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+		sess.setMaxInactiveInterval(1200);  // 20 minutes max
+		
+		// Marshall injections for the page
+		
+		// CSRF protection
+		retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+		retval.addObject("sconvo",sconvo);  // for formulating URLs
 		
 		ReturnedRHMetaInformation rhmi = CarAdminUtils.getResourceHolderMetaInformation(rhtype, rhid);
 		

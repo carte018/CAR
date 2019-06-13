@@ -32,6 +32,8 @@
 		<div class="content-section">
 			<h2>$new_rh_heading</h2>
 			<form id="newrhform" method="POST" action="#">
+				<input type="hidden" name="conversation" value="$sconvo">
+                <input type="hidden" name="csrftoken" value="$csrftoken">
 			<div class="form-set">
 				<label for="rhid">$id_heading <span class="required">*</span></label>
 				<label for="rhtype" class="visually-hidden">$rh_type_label</label>

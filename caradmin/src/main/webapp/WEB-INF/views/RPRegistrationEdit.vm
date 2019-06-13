@@ -17,6 +17,8 @@
 		<h1>$rp_heading: $rpdisplayname ($rpmi.getRpidentifier().getRptype() / $rpmi.getRpidentifier().getRpid())</h1>
 		
 		<form id="delregistration-form" method="POST" action="/caradmin/rpdelregistration/$rpmi.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rpmi.getRhidentifier().getRhid())/$rpmi.getRpidentifier().getRptype()/$CarAdminUtils.idEscape($rpmi.getRpidentifier().getRpid())">
+		       <input type="hidden" name="conversation" value="$sconvo">
+               <input type="hidden" name="csrftoken" value="$csrftoken">
 		</form>
 		
 		#if($successmsg)
@@ -82,6 +84,9 @@
  						<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
  						<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
  						<input type="hidden" name="formname" value="ic_edit_form">
+ 						<input type="hidden" name="conversation" value="$sconvo">
+               			<input type="hidden" name="csrftoken" value="$csrftoken">
+ 						
  						<div class="form-set">
 		        			<label for="iconurl">$icon_label</label>
 		        			#if($rpmi.getIconurl() && $rpmi.getIconurl().length() > 0)
@@ -151,6 +156,9 @@
  							<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
  							<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
  							<input type="hidden" name="formname" value="rppropertiesform">
+ 							<input type="hidden" name="conversation" value="$sconvo">
+                			<input type="hidden" name="csrftoken" value="$csrftoken">
+ 							
  							#set($rppropcnt=$rpmi.getRpproperties().size())
  							<input type="hidden" id="id_rppropertycount" name="rppropertycount" value="$rppropcnt">
  							#set($icnt=0)
@@ -218,6 +226,9 @@
 									<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
 									<input type="hidden" name="rhtype" value="$rpmi.getRhidentifier().getRhtype()">
 									<input type="hidden" name="rhid" value="$rpmi.getRhidentifier().getRhid()">
+									<input type="hidden" name="conversation" value="$sconvo">
+                					<input type="hidden" name="csrftoken" value="$csrftoken">
+									
 									<h3><a href="#" id="h3_$dlang" class="langtoggle">$dlang</a></h3>
 									<div class="hidden" id="div_rp_h3_$dlang">
 										<div class="form-set">
@@ -257,6 +268,9 @@
 								<input type="hidden" name="rpid" value="$rpmi.getRpidentifier()">
 								<input type="hidden" name="rhtype" value="$rpmi.getRhtype()">
 								<input type="hidden" name="rhid" value="$rpmi.getRhidentifier()">
+								<input type="hidden" name="conversation" value="$sconvo">
+                				<input type="hidden" name="csrftoken" value="$csrftoken">
+								
 								<h3>Add a Language</h3>
 								<div class="form-set">
 									<label for="lang">$lang_label</label>
@@ -293,6 +307,9 @@
 			 					<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
 			 					<input type="hidden" name="iitype" value="$t">
 			 					<input type="hidden" name="defaultlanguage" value="$language">
+			 					<input type="hidden" name="conversation" value="$sconvo">
+                				<input type="hidden" name="csrftoken" value="$csrftoken">
+			 					
 			 						
 			 					<input type="hidden" name="formname" value="form-required-$t"> 
 			 				
@@ -404,6 +421,9 @@
 			 					<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
 			 					<input type="hidden" name="iitype" value="$t">
 			 					<input type="hidden" name="defaultlanguage" value="$language">
+			 					<input type="hidden" name="conversation" value="$sconvo">
+                				<input type="hidden" name="csrftoken" value="$csrftoken">
+			 					
 			 						
 			 					<input type="hidden" name="formname" value="form-optional-$t"> 
 			 					<h2 class="header-edit hidden" id="h2-icon-optional-edit-$t"><a href="#" id="icon-optional-edit-$t" class="item-edit-icon"><i class="fa fa-edit"></i></a></h2>
@@ -518,6 +538,9 @@
  					<input type="hidden" name="rhid" value="$rhmi.getRhidentifier().getRhid()">
  					<input type="hidden" name="rptype" value="$rpmi.getRpidentifier().getRptype()">
  					<input type="hidden" name="rpid" value="$rpmi.getRpidentifier().getRpid()">
+ 					<input type="hidden" name="conversation" value="$sconvo">
+                	<input type="hidden" name="csrftoken" value="$csrftoken">
+ 					
  					
  					<table style="width:100%; vertical-align: top;">
  						<tbody>

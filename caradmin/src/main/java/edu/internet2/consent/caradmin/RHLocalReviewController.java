@@ -20,7 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +42,16 @@ import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 @Controller
 public class RHLocalReviewController {
 	
+    private String sconvo;
+    private int convo;
+
+
+    private String generateCSRFToken() {
+            String foo = RandomStringUtils.random(32,true,true);
+            String bar = Base64.encodeBase64URLSafeString(foo.getBytes());
+            return bar;
+    }
+
 	@RequestMapping(value="/rhlocalereview/{rhtype}/{rhid}",method=RequestMethod.POST)
 	public ModelAndView handlePostRHLocaleReview(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhid") String rhid) {
 		
@@ -51,6 +64,22 @@ public class RHLocalReviewController {
 			return eval;
 		}
 		
+        // Validate CSRF protection
+        // First, get the conversation number
+        sconvo = req.getParameter("conversation");
+        if (sconvo == null) {
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
+                return err;
+        }
+        HttpSession sess = req.getSession(false);
+        if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
+                // CSRF failure
+                ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
+                return err;
+        }
+
 		ActivityStreamEntry ase = new ActivityStreamEntry();
 		
 		// formname indicates which part of the page was submitted
@@ -191,6 +220,33 @@ public class RHLocalReviewController {
 			return eval;
 		}
 		
+        // Establish session for CSRF protection
+        HttpSession sess = req.getSession(true);
+        String csrftoken = generateCSRFToken();
+        // Establish a conversation numer
+        if (req.getParameter("conversation") != null) {
+                sconvo = (String) req.getParameter("conversation");
+        } else {
+                if (sess.getAttribute("maxconv") != null) {
+                        convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                } else {
+                        // start at 0
+                        convo = 0;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                }
+        }
+        sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+        sess.setMaxInactiveInterval(1200);  // 20 minutes max
+
+        // Marshall injections for the page
+
+        // CSRF protection
+        retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+        retval.addObject("sconvo",sconvo);  // for formulating URLs
+
 		// Retrieve the metainformation for this RH
 		
 		String rhiv = CarAdminUtils.idUnEscape(rhid);
