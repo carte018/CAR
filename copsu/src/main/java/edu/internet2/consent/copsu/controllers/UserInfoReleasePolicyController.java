@@ -487,11 +487,34 @@ public class UserInfoReleasePolicyController {
 			sess.close();
 			return CopsuUtility.locError(500, "ERR0022",LogCriticality.error);
 		}
+		// Before actually performing the update, check to see that there was a 
+		// significant change in the policy.  Most PUTs of user policies in the wild
+		// are merely replacing a policy with a duplicate policy of a later vintage. 
+		// If this is the current case, rather than archiving the old and building a new
+		// policy, we return without making a change.
+		// Actual policies have both metadata and policy data.  For comparison purposes,
+		// we are concerned only with policy data.
+		//
+		// And then, only with relevant policy data.
+		//
+		// It turns out that we can reasonably detect equivalence by comparing JSON representations
+		
+		if (original.getInfoReleasePolicy().toString().contentEquals(inputPolicy.toString())) {
+			CopsuUtility.locLog("LOG0015", LogCriticality.debug, "Skipping update of duplicate user policy");
+			tx.rollback();
+			sess.close();
+			return buildResponse(Status.OK,original.toJSON());
+		}
+		
+		// Otherwise...
+		
 		// Set create time to now
 		newPolicy.getPolicyMetaData().setCreateTime(System.currentTimeMillis());
+		
 		// Duplicate user into creator (in case there was a different creator before -- PUT is by the user)
 		newPolicy.getPolicyMetaData().getCreator().setCreatingUserType(newPolicy.getInfoReleasePolicy().getUserId().getUserType());
 		newPolicy.getPolicyMetaData().getCreator().setCreatingUserValue(newPolicy.getInfoReleasePolicy().getUserId().getUserValue());
+		
 		// Set version to version + 1
 		newPolicy.getPolicyMetaData().getPolicyId().setVersion(String.valueOf(Integer.parseInt(newPolicy.getPolicyMetaData().getPolicyId().getVersion()) + 1));
 		// Set state to active
