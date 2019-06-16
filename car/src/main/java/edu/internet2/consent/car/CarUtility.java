@@ -21,13 +21,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.core.HttpHeaders;
+import org.springframework.http.HttpHeaders;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,6 +63,7 @@ import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
 import edu.internet2.consent.informed.model.UserIdentifier;
 import edu.internet2.consent.car.CarConfig;
+import edu.internet2.consent.car.auth.AuthenticationDriver;
 import edu.internet2.consent.icm.model.IcmDecisionResponseObject;
 import edu.internet2.consent.icm.model.ResourceHolderId;
 import edu.internet2.consent.icm.model.UserId;
@@ -100,6 +102,21 @@ public class CarUtility {
 		return(config);
 		
 	}
+	
+	public static boolean isAuthenticated(HttpServletRequest request, HttpHeaders headers, String entity, CarConfig config) {
+		
+		// Return true or false depending on whether the request is authenticated.
+		//
+		// For now certain externally-drivable operations (like flushing individual 
+		// entries in the CAR informed content cache) can be performed by any 
+		// authenticated user.
+		//
+		if (AuthenticationDriver.getAuthenticatedUser(request, headers, config) != null) {
+			return true;
+		}
+		return false;
+	}
+	
 	public static String prefLang(HttpServletRequest req) {
 		CarConfig config = CarConfig.getInstance();
 		String defloc = config.getProperty("car.defaultLocale", true);
@@ -335,7 +352,7 @@ public class CarUtility {
 	
 	public static HttpResponse forwardRequest(HttpClient httpClient, String targetMethod, String targetServer, String targetPort, String targetURI, HttpServletRequest request, String entity) {
 
-		String authzHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+		String authzHeader = request.getHeader("Authorization");
 		
 		return sendRequest(httpClient,targetMethod,targetServer,targetPort,targetURI,entity,authzHeader);
 
@@ -395,7 +412,7 @@ public class CarUtility {
 		}
 		
 		httpRequest.setHeader("Accept","application/json");
-		httpRequest.setHeader(HttpHeaders.AUTHORIZATION,authzHeader);
+		httpRequest.setHeader("Authorization",authzHeader);
 		try {
 			retval = httpClient.execute(httpRequest);
 			return retval;

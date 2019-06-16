@@ -37,12 +37,17 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import org.springframework.http.HttpHeaders;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.ehcache.Cache.Entry;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -331,6 +336,53 @@ public class MainController {
 		}
 		
 		return retval;
+	}
+	
+	// evictiimicache?rhid=rhid&iiid=iiid
+	@RequestMapping(value="/evictiimicache", method=RequestMethod.GET)
+	public ModelAndView evictIIMICache(HttpServletRequest request,@RequestHeader HttpHeaders headers) {
+		CarConfig config = CarConfig.getInstance();
+
+		if (! CarUtility.isAuthenticated(request, headers , "", config)) {
+			return new ModelAndView("errorPage").addObject("message","Failed");
+		}
+		String rhid = request.getParameter("rhid");
+		String iiid = request.getParameter("iiid");
+		InfoItemMetaInformationCache cache = InfoItemMetaInformationCache.getInstance();
+		cache.evictCachedInfoItemMetaInformation(rhid,iiid);
+		return new ModelAndView("errorPage").addObject("message","Success");
+	}
+	
+	// evictrpmicache?rhid=rhid&rpid=rpid
+	@RequestMapping(value="/evictrpmicache",method=RequestMethod.GET)
+	public ModelAndView evictRPMICache(HttpServletRequest request, @RequestHeader HttpHeaders headers) {
+		CarConfig config = CarConfig.getInstance();
+		if (! CarUtility.isAuthenticated(request,  headers, "", config)) {
+			return new ModelAndView("errorPage").addObject("message","Failed");
+		}
+		String rhid = request.getParameter("rhid");
+		String rpid = request.getParameter("rpid");
+		String rptype = request.getParameter("rptype");
+		RPMetaInformationCache cache = RPMetaInformationCache.getInstance();
+		if (rptype != null)
+			cache.evictCachedRPMetaInformation(rhid,rptype,rpid);
+		else
+			cache.evictCachedRPMetaInformation(rhid, rpid);
+		return new ModelAndView("errorPage").addObject("message","Success");
+	}
+	
+	// evictvaluemicache?iiid=iiid&iivalue=iivalue
+	@RequestMapping(value="/evictvaluemicache",method=RequestMethod.GET)
+	public ModelAndView evictValueMICache(HttpServletRequest request, @RequestHeader HttpHeaders headers) {
+		CarConfig config = CarConfig.getInstance();
+		if (! CarUtility.isAuthenticated(request,  headers,  "",  config)) {
+			return new ModelAndView("errorPage").addObject("message","Failed");
+		}
+		String iiid = request.getParameter("iiid");
+		String iivalue = request.getParameter("iivalue");
+		ValueMetaInformationCache cache = ValueMetaInformationCache.getInstance();
+		cache.evictCachedValueMetaInformation(iiid, iivalue);
+		return new ModelAndView("errorPage").addObject("message","Success");
 	}
 	
 	@RequestMapping(value="/dumprpmicache", method=RequestMethod.GET)

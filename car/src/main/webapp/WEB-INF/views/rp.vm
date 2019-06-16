@@ -130,7 +130,7 @@
 		  	<th colspan=4>$additional_heading</th>
 		  </tr>
 		  <tr>
-		  <td><div class="label">$all_other_heading/div>
+		  <td><div class="label">$all_other_heading</div>
 		  <div class="sublabel">$all_other_prefix $localizedRPDisplayName $all_other_suffix</div></td>
 		  <td>($any_values)</td>
 		  #set($current=$userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective())
