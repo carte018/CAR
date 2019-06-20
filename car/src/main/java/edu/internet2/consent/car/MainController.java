@@ -385,6 +385,30 @@ public class MainController {
 		return new ModelAndView("errorPage").addObject("message","Success");
 	}
 	
+	@RequestMapping(value="/dumpiicache", method=RequestMethod.GET)
+	public ModelAndView returnIIMICacheData(HttpServletRequest request) {
+		ModelAndView retval = new ModelAndView("errorPage");
+		StringBuilder sb = new StringBuilder();
+
+		InfoItemMetaInformationCache iimicache = InfoItemMetaInformationCache.getInstance();
+		Iterator<Entry<String,CachedInfoItemMetaInformation>> iter = iimicache.getCache().iterator();
+		
+		while (iter.hasNext()) {
+			Entry<String,CachedInfoItemMetaInformation> e = iter.next();
+			CachedInfoItemMetaInformation v = e.getValue();
+			sb.append(e.getKey());
+			
+			if (v != null && v.getData() != null) {
+				sb.append("=="+v.getData().getDisplayname());
+				sb.append("<br>");
+			} else {
+				sb.append("==NULL");
+				sb.append("<br>");
+			}
+		}
+		retval.addObject("message",sb.toString());
+		return retval;
+	}
 	@RequestMapping(value="/dumprpmicache", method=RequestMethod.GET)
 	public ModelAndView returnRPMICacheData(HttpServletRequest request) {
 		ModelAndView retval = new ModelAndView("errorPage");

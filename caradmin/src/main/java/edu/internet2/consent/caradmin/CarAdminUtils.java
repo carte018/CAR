@@ -779,6 +779,28 @@ public class CarAdminUtils {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
 		}
+		
+		// And try to evict cache entry we just modified.
+		
+		HttpClient httpClient2 = HttpClientBuilder.create().build();
+		HttpResponse response2 = null;
+		String aheader = CarAdminUtils.buildAuthorizationHeader(config,"car");
+		String carhost = config.getProperty("caradmin.car.hostname", true);
+		String carport = config.getProperty("caradmin.car.port", true);
+		sb = new StringBuilder();
+
+		sb.append("/car/evictrpmicache/?rhid="+rpmi.getRhidentifier().getRhid()+"&rpid="+rpmi.getRpidentifier().getRpid());
+
+		try {
+			response2 = CarAdminUtils.sendRequest(httpClient2, "GET", carhost, carport, sb.toString(),"", aheader);
+			@SuppressWarnings("unused")
+			String rbody = CarAdminUtils.extractBody(response);
+		} catch (Exception e) {
+			// ignore -- this is purely to optimize update performance
+		} finally {
+			HttpClientUtils.closeQuietly(response2);
+			HttpClientUtils.closeQuietly(httpClient2);
+		}
 	}
 	
 	public static void putRHIIList(ReturnedRHInfoItemList r) {
@@ -1102,8 +1124,7 @@ public class CarAdminUtils {
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
-		}
-		
+		}		
 	}
 	
 	public static edu.internet2.consent.arpsi.model.ListOfReturnedPrecedenceObject getOrgPrecedence(String rhtype, String rhid, String baseId) {
@@ -1455,6 +1476,28 @@ public class CarAdminUtils {
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
+		}
+		
+		// And try to evict cache entry we just modified.
+		
+		HttpClient httpClient2 = HttpClientBuilder.create().build();
+		HttpResponse response2 = null;
+		String aheader = CarAdminUtils.buildAuthorizationHeader(config,"car");
+		String carhost = config.getProperty("caradmin.car.hostname", true);
+		String carport = config.getProperty("caradmin.car.port", true);
+		sb = new StringBuilder();
+
+		sb.append("/car/evictiimicache/?rhid="+riimi.getRhidentifier().getRhid()+"&iiid="+riimi.getIiidentifier().getIiid());
+
+		try {
+			response2 = CarAdminUtils.sendRequest(httpClient2, "GET", carhost, carport, sb.toString(),"", aheader);
+			@SuppressWarnings("unused")
+			String rbody = CarAdminUtils.extractBody(response2);
+		} catch (Exception e) {
+			// ignore -- this is purely to optimize update performance
+		} finally {
+			HttpClientUtils.closeQuietly(response2);
+			HttpClientUtils.closeQuietly(httpClient2);
 		}
 	}
 	
