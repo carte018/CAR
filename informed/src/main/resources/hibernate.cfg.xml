@@ -44,6 +44,7 @@
     <mapping class="edu.internet2.consent.informed.model.SupportedRHType"/>
     <mapping class="edu.internet2.consent.informed.model.SupportedRPType"/>
     <mapping class="edu.internet2.consent.informed.model.ActivityStreamEntry"/> 
-    <mapping class="edu.internet2.consent.informed.model.SupportedUserType"/>-->
+    <mapping class="edu.internet2.consent.informed.model.SupportedUserType"/>
+    <mapping class="edu.internet2.consent.informed.model.AdminRoleMapping"/>-->
   </session-factory>
 </hibernate-configuration>
