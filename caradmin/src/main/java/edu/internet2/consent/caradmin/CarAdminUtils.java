@@ -175,11 +175,24 @@ public class CarAdminUtils {
 		return larm;
 	}
 	
-	public static AdminConfig init(HttpServletRequest request) {
+	public static AdminConfig init(HttpServletRequest request, List<String> roleNames, ArrayList<String> targets) {
 		
-		LOG.info("Starting admin config init");
-		// Perform initialization -- get a config object and check authorization based on the user
-		// Throw a CopsuInitializationException if any of this fails.  Return the config if not.
+		// Generalized routine for performing init-with-authorization
+		//
+		// We retrieve a config instance, set some statics, and validate authorization.
+		//
+		// If roleNames is null or empty, we authorize only based on "any admin role"
+		//    (this is eg. the authorization for the Dashboard)
+		// If roleNames is non-empty but no targetrp or target rh is specified, we authorize
+		// against the specified role exclusively (eg., Translator or superadmin-only)
+		// If roleNames and targets are specified, we authorize against any pairs (eg. role1-target2)
+		//
+		// Since targets are unique identifiers that span rh's and rps, and no role
+		// covers both rps and rhs by id, we can ignore the relationship -- only one pairing
+		// will make "sense" in any given situation, but we can cheaply enough test for 
+		// all combinations in order to find the one.
+		//
+		
 		
 		AdminConfig config = null;
 		// Get the default message catalog ResourceBundle.  We default to "en" since that's the most common language.
@@ -195,15 +208,14 @@ public class CarAdminUtils {
 		// Now that the informed content provider supports stashing admin role information
 		// we begin to provide better granular authorization.
 		//
-		// Anyone with an admin role (of any sort) gets to play.  This is a bit 
-		// chatty, but it's needful.
-		//
 		
 		boolean isAuthorized = false;
 		
-		// Retrieve (some of) the admin roles belonging to the current user
+		// Retrieve the admin roles belonging to the current user
 		// If there are none to be found, reject the initialization -- the user 
 		// in that case is not an admin and has no admin rights.
+		// If we are *only* looking for admin rights in general, short-circuit.
+		//
 		
 		ArrayList<AdminRoleMapping> roles = new ArrayList<AdminRoleMapping>();
 		
@@ -211,6 +223,10 @@ public class CarAdminUtils {
 		// retrieving role mappings.
 		
 		String subs = request.getRemoteUser();
+
+		if (request.getAttribute("eppn") != null && ! request.getAttribute("eppn").equals("")) {
+			subs += ";" + request.getAttribute("eppn");
+		}
 		if (request.getAttribute("isMemberOf") != null && ! request.getAttribute("isMemberOf").equals("")) {
 			subs += ";" + request.getAttribute("isMemberOf");
 		}
@@ -232,15 +248,49 @@ public class CarAdminUtils {
 					x = sa.length;
 				String [] ssa = Arrays.copyOfRange(sa,n,x);
 				roles.addAll(getAdminRoles(String.join(";",Arrays.asList(ssa)),null,null));
-				if (! roles.isEmpty()) 
+				if (! roles.isEmpty() && (roleNames == null || roleNames.isEmpty())) {
+					isAuthorized = true;
 					break;  // short-circuit for long lists if we're lucky
+				}
 				n = x;
 			}
 		}
+		if (! isAuthorized && (roleNames == null || roleNames.isEmpty()))
+			return null;   // fail if no roleNames spec'd and no admin roles found
 		
+		if (! isAuthorized) {
+			// 	Perform a more granular role check here.
+			// At this point "roles" should contain the set of AdminRoleMappings this user has
+			// We succeed on any match
+			for (AdminRoleMapping arm : roles) {
+				// For every role this user has, check...
+				// If the role name is superadmin, short-circuit to authorized,
+				// since superadmins can do anything they want to anything they want.
+				if (arm.getRoleName().equalsIgnoreCase("superadmin")) {
+					isAuthorized = true;
+					break;
+				}
+				if (roleNames.contains(arm.getRoleName())) {
+					// This is a meaningful role -- check targeting
+					// If the user role spans all targets, or if the user role target
+					// matches one of the passed in targets, it applies
+					if (arm.getTarget() == null || arm.getTarget().contentEquals("") || targets == null || targets.isEmpty() || (targets != null && ! targets.isEmpty() && targets.contains(arm.getTarget()))) {
+						isAuthorized = true;
+						break;
+					}
+					// Absent any exact matches, we look for regex matches against targets
+					for (String targ : targets) {
+						if (targ.matches(arm.getTarget())) {
+							isAuthorized = true;
+							break;
+						}
+					}
+				}
+			}
+		}
 	
-		if (roles.isEmpty()) {
-			// No roley, no adminy
+		if (! isAuthorized) {
+			// Not authorized
 			return null;
 		} 
 		
@@ -253,9 +303,16 @@ public class CarAdminUtils {
 		// Web components are in the preferred user language (or the default if that doesn't exist
 		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request))); 
 
-		LOG.info("Completed admin config init");
 		return(config);
 		
+	}
+	
+	public static AdminConfig init(HttpServletRequest request) {
+		
+		// Special case for nul roles and targets
+		
+		return init(request, null, null);
+
 	}
 	
 	public static String prefLang(HttpServletRequest req) {

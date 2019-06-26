@@ -68,8 +68,24 @@ public class RHRegistrationController {
 		int state = 0;
 		String component = "none";
 		
-		if (CarAdminUtils.init(req) == null) {
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		// This is only available to RHRegistrars (general)
+		// Delegates do not get to create RHs, although once created, 
+		// delegates can administer RHs.
+		
+		roles.add("RHRegistrar");
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -276,8 +292,40 @@ public class RHRegistrationController {
 		int state = 0;
 		String component = "none";
 		
-		if (CarAdminUtils.init(req) == null) {
+		// Because there are multiple scenarios available here, 
+		// we must initialize differently depending on the scenario.
+		// Scenarios are conveyed in the formname parameter
+		//
+		// If formname is null, we can just give up.
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+
+		if (req.getParameter("formname") == null || req.getParameter("formname").contentEquals("")) {
+			roles.add("Unobtainable");  // make authorization out of unobtainium in this case
+		} else {
+			if (req.getParameter("formname").matches("^form_[^_]*_edit$")) {
+				// This is actually a language binding update.  While we do not
+				// allow Translator users access to the page, we want to 
+				// allow Translator users to perform the updates (just in case).
+				roles.add("Translator");
+			} 
+			// Regardless, we give RHRegistrars rights to everything here anyway
+			roles.add("RHRegistrar");
+			roles.add("DelegatedRHRegistrar");
+			targets.add(CarAdminUtils.idUnEscape(rhvalue));
+		}
+		
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -633,8 +681,21 @@ public class RHRegistrationController {
 	public ModelAndView handleDeleteRHRegistrationByEntity(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhvalue") String rhvalue) {
 		ModelAndView retval = new ModelAndView("redirect:/rhregistration?state=1&component=delrh");
 		
-		if (CarAdminUtils.init(req) == null) {
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		targets.add(CarAdminUtils.idUnEscape(rhvalue));
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			 eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+             eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+             CarAdminUtils.injectStrings(eval, new String[] {
+                               "top_heading",
+                               "sign_out",
+                               "top_logo_url"
+             });
+
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -682,9 +743,21 @@ public class RHRegistrationController {
 		ModelAndView retval = new ModelAndView("RHRegistrationByRH");
 		
 		AdminConfig config = null;
-		
-		if ((config = CarAdminUtils.init(req)) == null) {
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		targets.add(CarAdminUtils.idUnEscape(rhvalue));
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			 eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+             eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+             CarAdminUtils.injectStrings(eval, new String[] {
+                               "top_heading",
+                               "sign_out",
+                               "top_logo_url"
+             });
+             eval.addObject("activetab","rhregistration");
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -692,7 +765,7 @@ public class RHRegistrationController {
         // Establish session for CSRF protection
         HttpSession sess = req.getSession(true);
         String csrftoken = generateCSRFToken();
-        // Establish a conversation numer
+        // Establish a conversation number
         if (req.getParameter("conversation") != null) {
                 sconvo = (String) req.getParameter("conversation");
         } else {
@@ -904,8 +977,19 @@ public class RHRegistrationController {
 		ModelAndView retval;
 		
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		ArrayList<String> roles = new ArrayList<String>();
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		if ((config = CarAdminUtils.init(req,roles,null)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			 eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+             eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+             CarAdminUtils.injectStrings(eval, new String[] {
+                               "top_heading",
+                               "sign_out",
+                               "top_logo_url"
+             });
+
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
