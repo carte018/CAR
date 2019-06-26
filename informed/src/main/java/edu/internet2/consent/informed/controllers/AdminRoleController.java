@@ -227,8 +227,24 @@ public class AdminRoleController {
 		// If there is a subject restriction, add it
 		
 		if (req.getParameter("subject") != null && ! req.getParameter("subject").contentEquals("")) {
-			sb.append(" and subject like '%*%' or subject = :subject");
+			sb.append(" and (subject like '%*%' or subject = :subject)");
 		}
+		
+		// If there is a collection of subject restrictions (via "subjects",
+		// retrieve those into a phrase for retrieval
+		//
+		boolean subjects = false;
+		if (req.getParameter("subjects") != null && ! req.getParameter("subjects").contentEquals("")) {
+			subjects = true;  // we need to provision for the bulk subject request
+			String sl = req.getParameter("subjects");
+			sb.append(" and (subject like '%*%'");
+			int ctr = 1;
+			for (String s : sl.split(";")) {
+				sb.append(" or subject=:sub"+ctr++);
+			}
+			sb.append(")");
+		}
+		
 		
 		// Likewise a role restriction
 		
@@ -239,7 +255,7 @@ public class AdminRoleController {
 		// And a target restriction
 		
 		if (req.getParameter("target") != null && ! req.getParameter("target").contentEquals("")) {
-			sb.append(" and target like '%*%' or target = :target");
+			sb.append(" and (target like '%*%' or target = :target)");
 		}
 		
 		String qstring = sb.toString();
@@ -247,13 +263,21 @@ public class AdminRoleController {
 		getQuery = sess.createQuery(qstring,AdminRoleMapping.class);
 		
 		if (qstring.contains(":subject")) {
-			getQuery.setParameter(":subject", req.getParameter("subject"));
+			getQuery.setParameter("subject", req.getParameter("subject"));
 		}
-		if (qstring.contains("role")) {
-			getQuery.setParameter(":role", req.getParameter("role"));
+		if (qstring.contains(":role")) {
+			getQuery.setParameter("role", req.getParameter("role"));
 		}
-		if (qstring.contains("target")) {
-			getQuery.setParameter(":target", req.getParameter("target"));
+		if (qstring.contains(":target")) {
+			getQuery.setParameter("target", req.getParameter("target"));
+		}
+		
+		if (subjects) {
+			// we need to produce the subjects insertions
+			int ctr = 1;
+			for (String s : req.getParameter("subjects").split(";")) {
+				getQuery.setParameter("sub"+ctr++, s);
+			}
 		}
 		
 		List<AdminRoleMapping> larm = getQuery.list();
