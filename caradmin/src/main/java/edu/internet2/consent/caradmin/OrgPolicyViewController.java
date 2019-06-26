@@ -50,6 +50,8 @@ public class OrgPolicyViewController {
             return bar;
     }
 
+    // Primarily used for Policy Admins to access policies without access to 
+    // the associated RH MetaInformation
 	@RequestMapping(value="/orgpolicyview",method=RequestMethod.GET)
 	public ModelAndView GetOrgPolicyView(HttpServletRequest req) {
 		ModelAndView retval = new ModelAndView("OrgPolicyView");
@@ -62,12 +64,47 @@ public class OrgPolicyViewController {
 		
 		AdminConfig config = null;
 		
-		if ((config = CarAdminUtils.init(req)) == null) {
+		// Only policy admin rights to access this
+		// Rights to any policy set are sufficient
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("PolicyAdmin");
+		roles.add("DelegatedPolicyAdmin");
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
 		
+        // Establish session for CSRF protection
+        HttpSession sess = req.getSession(true);
+        String csrftoken = generateCSRFToken();
+        // Establish a conversation number
+        if (req.getParameter("conversation") != null) {
+                sconvo = (String) req.getParameter("conversation");
+        } else {
+                if (sess.getAttribute("maxconv") != null) {
+                        convo = Integer.parseInt((String) sess.getAttribute("maxconv")) + 1;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                } else {
+                        // start at 0
+                        convo = 0;
+                        sconvo = String.valueOf(convo);
+                        sess.setAttribute("maxconv", sconvo);
+                }
+        }
+        sess.setAttribute(sconvo + ":" + "csrftoken", csrftoken);
+        sess.setMaxInactiveInterval(1200);  // 20 minutes max
+
+        // Marshall injections for the page
+
+        // CSRF protection
+        retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
+        retval.addObject("sconvo",sconvo);  // for formulating URLs
 		String lang = req.getLocale().getLanguage();
 		if (lang == null) {
 			lang = "en"; // default to English for now
@@ -119,8 +156,26 @@ public class OrgPolicyViewController {
 		//	ModelAndView retval = new ModelAndView("redirect:"+rhid+"?success=Policy Order Updated");
 			ModelAndView retval = new ModelAndView("redirect:"+req.getRequestURL().append("?success=Policy Order Updated").toString());
 			
+			// Authorization for all these operations is the same.
+			// You must be a PolicyAdmin to modify or relocate policies of either kind
+			
+			ArrayList<String> roles = new ArrayList<String>();
+			ArrayList<String> targets = new ArrayList<String>();
+			
+			roles.add("PolicyAdmin");
+			roles.add("DelegatedPolicyAdmin");
+			
+			targets.add(CarAdminUtils.idUnEscape(rhid));
+			
 			if (CarAdminUtils.init(req) == null) {
 				ModelAndView eval = new ModelAndView("errorPage");
+				eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(eval, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
 				eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 				return eval;
 			}
@@ -195,8 +250,28 @@ public class OrgPolicyViewController {
 		ModelAndView retval = new ModelAndView("OrgPolicyViewByRH");
 		AdminConfig config = null;
 		
-		if ((config = CarAdminUtils.init(req)) == null) {
+		// Looking at policies requires only that you be a policy admin *or* a 
+		// RH Registrar for the appropriate RH.
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		roles.add("PolicyAdmin");
+		roles.add("DelegatedPolicyAdmin");
+		
+		targets.add(CarAdminUtils.idUnEscape(rhid));
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
