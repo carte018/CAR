@@ -58,8 +58,26 @@ public class RHLocalReviewController {
 		ModelAndView retval = new ModelAndView("redirect:/rhlocalereview/"+rhtype+"/"+rhid+"/?state=1");
 		String rhiv = CarAdminUtils.idUnEscape(rhid);
 		
-		if (CarAdminUtils.init(req) == null) {
+		// Translators and RHRegistrars (general or delegated) only.
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("Translator");
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		
+		targets.add(CarAdminUtils.idUnEscape(rhid));
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -214,8 +232,28 @@ public class RHLocalReviewController {
 		
 		ModelAndView retval = new ModelAndView("RHLocaleReview");
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		
+		// Translators can always perform locale reviews, but so can 
+		// RH registrars in this case.
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("Translator");
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		
+		targets.add(CarAdminUtils.idUnEscape(rhid));
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
