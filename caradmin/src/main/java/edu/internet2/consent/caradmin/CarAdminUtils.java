@@ -41,6 +41,8 @@ import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import java.util.Arrays;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -72,6 +74,7 @@ import edu.internet2.consent.informed.model.SupportedRHType;
 import edu.internet2.consent.informed.model.SupportedRPType;
 import edu.internet2.consent.informed.model.SupportedUserType;
 import edu.internet2.consent.informed.model.ActivityStreamEntry;
+import edu.internet2.consent.informed.model.AdminRoleMapping;
 
 public class CarAdminUtils {
 
@@ -79,10 +82,102 @@ public class CarAdminUtils {
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static ResourceBundle locCB = ResourceBundle.getBundle("i18n.components",new Locale("en")); // default locale
+	
 	// Static utility routines
+	
+	private static ArrayList<String> extractUserGroups(HttpServletRequest request) {
+		//
+		// TODO:  Devise a more general way of extracting group memberships
+		//
+		// For now, we assume we receive group memberships in the "isMemberOf" attribute
+		//
+		
+		String groups = (String) request.getAttribute("isMemberOf");
+		
+		ArrayList<String> retval= new ArrayList<String>();
+		
+		if (groups == null || groups.contentEquals("")) 
+			return retval;
+		
+		for (String g : groups.split(";")) {
+			retval.add(g);
+		}
+		return retval;
+	}
+	
+	private static ArrayList<String> extractUserEntitlements(HttpServletRequest request) {
+		// 
+		// TODO:  Devise a more general way of accessing entitlements
+		//
+		// For now we assume we receive entitlements in an "eduPersonEntitlement" attribute
+		//
+		
+		String entitlements = (String) request.getAttribute("eduPersonEntitlement");
+		ArrayList<String> retval = new ArrayList<String>();
+		
+		if (entitlements == null || entitlements.contentEquals("")) 
+			return retval;
+		
+		for (String e : entitlements.split(";")) {
+			retval.add(e);
+		}
+		
+		return retval;
+	}
+	
+	private static ArrayList<AdminRoleMapping> getAdminRoles(String subject, String role, String target) {
+		// Null values are acceptable on input
+		
+		AdminConfig config = AdminConfig.getInstance();
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port",true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/adminrole/?nonce=foo");
+
+		if (subject != null && ! subject.contentEquals("")) {
+			sb.append("&subjects="+subject);
+		}
+		
+		if (role != null && ! role.contentEquals("")) {
+			sb.append("&role="+role);
+		}
+		if (target != null && ! target.contentEquals("")) {
+			sb.append("&target="+target);
+		}
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), "", authzheader);
+			rbody = CarAdminUtils.extractBody(response);
+			
+		} catch (Exception e) {
+			// ignore in this case
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
+		
+		ObjectMapper om = new ObjectMapper();
+		
+		ArrayList<AdminRoleMapping> larm =  new ArrayList<AdminRoleMapping>();
+		
+		try {
+			larm = om.readValue(rbody,new TypeReference<ArrayList<AdminRoleMapping>>() {});
+		} catch (Exception e) {
+			// ignore in this case
+		}
+		
+		return larm;
+	}
 	
 	public static AdminConfig init(HttpServletRequest request) {
 		
+		LOG.info("Starting admin config init");
 		// Perform initialization -- get a config object and check authorization based on the user
 		// Throw a CopsuInitializationException if any of this fails.  Return the config if not.
 		
@@ -96,6 +191,59 @@ public class CarAdminUtils {
 			// ignore
 		}
 		
+		//
+		// Now that the informed content provider supports stashing admin role information
+		// we begin to provide better granular authorization.
+		//
+		// Anyone with an admin role (of any sort) gets to play.  This is a bit 
+		// chatty, but it's needful.
+		//
+		
+		boolean isAuthorized = false;
+		
+		// Retrieve (some of) the admin roles belonging to the current user
+		// If there are none to be found, reject the initialization -- the user 
+		// in that case is not an admin and has no admin rights.
+		
+		ArrayList<AdminRoleMapping> roles = new ArrayList<AdminRoleMapping>();
+		
+		// Construct a list of all the subjects this user comprises for purposes of 
+		// retrieving role mappings.
+		
+		String subs = request.getRemoteUser();
+		if (request.getAttribute("isMemberOf") != null && ! request.getAttribute("isMemberOf").equals("")) {
+			subs += ";" + request.getAttribute("isMemberOf");
+		}
+		if (request.getAttribute("eduPersonEntitlement") != null && ! request.getAttribute("eduPersonEntitlement").equals("")) {
+			subs += ";" + request.getAttribute("eduPersonEntitlement");
+		}		
+		
+		// And retrieve the role maps
+		
+		if (subs.length() < 2000) 
+			roles.addAll(getAdminRoles(subs,null,null));
+		else {
+			// Break into segments of 50 and process
+			String [] sa = subs.split(";");
+			int n = 0;
+			while (n < sa.length) {
+				int x = n + 50;
+				if (x > sa.length)
+					x = sa.length;
+				String [] ssa = Arrays.copyOfRange(sa,n,x);
+				roles.addAll(getAdminRoles(String.join(";",Arrays.asList(ssa)),null,null));
+				if (! roles.isEmpty()) 
+					break;  // short-circuit for long lists if we're lucky
+				n = x;
+			}
+		}
+		
+	
+		if (roles.isEmpty()) {
+			// No roley, no adminy
+			return null;
+		} 
+		
 		String sl = null;
 		if ((sl = config.getProperty("serverLanguage", false)) != null) {
 				locRB = ResourceBundle.getBundle("i18n.errors",new Locale(sl));  // override if found
@@ -105,16 +253,7 @@ public class CarAdminUtils {
 		// Web components are in the preferred user language (or the default if that doesn't exist
 		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request))); 
 
-		String admins = null;
-		if ((admins = config.getProperty("AdminEPPNs", false)) != null) {
-			if (! admins.contains(request.getRemoteUser())) {
-				return null;
-			}
-		} else {
-			if (! request.getRemoteUser().equals("0042752") && ! request.getRemoteUser().equals("0374183") && ! request.getRemoteUser().equals("0277213") && ! request.getRemoteUser().equals("0427503")) {
-				return null;
-			}
-		}
+		LOG.info("Completed admin config init");
 		return(config);
 		
 	}
