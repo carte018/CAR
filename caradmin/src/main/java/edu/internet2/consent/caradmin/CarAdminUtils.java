@@ -175,6 +175,150 @@ public class CarAdminUtils {
 		return larm;
 	}
 	
+	public static ArrayList<String> getAuthorizedTargets(HttpServletRequest request, ArrayList<String> roleNames, ArrayList<String> targets) {
+		// Return the list of target ids for which one of the roleNames is applicable
+		
+		ArrayList<AdminRoleMapping> roles = new ArrayList<AdminRoleMapping>();
+		
+		// Construct a list of all the subjects this user comprises for purposes of 
+		// retrieving role mappings.
+		
+		String subs = request.getRemoteUser();
+
+		if (request.getAttribute("eppn") != null && ! request.getAttribute("eppn").equals("")) {
+			subs += ";" + request.getAttribute("eppn");
+		}
+		if (request.getAttribute("isMemberOf") != null && ! request.getAttribute("isMemberOf").equals("")) {
+			subs += ";" + request.getAttribute("isMemberOf");
+		}
+		if (request.getAttribute("eduPersonEntitlement") != null && ! request.getAttribute("eduPersonEntitlement").equals("")) {
+			subs += ";" + request.getAttribute("eduPersonEntitlement");
+		}		
+		
+		// And retrieve the role maps
+		
+		if (subs.length() < 2000) 
+			roles.addAll(getAdminRoles(subs,null,null));
+		else {
+			// Break into segments of 50 and process
+			String [] sa = subs.split(";");
+			int n = 0;
+			while (n < sa.length) {
+				int x = n + 50;
+				if (x > sa.length)
+					x = sa.length;
+				String [] ssa = Arrays.copyOfRange(sa,n,x);
+				roles.addAll(getAdminRoles(String.join(";",Arrays.asList(ssa)),null,null));
+				n = x;
+			}
+		}
+		
+		ArrayList<String> authorized = new ArrayList<String>();
+		for (AdminRoleMapping arm : roles) {
+			if (roleNames.contains(arm.getRoleName()) && targets.contains(arm.getTarget()) && ! authorized.contains(arm.getTarget())) {
+				authorized.add(arm.getTarget());
+			} else {
+				for (String t : targets) {
+					if (t.matches(arm.getTarget()) && ! authorized.contains(t)) {
+						authorized.add(t);
+					}
+				}
+			}
+		}
+		ArrayList<String> retval = new ArrayList<String>();
+		for (String t : targets) {
+			if (authorized.contains(t)) 
+				retval.add(t);
+		}
+		
+		return retval;
+	}
+	
+	public static boolean amIInRole(HttpServletRequest request, ArrayList<String> roleNames, ArrayList<String> targets) {
+		boolean isAuthorized=false;
+		// Retrieve the admin roles belonging to the current user
+		// If there are none to be found, reject the initialization -- the user 
+		// in that case is not an admin and has no admin rights.
+		// If we are *only* looking for admin rights in general, short-circuit.
+		//
+		
+		ArrayList<AdminRoleMapping> roles = new ArrayList<AdminRoleMapping>();
+		
+		// Construct a list of all the subjects this user comprises for purposes of 
+		// retrieving role mappings.
+		
+		String subs = request.getRemoteUser();
+
+		if (request.getAttribute("eppn") != null && ! request.getAttribute("eppn").equals("")) {
+			subs += ";" + request.getAttribute("eppn");
+		}
+		if (request.getAttribute("isMemberOf") != null && ! request.getAttribute("isMemberOf").equals("")) {
+			subs += ";" + request.getAttribute("isMemberOf");
+		}
+		if (request.getAttribute("eduPersonEntitlement") != null && ! request.getAttribute("eduPersonEntitlement").equals("")) {
+			subs += ";" + request.getAttribute("eduPersonEntitlement");
+		}		
+		
+		// And retrieve the role maps
+		
+		if (subs.length() < 2000) 
+			roles.addAll(getAdminRoles(subs,null,null));
+			if (! roles.isEmpty() && (roleNames == null || roleNames.isEmpty()))
+				isAuthorized = true;
+		else {
+			// Break into segments of 50 and process
+			String [] sa = subs.split(";");
+			int n = 0;
+			while (n < sa.length) {
+				int x = n + 50;
+				if (x > sa.length)
+					x = sa.length;
+				String [] ssa = Arrays.copyOfRange(sa,n,x);
+				roles.addAll(getAdminRoles(String.join(";",Arrays.asList(ssa)),null,null));
+				if (! roles.isEmpty() && (roleNames == null || roleNames.isEmpty())) {
+					isAuthorized = true;
+					break;  // short-circuit for long lists if we're lucky
+				}
+				n = x;
+			}
+		}
+		if (! isAuthorized && (roleNames == null || roleNames.isEmpty()))
+			return false;   // fail if no roleNames spec'd and no admin roles found
+		
+		if (! isAuthorized) {
+			// 	Perform a more granular role check here.
+			// At this point "roles" should contain the set of AdminRoleMappings this user has
+			// We succeed on any match
+			for (AdminRoleMapping arm : roles) {
+				// For every role this user has, check...
+				// If the role name is superadmin, short-circuit to authorized,
+				// since superadmins can do anything they want to anything they want.
+				if (arm.getRoleName().equalsIgnoreCase("superadmin")) {
+					isAuthorized = true;
+					break;
+				}
+				if (roleNames.contains(arm.getRoleName())) {
+					// This is a meaningful role -- check targeting
+					// If the user role spans all targets, or if the user role target
+					// matches one of the passed in targets, it applies
+					if (arm.getTarget() == null || arm.getTarget().contentEquals("") || targets == null || targets.isEmpty() || (targets != null && ! targets.isEmpty() && targets.contains(arm.getTarget()))) {
+						isAuthorized = true;
+						break;
+					}
+					// Absent any exact matches, we look for regex matches against targets
+					for (String targ : targets) {
+						if (targ.matches(arm.getTarget())) {
+							isAuthorized = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+	
+		return isAuthorized;
+	}
+	
 	public static AdminConfig init(HttpServletRequest request, List<String> roleNames, ArrayList<String> targets) {
 		
 		// Generalized routine for performing init-with-authorization
@@ -221,7 +365,7 @@ public class CarAdminUtils {
 		
 		// Construct a list of all the subjects this user comprises for purposes of 
 		// retrieving role mappings.
-		
+		/*
 		String subs = request.getRemoteUser();
 
 		if (request.getAttribute("eppn") != null && ! request.getAttribute("eppn").equals("")) {
@@ -292,7 +436,14 @@ public class CarAdminUtils {
 		if (! isAuthorized) {
 			// Not authorized
 			return null;
-		} 
+		} */
+		ArrayList<String> rn = new ArrayList<String>();
+		if (roleNames != null && ! roleNames.isEmpty()) {
+			rn.addAll(roleNames);
+		}
+		if (! amIInRole(request,rn,targets)) {
+			return null;
+		}
 		
 		String sl = null;
 		if ((sl = config.getProperty("serverLanguage", false)) != null) {

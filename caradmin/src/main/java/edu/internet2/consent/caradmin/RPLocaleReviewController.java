@@ -63,17 +63,43 @@ public class RPLocaleReviewController {
 		String rhid = CarAdminUtils.idUnEscape(rhidin);
 		String rpid = CarAdminUtils.idUnEscape(rpidin);
 		
-		if (CarAdminUtils.init(req) == null) {
+		// Translators and RPRegistrars (general or delegated) only.
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("Translator");
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		targets.add(rhid);
+		targets.add(rpid);
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
+		
 		
         // Validate CSRF protection
         // First, get the conversation number
         sconvo = req.getParameter("conversation");
         if (sconvo == null) {
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
                 return err;
         }
@@ -81,6 +107,13 @@ public class RPLocaleReviewController {
         if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
                 // CSRF failure
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
                 return err;
         }
@@ -316,8 +349,29 @@ public class RPLocaleReviewController {
 		ModelAndView retval = new ModelAndView("RPLocaleReview");
 		
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		
+		// Translators can always perform locale reviews, but so can 
+		// RP registrars in this case.
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("Translator");
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		
+		targets.add(CarAdminUtils.idUnEscape(rpidin));
+		targets.add(CarAdminUtils.idUnEscape(rhidin));
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}

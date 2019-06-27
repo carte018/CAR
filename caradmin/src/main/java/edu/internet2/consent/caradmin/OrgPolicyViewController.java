@@ -75,6 +75,13 @@ public class OrgPolicyViewController {
 		
 		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -167,7 +174,7 @@ public class OrgPolicyViewController {
 			
 			targets.add(CarAdminUtils.idUnEscape(rhid));
 			
-			if (CarAdminUtils.init(req) == null) {
+			if (CarAdminUtils.init(req,roles,targets) == null) {
 				ModelAndView eval = new ModelAndView("errorPage");
 				eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
                 eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
@@ -185,6 +192,13 @@ public class OrgPolicyViewController {
             sconvo = req.getParameter("conversation");
             if (sconvo == null) {
                     ModelAndView err = new ModelAndView("errorPage");
+    				err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                    err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                    CarAdminUtils.injectStrings(err, new String[] {
+                                      "top_heading",
+                                      "sign_out",
+                                      "top_logo_url"
+                    });
                     err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
                     return err;
             }
@@ -192,6 +206,13 @@ public class OrgPolicyViewController {
             if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
                     // CSRF failure
                     ModelAndView err = new ModelAndView("errorPage");
+    				err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                    err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                    CarAdminUtils.injectStrings(err, new String[] {
+                                      "top_heading",
+                                      "sign_out",
+                                      "top_logo_url"
+                    });
                     err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
                     return err;
             }

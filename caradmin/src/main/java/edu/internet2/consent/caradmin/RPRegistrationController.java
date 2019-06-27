@@ -1742,8 +1742,31 @@ public class RPRegistrationController {
 		ModelAndView retval = new ModelAndView("RPRegistrationNew");
 		
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		
+		// The RP listing page is available to any RH admin or RP admin
+		// with the caveat that it will only show the admin RPs that are 
+		// in scope (that is, that either belong to RHs the user is an 
+		// RH or RP registrar for or that are 
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		// No targets for this
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
+
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -1784,6 +1807,17 @@ public class RPRegistrationController {
 		HashMap<String,String> displist = new HashMap<String,String>();
 		
 		for (ReturnedRHMetaInformation rhmi : rhmia) {
+
+			// Determine if the user has rh-wide rights
+			ArrayList<String> rhroles = new ArrayList<String>();
+			ArrayList<String> rhtargs = new ArrayList<String>();
+			
+			rhroles.add("RHRegistrar");
+			rhroles.add("DelegatedRHRegistrar");
+			rhtargs.add(rhmi.getRhidentifier().getRhid());
+			
+			boolean rhwide = CarAdminUtils.amIInRole(req, rhroles, rhtargs);
+			
 			rhlist.add(rhmi.getRhidentifier().getRhtype() + "/" + rhmi.getRhidentifier().getRhid());
 			String dname = CarAdminUtils.localize(rhmi.getDisplayname(), req.getLocale().getLanguage());
 			displist.put(rhmi.getRhidentifier().getRhid(), dname);
@@ -1792,7 +1826,24 @@ public class RPRegistrationController {
 			if (arpmi == null) {
 				continue;
 			}
+			
+			ArrayList<String> rproles = new ArrayList<String>();
+			ArrayList<String> rptargs = new ArrayList<String>();
+			
+			rproles.add("RPRegistrar");
+			rproles.add("DelegatedRPRegistrar");
+			rptargs.addAll(rhtargs);
 			for (ReturnedRPMetaInformation r : arpmi) {
+				rptargs.add(r.getRpidentifier().getRpid());
+			}
+			ArrayList<String> atargs = CarAdminUtils.getAuthorizedTargets(req, rproles, rptargs);
+			
+			for (ReturnedRPMetaInformation r : arpmi) {
+				
+				// Check for RH-wide role or RP role before adding
+				if (! rhwide && ! atargs.contains(r.getRpidentifier().getRpid())) {
+					continue;
+				}
 				InjectedRPMetaInformation i = new InjectedRPMetaInformation();
 				i.setRhtype(r.getRhidentifier().getRhtype());
 				i.setRhid(r.getRhidentifier().getRhid());

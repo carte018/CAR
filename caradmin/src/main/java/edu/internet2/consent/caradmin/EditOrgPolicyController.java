@@ -76,10 +76,41 @@ public class EditOrgPolicyController {
 		String rhtype = req.getParameter("rhtype");
 		String rhid = CarAdminUtils.idEscape(req.getParameter("rhid"));
 		
+		
+
 		@SuppressWarnings("unused")
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		
+		// Only Policy Admins may submit edits to policies
+		
+		// We need to dereference the pid to apply authz restrictions
+		
+		OrgReturnedPolicy orp = CarAdminUtils.getOrgInfoReleasePolicyById(pid);
+
+		if (orp == null) {
+			// invalid request
+			return new ModelAndView("redirect:/orgpolicyview/?failmessage=Requested Policy Not Found");
+		}
+		
+		// Restrict to Policy Admins
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("PolicyAdmin");
+		roles.add("DelegatedPolicyAdmin");
+		
+		targets.add(orp.getPolicy().getResourceHolderId().getRHValue())
+		;
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -89,6 +120,13 @@ public class EditOrgPolicyController {
         sconvo = req.getParameter("conversation");
         if (sconvo == null) {
                 ModelAndView err = new ModelAndView("errorPage");
+    			err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
                 return err;
         }
@@ -96,6 +134,13 @@ public class EditOrgPolicyController {
         if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
                 // CSRF failure
                 ModelAndView err = new ModelAndView("errorPage");
+    			err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
                 return err;
         }
@@ -367,8 +412,35 @@ public class EditOrgPolicyController {
 		ModelAndView retval = new ModelAndView("EditOrgPolicy");
 		AdminConfig config = null;
 		
-		if ((config = CarAdminUtils.init(req)) == null) {
+		// Only Policy Admins can even get to the edit page for policies
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("PolicyAdmin");
+		roles.add("DelegatedPolicyAdmin");
+		
+		// We must dereference the pid to determine what policy we're editing
+				
+		OrgReturnedPolicy orp = CarAdminUtils.getOrgInfoReleasePolicyById(pid);
+
+		// If we have been asked for a non-exist policy, return to the main page with an error.
+		if (orp == null) {
+			return new ModelAndView("redirect:/orgpolicyview/?failmessage=Requested Policy Not Found");
+		}
+		
+		// Otherwise, restrict delegated admins to the associated RH
+		targets.add(orp.getPolicy().getResourceHolderId().getRHValue());
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -400,16 +472,8 @@ public class EditOrgPolicyController {
         retval.addObject("csrftoken",csrftoken); // to set csrftoken in the form
         retval.addObject("sconvo",sconvo);  // for formulating URLs
 
-		// Start by retrieving the policy we are going to edit -- it must exist in order to edit it.
 		
-		OrgReturnedPolicy orp = CarAdminUtils.getOrgInfoReleasePolicyById(pid);
-		
-		// If we have been asked for a non-exist policy, return to the main page with an error.
-		if (orp == null) {
-			return new ModelAndView("redirect:/orgpolicyview/?failmessage=Requested Policy Not Found");
-		}
-		
-		// Otherwise, produce an edit page
+		// Produce an edit page
 		
 		RHIdentifier rhi = new RHIdentifier();
 		String rhid = orp.getPolicy().getResourceHolderId().getRHValue();
