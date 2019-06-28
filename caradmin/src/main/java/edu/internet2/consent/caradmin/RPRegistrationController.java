@@ -66,7 +66,17 @@ public class RPRegistrationController {
 	public ModelAndView handlePostDeleteRPRegistration(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhid") String rhidin, @PathVariable("rptype") String rptype, @PathVariable("rpid") String rpidin) {
 		ModelAndView retval = new ModelAndView("redirect:/rpregistration/?state=1&component=rparchive");
 		
-		if (CarAdminUtils.init(req) == null) {
+		// RP Registrar (including delegates for this one RP) may delete the RP
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		targets.add(CarAdminUtils.idUnEscape(rhidin));
+		targets.add(CarAdminUtils.idUnEscape(rpidin));
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
@@ -121,8 +131,25 @@ public class RPRegistrationController {
 		String component = null;
 		int state = 0;
 		
-		if (CarAdminUtils.init(req) == null) {
+		// Require RP Registrar privilege here
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		targets.add(CarAdminUtils.idUnEscape(rhid));
+		targets.add(CarAdminUtils.idUnEscape(rpid));
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+            eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] { 
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -132,6 +159,13 @@ public class RPRegistrationController {
         sconvo = req.getParameter("conversation");
         if (sconvo == null) {
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] { 
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
                 return err;
         }
@@ -139,6 +173,13 @@ public class RPRegistrationController {
         if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
                 // CSRF failure
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] { 
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
                 return err;
         }
@@ -1132,8 +1173,27 @@ public class RPRegistrationController {
 		ModelAndView retval = new ModelAndView("RPRegistrationEdit");
 		
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		
+		// Require RP Registrar (for the whole RH or just this RP) in order to GET
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		targets.add(CarAdminUtils.idUnEscape(rhid));
+		targets.add(CarAdminUtils.idUnEscape(rpid));
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+            eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] { 
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
+
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -1369,12 +1429,31 @@ public class RPRegistrationController {
 		return retval;
 	}
 
+	@Deprecated
 	@RequestMapping(value="/rpregistration/{rhtype}/{rhid}",method=RequestMethod.POST)
 	public	ModelAndView handlePostRPRegistrationByRH(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhid") String rhid) {
 		ModelAndView retval = new ModelAndView("redirect:#");
 		
-		if (CarAdminUtils.init(req) == null) {
+		// This interface is deprecated along with its GET driver, but as long as it's here
+		// we need to maintain consistency.
+		
+		// Only RP Registrars for *this* RH allowed
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		targets.add(CarAdminUtils.idUnEscape(rhid));
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+            eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] { 
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -1384,6 +1463,13 @@ public class RPRegistrationController {
         sconvo = req.getParameter("conversation");
         if (sconvo == null) {
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] { 
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
                 return err;
         }
@@ -1391,6 +1477,13 @@ public class RPRegistrationController {
         if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
                 // CSRF failure
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] { 
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
                 return err;
         }
@@ -1465,15 +1558,34 @@ public class RPRegistrationController {
 		return(retval);
 	}
 	
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/rpregistration/{rhtype}/{rhid}",method=RequestMethod.GET)
 	public ModelAndView handleGetRPRegistrationByRH(HttpServletRequest req, @PathVariable("rhtype") String rhtype, @PathVariable("rhid") String rhid) {
 		
 		ModelAndView retval = new ModelAndView("RPRegistrationList");
 		
+		// While this interface is currently deprecated and unlinked, until we 
+		// remove it completely, it needs to follow the new authorization scheme
+		
+		// RP registrars only here, please
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		
+		
 		AdminConfig config = null;
-		if ((config = CarAdminUtils.init(req)) == null) {
+		if ((config = CarAdminUtils.init(req,roles,null)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+            eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] { 
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -1601,14 +1713,38 @@ public class RPRegistrationController {
 		});
 		return (retval);
 	}
+	
+	@Deprecated
 	@RequestMapping(value="/rpregistration-old",method=RequestMethod.GET)
 	public ModelAndView handleGetRPRegistration(HttpServletRequest req) {
 		
 		ModelAndView retval = new ModelAndView("RPRegistrationMain");
 		AdminConfig config = null;
 		
-		if ((config = CarAdminUtils.init(req)) == null) {
+		// While this interface is currently deprecated and unlinked, until we 
+		// emove it completely, it needs to follow the new authorization scheme
+		
+		// Same authorization model as /rpregistration (GET) uses
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		roles.add("RHRegistrar");
+		roles.add("DelegatedRHRegistrar");
+		// No targets for this
+		
+		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+            eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
+
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -1672,8 +1808,29 @@ public class RPRegistrationController {
 		
 		ModelAndView retval = new ModelAndView("redirect:/rpregistration/"+rhtype+"/"+CarAdminUtils.idEscape(rhid)+"/"+rptype+"/"+CarAdminUtils.idEscape(rpid)+"/?state=1&component=rpcreate");
 		
-		if (CarAdminUtils.init(req) == null) {
+		// In order to create a new RP for an RH, one must be an RPRegistrar for the RH
+		// or be pre-configured as the delegated RP Registrar for that specific RP 
+		// (very unlikely scenario)
+		//
+		
+		ArrayList<String> roles = new ArrayList<String>();
+		ArrayList<String> targets = new ArrayList<String>();
+		
+		roles.add("RPRegistrar");
+		roles.add("DelegatedRPRegistrar");
+		
+		targets.add(rhid);
+		targets.add(rpid);
+		
+		if (CarAdminUtils.init(req,roles,targets) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
+			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            CarAdminUtils.injectStrings(eval, new String[] {
+                              "top_heading",
+                              "sign_out",
+                              "top_logo_url"
+            });
 			eval.addObject("message",CarAdminUtils.getLocalComponent("unauthorized_msg"));
 			return eval;
 		}
@@ -1683,6 +1840,13 @@ public class RPRegistrationController {
         sconvo = req.getParameter("conversation");
         if (sconvo == null) {
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("missing_convo"));
                 return err;
         }
@@ -1690,6 +1854,13 @@ public class RPRegistrationController {
         if (sess == null || sess.getAttribute(sconvo + ":" + "csrftoken") == null || ! sess.getAttribute(sconvo + ":" + "csrftoken").equals(req.getParameter("csrftoken"))) {
                 // CSRF failure
                 ModelAndView err = new ModelAndView("errorPage");
+                err.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
+                err.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+                CarAdminUtils.injectStrings(err, new String[] {
+                                  "top_heading",
+                                  "sign_out",
+                                  "top_logo_url"
+                });
                 err.addObject("message",CarAdminUtils.getLocalComponent("csrf_fail"));
                 return err;
         }
