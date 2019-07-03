@@ -1,0 +1,42 @@
+#**
+ * Copyright 2015 - 2019 Duke University
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+
+ *#
+ 
+  <div id="sidebar">
+	<div class="content-section">
+		<h2>System Settings</h2>
+		<h3><a href="/caradmin/manageadmins">Admin Role Mappings</a></h3>
+		<p>
+		The CAR administrative UI restricts its functionality based on the roles available 
+		to logged in users.  Sufficiently authorized administrators (those with the "superadmin" 
+		role or listed as system administrators in the caradmin.conf configuration file) may
+		manage the role mappings to provide different levels of access to administrative functions 
+		(eg., registering RHs, registering RPs, managing policies) to different users or groups 
+		of users.
+		</p>
+		<h3>Component Configuration</h3>
+		<p>
+		...under development...
+		</p>
+		<h3>Style</h3>
+		<p>
+		...under development...
+		</p>
+	</div>
+  </div>
+  <div id="left">
+  </div>
+  

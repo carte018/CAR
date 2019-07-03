@@ -125,7 +125,67 @@ public class CarAdminUtils {
 		return retval;
 	}
 	
-	private static ArrayList<AdminRoleMapping> getAdminRoles(String subject, String role, String target) {
+	public static void deleteAdminRoleMapping(long roleid) {
+		// Given a role ID, deactivate it.
+		
+		AdminConfig config = AdminConfig.getInstance();
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port",true);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("/consent/v1/informed/adminrole/" + roleid);
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "DELETE", informedhost, informedport, sb.toString(), "", authzheader);	
+			@SuppressWarnings("unused")
+			String rbody = CarAdminUtils.extractBody(response);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
+	}
+	
+	public static void postAdminRoleMapping(AdminRoleMapping arm) {
+		// Given an admin role mapping, add it to the database
+		//
+		
+		AdminConfig config = AdminConfig.getInstance();
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port",true);
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("/consent/v1/informed/adminrole/");
+		
+		ObjectMapper om = new ObjectMapper();
+		
+		String json;
+		try {
+			json = om.writeValueAsString(arm);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpResponse response = null;
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "POST", informedhost, informedport, sb.toString(), json, authzheader);	
+			@SuppressWarnings("unused")
+			String rbody = CarAdminUtils.extractBody(response);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			HttpClientUtils.closeQuietly(response);
+			HttpClientUtils.closeQuietly(httpClient);
+		}
+	}
+	
+	public static ArrayList<AdminRoleMapping> getAdminRoles(String subject, String role, String target) {
 		// Null values are acceptable on input
 		
 		AdminConfig config = AdminConfig.getInstance();

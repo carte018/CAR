@@ -1,0 +1,400 @@
+#**
+ * Copyright 2015 - 2019 Duke University
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+
+ *#
+ 
+ <div id="sidebar">
+	<div class="content-section">
+		<h2>Administrative Roles</h2>
+		<p>
+		Access to the CarAdmin UI and its associated administrative functions is controlled via
+		role mappings stored in the CAR persistence layer.  There are multiple roles recognized 
+		by the application:
+		</p>
+		<ul>
+		<li><em>superadmin:</em> Users with the superadmin role have access to the full functionality 
+		of the CarAdmin UI and additionally have access to this interface for managing users' roles.
+		<b>Note</b> that with superadmin rights, you may remove your own superadmin privileges, so 
+		act accordingly.</li>
+		<li><em>RHRegistrar:</em> Users with the RHRegistrar role have access to create,
+		archive, and update Resource Holder registration information, including RH metainformation
+		and the configuration of available information items for any Resource Holder.  RHRegistrar
+		rights do <b>not</b> confer update rights to information release policies, but RHRegistrars
+		<b>may</b> review information release policies for all RHs.</li>
+		<li><em>DelegatedRHRegistrar:</em> Users with the DelegatedRHRegistrar role have access
+		similar to that of RHRegistrars, but restricted to a single Resource Holder.  Delegates 
+		therefore cannot create resource holders, but they can otherwise operate on the RHs 
+		they are delegated rights to as though they were full RHRegistrars.</li>
+		<li><em>RPRegistrar:</em> Users with the RPRegistrar role have access to create, 
+		archive, and update Relying Party registration information, including RP metainformation
+		and the configuration of RP information item requests.</li>
+		<li><em>DelegatedRPRegistrar:</em> Users with the DelegatedRPRegistrar role have rights 
+		equivalent to those of RPRegistrars, but extending only to a single Relying Pary.  As such, 
+		they cannot create new Relying Party registrations, but they may otherwise operate on 
+		their delegated RPs as if they were RPRegistrars.</li>
+		<li><em>PolicyAdmin:</em> Users with the PolicyAdmin role have access to modify policies 
+		(both institutional and meta-policies) for all registered Resource Holders.  Modification 
+		rights imply re-ordering rights and create/remove rights.</li>
+		<li><em>DelegatedPolicyAdmin:</em> Users with the DelegatedPolicyAdmin role have access to 
+		modify policies for a single Resource Holder.  Rights over the delegated RH are the same 
+		as those afforded PolcyAdmins over all registered Resource Holders.</li>
+		<li>Translator:</li> Users with the Translator role have full rights to modify the i18n
+		strings used by the CAR UIs to construct views in users' preferred languages (including 
+		whatever the default language for a given CAR instance is).  The Translator role affords 
+		no other rights, although it does allow certain read privileges sufficient to allow holders
+		to access the resources they can manage (eg., a Translator can see all the registered
+		RHs and RPs, but can only manipulate their language bindings).</li>
+		</ul>
+		<p>
+		Roles may be assigned to individual users, user groups (currently identified by the 
+		values of the isMemberOf attribute, if one is available, for the user) or entitlements
+		(currently identified by the values of the eduPersonEntitlement attribute, if one is 
+		available, for the user).  A single user may have multiple roles, in which case the roles
+		are additive.  Some roles subsume other roles (eg., RPRegistrar / DelegatedRPRegistrar, or
+		superadmin, which subsumes all other roles) -- a single user may be a member of multiple
+		overlapping roles, in which case the aggregate rights pertain.	
+		</p>
+		<p>
+		Delegated roles (DelegatedRHRegistrar, DelegatedRPRegistrar, and DelegatedPolicyAdmin) 
+		require specifying a target.  Targets are identified by their RH or RP identifiers, and 
+		are construed as regular expressions (so a DelegatedRPRegistrar can be set up with rights
+		to more than one RP in a single statement by using a regular expression match.  Exact string
+		matches are simply a subset of regular expression matches.
+		</p>
+	</div>
+</div>
+<div id="left">
+	<div class="content-section">
+		<h2>Superadmins</h2>
+		<form name="superform" id="superform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="superadmin">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($superadmin.isEmpty())
+			<tr><td colspan=3><em>No superadmins configured</em></td></tr>
+			#end
+			#foreach($r in $superadmin)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="super_id_$ctr" id="super_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="super_subject_$ctr" id="super_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="super_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="super_is_delete_$ctr" id="super_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="super_subject_add"></td>
+				<td>superadmin</td><input type="hidden" name="super_role_add" value="superadmin">
+				<td><a href="#" id="super_add" class="addlink">Add</a></td><input type="hidden" name="super_is_add" id="super_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>RHRegistrar role</h2>
+		<form name="rhrform" id="rhrform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="RHRegistrar">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($rhreg.isEmpty())
+			<tr><td colspan=3><em>No RHRegistrars configured</em></td></tr>
+			#end
+			#foreach($r in $rhreg)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="rhr_id_$ctr" id="rhr_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="rhr_subject_$ctr" id="rhr_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="rhr_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="rhr_is_delete_$ctr" id="rhr_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="rhr_subject_add"></td>
+				<td>RHRegistrar</td><input type="hidden" name=rhr_role_add" value="RHRegistrar">
+				<td><a href="#" id="rhr_add" class="addlink">Add</a></td><input type="hidden" name="rhr_is_add" id="rhr_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>DelegatedRHRegistrar role</h2>
+		<form name="drhrform" id="drhrform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="DelegatedRHRegistrar">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Target</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($delrhreg.isEmpty())
+			<tr><td colspan=4><em>No DelegatedRHRegistrars configured</em></td></tr>
+			#end
+			#foreach($r in $delrhreg)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="drhr_id_$ctr" id="drhr_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="drhr_subject_$ctr" id="drhr_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td>$r.getTarget()</td><input type="hidden" name="drhr_target_$ctr" id="drhr_target_$ctr" value="r.getTarget()">
+				<td><a href="#" id="drhr_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="drhr_is_delete_$ctr" id="drhr_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="drhr_subject_add"></td>
+				<td>DelegatedRHRegistrar</td><input type="hidden" name="drhr_role_add" value="DelegatedRHRegistrar">
+				<td><input type="text" name="drhr_target_add"></td>
+				<td><a href="#" id="drhr_add" class="addlink">Add</a></td><input type="hidden" name="drhr_is_add" id="drhr_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>RPRegistrar role</h2>
+		<form name="rprform" id="rprform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="RPRegistrar">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($rpreg.isEmpty())
+			<tr><td colspan=3><em>No RPRegistrars configured</em></td></tr>
+			#end
+			#foreach($r in $rpreg)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="rpr_id_$ctr" id="rpr_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="rpr_subject_$ctr" id="rpr_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="rpr_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="rpr_is_delete_$ctr" id="rpr_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="rpr_subject_add"></td>
+				<td>RPRegistrar</td><input type="hidden" name="rpr_role_add" value="RPRegistrar">
+				<td><a href="#" id="rpr_add" class="addlink">Add</a></td><input type="hidden" name="rpr_is_add" id="rpr_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>DelegatedRPRegistrar role</h2>
+		<form name="drprform" id="drprform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="DelegatedRPRegistrar">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Target</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($delrpreg.isEmpty())
+			<tr><td colspan=4><em>No DelegatedRPRegistrars configured</em></td></tr>
+			#end
+			#foreach($r in $delrpreg)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="drpr_id_$ctr" id="drpr_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="drpr_subject_$ctr" id="drpr_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td>$r.getTarget()</td><input type="hidden" name="drpr_target_$ctr" id="drpr_target_$ctr" value="$r.getTarget()">
+				<td><a href="#" id="drpr_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="drpr_is_delete_$ctr" id="drpr_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="drpr_subject_add"></td>
+				<td>RPRegistrar</td><input type="hidden" name="drpr_role_add" value="DelegatedRPRegistrar">
+				<td><input type="text" name="drpr_target_add"></td>
+				<td><a href="#" id="drpr_add" class="addlink">Add</a></td><input type="hidden" name="drpr_is_add" id="drpr_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>PolicyAdmin role</h2>
+		<form name="paform" id="paform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="PolicyAdmin">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($poladmin.isEmpty())
+			<tr><td colspan=3><em>No PolicyAdmins configured</em></td></tr>
+			#end
+			#foreach($r in $poladmin)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="pa_id_$ctr" id="pa_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="pa_subject_$ctr" id="pa_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="pa_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="pa_is_delete_$ctr" id="pa_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="pa_subject_add"></td>
+				<td>PolicyAdmin</td>
+				<td><a href="#" id="pa_add" class="addlink">Add</a></td><input type="hidden" name="pa_is_add" id="pa_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>DelegatedPolicyAdmin role</h2>
+		<form name="dpaform" id="dpaform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="DelegatedPolicyAdmin">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Target</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($delpoladmin.isEmpty())
+			<tr><td colspan=4><em>No DelegatedPolicyAdmins configured</em></td></tr>
+			#end
+			#foreach($r in $delpoladmin)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="dpa_id_$ctr" id="dpa_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="dpa_subject_$ctr" id="dpa_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td>$r.getTarget()</td><input type="hidden" name="dpa_target_$ctr" id="dpa_target_$ctr" value="$r.getTarget()">
+				<td><a href="#" id="dpa_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="dpa_is_delete_$ctr" id="dpa_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="dpa_subject_add"></td>
+				<td>DelegatedPolicyAdmin</td>
+				<td><input type="text" name="dpa_target_add"></td>
+				<td><a href="#" id="dpa_add" class="addlink">Add</a></td><input type="hidden" name="dpa_is_add" id="dpa_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>Translator role</h2>
+		<form name="transform" id="transform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="Translator">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($translator.isEmpty())
+			<tr><td colspan=3><em>No Translators configured</em></td></tr>
+			#end
+			#foreach($r in $translator)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="trans_id_$ctr" id="trans_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="trans_subject_$ctr" id="trans_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="trans_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="trans_is_delete_$ctr" id="trans_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="trans_subject_add"></td>
+				<td>Translator</td>
+				<td><a href="#" id="trans_add" class="addlink">Add</a></td><input type="hidden" name="trans_is_add" id="trans_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".deletelink").click(function(e) {
+			handledelete(e);
+		});
+		$(".addlink").click(function(e) {
+			handleadd(e);
+		});
+	});
+	
+	function handledelete(e) {
+		e.preventDefault();
+		tid = e.target.id;
+		ttype = tid.replace(/_delete_.*$/,"");
+		tnum = tid.replace(/^.*delete_/,"");
+		$("#"+ttype+"_is_delete_"+tnum).val(1);
+		$("#"+ttype+"form").submit();
+	};
+	
+	function handleadd(e) {
+		e.preventDefault();
+		tid = e.target.id;
+		ttype = tid.replace(/_add$/,"");
+		$("#"+ttype+"_is_add").val(1);
+		$("#"+ttype+"form").submit();
+	};
+</script>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
