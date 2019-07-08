@@ -1,0 +1,95 @@
+#**
+ * Copyright 2015 - 2019 Duke University
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+
+ *#
+
+ <div id="sidebar">
+	<div class="content-section">
+		<h2>Translations</h2>
+		<p>
+		The CAR system provides a number of user interfaces, each of which must present a 
+		wealth of information to end users or administrators, many of whom may prefer to 
+		work in their native language.  
+		</p>
+		<p>
+		From here, you can select a Resource Holder (and optionally a Relying Party) and
+		add or edit internationalized strings used by the various CAR user interfaces to 
+		present content in user-preferred languages.
+		</p>
+	</div>
+</div>
+<div id="left">
+	<div class="content-section">
+		<h2>View/Manage Translations</h2>
+		<div class="form-set">
+			<label class="inline" for="rhselector">Resource Holder: </label>
+			<select id="rhselector" name="rhselector">
+				#foreach($rh in $rhrpmap.keySet())
+					<option value="$rh.getRhidentifier().getRhtype()|$rh.getRhidentifier().getRhid()">$CarAdminUtils.localize($rh.getDisplayname(),$lang)</option>
+				#end
+			</select>
+			<br><br>
+			<label class="inline" for="rpselector">Relying Party: </label>
+			<select id="rpselector" name="rpselector" style="max-width: 80%">
+				<option selected="selected" value="">None:  Manage RH Translations</option>
+				
+			</select>
+			<br><br>
+			<button class="active review">Review Language Bindings</button>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	var irdplist=$irdplist;
+	
+	$(document).ready(function() {
+		$("#rhselector").change(function(e) {
+			updaterps(e);
+		});
+		$(".review").click(function(e) {
+			gotoreview(e);
+		});
+		$("#rhselector").change();
+	});
+	
+	function updaterps(e) {
+		rid = $("#rhselector").children("option:selected").val();
+		$("#rpselector option:gt(0)").remove(); 
+		irdplist[rid].forEach(function(e) {
+			$("#rpselector").append($("<option></option>").attr("value",e.replace(/\|.*$/,"")).text(e.replace(/^.*\|/,"")+'('+e.replace(/\|.*$/,"").replace(/!/g,"/")+')'));
+		});
+	};
+	
+	function gotoreview(e) {
+		e.preventDefault();
+		rhid = $("#rhselector").children("option:selected").val().replace(/\//g,"!").replace(/\|/,"/");
+		rpid = $("#rpselector").children("option:selected").val();
+		
+		var gourl = "";
+		
+		if (rpid == "") {
+			gourl = "/caradmin/rhlocalereview/" + rhid + "/";
+		} else {
+			gourl = "/caradmin/rplocalereview/" + rhid + "/" + rpid + "/";
+		}
+		
+		window.location.href = gourl;
+	};
+	
+		
+</script>
+					

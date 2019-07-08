@@ -44,8 +44,12 @@
 			<tr>
 				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
-					#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
-						<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)</td>
+					#if($rrpmi.getDisplayname())
+						#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
+							<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)</td>
+						#else
+							<td class="wrappingtd langnotok">$missing_label</td>
+						#end
 					#else
 						<td class="wrappingtd langnotok">$missing_label</td>
 					#end
@@ -54,8 +58,12 @@
 			<tr>
 				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
-					#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
-						<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)</td>
+					#if($rrpmi.getDescsription())
+						#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
+							<td class="wrappingtd langok">$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)</td>
+						#else
+							<td class="wrappingtd langnotok">$missing_label</td>
+						#end
 					#else
 						<td class="wrappingtd langnotok">$missing_label</td>
 					#end
@@ -88,8 +96,12 @@
 			<tr>
 				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
-					#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
-						<td><input type="text" name="rpdisplayname_$l" value="$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)"></td>
+					#if ($rrpmi.gtDisplayname())
+						#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
+							<td><input type="text" name="rpdisplayname_$l" value="$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)"></td>
+						#else
+							<td><input type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
+						#end
 					#else
 						<td><input type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
 					#end
@@ -98,8 +110,12 @@
 			<tr>
 				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
-					#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
-						<td><input type="text" name="rpdescription_$l" value="$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)"></td>
+					#if ($rrpmi.getDescription())
+						#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
+							<td><input type="text" name="rpdescription_$l" value="$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)"></td>
+						#else
+							<td><input type="text" name="rpdescription_$l" placeholder="Add translation"></td>
+						#end
 					#else
 						<td><input type="text" name="rpdescription_$l" placeholder="Add translation"></td>
 					#end

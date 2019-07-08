@@ -27,6 +27,13 @@
 		(eg., registering RHs, registering RPs, managing policies) to different users or groups 
 		of users.
 		</p>
+		<h3><a href="/caradmin/systemsettings/translatorview">Translator View</a></h3>
+		<p>
+		A great many of the text strings used in building the CAR user interface are actually 
+		implemented as internationalized strings.  This view allows authorized users to see
+		and update the various language-specific string bindings attached to Resource Holders and 
+		Relying Parties defined in the system.
+		</p>
 		<h3>Component Configuration</h3>
 		<p>
 		...under development...

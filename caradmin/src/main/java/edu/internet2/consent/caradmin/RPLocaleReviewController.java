@@ -418,10 +418,16 @@ public class RPLocaleReviewController {
 		
 		if (req.getLocale() != null && req.getLocale().getLanguage() != null) {
 			lang = req.getLocale().getLanguage();
-			displayname = CarAdminUtils.localize(rrpmi.getDisplayname(), lang);
+			if (rrpmi.getDisplayname() == null)
+				displayname = rrpmi.getRpidentifier().getRpid();
+			else
+				displayname = CarAdminUtils.localize(rrpmi.getDisplayname(), lang);
 		} else {
 			lang = languages.get(0);
-			displayname = CarAdminUtils.localize(rrpmi.getDisplayname(), lang);
+			if (rrpmi.getDisplayname() == null)
+				displayname = rrpmi.getRpidentifier().getRpid();
+			else
+				displayname = CarAdminUtils.localize(rrpmi.getDisplayname(), lang);
 		}
 		
 		ArrayList<ReturnedRHMetaInformation> rhmil = CarAdminUtils.getAllDefinedResourceHolders();

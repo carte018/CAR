@@ -59,6 +59,7 @@
         <li><a href="/caradmin/systemsettings" #if($activetab=="systemsettings")class="active-tab"#end>System Settings</a>
             <ul class="dropdown-content">
               <li><a href="/caradmin/manageadmins">Manage Admin Roles</a></li>
+              <li><a href="/caradmin/systemsettings/translatorview">Translator View</a></li>
               <li><a href="#">Component Configuration</a></li>
               <li><a href="#">Style</a></li>
             </ul>
