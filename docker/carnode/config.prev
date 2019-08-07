@@ -7,5 +7,5 @@ basicauth_class=edu.internet2.consent.car.auth.KrbAuth
 app_users=rob,mkm16,hiro
 app_admins=rob,mkm16
 carma_user=carcomp-svc
-carma_password=SWgW+lfVyrBACqGlr8iFbzdV
+carma_password=TheMoonIsAHarshMistress
 institution_name=Duke

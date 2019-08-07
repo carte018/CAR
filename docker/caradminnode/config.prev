@@ -7,6 +7,6 @@ basicauth_class=edu.internet2.consent.arpsi.auth.KrbAuth
 app_users=rob,mkm16,hiro
 app_admins=rob,mkm16
 carma_user=carcomp-svc
-carma_password=SWgW+lfVyrBACqGlr8iFbzdV
+carma_password=TheMoonIsAHarshMistress
 institution_name=Duke
 super_admins=0042752,rob@duke.edu,0277213,mkm16@duke.edu,0374183,shilen@duke.edu
