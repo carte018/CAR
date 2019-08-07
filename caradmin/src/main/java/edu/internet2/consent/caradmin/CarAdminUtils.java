@@ -18,6 +18,7 @@ package edu.internet2.consent.caradmin;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -413,6 +414,24 @@ public class CarAdminUtils {
 		// we begin to provide better granular authorization.
 		//
 		
+		// Start by checking for superadmin override -- anyone listed in the config
+		// file as an AdminEPPNs member gets rights despite everything else.
+		//
+		boolean is_overridden_admin = false;
+		
+		String admineppns = null;
+        admineppns = config.getProperty("AdminEPPNs", false);
+        if (admineppns != null) {
+                String eppn = ((String) request.getAttribute("eppn")).replaceAll(";.*$","");
+                String remote = request.getRemoteUser();
+                String[] ae = admineppns.split(",");
+                for (String a : ae) {
+                        if ((eppn != null && a.equals(eppn)) || (remote != null && a.contentEquals(remote))) {
+                        	is_overridden_admin = true;
+                        }
+                }
+        }
+
 		
 		
 		// Check for role authorizing operation
@@ -421,7 +440,7 @@ public class CarAdminUtils {
 		if (roleNames != null && ! roleNames.isEmpty()) {
 			rn.addAll(roleNames);
 		}
-		if (! amIInRole(request,rn,targets)) {
+		if (! amIInRole(request,rn,targets) && ! is_overridden_admin) {
 			return null;
 		}
 		
@@ -997,9 +1016,10 @@ public class CarAdminUtils {
 			httpRequest = new HttpGet(sb.toString());
 		} else if (targetMethod.equalsIgnoreCase("PUT")) {
 			httpRequest = new HttpPut(sb.toString());
+			httpRequest.setHeader("Content-Type","application/json;charset=UTF-8");
 			try {
 				sendEntity = new StringEntity(payload);
-				sendEntity.setContentType("application/json");
+				sendEntity.setContentType("application/json;charset=UTF-8");
 				((HttpPut)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -1008,7 +1028,7 @@ public class CarAdminUtils {
 			httpRequest = new HttpPost(sb.toString());
 			try {
 				sendEntity = new StringEntity(payload);
-				sendEntity.setContentType("application/json");
+				sendEntity.setContentType("application/json;charset=UTF-8");
 				((HttpPost)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -1019,7 +1039,7 @@ public class CarAdminUtils {
 			httpRequest = new HttpPatch(sb.toString());
 			try {
 				sendEntity = new StringEntity(payload);
-				sendEntity.setContentType("application/json");
+				sendEntity.setContentType("application/json;charset=UTF-8");
 				((HttpPatch)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -2355,6 +2375,7 @@ public class CarAdminUtils {
 			}
 			ObjectMapper om = new ObjectMapper();
 			ReturnedRPMetaInformation lr = om.readValue(rbody, ReturnedRPMetaInformation.class);
+			
 			return lr;
 		} catch (Exception e) {
 			locError("ERR0003",LogCriticality.error,"Exception message " + e.getMessage());

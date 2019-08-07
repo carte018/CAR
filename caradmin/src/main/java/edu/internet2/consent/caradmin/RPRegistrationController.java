@@ -25,6 +25,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,6 +55,7 @@ public class RPRegistrationController {
 	
     private String sconvo;
     private int convo;
+	private static final Log LOG=LogFactory.getLog(CarAdminUtils.class);
 
 
     private String generateCSRFToken() {
@@ -184,6 +187,7 @@ public class RPRegistrationController {
                 return err;
         }
 
+        
 		if (req.getParameter("formname") != null && req.getParameter("formname").equalsIgnoreCase("rpdisplayname_edit_form")) {
 			// Update the displayname InternationalizedString value
 			InternationalizedString newval = new InternationalizedString();
@@ -337,6 +341,7 @@ public class RPRegistrationController {
 				is.setLocales(isl);
 				rrpmi.setDescription(is);
 			}
+			
 			
 			CarAdminUtils.putRelyingPartyMetaInformation(rrpmi);  // actually update the rp metainfo
 			component = "rpmi";
@@ -1238,8 +1243,9 @@ public class RPRegistrationController {
 			throw new RuntimeException("getRelyingPartyMetaInformation returned null for"+rhtype+","+rhid+","+rptype+","+rpid);
 		}
 		String rpdisplayname = null;
-		if (rpmi.getDisplayname() != null)
+		if (rpmi.getDisplayname() != null) {
 			rpdisplayname = CarAdminUtils.localize(rpmi.getDisplayname(), lang);
+		}
 		else
 			rpdisplayname = rpmi.getRpidentifier().getRpid();
 		
