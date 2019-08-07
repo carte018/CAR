@@ -1,0 +1,223 @@
+#!/bin/bash
+
+parse_args() {
+  POSITIONAL=()
+  while [[ $# -gt 0 ]]
+  do
+    key="$1"
+    case "$key" in
+        -q)
+                QUIET=yes
+                shift
+                ;;
+        -b)
+                REBUILD=yes
+                shift
+                ;;
+        -s)
+                RESTART=yes
+                shift
+                ;;
+    esac
+  done
+  set -- "${POSITIONAL[@]}"
+}
+
+parse_args $*
+
+# 
+# If we have a previously-configured arpsi config, start with its defaults
+# as ours, overridden by our own config.prev file.
+#
+
+if [ -f ../arpsinode/config.prev ]
+then
+    source ../arpsinode/config.prev
+fi
+
+
+#
+# if the config.prev file exists, load it
+#
+
+if [ -f config.prev ]
+then
+    source config.prev
+fi
+
+#
+# if we were called with the -q flag, don't ask questions, otherwise do
+#
+
+if [ "$QUIET" != "yes" ]
+then
+  # Ask some questions
+  #
+
+  echo "The INFORMED WS uses http-basicauth to authenticate requests it receives."
+  echo "Current options for validating basicauth credentials are:"
+  echo "krb5 - Verify credentials by performing krb5 authentication"
+  echo "null - Don't verify credentials -- simply accept any user/secret presented"
+  echo "For testing purposes, and in special cases in which a web service proxy (like Kong)"
+  echo "is being used to pre-authenitcate WS requests, the 'null' driver may be acceptable."
+  echo "For any other purpose, the 'null' driver should NOT be used."
+  echo
+  echo "Which driver do you wish to use [krb5 / null] for authenticating INFORMED requests?"
+  echo "[$auth_mech]:  "
+  read am
+  if [ -n "$am" ]
+  then
+    auth_mech="$am"
+  fi
+
+  if [ "$auth_mech" == "krb5" ]
+  then
+    basicauth_class="edu.internet2.consent.informed.auth.KrbAuth"
+    echo
+    echo "Since you will be using the krb5 driver, we need to configure your Kerberos"
+    echo "realm information."
+    echo
+
+    # Set Kerberos default realm
+    if [ ! -n "$krb_default_realm" ]
+    then
+      krb_default_realm="LOCAL"
+    fi
+    echo "Enter the name -- usually all UPPER CASE -- of the Kerberos realm you wish to "
+    echo "use for authenticating requests to the INFORMED web service.  If you are not using "
+    echo "Kerberos to authenticate requests to the INFORMED, the default should be fine."
+    echo "[$krb_default_realm]:  "
+    read kd
+    if [ -n "$kd" ]
+    then
+      krb_default_realm="$kd"
+    fi
+
+    # Set three kdcs
+    #
+    echo "We now need to identify the KDCs for the $krb_default_realm realm."
+    echo "You may specify up to three KDCs and you must specify a kadmin server."
+    echo "If you are not using Kerberos to authenticate web service requests, you may "
+    echo "safely accept the default values."
+    echo
+
+    if [ ! -n "$kdc_fqdn_1" ]
+    then
+      kdc_fqdn_1="kdc.LOCAL"
+    fi
+    echo "First KDC FQDN [$kdc_fqdn_1]:  "
+    read kdc1
+    if [ -n "$kdc1" ]
+    then
+      kdc_fqdn_1="$kdc1";
+    fi
+    echo
+    if [ ! -n "$kdc_fqdn_2" ]
+    then
+      kdc_fqdn_2="$kdc_fqdn_1"
+    fi
+    echo "Second KDC FQDN [$kdc_fqdn_2]:  "
+    read kdc2
+    if [ -n "$kdc2" ]
+    then
+      kdc_fqdn_2="$kdc2";
+    fi
+    echo
+    if [ ! -n "$kdc_fqdn_3" ]
+    then
+      kdc_fqdn_3="$kdc_fqdn_1"
+    fi
+    echo "Third KDC FQDN [$kdc_fqdn_3]:  "
+    read kdc3
+    if [ -n "$kdc3" ]
+    then
+      kdc_fqdn_3="$kdc3";
+    fi
+    echo
+    if [ ! -n "$kdc_fqdn_admin" ]
+    then
+      kdc_fqdn_admin="$kdc_fqdn_1"
+    fi
+    echo "Admin KDC FQDN -- the FQDN of the KDC running the kadmin daemon [$kdc_fqdn_admin]:"
+  
+    read kdca
+    if [ -n "$kdca" ]
+    then
+      kdc_fqdn_admin="$kdca"
+    fi
+    if [ -n "$auth_mech" ]
+    then
+      auth_mech="null"
+    fi
+  else
+    basicauth_class="edu.internet2.consent.informed.auth.NullAuth"
+  fi
+
+  if [ ! -n "$app_users" ]
+  then
+    app_users="root"
+  fi
+  echo "We must now configure authorizations for the INFORMED WS.  The INFORMED is"
+  echo "the primary outward-facing API exposed by the CARMA, and it"
+  echo "includes reflection APIs from the ARPSI and the COPSU." 
+  echo "Enter a comma-separated list of the user identifiers [the values"
+  echo "that will be passed in the basicauth headers of requests] to grant"
+  echo "general access to the INFORMED WS.  You will separately grant a subset"
+  echo "of these users administrative rights in the INFORMED WS below."
+  echo "If you do not list any INFORMED users, your INFORMED will not respond to"
+  echo "any requests."
+  echo "[$app_users]: "
+  read au
+  if [ -n "$au" ]
+  then
+    app_users="$au"
+  fi
+
+  if [ ! -n "$app_admins" ]
+  then
+    app_admins="$app_users"
+  fi
+  echo "We now need to configure the list of API admins who will have full rights in"
+  echo "the INFORMED WS (including the COPSU and ARPSI API reflections there.)"
+  echo "This is typically a subset of the app users you listed above."
+  echo
+  echo "[$app_admins] : "
+  read aa
+  if [ -n "$aa" ]
+  then
+    app_admins="$aa"
+  fi
+fi
+
+echo
+echo
+echo "We will now rebuild the templated configuration files for this SP."
+echo
+echo
+
+cat informed.conf.tmpl | sed 's/%basicauth_class%/'$basicauth_class'/g' | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%app_users%/'$app_users'/g' | sed 's/%app_admins%/'$app_admins'/g' | sed 's/%carma_user%/'$CARMA_USER'/g' | sed 's/%carma_password%/'$CARMA_PASSWORD'/g' > informed.conf
+
+cat krb5.conf.tmpl | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%kdc_fqdn_1%/'$kdc_fqdn_1'/g' | sed 's/%kdc_fqdn_2%/'$kdc_fqdn_2'/g' | sed 's/%kdc_fqdn_3%/'$kdc_fqdn_3'/g' | sed 's/%kdc_fqdn_admin%/'$kdc_fqdn_admin'/g' > krb5.conf
+
+echo
+echo "Registering SSL certificate trusts"
+echo
+cp ../apache-sp/ssl.pem ./ssl.pem
+
+
+echo "Saving configuration for later reuse"
+echo
+echo "krb_default_realm=$krb_default_realm" > config.prev
+echo "kdc_fqdn_1=$kdc_fqdn_1" >> config.prev
+echo "kdc_fqdn_2=$kdc_fqdn_2" >> config.prev
+echo "kdc_fqdn_3=$kdc_fqdn_3" >> config.prev
+echo "kdc_fqdn_admin=$kdc_fqdn_admin" >> config.prev
+echo "basicauth_class=$basicauth_class" >> config.prev
+echo "app_users=$app_users" >> config.prev
+echo "app_admins=$app_admins" >> config.prev
+echo "carma_user=$CARMA_USER" >> config.prev
+echo "carma_password=$CARMA_PASSWORD" >> config.prev
+echo "Done."
+echo "Your saved configuration options are available in the file config.prev in the informed directory."
+echo
+

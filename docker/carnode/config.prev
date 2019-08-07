@@ -1,0 +1,11 @@
+krb_default_realm=ACPUB.DUKE.EDU
+kdc_fqdn_1=kaserv1.acpub.duke.edu
+kdc_fqdn_2=kaserv2.acpub.duke.edu
+kdc_fqdn_3=kaserv3.acpub.duke.edu
+kdc_fqdn_admin=kaserv1.acpub.duke.edu
+basicauth_class=edu.internet2.consent.car.auth.KrbAuth
+app_users=rob,mkm16,hiro
+app_admins=rob,mkm16
+carma_user=carcomp-svc
+carma_password=SWgW+lfVyrBACqGlr8iFbzdV
+institution_name=Duke

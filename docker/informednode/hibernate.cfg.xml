@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver.class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql:loadbalance://node1:3306,node2:3306,node3:3306/informed?autoReconnect=true</property>
+    <property name="hibernate.connection.username">informeduser</property>
+    <property name="hibernate.connection.password">ResistanceIsFutile</property>
+    <property name="hibernate.connection.autocommit">false</property>
+
+	<property name="hibernate.c3p0.min_size">5</property>
+	<property name="hibernate.c3p0.max_size">100</property>
+	<property name="hibernate.c3p0.timeout">3605</property>
+	<property name="hibernate.c3p0.max_statements">50</property>
+	<property name="hibernate.c3p0.idle_test_period">3600</property>
+	<property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
+	<property name="hibernate.c3p0.acquire_increment">5</property>
+	 
+    <!-- Do not go into production with this in place; this is for testing only -->
+    <!-- <property name="hbm2ddl.auto">create</property> --> <!-- RGC:  disabled for now -->
+    <!--  Enable this to show SQL being processed  -->
+    <!-- <property name="hibernate.show_sql">true</property> -->
+    <!--<mapping class="edu.internet2.consent.copsu.model.ListablePolicyId"/>--> <!-- example mapping -->
+    <mapping class="edu.internet2.consent.informed.model.ReturnedInfoTypeList"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRHInfoItemList"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRHMetaInformation"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRHRPList"/>
+    <mapping class="edu.internet2.consent.informed.model.RPIdentifier"/>
+    <mapping class="edu.internet2.consent.informed.model.LocaleString"/>
+    <mapping class="edu.internet2.consent.informed.model.InfoItemIdentifier"/>
+    <mapping class="edu.internet2.consent.informed.model.InfoItemValueList"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRPMetaInformation"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedRPProperty"/>
+    <mapping class="edu.internet2.consent.informed.model.InternationalizedString"/>
+    <mapping class="edu.internet2.consent.informed.model.ReturnedValueMetaInformation"/>
+    <mapping class="edu.internet2.consent.informed.model.SupportedLanguage"/>
+    <mapping class="edu.internet2.consent.informed.model.SupportedIIType"/>
+    <mapping class="edu.internet2.consent.informed.model.SupportedRHType"/>
+    <mapping class="edu.internet2.consent.informed.model.SupportedRPType"/>
+    <mapping class="edu.internet2.consent.informed.model.ActivityStreamEntry"/>
+    <mapping class="edu.internet2.consent.informed.model.SupportedUserType"/>
+    <mapping class="edu.internet2.consent.informed.model.AdminRoleMapping"/>
+  </session-factory>
+</hibernate-configuration>

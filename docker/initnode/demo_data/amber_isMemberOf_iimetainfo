@@ -1,0 +1,41 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Groups of which You Are a Member"
+            },
+            {
+                "locale": "es",
+                "value": "Grupos de los que eres miembro"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Group Membership"
+            },
+            {
+                "locale": "es",
+                "value": "Membres\u00eda de grupo"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "isMemberOf",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": true,
+    "policytype": "PEV",
+    "presentationtype": "ENCODED",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": true,
+}

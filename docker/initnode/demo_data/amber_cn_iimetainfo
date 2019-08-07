@@ -1,0 +1,41 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Official Name"
+            },
+            {
+                "locale": "es",
+                "value": "Nombre oficial"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Official Name"
+            },
+            {
+                "locale": "es",
+                "value": "Nombre oficial"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "cn",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PEV",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false,
+}

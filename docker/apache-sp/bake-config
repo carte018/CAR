@@ -1,0 +1,179 @@
+#!/bin/bash
+
+#
+# if the config.prev file exists, load it
+#
+
+parse_args() {
+  POSITIONAL=()
+  while [[ $# -gt 0 ]]
+  do
+    key="$1"
+    case "$key" in
+        -q)
+                QUIET=yes
+                shift
+                ;;
+        -b)
+                REBUILD=yes
+                shift
+                ;;
+        -s)
+                RESTART=yes
+                shift
+                ;;
+    esac
+  done
+  set -- "${POSITIONAL[@]}"
+}
+
+parse_args $*
+
+
+if [ -f config.prev ]
+then
+    source config.prev
+fi
+
+#
+# if we were called with the -q flag, don't ask questions, otherwise do
+#
+
+if [ "$QUIET" != "yes" ]
+then
+  # Ask some questions
+  #
+
+  # Set apache_server_name for the Apache server
+
+  if [ ! -n "$apache_server_name" ]
+  then
+    apache_server_name="localhost"
+  fi
+  echo "Enter the name you wish to use for the Apache server.  This will be used by the Apache server"
+  echo "to construct response URLs.  [$apache_server_name]:  "
+  read a
+  if [ -n "$a" ]
+  then
+    apache_server_name="$a"
+  fi
+
+  # Set sp-entity-id for the SP
+  #
+
+  if [ ! -n "$sp_entity_id" ]
+  then
+    sp_entity_id="https://$apache_server_name/car-demo-sp"
+  fi
+  echo "Enter the Entity ID you wish to use for the Shibboleth SP.  This will be the identifier by "
+  echo "which federation partners (IDPs, typically) will identify your SP.  It will also be the "
+  echo "entity ID by which your CAR instance will recognize itself (for purposes of ensuring full"
+  echo "attribute availability for the CARMA self-service UI)".  If you are not sure what to use, 
+  echo "the default value is probably safe to try.  [$sp_entity_id]:  "
+  read s
+  if [ -n "$s" ]
+  then
+    sp_entity_name="$s"
+  fi
+
+  # Set local-unique-id attribute if any
+  #
+  if [ ! -n "$local_unique_id" ]
+  then
+    local_unique_id="eppn"
+  fi
+  echo "Enter the name of a local attribute you wish to use as the preferred user identifier for your"
+  echo "CAR instance.  Typically, this is the eppn, but if you have a local unique identifier with "
+  echo "stronger temporal uniqueness qualities, you may prefer to specify it here.  The default "
+  echo "should be safe in most cases.  [$local_unique_id]:  "
+  read l
+  if [ -n "$l" ]
+  then
+    local_unique_id="$l"
+  fi
+
+  # Set idp-entity-id value (if using)
+  #
+  if [ ! -n "$idp_entity_id" ]
+  then
+    idp_entity_id=""
+  fi
+  echo "If you plan to federate this instance bilaterally with a local IDP (the most common use case)"
+  echo "enter the entity ID of the IDP you wish to federate with.  [$idp_entity_id]:  "
+  read i
+  if [ -n "$i" ]
+  then
+    idp_entity_id="$i"
+  fi
+
+  # Set federation-discovery-service value (if using)
+  #
+  if [ ! -n "$federation_discovery_service" ]
+  then
+    federation_discovery_service=""
+  fi
+  echo "If you plan to operate this instance as part of a multilateral federation (an uncommon use"
+  echo "case, typically reserved for multitenant instances operated by federation operators) enter"
+  echo "the URL for your preferred federation discovery service. In most cases, the default value"
+  echo "(empty) will be correct here.  [$federation_discovery_service]:  "
+  read f
+  if [ -n "$f" ]
+  then
+    federation_discovery_service="$f"
+  fi
+
+  # Set federation-metadata-retrieval-url
+  #
+  if [ ! -n "$federation_metadata_retrieval_url" ]
+  then
+    federation_metadata_retrieval_url="https://md.incommon.org/InCommon/InCommon-metadata.xml" 
+  fi
+  echo "This SP must (periodically) retrieve SAML metadata that includes the metadata for the IDP(s)"
+  echo "you federate with.  This may be a federation-supplied metadata object or it may be a local"
+  echo "metadata file describing a single IDP.  In either case, enter the URL from which this SP"
+  echo "should retrieve trusted metadata.  [$federation_metadata_retrieval_url]:  "
+  read m
+  if [ -n "$m" ]
+  then
+    federation_metadata_retrieval_url="$m"
+  fi
+fi
+
+echo
+echo
+echo "We will now rebuild the templated configuration files for this SP."
+echo
+echo
+cat custom.conf.tmpl | sed 's/%apache-server-name%/'$apache_server_name'/g' > custom.conf
+cat shibboleth2.xml.tmpl | sed 's/%sp-entity-id%/'`echo $sp_entity_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%local-unique-id%/'`echo $local_unique_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%idp-entity-id%/'`echo $idp_entity_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-discovery-service%/'`echo $federation_discovery_service | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-metadata-retrieval-url%/'`echo $federation_metadata_retrieval_url | sed s/\\\//\\\\\\\\\\\//g`'/g' > shibboleth2.xml
+echo
+echo
+if [ ! -f sp-key.pem ]
+then
+  echo "We must now create an SP key pair for this SP. We'll remember it for future rebuilds."
+  echo 
+  if ! type openssl > /dev/null 2>&1
+  then
+    echo "We are not able to find the "openssl" utility in your path.  When we build the Docker"
+    echo "container for this SP, we'll use the auto-generated SP certificate and private key. "
+    echo "We'll worry about remembering what those are later."
+  else
+    openssl req -newkey rsa:4096 -nodes -x509 -subj "/CN=car-sp" -keyout sp-key.pem -out sp-cert.pem -days 3650
+  fi
+else
+  echo "Using existing sp-key.pem and sp-cert.pem files"
+fi
+
+echo "Saving configuration for later reuse"
+echo
+echo "apache_server_name=$apache_server_name" > config.prev
+echo "sp_entity_id=$sp_entity_id" >> config.prev
+echo "local_unique_id=$local_unique_id" >> config.prev
+echo "idp_entity_id=$idp_entity_id" >> config.prev
+echo "federation_discovery_service=$federation_discovery_service" >> config.prev
+echo "federation_metadata_retrieval_url=$federation_metadata_retrieval_url" >> config.prev
+echo
+echo "Done."
+echo "Your saved configuration options are available in the file 'config.prev' in the 'apache-sp' directory."
+echo
+

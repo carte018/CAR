@@ -1,0 +1,75 @@
+{
+    "requiredlist": [
+        {
+            "infoitemidentifier": {
+                "iiid": "eduPersonPrincipalName",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "Unique Identification"
+                    },
+                    {
+                        "locale": "es",
+                        "value": "Identificaci\u00f3n \u00fanica"
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "eduPersonPrincipalName",
+            "valuelist": [
+                ".*"
+            ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "amberTitle",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "Only the Titled may walk the Pattern"
+                    },
+                    {
+                        "locale": "es",
+                        "value": "Solo los Titulados pueden caminar el Patr\u00f3n"
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "amberTitle",
+            "valuelist": [
+                ".*"
+            ]
+        }
+    ],
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "https://pattern.amber.org/shibboleth",
+        "rptype": "entityId"
+    },
+    "state": "active",
+    "updated": 1564949780486,
+    "version": 3
+}

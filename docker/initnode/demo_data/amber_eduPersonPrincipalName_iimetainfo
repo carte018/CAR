@@ -1,0 +1,41 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "A Unique Person Identifier Related to Your Login ID"
+            },
+            {
+                "locale": "es",
+                "value": "Un identificador de persona \u00fanico"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Federated Principal Name"
+            },
+            {
+                "locale": "es",
+                "value": "Nombre principal federado"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonPrincipalName",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false,
+}

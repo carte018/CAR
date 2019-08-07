@@ -1,0 +1,41 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Unique Federation Identifier (not related to your name or login)"
+            },
+            {
+                "locale": "es",
+                "value": "Identificador \u00fanico de la federaci\u00f3n (no relacionado con su nombre o inicio de sesi\u00f3n)"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Federated Unique Identifier"
+            },
+            {
+                "locale": "es",
+                "value": "Identificador \u00fanico federado federado"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonUniqueId",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false,
+}

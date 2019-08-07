@@ -1,0 +1,105 @@
+{
+    "optionallist": [
+        {
+            "infoitemidentifier": {
+                "iiid": "eduPersonScopedAffiliation",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To verify your lineage"
+                    },
+                    {
+                        "locale": "es",
+                        "value": "Para verificar tu linaje"
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "eduPersonScopedAffiliation",
+            "valuelist": [
+                ".*"
+            ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "isMemberOf",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "Authorization"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "isMemberOf",
+            "valuelist": [
+                "urn:mace:duke.edu:groups:group-manager:roles:car-demo-.*"
+            ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "cn",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "The Pattern uses CN to address you (and we use displayName instead)"
+                    },
+                    {
+                        "locale": "es",
+                        "value": "El patr\u00f3n utiliza CN para dirigirse a usted (y en su lugar usamos displayName)"
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "displayName",
+            "valuelist": [
+                ".*"
+            ]
+        }
+    ],
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "https://pattern.amber.org/shibboleth",
+        "rptype": "entityId"
+    },
+    "state": "active",
+    "updated": 1564949840325,
+    "version": 4
+}

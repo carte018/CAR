@@ -1,0 +1,41 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Primary or Strongest Relationship to Amber"
+            },
+            {
+                "locale": "es",
+                "value": "Relaci\u00f3n principal o m\u00e1s fuerte con Amber"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Primary Affiliation"
+            },
+            {
+                "locale": "es",
+                "value": "Afiliaci\u00f3n primaria"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonPrimaryAffiliation",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false,
+}

@@ -1,0 +1,41 @@
+{
+    "asnd": true,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "A Unique, Targeted ID Specific to the Service You Are Accessing"
+            },
+            {
+                "locale": "es",
+                "value": "Una identificaci\u00f3n \u00fanica y espec\u00edfica para el servicio al que est\u00e1 accediendo"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Targeted ID"
+            },
+            {
+                "locale": "es",
+                "value": "ID dirigida"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonTargetedID",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "OPAQUE",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false,
+}

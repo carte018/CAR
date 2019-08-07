@@ -1,0 +1,41 @@
+{
+    "asnd": true,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Unique Identifier for Amber"
+            },
+            {
+                "locale": "es",
+                "value": "Identificador \u00fanico para Amber"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Organization"
+            },
+            {
+                "locale": "es",
+                "value": "Organizaci\u00f3n"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonOrgDN",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false,
+}

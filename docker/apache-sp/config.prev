@@ -1,0 +1,6 @@
+apache_server_name=localhost
+sp_entity_id=https://localhost/car-demo-sp
+local_unique_id=duDukeID
+idp_entity_id=https://shib.oit.duke.edu/shibboleth-idp
+federation_discovery_service=
+federation_metadata_retrieval_url=https://shib.oit.duke.edu/duke-metadata-2-signed.xml

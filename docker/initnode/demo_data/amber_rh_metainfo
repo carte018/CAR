@@ -1,0 +1,22 @@
+{
+  "description": {
+    "locales": [
+      {
+        "locale":"en",
+        "value":"Castle Amber Identity Provider"
+      }
+    ]
+  },
+  "displayname": {
+    "locales": [
+      {
+        "locale":"en",
+        "value":"Amber IDP"
+      }
+    ]
+  },
+  "rhidentifier": {
+    "rhid":"urn:mace:multiverse:amber",
+    "rhtype":"entityId"
+  }
+}
