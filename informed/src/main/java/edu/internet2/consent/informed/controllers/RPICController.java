@@ -19,12 +19,14 @@ package edu.internet2.consent.informed.controllers;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -57,7 +59,7 @@ public class RPICController {
 	
 	// Response builder
 	private Response buildResponse(Status code, String entity) {
-		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST, PUT, DELETE").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST, PUT, DELETE").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").encoding("UTF-8").build();
 	}
 	
 	// CORS
@@ -776,6 +778,7 @@ public class RPICController {
 		}
 	}
 	@GET
+	@Produces("application/json;charset=UTF-8")
 	@Path("/metainformation/{rhtype}/{rhvalue}/{rptype}/{rpvalue}")
 	public Response getMetaInformationRP(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("rhtype") String rhtype, @PathParam("rhvalue") String rhvaluein, @PathParam("rptype") String rptype, @PathParam("rpvalue") String rpvaluein) {
 		
@@ -830,6 +833,8 @@ public class RPICController {
 	}
 	
 	@PUT
+	@Consumes("application/json;charset=UTF-8")
+	@Produces("application/json;charset=UTF-8")
 	@Path("/metainformation/{rhtype}/{rhvalue}/{rptype}/{rpvalue}")
 	public Response putMetaInformationRP(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("rhtype") String rhtype, @PathParam("rhvalue") String rhvaluein, @PathParam("rptype") String rptype, @PathParam("rpvalue") String rpvaluein) {
 		// init first
@@ -852,6 +857,7 @@ public class RPICController {
 		
 		try {
 			rrmi = mapper.readValue(entity, ReturnedRPMetaInformation.class);
+			
 		} catch (JsonParseException e) {
 			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
 		} catch (JsonMappingException e) {
@@ -904,6 +910,7 @@ public class RPICController {
 			tx.commit();
 		}
 		try {
+			
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
 			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
