@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "Your Official Title in the Court of Amber"
-            },
-            {
-                "locale": "es",
-                "value": "Tu t\u00edtulo oficial en el Tribunal de Amber"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Amber Royal Title"
-            },
-            {
-                "locale": "es",
-                "value": "T\u00edtulo real in Amber"
             }
         ]
     },

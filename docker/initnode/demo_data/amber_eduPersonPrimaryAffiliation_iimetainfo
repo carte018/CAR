@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "Primary or Strongest Relationship to Amber"
-            },
-            {
-                "locale": "es",
-                "value": "Relaci\u00f3n principal o m\u00e1s fuerte con Amber"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Primary Affiliation"
-            },
-            {
-                "locale": "es",
-                "value": "Afiliaci\u00f3n primaria"
             }
         ]
     },

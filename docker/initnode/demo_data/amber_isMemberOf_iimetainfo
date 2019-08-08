@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "Groups of which You Are a Member"
-            },
-            {
-                "locale": "es",
-                "value": "Grupos de los que eres miembro"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Group Membership"
-            },
-            {
-                "locale": "es",
-                "value": "Membres\u00eda de grupo"
             }
         ]
     },

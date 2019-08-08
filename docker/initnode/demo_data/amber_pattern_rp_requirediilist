@@ -13,7 +13,7 @@
                     },
                     {
                         "locale": "es",
-                        "value": "Identificaci\u00f3n \u00fanica"
+                        "value": null
                     },
                     {
                         "locale": "de",
@@ -43,7 +43,7 @@
                     },
                     {
                         "locale": "es",
-                        "value": "Solo los Titulados pueden caminar el Patr\u00f3n"
+                        "value": null
                     },
                     {
                         "locale": "de",

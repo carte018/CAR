@@ -13,7 +13,7 @@
                     },
                     {
                         "locale": "es",
-                        "value": "Para verificar tu linaje"
+                        "value": null
                     },
                     {
                         "locale": "de",
@@ -73,7 +73,7 @@
                     },
                     {
                         "locale": "es",
-                        "value": "El patr\u00f3n utiliza CN para dirigirse a usted (y en su lugar usamos displayName)"
+                        "value": null
                     },
                     {
                         "locale": "de",

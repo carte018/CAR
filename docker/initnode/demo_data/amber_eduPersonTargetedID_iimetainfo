@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "A Unique, Targeted ID Specific to the Service You Are Accessing"
-            },
-            {
-                "locale": "es",
-                "value": "Una identificaci\u00f3n \u00fanica y espec\u00edfica para el servicio al que est\u00e1 accediendo"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Targeted ID"
-            },
-            {
-                "locale": "es",
-                "value": "ID dirigida"
             }
         ]
     },

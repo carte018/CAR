@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "Unique Identifier for Amber"
-            },
-            {
-                "locale": "es",
-                "value": "Identificador \u00fanico para Amber"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Organization"
-            },
-            {
-                "locale": "es",
-                "value": "Organizaci\u00f3n"
             }
         ]
     },

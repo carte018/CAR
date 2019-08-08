@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "Surname"
-            },
-            {
-                "locale": "es",
-                "value": "Apellido"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Surname"
-            },
-            {
-                "locale": "es",
-                "value": "Apellido"
             }
         ]
     },

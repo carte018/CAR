@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "A Unique Person Identifier Related to Your Login ID"
-            },
-            {
-                "locale": "es",
-                "value": "Un identificador de persona \u00fanico"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Federated Principal Name"
-            },
-            {
-                "locale": "es",
-                "value": "Nombre principal federado"
             }
         ]
     },

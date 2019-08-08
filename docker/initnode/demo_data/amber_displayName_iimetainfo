@@ -5,10 +5,6 @@
             {
                 "locale": "en",
                 "value": "Your Preferred Name for Display"
-            },
-            {
-                "locale": "es",
-                "value": "Su nombre preferido para mostrar"
             }
         ]
     },
@@ -17,10 +13,6 @@
             {
                 "locale": "en",
                 "value": "Display Name"
-            },
-            {
-                "locale": "es",
-                "value": "Nombre para mostrar"
             }
         ]
     },
