@@ -33,5 +33,5 @@
         "rhid": "urn:mace:multiverse:amber",
         "rhtype": "entityId"
     },
-    "sensitivity": false,
+    "sensitivity": false
 }
