@@ -32,14 +32,14 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" --insecure 'https://apache-sp/consent/
 # Force tomcat8 to deploy the informed content app
 # and load the demo "Amber" RH 
 #
-curl -u "${CARMA_USER}:$CARMA_PASSWORD" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_rh_metainfo 'https://apache-sp/consent/v1/informed/rhic/entityId/urn:mace:multiverse:amber' >> /dev/null
+curl -u "${CARMA_USER}:$CARMA_PASSWORD" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_rh_metainfo 'https://apache-sp/consent/v1/informed/rhic/metainformation/entityId/urn:mace:multiverse:amber' >> /dev/null
 
 #
 # Load attributes available through the Amber RH
 #
 for num in amberTitle cn displayName eduPersonOrcid eduPersonOrgDN eduPersonPrimaryAffiliation eduPersonPrincipalName eduPersonScopedAffiliation eduPersonTargetedID eduPersonUniqueId isMemberOf mail sn
 do
-  curl -u "${CARMA_USER}:$CARMA_PASSWORD" -H 'Content-type: application/json;charset=UTF-8'  --insecure -X PUT -d @/tmp/demo_data/amber_${num}_iimetainfo 'https://apache-sp/consent/v1/informed/iiic/entityId/urn:mace:multiverse:amber/attribute/'$num >> /dev/null
+  curl -u "${CARMA_USER}:$CARMA_PASSWORD" -H 'Content-type: application/json;charset=UTF-8'  --insecure -X PUT -d @/tmp/demo_data/amber_${num}_iimetainfo 'https://apache-sp/consent/v1/informed/iiic/iimetainformation/entityId/urn:mace:multiverse:amber/attribute/'$num >> /dev/null
 done
 
 #
