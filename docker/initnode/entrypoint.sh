@@ -1,6 +1,19 @@
 #!/bin/bash
 
 #
+# Build timing is somewhat...  complicated.
+#
+# While the initnode is built and started last by docker-compose, it starts
+# as soon as the node's container is started, which may (frequently) happen before
+# the other components have successfully deployed their servlets.  
+#
+# Here, we simply wait 20 seconds to give the other components time to 
+# deploy their servlets before starting to populate registration information.
+#
+
+sleep 20
+
+#
 # Force tomcat8 to deploy the ICM
 #
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" --insecure 'https://apache-sp/consent/v1/icm/icm-info-release-policies' >> /dev/null
@@ -26,7 +39,7 @@ curl -u "${CARMA_USER}:$CARMA_PASSWORD" --insecure -X PUT -d @/tmp/demo_data/amb
 #
 for num in amberTitle cn displayName eduPersonOrcid eduPersonOrgDN eduPersonPrimaryAffiliation eduPersonPrincipalName eduPersonScopedAffiliation eduPersonTargetedID eduPersonUniqueId isMemberOf mail sn
 do
-  curl -u "${CARMA_USER}:$CARMA_PASSWORD" --insecure -X PUT -d @/tmp/demo_data/amber_$num_iimetainfo 'https://apache-sp/consent/v1/informed/iiic/entityId/urn:mace:multiverse:amber/attribute/'$num >> /dev/null
+  curl -u "${CARMA_USER}:$CARMA_PASSWORD" --insecure -X PUT -d @/tmp/demo_data/amber_${num}_iimetainfo 'https://apache-sp/consent/v1/informed/iiic/entityId/urn:mace:multiverse:amber/attribute/'$num >> /dev/null
 done
 
 #
