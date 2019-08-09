@@ -1,11 +1,11 @@
 SET foreign_key_checks=0;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `arpsi` DEFAULT CHARACTER SET utf8mb4 /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `arpsi` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `arpsi`;
 
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgDirectiveOnValues` (
   `DirectiveOnValuesIdentifier` bigint(20) NOT NULL AUTO_INCREMENT,
   `orgReleaseDirective` varchar(255) DEFAULT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `OrgDirectiveOnValues` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgDirectiveOnValues_ValueObject` (
   `OrgDirectiveOnValues_DirectiveOnValuesIdentifier` bigint(20) NOT NULL,
   `valueObjectList_valueKey` bigint(20) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE `OrgDirectiveOnValues_ValueObject` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgInfoReleaseStatement` (
   `OIRKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `infoType` varchar(255) DEFAULT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `OrgInfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgInfoReleaseStatement_OrgDirectiveOnValues` (
   `OrgInfoReleaseStatement_OIRKey` bigint(20) NOT NULL,
   `arrayOfOrgDirectiveOnValues_DirectiveOnValuesIdentifier` bigint(20) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE `OrgInfoReleaseStatement_OrgDirectiveOnValues` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgReturnedPolicy` (
   `ReturnedPolicyIdentifier` bigint(20) NOT NULL AUTO_INCREMENT,
   `allOtherInfoType` varchar(255) DEFAULT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE `OrgReturnedPolicy` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgReturnedPolicy_OrgInfoReleaseStatement` (
   `OrgReturnedPolicy_ReturnedPolicyIdentifier` bigint(20) NOT NULL,
   `arrayOfInfoReleaseStatement_OIRKey` bigint(20) NOT NULL,
@@ -115,7 +115,7 @@ CREATE TABLE `OrgReturnedPolicy_OrgInfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgReturnedPolicy_RelyingPartyProperty` (
   `OrgReturnedPolicy_ReturnedPolicyIdentifier` bigint(20) NOT NULL,
   `relyingPartyPropertyArray_relyingPartyIdKey` bigint(20) NOT NULL,
@@ -131,7 +131,7 @@ CREATE TABLE `OrgReturnedPolicy_RelyingPartyProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `OrgReturnedPolicy_UserProperty` (
   `OrgReturnedPolicy_ReturnedPolicyIdentifier` bigint(20) NOT NULL,
   `userPropertyArray_userPropertyKey` bigint(20) NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE `OrgReturnedPolicy_UserProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyProperty` (
   `relyingPartyIdKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `rpPropName` varchar(255) DEFAULT NULL,
@@ -161,7 +161,7 @@ CREATE TABLE `RelyingPartyProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `UserProperty` (
   `userPropertyKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `userPropName` varchar(255) DEFAULT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE `UserProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ValueObject` (
   `valueKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `value` varchar(255) DEFAULT NULL,
@@ -188,7 +188,7 @@ CREATE TABLE `ValueObject` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -200,7 +200,7 @@ INSERT INTO `hibernate_sequence` VALUES(1000);
 -- Current Database: `copsu`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `copsu` DEFAULT CHARACTER SET utf8mb4 /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `copsu` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `copsu`;
 
@@ -209,7 +209,7 @@ USE `copsu`;
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `DirectiveOnValues` (
   `DirectiveIdentifier` bigint(20) NOT NULL,
   `releaseDirective` varchar(255) DEFAULT NULL,
@@ -222,7 +222,7 @@ CREATE TABLE `DirectiveOnValues` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `DirectiveOnValues_ValueObject` (
   `DirectiveOnValues_DirectiveIdentifier` bigint(20) NOT NULL,
   `valueObjectList_valueKey` bigint(20) NOT NULL,
@@ -238,7 +238,7 @@ CREATE TABLE `DirectiveOnValues_ValueObject` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoReleaseStatement` (
   `InfoIdKey` bigint(20) NOT NULL,
   `allOtherValues` varchar(255) DEFAULT NULL,
@@ -255,7 +255,7 @@ CREATE TABLE `InfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoReleaseStatement_DirectiveOnValues` (
   `InfoReleaseStatement_InfoIdKey` bigint(20) NOT NULL,
   `arrayOfDirectiveOnValues_DirectiveIdentifier` bigint(20) NOT NULL,
@@ -271,7 +271,7 @@ CREATE TABLE `InfoReleaseStatement_DirectiveOnValues` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ListablePolicyId` (
   `ListablePolicyIdentifier` bigint(20) NOT NULL,
   `baseId` varchar(255) DEFAULT NULL,
@@ -285,7 +285,7 @@ CREATE TABLE `ListablePolicyId` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ListableRelyingPartyId` (
   `ListableRelyingPartyIdentifier` bigint(20) NOT NULL,
   `RPtype` varchar(255) DEFAULT NULL,
@@ -299,7 +299,7 @@ CREATE TABLE `ListableRelyingPartyId` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ListableUserId` (
   `ListableUserIdentifier` bigint(20) NOT NULL,
   `userType` varchar(255) DEFAULT NULL,
@@ -313,7 +313,7 @@ CREATE TABLE `ListableUserId` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedChangeOrder` (
   `ChangeOrderIdentifier` bigint(20) NOT NULL,
   `allOtherInfoType` varchar(255) DEFAULT NULL,
@@ -338,7 +338,7 @@ CREATE TABLE `ReturnedChangeOrder` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedChangeOrder_InfoReleaseStatement` (
   `ReturnedChangeOrder_ChangeOrderIdentifier` bigint(20) NOT NULL,
   `arrayOfInfoReleaseStatement_InfoIdKey` bigint(20) NOT NULL,
@@ -354,7 +354,7 @@ CREATE TABLE `ReturnedChangeOrder_InfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedChangeOrder_ListablePolicyId` (
   `ReturnedChangeOrder_ChangeOrderIdentifier` bigint(20) NOT NULL,
   `policyIdArray_ListablePolicyIdentifier` bigint(20) NOT NULL,
@@ -370,7 +370,7 @@ CREATE TABLE `ReturnedChangeOrder_ListablePolicyId` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedChangeOrder_ListableRelyingPartyId` (
   `ReturnedChangeOrder_ChangeOrderIdentifier` bigint(20) NOT NULL,
   `relyingPartyIdArray_ListableRelyingPartyIdentifier` bigint(20) NOT NULL,
@@ -386,7 +386,7 @@ CREATE TABLE `ReturnedChangeOrder_ListableRelyingPartyId` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedChangeOrder_ListableUserId` (
   `ReturnedChangeOrder_ChangeOrderIdentifier` bigint(20) NOT NULL,
   `userIdArray_ListableUserIdentifier` bigint(20) NOT NULL,
@@ -402,7 +402,7 @@ CREATE TABLE `ReturnedChangeOrder_ListableUserId` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedPolicy` (
   `PolicyIdentifier` bigint(20) NOT NULL,
   `allOtherInfoType` varchar(255) DEFAULT NULL,
@@ -435,7 +435,7 @@ CREATE TABLE `ReturnedPolicy` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedPolicy_InfoReleaseStatement` (
   `ReturnedPolicy_PolicyIdentifier` bigint(20) NOT NULL,
   `arrayOfInfoReleaseStatement_InfoIdKey` bigint(20) NOT NULL,
@@ -451,7 +451,7 @@ CREATE TABLE `ReturnedPolicy_InfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ValueObject` (
   `valueKey` bigint(20) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
@@ -464,7 +464,7 @@ CREATE TABLE `ValueObject` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -475,7 +475,7 @@ INSERT INTO hibernate_sequence VALUES(1000);
 -- Current Database: `icm`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `icm` DEFAULT CHARACTER SET utf8mb4 /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `icm` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `icm`;
 
@@ -484,7 +484,7 @@ USE `icm`;
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmDirectiveOnValues` (
   `DirectiveOnValuesIdentifier` bigint(20) NOT NULL AUTO_INCREMENT,
   `icmReleaseDirective` varchar(255) DEFAULT NULL,
@@ -497,7 +497,7 @@ CREATE TABLE `IcmDirectiveOnValues` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmDirectiveOnValues_ValueObject` (
   `IcmDirectiveOnValues_DirectiveOnValuesIdentifier` bigint(20) NOT NULL,
   `valueObjectList_valueKey` bigint(20) NOT NULL,
@@ -513,7 +513,7 @@ CREATE TABLE `IcmDirectiveOnValues_ValueObject` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmInfoReleaseStatement` (
   `OIRKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `allOtherValuesConst` varchar(255) DEFAULT NULL,
@@ -529,7 +529,7 @@ CREATE TABLE `IcmInfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmInfoReleaseStatement_IcmDirectiveOnValues` (
   `IcmInfoReleaseStatement_OIRKey` bigint(20) NOT NULL,
   `arrayOfIcmDirectiveOnValues_DirectiveOnValuesIdentifier` bigint(20) NOT NULL,
@@ -545,7 +545,7 @@ CREATE TABLE `IcmInfoReleaseStatement_IcmDirectiveOnValues` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmReturnedPolicy` (
   `ReturnedPolicyIdentifier` bigint(20) NOT NULL AUTO_INCREMENT,
   `allOtherInfoType` varchar(255) DEFAULT NULL,
@@ -575,7 +575,7 @@ CREATE TABLE `IcmReturnedPolicy` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmReturnedPolicy_IcmInfoReleaseStatement` (
   `IcmReturnedPolicy_ReturnedPolicyIdentifier` bigint(20) NOT NULL,
   `arrayOfInfoReleaseStatement_OIRKey` bigint(20) NOT NULL,
@@ -591,7 +591,7 @@ CREATE TABLE `IcmReturnedPolicy_IcmInfoReleaseStatement` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmReturnedPolicy_RelyingPartyProperty` (
   `IcmReturnedPolicy_ReturnedPolicyIdentifier` bigint(20) NOT NULL,
   `relyingPartyPropertyArray_relyingPartyIdKey` bigint(20) NOT NULL,
@@ -607,7 +607,7 @@ CREATE TABLE `IcmReturnedPolicy_RelyingPartyProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `IcmReturnedPolicy_UserProperty` (
   `IcmReturnedPolicy_ReturnedPolicyIdentifier` bigint(20) NOT NULL,
   `userPropertyArray_userPropertyKey` bigint(20) NOT NULL,
@@ -623,7 +623,7 @@ CREATE TABLE `IcmReturnedPolicy_UserProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoItemInformedContent` (
   `RPICIdentifier` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayName` varchar(255) DEFAULT NULL,
@@ -639,7 +639,7 @@ CREATE TABLE `InfoItemInformedContent` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoItemInformedContent_vocabulary` (
   `InfoItemInformedContent_RPICIdentifier` bigint(20) NOT NULL,
   `vocabulary` varchar(255) DEFAULT NULL,
@@ -653,7 +653,7 @@ CREATE TABLE `InfoItemInformedContent_vocabulary` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyInformedContent` (
   `RPICIdentifier` bigint(20) NOT NULL AUTO_INCREMENT,
   `accessUrl` varchar(255) DEFAULT NULL,
@@ -672,7 +672,7 @@ CREATE TABLE `RelyingPartyInformedContent` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyInformedContent_displayMode` (
   `RelyingPartyInformedContent_RPICIdentifier` bigint(20) NOT NULL,
   `displayMode` varchar(255) DEFAULT NULL,
@@ -687,7 +687,7 @@ CREATE TABLE `RelyingPartyInformedContent_displayMode` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyInformedContent_optionalAttributes` (
   `RelyingPartyInformedContent_RPICIdentifier` bigint(20) NOT NULL,
   `optionalAttributes` varchar(255) DEFAULT NULL,
@@ -701,7 +701,7 @@ CREATE TABLE `RelyingPartyInformedContent_optionalAttributes` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyInformedContent_reasonMap` (
   `RelyingPartyInformedContent_RPICIdentifier` bigint(20) NOT NULL,
   `reasonMap` varchar(255) DEFAULT NULL,
@@ -716,7 +716,7 @@ CREATE TABLE `RelyingPartyInformedContent_reasonMap` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyInformedContent_requiredAttributes` (
   `RelyingPartyInformedContent_RPICIdentifier` bigint(20) NOT NULL,
   `requiredAttributes` varchar(255) DEFAULT NULL,
@@ -730,7 +730,7 @@ CREATE TABLE `RelyingPartyInformedContent_requiredAttributes` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RelyingPartyProperty` (
   `relyingPartyIdKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `rpPropName` varchar(255) DEFAULT NULL,
@@ -744,7 +744,7 @@ CREATE TABLE `RelyingPartyProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `UserProperty` (
   `userPropertyKey` bigint(20) NOT NULL AUTO_INCREMENT,
   `userPropName` varchar(255) DEFAULT NULL,
@@ -758,7 +758,7 @@ CREATE TABLE `UserProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ValueObject` (
   `valueKey` bigint(20) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
@@ -771,7 +771,7 @@ CREATE TABLE `ValueObject` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -782,7 +782,7 @@ INSERT INTO hibernate_sequence VALUES(1000);
 -- Current Database: `informed`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `informed` DEFAULT CHARACTER SET utf8mb4 /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `informed` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `informed`;
 
@@ -791,7 +791,7 @@ USE `informed`;
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ActivityStreamEntry` (
   `aseid` bigint(20) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
@@ -807,7 +807,7 @@ CREATE TABLE `ActivityStreamEntry` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `AdminRoleMapping` (
   `adminRoleId` bigint(20) NOT NULL,
   `subject` varchar(255) DEFAULT NULL,
@@ -825,7 +825,7 @@ CREATE TABLE `AdminRoleMapping` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoItemIdentifier` (
   `iiiid` bigint(20) NOT NULL,
   `iiid` varchar(255) DEFAULT NULL,
@@ -839,7 +839,7 @@ CREATE TABLE `InfoItemIdentifier` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoItemValueList` (
   `ivlid` bigint(20) NOT NULL,
   `sourceitemname` varchar(255) DEFAULT NULL,
@@ -858,7 +858,7 @@ CREATE TABLE `InfoItemValueList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InfoItemValueList_valuelist` (
   `InfoItemValueList_ivlid` bigint(20) NOT NULL,
   `valuelist` varchar(255) DEFAULT NULL,
@@ -872,7 +872,7 @@ CREATE TABLE `InfoItemValueList_valuelist` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InternationalizedString` (
   `istringid` bigint(20) NOT NULL,
   PRIMARY KEY (`istringid`)
@@ -884,7 +884,7 @@ CREATE TABLE `InternationalizedString` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `InternationalizedString_LocaleString` (
   `InternationalizedString_istringid` bigint(20) NOT NULL,
   `locales_localstringid` bigint(20) NOT NULL,
@@ -900,7 +900,7 @@ CREATE TABLE `InternationalizedString_LocaleString` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `LocaleString` (
   `localstringid` bigint(20) NOT NULL,
   `locale` varchar(255) DEFAULT NULL,
@@ -914,7 +914,7 @@ CREATE TABLE `LocaleString` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `RPIdentifier` (
   `rpiid` bigint(20) NOT NULL,
   `rpid` varchar(255) DEFAULT NULL,
@@ -928,7 +928,7 @@ CREATE TABLE `RPIdentifier` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedInfoItemMetaInformation` (
   `riimiid` bigint(20) NOT NULL,
   `iimode` int(11) DEFAULT NULL,
@@ -963,7 +963,7 @@ CREATE TABLE `ReturnedInfoItemMetaInformation` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedInfoTypeList` (
   `typelistID` bigint(20) NOT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
@@ -977,7 +977,7 @@ CREATE TABLE `ReturnedInfoTypeList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedInfoTypeList_infotypes` (
   `ReturnedInfoTypeList_typelistID` bigint(20) NOT NULL,
   `infotypes` varchar(255) DEFAULT NULL,
@@ -991,7 +991,7 @@ CREATE TABLE `ReturnedInfoTypeList_infotypes` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRHInfoItemList` (
   `infoitemlistid` bigint(20) NOT NULL,
   `rhid` varchar(255) DEFAULT NULL,
@@ -1005,7 +1005,7 @@ CREATE TABLE `ReturnedRHInfoItemList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRHInfoItemList_InfoItemIdentifier` (
   `ReturnedRHInfoItemList_infoitemlistid` bigint(20) NOT NULL,
   `infoitemlist_iiiid` bigint(20) NOT NULL,
@@ -1021,7 +1021,7 @@ CREATE TABLE `ReturnedRHInfoItemList_InfoItemIdentifier` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRHMetaInformation` (
   `rhmetainfoid` bigint(20) NOT NULL,
   `rhid` varchar(255) DEFAULT NULL,
@@ -1044,7 +1044,7 @@ CREATE TABLE `ReturnedRHMetaInformation` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRHRPList` (
   `rplistid` bigint(20) NOT NULL,
   `rhid` varchar(255) DEFAULT NULL,
@@ -1058,7 +1058,7 @@ CREATE TABLE `ReturnedRHRPList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRHRPList_RPIdentifier` (
   `ReturnedRHRPList_rplistid` bigint(20) NOT NULL,
   `rplist_rpiid` bigint(20) NOT NULL,
@@ -1074,7 +1074,7 @@ CREATE TABLE `ReturnedRHRPList_RPIdentifier` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPMetaInformation` (
   `rpmiid` bigint(20) NOT NULL,
   `iconurl` varchar(40000) DEFAULT NULL,
@@ -1104,7 +1104,7 @@ CREATE TABLE `ReturnedRPMetaInformation` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPMetaInformation_ReturnedRPProperty` (
   `ReturnedRPMetaInformation_rpmiid` bigint(20) NOT NULL,
   `rpproperties_rppropertyid` bigint(20) NOT NULL,
@@ -1120,7 +1120,7 @@ CREATE TABLE `ReturnedRPMetaInformation_ReturnedRPProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPOptionalInfoItemList` (
   `infoitemlistid` bigint(20) NOT NULL,
   `rhid` varchar(255) DEFAULT NULL,
@@ -1140,7 +1140,7 @@ CREATE TABLE `ReturnedRPOptionalInfoItemList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPOptionalInfoItemList_InfoItemValueList` (
   `ReturnedRPOptionalInfoItemList_infoitemlistid` bigint(20) NOT NULL,
   `optionallist_ivlid` bigint(20) NOT NULL,
@@ -1156,7 +1156,7 @@ CREATE TABLE `ReturnedRPOptionalInfoItemList_InfoItemValueList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPProperty` (
   `rppropertyid` bigint(20) NOT NULL,
   `rppropertyname` varchar(255) DEFAULT NULL,
@@ -1171,7 +1171,7 @@ CREATE TABLE `ReturnedRPProperty` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPRequiredInfoItemList` (
   `infoitemlistid` bigint(20) NOT NULL,
   `rhid` varchar(255) DEFAULT NULL,
@@ -1191,7 +1191,7 @@ CREATE TABLE `ReturnedRPRequiredInfoItemList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedRPRequiredInfoItemList_InfoItemValueList` (
   `ReturnedRPRequiredInfoItemList_infoitemlistid` bigint(20) NOT NULL,
   `requiredlist_ivlid` bigint(20) NOT NULL,
@@ -1207,7 +1207,7 @@ CREATE TABLE `ReturnedRPRequiredInfoItemList_InfoItemValueList` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedUserRPMetaInformation` (
   `rumiid` bigint(20) NOT NULL,
   `lastinteracted` bigint(20) NOT NULL,
@@ -1226,7 +1226,7 @@ CREATE TABLE `ReturnedUserRPMetaInformation` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `ReturnedValueMetaInformation` (
   `vmiid` bigint(20) NOT NULL,
   `displayname` varchar(255) DEFAULT NULL,
@@ -1248,7 +1248,7 @@ CREATE TABLE `ReturnedValueMetaInformation` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SupportedIIType` (
   `sitiid` bigint(20) NOT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
@@ -1264,7 +1264,7 @@ CREATE TABLE `SupportedIIType` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SupportedLanguage` (
   `sliid` bigint(20) NOT NULL,
   `lang` varchar(255) DEFAULT NULL,
@@ -1278,7 +1278,7 @@ CREATE TABLE `SupportedLanguage` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SupportedRHType` (
   `srhiid` bigint(20) NOT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
@@ -1292,7 +1292,7 @@ CREATE TABLE `SupportedRHType` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SupportedRPType` (
   `srpiid` bigint(20) NOT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
@@ -1308,7 +1308,7 @@ CREATE TABLE `SupportedRPType` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `SupportedUserType` (
   `sutid` bigint(20) NOT NULL,
   `utype` varchar(255) DEFAULT NULL,
@@ -1322,7 +1322,7 @@ CREATE TABLE `SupportedUserType` (
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
