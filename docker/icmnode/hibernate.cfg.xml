@@ -4,7 +4,7 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     <property name="hibernate.connection.driver.class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql:loadbalance://node1:3306,node2:3306,node3:3306/icm?autoReconnect=true&amp;characterEncoding=UTF-8</property>
+    <property name="hibernate.connection.url">jdbc:mysql:loadbalance://node1:3306,node2:3306,node3:3306/icm?autoReconnect=true</property>
     <property name="hibernate.connection.username">icmuser</property>
     <property name="hibernate.connection.password">ResistanceIsFutile</property>
     <property name="hibernate.connection.autocommit">false</property>
