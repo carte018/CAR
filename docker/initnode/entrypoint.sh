@@ -14,7 +14,7 @@
 sleep 20
 
 #
-# Force tomcat8 to deploy the ICM
+# Force tomcat8 to deploy the ICM 
 #
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" --insecure 'https://apache-sp/consent/v1/icm/icm-info-release-policies' 
 
