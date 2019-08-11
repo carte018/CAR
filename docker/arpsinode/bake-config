@@ -185,7 +185,7 @@ echo "We will now rebuild the templated configuration files for this SP."
 echo
 echo
 
-cat arpsi.conf.tmpl | sed 's/%basicauth_class%/'$basicauth_class'/g' | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%app_users%/'$app_users'/g' | sed 's/%app_admins%/'$app_admins'/g' | sed 's/%carma_user%/$CARMA_USER'/g' > arpsi.conf
+cat arpsi.conf.tmpl | sed 's/%basicauth_class%/'$basicauth_class'/g' | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%app_users%/'$app_users'/g' | sed 's/%app_admins%/'$app_admins'/g' | sed 's/%carma_user%/'$CARMA_USER'/g' > arpsi.conf
 
 cat krb5.conf.tmpl | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%kdc_fqdn_1%/'$kdc_fqdn_1'/g' | sed 's/%kdc_fqdn_2%/'$kdc_fqdn_2'/g' | sed 's/%kdc_fqdn_3%/'$kdc_fqdn_3'/g' | sed 's/%kdc_fqdn_admin%/'$kdc_fqdn_admin'/g' > krb5.conf
 echo
