@@ -276,6 +276,10 @@ public class CarAdminUtils {
 		
 		ArrayList<String> authorized = new ArrayList<String>();
 		for (AdminRoleMapping arm : roles) {
+			// Null role target means "all targets"
+			if (arm.getTarget() == null) {
+				arm.setTarget(".*");
+			}
 			if (roleNames.contains(arm.getRoleName()) && targets.contains(arm.getTarget()) && ! authorized.contains(arm.getTarget())) {
 				authorized.add(arm.getTarget());
 			} else {

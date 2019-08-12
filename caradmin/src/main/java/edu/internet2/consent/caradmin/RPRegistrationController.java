@@ -1937,7 +1937,7 @@ public class RPRegistrationController {
 		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
 			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
-            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+            eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludes using config'd logouturl
             CarAdminUtils.injectStrings(eval, new String[] {
                               "top_heading",
                               "sign_out",
