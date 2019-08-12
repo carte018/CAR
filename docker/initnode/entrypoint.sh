@@ -51,6 +51,9 @@ done
 echo "Adding rhiilist"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_rh_iilist 'https://apache-sp/consent/v1/informed/rhic/iilist/entityId/urn:mace:multiverse:amber'
 
+echo "And rh infotypelist"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_rh_infotypes 'https://apache-sp/consent/v1/informed/rhic/infotypes/entityId/urn:mace:multiverse:amber'
+
 #
 # Load up information about the Pattern in Amber RP
 #
