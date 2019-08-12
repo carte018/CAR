@@ -11,10 +11,10 @@
 
 	<property name="hibernate.c3p0.min_size">5</property>
 	<property name="hibernate.c3p0.max_size">100</property>
-	<property name="hibernate.c3p0.timeout">3605</property>
-	<property name="hibernate.c3p0.max_statements">50</property>
-	<property name="hibernate.c3p0.idle_test_period">3600</property>
-	<property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
+	<property name="hibernate.c3p0.timeout">3500</property>
+	<property name="hibernate.c3p0.max_statements">500</property>
+	<property name="hibernate.c3p0.idle_test_period">360</property>
+	<property name="hibernate.c3p0.preferredTestQuery">select 1</property>
 	<property name="hibernate.c3p0.acquire_increment">5</property>
 	 
     <!-- Do not go into production with this in place; this is for testing only -->
