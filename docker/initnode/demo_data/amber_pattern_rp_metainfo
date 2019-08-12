@@ -46,6 +46,10 @@
         {
             "rppropertyname": "corwinrp",
             "rppropertyvalue": "true"
+        },
+        {
+        	"rppropertyname": "entityId",
+        	"rppropertyvalue": "https://pattern.amber.org/shibboleth"
         }
     ],
     "state": "active",

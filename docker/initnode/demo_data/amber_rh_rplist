@@ -1,0 +1,12 @@
+{
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rplist": [
+        {
+            "rpid": "https://pattern.amber.org/shibboleth",
+            "rptype": "entityId"
+        }
+    ]
+}
