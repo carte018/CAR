@@ -16,7 +16,7 @@
             }
         ]
     },
-    "iconurl": "http://people.duke.edu/~rob/AmberPattern.png",
+    "iconurl": "https://apache-sp/AmberPattern.png",
     "privacyurl": null,
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
