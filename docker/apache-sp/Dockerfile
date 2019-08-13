@@ -99,6 +99,14 @@ ADD shibboleth2.xml /etc/shibboleth/shibboleth2.xml
 ADD sp-key.pem /etc/shibboleth/sp-key.pem
 ADD sp-cert.pem /etc/shibboleth/sp-cert.pem
 
+#
+# Icons for Amber Entities
+#
+ADD Amber-Icon.png /var/www/html/Amber-Icon.png
+ADD AmberPattern.png /var/www/html/AmberPattern.png
+ADD Logrus_of_Chaos.png /var/www/html/Logrus_of_Chaos.png
+ADD Pattern_in_Rebma.png /var/www/html/Pattern_In_Rebma.png
+
 VOLUME ["/interlock"]
 VOLUME ["/var/log/httpd"]
 
