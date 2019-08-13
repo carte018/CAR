@@ -313,6 +313,20 @@ public class CarAdminUtils {
 		// retrieving role mappings.
 		
 		String subs = request.getRemoteUser();
+		
+		// Short-circuit for superadmins listed in the AdminEPPNs list in the 
+		// config.  If you are an explicitly listed superadmin, you have rights to 
+		// everything automatically.
+		
+		AdminConfig config = AdminConfig.getInstance();
+		String mkultra = config.getProperty("AdminEPPNs",false);
+		if (mkultra != null) {
+			String[] ents = mkultra.split(",");
+			for (String e : ents) {
+				if (subs.equalsIgnoreCase(e)) 
+					return true;  // short circuit here
+			}
+		}
 
 		if (request.getAttribute("eppn") != null && ! request.getAttribute("eppn").equals("")) {
 			subs += ";" + request.getAttribute("eppn");
