@@ -1,0 +1,33 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Opaque Scholarly Identifier from the ORCID Organization"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Orcid"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonOrcid",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "OPAQUE",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:chaos",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false
+}

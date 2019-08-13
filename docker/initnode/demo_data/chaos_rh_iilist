@@ -1,0 +1,60 @@
+{
+    "infoitemlist": [
+        {
+            "iiid": "eduPersonPrincipalName",
+            "iitype": "attribute"
+        },
+        {
+            "iiid": "eduPersonScopedAffiliation",
+            "iitype": "attribute"
+        },
+		{
+			"iiid": "chaosFamily",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "cn",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "displayName",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "eduPersonOrcid",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "eduPersonOrgDN",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "eduPersonPrimaryAffiliation",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "eduPersonTargetedID",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "eduPersonUniqueId",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "isMemberOf",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "mail",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "sn",
+			"iitype": "attribute"
+		}
+	],
+	"rhidentifier": {
+		"rhid": "urn:mace:multiverse:chaos",
+		"rhtype": "entityId"
+	}
+}

@@ -1,0 +1,7 @@
+{
+    "infotypes": [
+        "attribute"
+    ],
+    "rhtype": "entityId",
+    "rhvalue": "urn:mace:multiverse:chaos"
+}

@@ -1,0 +1,33 @@
+{
+    "asnd": true,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Unique Identifier for Courts of Chaos"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Organization"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonOrgDN",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:chaos",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false
+}

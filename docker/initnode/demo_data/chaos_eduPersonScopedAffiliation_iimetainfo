@@ -1,0 +1,33 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Your Official Relationships with Chaos"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Federated Affiliations"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonScopedAffiliation",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": true,
+    "policytype": "PEV",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:chaos",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false
+}

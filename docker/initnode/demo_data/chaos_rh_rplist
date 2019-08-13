@@ -1,0 +1,12 @@
+{
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:chaos",
+        "rhtype": "entityId"
+    },
+    "rplist": [
+        {
+            "rpid": "https://logrus.chaos.org/shibboleth",
+            "rptype": "entityId"
+        }
+    ]
+}

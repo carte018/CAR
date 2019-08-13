@@ -1,10 +1,10 @@
 {
-    "defaultshowagain": show,
+    "defaultshowagain": hide,
     "description": {
         "locales": [
             {
                 "locale": "en",
-                "value": "The Pattern in Amber"
+                "value": "The Pattern under Rebma"
             }
         ]
     },
@@ -12,24 +12,24 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "The Pattern Beneath Castle Amber"
+                "value": "The Watery Pattern of Rebma"
             }
         ]
     },
-    "iconurl": "http://people.duke.edu/~rob/AmberPattern.png",
+    "iconurl": "http://people.duke.edu/~rob/Pattern_in_Rebma.png",
     "privacyurl": null,
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "https://pattern.amber.org/shibboleth",
+        "rpid": "https://pattern.rebma.org/shibboleth",
         "rptype": "entityId"
     },
     "rpproperties": [
         {
             "rppropertyname": "castlerp",
-            "rppropertyvalue": "true"
+            "rppropertyvalue": "false"
         },
         {
             "rppropertyname": "entity-category",
@@ -49,10 +49,7 @@
         },
         {
         	"rppropertyname": "entityId",
-        	"rppropertyvalue": "https://pattern.amber.org/shibboleth"
+        	"rppropertyvalue": "https://pattern.rebma.org/shibboleth"
         }
-    ],
-    "state": "active",
-    "updated": 1565200719037,
-    "version": 209
+    ]
 }

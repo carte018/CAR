@@ -1,0 +1,22 @@
+{
+  "description": {
+    "locales": [
+      {
+        "locale":"en",
+        "value":"IDP in the Courts of Chaos"
+      }
+    ]
+  },
+  "displayname": {
+    "locales": [
+      {
+        "locale":"en",
+        "value":"Chaos IDP"
+      }
+    ]
+  },
+  "rhidentifier": {
+    "rhid":"urn:mace:multiverse:chaos",
+    "rhtype":"entityId"
+  }
+}

@@ -1,0 +1,102 @@
+{
+    "optionallist": [
+        {
+            "infoitemidentifier": {
+                "iiid": "eduPersonScopedAffiliation",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To verify your lineage"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "eduPersonScopedAffiliation",
+            "valuelist": [
+                ".*"
+            ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "isMemberOf",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "Authorization"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "isMemberOf",
+            "valuelist": [
+                "urn:mace:duke.edu:groups:group-manager:roles:car-demo-.*"
+            ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "cn",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "The Pattern uses CN to address you (and in Rebma, it must be your True Name)"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "cn",
+            "valuelist": [
+                ".*"
+            ]
+        }
+    ],
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "https://pattern.rebma.org/shibboleth",
+        "rptype": "entityId"
+    }
+}

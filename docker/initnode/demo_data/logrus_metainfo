@@ -1,10 +1,10 @@
 {
-    "defaultshowagain": show,
+    "defaultshowagain": hide,
     "description": {
         "locales": [
             {
                 "locale": "en",
-                "value": "The Pattern in Amber"
+                "value": "The Logrus of Chaos"
             }
         ]
     },
@@ -12,23 +12,23 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "The Pattern Beneath Castle Amber"
+                "value": "The Logrus in the Courts of Chaos"
             }
         ]
     },
-    "iconurl": "http://people.duke.edu/~rob/AmberPattern.png",
+    "iconurl": "http://people.duke.edu/~rob/Logrus_of_Chaos.png",
     "privacyurl": null,
     "rhidentifier": {
-        "rhid": "urn:mace:multiverse:amber",
+        "rhid": "urn:mace:multiverse:chaos",
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "https://pattern.amber.org/shibboleth",
+        "rpid": "https://logrus.coc.org/shibboleth",
         "rptype": "entityId"
     },
     "rpproperties": [
         {
-            "rppropertyname": "castlerp",
+            "rppropertyname": "chaosrp",
             "rppropertyvalue": "true"
         },
         {
@@ -40,19 +40,15 @@
             "rppropertyvalue": "http://registrar.multiverse.org"
         },
         {
-            "rppropertyname": "entity-category",
-            "rppropertyvalue": "http://refeds.org/category/research-and-scholarship"
+            "rppropertyname": "corwinrp",
+            "rppropertyvalue": "false"
         },
         {
-            "rppropertyname": "corwinrp",
-            "rppropertyvalue": "true"
-        },
+        	"rppropertyname": "dworkinrp",
+        	"rppropertyvalue": "true"
         {
         	"rppropertyname": "entityId",
-        	"rppropertyvalue": "https://pattern.amber.org/shibboleth"
+        	"rppropertyvalue": "https://logrus.coc.org/shibboleth"
         }
-    ],
-    "state": "active",
-    "updated": 1565200719037,
-    "version": 209
+    ]
 }
