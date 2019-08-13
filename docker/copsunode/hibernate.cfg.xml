@@ -12,9 +12,13 @@
 	<property name="hibernate.c3p0.min_size">1</property>
 	<property name="hibernate.c3p0.max_size">10</property>
 	<property name="hibernate.c3p0.timeout">3500</property>
-	<property name="hibernate.c3p0.max_statements">500</property>
-	<property name="hibernate.c3p0.idle_test_period">360</property>
+	<property name="hibernate.c3p0.max_statements">0</property>
+	<property name="hibernate.c3p0.idle_test_period">30</property>
 	<property name="hibernate.c3p0.preferredTestQuery">select 1</property>
+	
+	<property name="acquireRetryAttempts">0</property>
+	<property name="acquireRetryDelay">200</property>
+	<property name="breakAfterAcquireFailure">false</property>
 	 
     <!-- Do not go into production with this in place; this is for testing only -->
     <!-- <property name="hbm2ddl.auto">create</property> --> <!-- RGC:  disabled for now -->
