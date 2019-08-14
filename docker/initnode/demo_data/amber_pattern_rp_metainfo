@@ -1,5 +1,5 @@
 {
-    "defaultshowagain": show,
+    "defaultshowagain": "show",
     "description": {
         "locales": [
             {
