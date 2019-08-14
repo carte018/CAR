@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN groupadd -r mysql && useradd -r -g mysql mysql
 
 # Prepare to install, and clean up after ourselves
-
+ADD sources.list /etc/apt/sources.list
 RUN apt-get update -qq && \
 	apt-get upgrade --yes && \
 	apt-get -y install software-properties-common && \

@@ -9,7 +9,7 @@ RUN groupadd -r _shibd && useradd -r -g _shibd _shibd
 # RUN groupadd -r www-data && useradd -r -g www-data www-data
 
 # Prepare for installation and clean up after ourselves
-
+ADD sources.list /etc/apt/sources.list
 RUN apt-get update -qq && \ 
     apt-get upgrade --yes && \
     apt-get -y install software-properties-common && \

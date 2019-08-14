@@ -46,6 +46,7 @@
         {
         	"rppropertyname": "dworkinrp",
         	"rppropertyvalue": "true"
+        },
         {
         	"rppropertyname": "entityId",
         	"rppropertyvalue": "https://logrus.coc.org/shibboleth"
