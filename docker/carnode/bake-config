@@ -90,7 +90,7 @@ then
       echo "and demonstration."
       
       auth_mech="null"
-      basicauth_class=edu.internet2.consent.car.auth.NullAuth"
+      basicauth_class="edu.internet2.consent.car.auth.NullAuth"
   else
   echo "The CAR UI exposes a handful of cache manipulation API endpoints and "
   echo "uses http-basicauth to authenticate requests it receives."

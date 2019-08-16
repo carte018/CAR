@@ -84,9 +84,9 @@ then
     sp_entity_id="https://$apache_server_name/car-demo-sp"
   fi
   echo "Enter the Entity ID you wish to use for the Shibboleth SP.  This will be the identifier by "
-  echo "which federation partners (IDPs, typically) will identify your SP.  It will also be the "
-  echo "entity ID by which your CAR instance will recognize itself (for purposes of ensuring full"
-  echo "attribute availability for the CARMA self-service UI)".  If you are not sure what to use, 
+  echo "which federation partners \(IDPs, typically\) will identify your SP.  It will also be the "
+  echo "entity ID by which your CAR instance will recognize itself \(for purposes of ensuring full"
+  echo "attribute availability for the CARMA self-service UI\)".  If you are not sure what to use, 
   echo "the default value is probably safe to try.  [$sp_entity_id]:  "
   read s
   if [ -n "$s" ]
