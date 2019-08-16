@@ -40,6 +40,20 @@ QUIET=no
 
 parse_args $*
 
+if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+then
+  echo "You have requested both quiet operation and skunkworks semantics."
+  echo "If your last build was not in skunkworks mode, results may not be"
+  echo "what you expect.  It is recommended that you run in non-quiet "
+  echo "mode if this is your first skunkworks build."
+  echo "Do you really want to run in quiet mode *and* skunkworks mode? [y/n]]"
+  read qands
+  if [ $qands != "y" ]
+  then
+    echo "exiting."
+    exit
+  fi
+fi
 #
 # Prepare the compose template
 #
@@ -68,11 +82,41 @@ else
   cp docker-compose.caronly docker-compose.yml.tmpl
 fi
 
+if [ -e ./config.prev ]
+then
+  source ./config.prev
+fi
+
 #
 # Create an SSL certificate to use in the apache configuration
 # 
 # Required for both caronly and skunkworks builds
 #
+if [ $QUIET == "yes" ]
+then
+  if [ ! -n $apache_fqdn ]
+  then
+    apache_fqdn="localhost"
+  fi
+else
+echo
+echo "We first need to determine the hostname that will be used by clients (browsers) to"
+echo "access the components of this deployment.  In many cases, for testing purposes, you"
+echo "may deploy the various components onto a personal workstation or laptop, in which "
+echo "case you may access the components via 'localhost'.  If you are deploying onto a "
+echo "dedicated test server shared among multiple clients, you will need to specify the "
+echo "FQDN of the server as it will be presented by the clients when making HTTP connections."
+echo
+echo "Enter the FQDN of the server you're deploying to. [ $apache_fqdn ]"
+read afq
+if [ -n $afq ]
+then
+  apache_fqdn="$afq"
+fi
+fi
+
+cat ssl.cnf.tmpl | sed 's/%apache_fqdn%/'$apache_fqdn'/' > ssl.cnf
+
 openssl req -newkey rsa:2048 -x509 -nodes -keyout ssl.key -new -out ssl.pem -subj '/C=UF/ST=Sector 1/L=Earth/O=United Federation of Planets/OU=StarFleet Academy/CN=localhost' -config ssl.cnf -sha256 -days 3650
 cp ssl.key apache-sp/ssl.key
 cp ssl.pem apache-sp/ssl.pem
@@ -84,11 +128,6 @@ cp ssl.pem apache-sp/ssl.pem
 # Varies according to build type
 #
 
-if [ -e ./config.prev ]
-then
-  source ./config.prev
-fi
-
 if [ "$QUIET" != "yes" ]
 then
  echo "The components of the CAR system rely on database tables to store various information."
@@ -97,7 +136,7 @@ then
  echo "use to operate)."
  echo
  echo "Enter the password you wish to use for the 'root' user in your CAR database: [$mysql_root_password]: "
- read mrp
+ read arp
  if [ -n "$arp" ]
  then
   mysql_root_password="$arp"
@@ -195,38 +234,38 @@ echo "carma_password=$carma_password" >> config.prev
 # Configure the conf files in apache-sp
 #
 
-(cd apache-sp; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+(cd apache-sp; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
 
 #
 # Configure the conf files in arpsinode
-(cd arpsinode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+(cd arpsinode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
 
 #
 # Configure the conf files in the copsunode
-(cd copsunode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+(cd copsunode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
 
 #
 # Configure the icm conf files
-(cd icmnode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd icmnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
 
 # 
 # Configure the informed conf files
-(cd informednode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd informednode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
 
 #
 # Configure the car conf files
-(cd carnode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd carnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
 
 #
 # Configure the caradmin conf files
-(cd caradminnode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd caradminnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
 
 #
 # (Re)build the CAR components' source code using the buildnode
 #
 # We rely on docker-compose "up" (without the -d flag) terminating with the container
 
-(cd buildnode; SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` docker-compose up)
+(cd buildnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` docker-compose up)
 
 #
 # After the relevant configs are baked (or not, if we're just running to start up after a 

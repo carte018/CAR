@@ -25,6 +25,22 @@ parse_args() {
 
 parse_args $*
 
+if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+then
+  echo "You have requested both quiet operation and skunkworks semantics."
+  echo "If your last build was not in skunkworks mode, results may not be"
+  echo "what you expect.  It is recommended that you run in non-quiet "
+  echo "mode if this is your first skunkworks build."
+  echo "Do you really want to run in quiet mode *and* skunkworks mode? [y/n]]"
+  read qands
+  if [ $qands != "y" ]
+  then
+    echo "exiting."
+    exit
+  fi
+fi
+
+
 # 
 # If we have a previously-configured arpsi config, start with its defaults
 # as ours, overridden by our own config.prev file.
@@ -66,6 +82,16 @@ then
     institution_name="$im"
   fi
 
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    echo "Skunkworks builds use the default 'sysadmin' SAML user (defined automatically"
+    echo "by the build in the skunkworks amber.org LDAP) as the initial 'super-admin'"
+    echo "for the caradmin interface.  When the build is complete, you will need to "
+    echo "use the 'sysadmin' account to access the caradmin service and assign roles to"
+    echo "other users in the skunkworks IDP."
+  
+    super_admins="1777@amber.org,sysadmin@amber.org"
+  else
   echo "The CARADMIN UI provides a mechanism for managing which of the"
   echo "administrative features it exposes is accesible to which"
   echo "logged-in users.  In order to bootstrap that configuration,"
@@ -83,6 +109,7 @@ then
   if [ -n "$sa" ]
   then
     super_admins="$sa"
+  fi
   fi
   
 fi

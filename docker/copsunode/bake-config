@@ -25,6 +25,21 @@ parse_args() {
 
 parse_args $*
 
+if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+then
+  echo "You have requested both quiet operation and skunkworks semantics."
+  echo "If your last build was not in skunkworks mode, results may not be"
+  echo "what you expect.  It is recommended that you run in non-quiet "
+  echo "mode if this is your first skunkworks build."
+  echo "Do you really want to run in quiet mode *and* skunkworks mode? [y/n]]"
+  read qands
+  if [ $qands != "y" ]
+  then
+    echo "exiting."
+    exit
+  fi
+fi
+
 #
 # if the config.prev file exists, load it after trying to load the 
 # arpsinode config.prev file (to pick up any defaults we might have there.)
@@ -51,6 +66,16 @@ then
   # Ask some questions
   #
 
+  if [ $SKUNKWORKS == "yes" ]
+  then
+      echo "Skunkworks installations use the null authentication mechanism by default."
+      echo "This mechanism accepts any http-basicauth credential without validation."
+      echo "Be aware that you are running this installation in skunkworks mode, and use"
+      echo "it only for test or demonstration purposes."
+      
+      auth_mech="null"
+      basicauth_class="edu.internet2.consent.copsu.auth.NullAuth"
+  else
   echo "The COPSU WS uses http-basicauth to authenticate requests it receives."
   echo "Current options for validating basicauth credentials are:"
   echo "krb5 - Verify credentials by performing krb5 authentication"
@@ -149,7 +174,14 @@ then
   else
     basicauth_class="edu.internet2.consent.copsu.auth.NullAuth"
   fi
-
+  fi
+  
+  # ARPSI app_users carries forward for Skunkworks
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    app_users="root"
+    app_admins="$app_users"
+  else
   if [ ! -n "$app_users" ]
   then
     app_users="root"
@@ -183,6 +215,7 @@ then
   if [ -n "$aa" ]
   then
     app_admins="$aa"
+  fi
   fi
 fi
 

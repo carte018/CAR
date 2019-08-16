@@ -29,10 +29,24 @@ parse_args() {
 
 parse_args $*
 
-
 if [ -f config.prev ]
 then
     source config.prev
+fi
+
+if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+then
+  echo "You have requested both quiet operation and skunkworks semantics."
+  echo "If your last build was not in skunkworks mode, results may not be"
+  echo "what you expect.  It is recommended that you run in non-quiet "
+  echo "mode if this is your first skunkworks build."
+  echo "Do you really want to run in quiet mode *and* skunkworks mode? [y/n]]"
+  read qands
+  if [ $qands != "y" ]
+  then
+    echo "exiting."
+    exit
+  fi
 fi
 
 #
@@ -48,7 +62,7 @@ then
 
   if [ ! -n "$apache_server_name" ]
   then
-    apache_server_name="localhost"
+    apache_server_name="$APACHE_FQDN"
   fi
   echo "Enter the name you wish to use for the Apache server.  This will be used by the Apache server"
   echo "to construct response URLs.  [$apache_server_name]:  "
@@ -61,6 +75,10 @@ then
   # Set sp-entity-id for the SP
   #
 
+  if [ $SKUNKWORKS == "yes" ]
+  then
+      sp_entity_id="https://localhost/car-demo-sp
+  else
   if [ ! -n "$sp_entity_id" ]
   then
     sp_entity_id="https://$apache_server_name/car-demo-sp"
@@ -75,9 +93,14 @@ then
   then
     sp_entity_name="$s"
   fi
-
+  fi
+  
   # Set local-unique-id attribute if any
   #
+  if [ $SKUNKWORKS == "yes" ]
+  then
+      local_unique_id="eduPersonUniqueID"
+  else
   if [ ! -n "$local_unique_id" ]
   then
     local_unique_id="eppn"
@@ -91,9 +114,14 @@ then
   then
     local_unique_id="$l"
   fi
-
+  fi
+  
   # Set idp-entity-id value (if using)
   #
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    idp_entity_id="urn:mace:multiverse:amber"
+  else
   if [ ! -n "$idp_entity_id" ]
   then
     idp_entity_id=""
@@ -105,9 +133,14 @@ then
   then
     idp_entity_id="$i"
   fi
-
+  fi
+  
   # Set federation-discovery-service value (if using)
   #
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    federation_discovery_service=""
+  else
   if [ ! -n "$federation_discovery_service" ]
   then
     federation_discovery_service=""
@@ -121,9 +154,14 @@ then
   then
     federation_discovery_service="$f"
   fi
-
+  fi
+  
   # Set federation-metadata-retrieval-url
   #
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    federation_metadata_retrieval_url="https://idpnode/idp-metadata.xml"
+  else
   if [ ! -n "$federation_metadata_retrieval_url" ]
   then
     federation_metadata_retrieval_url="https://md.incommon.org/InCommon/InCommon-metadata.xml" 
@@ -136,6 +174,7 @@ then
   if [ -n "$m" ]
   then
     federation_metadata_retrieval_url="$m"
+  fi
   fi
 fi
 

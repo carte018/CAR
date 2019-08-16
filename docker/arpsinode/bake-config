@@ -25,6 +25,21 @@ parse_args() {
 
 parse_args $*
 
+if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+then
+  echo "You have requested both quiet operation and skunkworks semantics."
+  echo "If your last build was not in skunkworks mode, results may not be"
+  echo "what you expect.  It is recommended that you run in non-quiet "
+  echo "mode if this is your first skunkworks build."
+  echo "Do you really want to run in quiet mode *and* skunkworks mode? [y/n]]"
+  read qands
+  if [ $qands != "y" ]
+  then
+    echo "exiting."
+    exit
+  fi
+fi
+
 
 #
 # if the config.prev file exists, load it
@@ -44,6 +59,17 @@ then
   # Ask some questions
   #
 
+  if [ $SKUNKWORKS == "yes" ]
+  then
+      echo "Skunkworks builds use the null authentication driver by default."
+      echo "Be aware that, in a skunkworks build, your API endpoints will accept any"
+      echo "http-basicauth credential provided by a client without validation."
+      echo "You should NEVER use a deployment built in skunkworks mode for anything"
+      echo "but test/demo purposes."
+      
+      auth_mech="null"
+      basicauth_class="edu.internet2.consent.arpsi.auth.NullAuth"
+  else
   echo "The ARPSI WS uses http-basicauth to authenticate requests it receives."
   echo "Current options for validating basicauth credentials are:"
   echo "krb5 - Verify credentials by performing krb5 authentication"
@@ -142,7 +168,18 @@ then
   else
     basicauth_class="edu.internet2.consent.arpsi.auth.NullAuth"
   fi
-
+  fi
+  
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    echo "Skunkworks builds default to authorizing a single username (root) for access"
+    echo "to the APIs.  The user has full admin rights in the APIs, and because"
+    echo "skunkworks builds use the NullAuth authentication module, any credential"
+    echo "will be accepted as valid."
+    
+    app_users="root"
+    app_admins=$app_users
+  else
   if [ ! -n "$app_users" ]
   then
     app_users="root"
@@ -176,6 +213,7 @@ then
   if [ -n "$aa" ]
   then
     app_admins="$aa"
+  fi
   fi
 fi
 

@@ -25,6 +25,21 @@ parse_args() {
 
 parse_args $*
 
+if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+then
+  echo "You have requested both quiet operation and skunkworks semantics."
+  echo "If your last build was not in skunkworks mode, results may not be"
+  echo "what you expect.  It is recommended that you run in non-quiet "
+  echo "mode if this is your first skunkworks build."
+  echo "Do you really want to run in quiet mode *and* skunkworks mode? [y/n]]"
+  read qands
+  if [ $qands != "y" ]
+  then
+    echo "exiting."
+    exit
+  fi
+fi
+
 # 
 # If we have a previously-configured arpsi config, start with its defaults
 # as ours, overridden by our own config.prev file.
@@ -65,6 +80,18 @@ then
   then
     institution_name="$im"
   fi
+  
+  if [ $SKUNKWORKS == "yes" ]
+  then
+      echo "Skunkworks deployments default to using the null authentication "
+      echo "module which accepts any credentials for API access without validation."
+      echo "Be aware that your installation will use the null authentication"
+      echo "module, and do NOT use this installation for any purpose beyond testing"
+      echo "and demonstration."
+      
+      auth_mech="null"
+      basicauth_class=edu.internet2.consent.car.auth.NullAuth"
+  else
   echo "The CAR UI exposes a handful of cache manipulation API endpoints and "
   echo "uses http-basicauth to authenticate requests it receives."
   echo "Current options for validating basicauth credentials are:"
@@ -164,7 +191,10 @@ then
   else
     basicauth_class="edu.internet2.consent.car.auth.NullAuth"
   fi
-
+  fi
+  
+  # ARPSI config app_users applies here in Skunkworks mode.
+  
   if [ ! -n "$app_users" ]
   then
     app_users="root"
