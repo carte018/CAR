@@ -13,15 +13,19 @@ parse_args() {
     key="$1"
     case "$key" in 
 	-q)
-		QUIET=yes
+		QUIET=yes     # currently supported
 		shift
 		;;
 	-b)
-		REBUILD=yes
+		REBUILD=yes   # not yet supported
 		shift
 		;;
 	-s)
-		RESTART=yes
+		RESTART=yes   # not yet supported
+		shift
+		;;
+	-k)
+		SKUNKWORKS=yes   # beta support
 		shift
 		;;
     esac
@@ -29,10 +33,45 @@ parse_args() {
   set -- "${POSITIONAL[@]}"
 }
 
+SKUNKWORKS=no
+RESTART=no
+REBUILD=no
+QUIET=no
+
 parse_args $*
 
 #
+# Prepare the compose template
+#
+# Skunkworks builds include building, configuring and populating
+# test data into an LDAP and a Shibboleth IDP and setting up a group of 
+# trivial test relying parties behind the apache-sp environment.  
+#
+# Non-skunkworks builds only build and deploy the CAR installation and 
+# allow for configuring the CAR instance to interact with external
+# RHs and RPs.
+#
+# If you have an existing skunkworks environment with an existing test IDP or 
+# another test resource holder you'd like to use, use the non-skunkworks build and
+# answer the build questions so as to integrate with your existing environment. 
+#
+# If you don't have an existing skunkworks environment or you want to try CAR out in 
+# a bespoke test environment before trying it in our own test environment, use the 
+# skunkworks build.
+#
+
+
+if [ "$SKUNKWORKS" == "yes" ]
+then
+  cp docker-compose.skunkworks docker-compose.yml.tmpl
+else
+  cp docker-compose.caronly docker-compose.yml.tmpl
+fi
+
+#
 # Create an SSL certificate to use in the apache configuration
+# 
+# Required for both caronly and skunkworks builds
 #
 openssl req -newkey rsa:2048 -x509 -nodes -keyout ssl.key -new -out ssl.pem -subj '/C=UF/ST=Sector 1/L=Earth/O=United Federation of Planets/OU=StarFleet Academy/CN=localhost' -config ssl.cnf -sha256 -days 3650
 cp ssl.key apache-sp/ssl.key
@@ -40,6 +79,10 @@ cp ssl.pem apache-sp/ssl.pem
 
 #
 # If we aren't called with the "-q" flag, update the docker-compose script with credential information
+#
+# Required for both caronly and skunkworks builds.
+# Varies according to build type
+#
 
 if [ -e ./config.prev ]
 then
@@ -99,6 +142,8 @@ then
   mysql_informed_password="$anp"
   mysql_informed_password=`echo $mysql_informed_password | sed 's/\//_g/' | sed 's/ /_/g'`
  fi
+ if [ $SKUNKWORKS != "yes" ]
+ then
  echo
  echo
  echo "Components of the CARMA (like the icm) must make requests to the"
@@ -125,6 +170,14 @@ then
  then
   carma_password="$cpw"
  fi
+ else
+   echo
+   echo
+   echo "Skunkworks build will use the null authentication plugin by default."
+   echo "Setting carma_user to 'skunkworks'."
+   carma_user="skunkworks"
+   carma_password="skunkworks"
+ fi
 fi
 
 cat docker-compose.yml.tmpl | sed 's/%mysql_root_password%/'$mysql_root_password'/g' | sed 's/%mysql_replication_password%/'$mysql_replication_password'/g' | sed 's/%mysql_arpsi_password%/'$mysql_arpsi_password'/g' | sed 's/%mysql_copsu_password%/'$mysql_copsu_password'/g' | sed 's/%mysql_icm_password%/'$mysql_icm_password'/g' | sed 's/%mysql_informed_password%/'$mysql_informed_password'/g' | sed 's/%carma_user%/'$carma_user'/g' | sed 's/%carma_password%/'$carma_password'/g' > docker-compose.yml 
@@ -138,43 +191,42 @@ echo "mysql_informed_password=$mysql_informed_password" >> config.prev
 echo "carma_user=$carma_user" >> config.prev
 echo "carma_password=$carma_password" >> config.prev
 
+#
+# Configure the conf files in apache-sp
+#
+
+(cd apache-sp; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+
+#
+# Configure the conf files in arpsinode
+(cd arpsinode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+
+#
+# Configure the conf files in the copsunode
+(cd copsunode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+
+#
+# Configure the icm conf files
+(cd icmnode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+
+# 
+# Configure the informed conf files
+(cd informednode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+
+#
+# Configure the car conf files
+(cd carnode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+
+#
+# Configure the caradmin conf files
+(cd caradminnode; SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
 
 #
 # (Re)build the CAR components' source code using the buildnode
 #
 # We rely on docker-compose "up" (without the -d flag) terminating with the container
 
-(cd buildnode; thisdir=`pwd` docker-compose up)
-
-#
-# Configure the conf files in apache-sp
-#
-
-(cd apache-sp; CARMA_USER=$carma_user ./bake-config $*)
-
-#
-# Configure the conf files in arpsinode
-(cd arpsinode; CARMA_USER=$carma_user ./bake-config $*)
-
-#
-# Configure the conf files in the copsunode
-(cd copsunode; CARMA_USER=$carma_user ./bake-config $*)
-
-#
-# Configure the icm conf files
-(cd icmnode; CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
-
-# 
-# Configure the informed conf files
-(cd informednode; CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
-
-#
-# Configure the car conf files
-(cd carnode; CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
-
-#
-# Configure the caradmin conf files
-(cd caradminnode; CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd buildnode; SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` docker-compose up)
 
 #
 # After the relevant configs are baked (or not, if we're just running to start up after a 

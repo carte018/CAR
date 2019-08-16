@@ -1,0 +1,275 @@
+version: '3'
+services:
+  node1:
+    build: ./galera
+    hostname: node1
+    ports:
+      - 13306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=%mysql_root_password%
+      - REPLICATION_PASSWORD=%mysql_replication_password%
+      - MYSQL_ARPSI_PASSWORD=%mysql_arpsi_password%
+      - MYSQL_COPSU_PASSWORD=%mysql_copsu_password%
+      - MYSQL_ICM_PASSWORD=%mysql_icm_password%
+      - MYSQL_INFORMED_PASSWORD=%mysql_informed_password%
+      - NODE_NAME=node1
+      - CLUSTER_ADDRESS=gcomm://node1,node2,node3
+      - OTHER_NODES=node2 node3
+      - PRIMARY=node1
+      - NODE_COUNT=3
+      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - RECOVER=false
+    volumes:
+      - node1-mysql:/var/lib/mysql
+      - node1-interlock:/interlock
+  
+  node2:
+    build: ./galera
+    hostname: node2
+    links:
+     - node1
+    depends_on:
+      - node1
+    ports:
+      - 23306:3306
+    environment:
+      - REPLICATION_PASSWORD=Sw33tPotat0
+      - NODE_NAME=node2
+      - CLUSTER_ADDRESS=gcomm://node1,node2,node3
+      - PRIMARY=node1
+      - NODE_COUNT=3
+      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - RECOVER=false
+    volumes:
+      - node2-mysql:/var/lib/mysql
+      - node2-interlock:/interlock
+  
+  node3:
+    build: ./galera
+    hostname: node3
+    depends_on:
+      - node1
+      - node2
+    links:
+      - node1
+    ports:
+      - 33306:3306
+    environment:
+      - REPLICATION_PASSWORD=Sw33tPotat0
+      - NODE_NAME=node3
+      - CLUSTER_ADDRESS=gcomm://node1,node2,node3
+      - PRIMARY=node1
+      - NODE_COUNT=3
+      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - RECOVER=false
+    volumes:
+      - node3-mysql:/var/lib/mysql
+      - node3-interlock:/interlock
+
+  apache-sp:
+    build: ./apache-sp
+    hostname: apache-sp
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+    ports:
+      - 443:443
+    environment:
+      - NODE_NAME=apache-sp
+    volumes:
+      - apache-sp-interlock:/interlock
+
+  arpsinode:
+    build: ./arpsinode
+    hostname: arpsinode
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2 
+      - node3
+      - apache-sp
+    environment:
+      - NODE_NAME=arpsinode
+      - ARPSIUSER_PASSWORD=%mysql_arpsi_password%
+    volumes:
+      - arpsi-config:/etc/car
+      - buildnode_arpsi-webapps:/var/lib/tomcat8/webapps
+
+  copsunode:
+    build: ./copsunode
+    hostname: copsunode
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - apache-sp
+    environment:
+      - NODE_NAME=copsunode
+      - COPSUUSER_PASSWORD=%mysql_copsu_password%
+    volumes:
+      - copsu-config:/etc/car
+      - buildnode_copsu-webapps:/var/lib/tomcat8/webapps
+
+  icmnode:
+    build: ./icmnode
+    hostname: icmnode
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - apache-sp
+      - arpsinode
+      - copsunode
+    environment:
+      - NODE_NAME=icmnode
+      - ICMUSER_PASSWORD=%mysql_icm_password%
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - icm-config:/etc/car
+      - buildnode_icm-webapps:/var/lib/tomcat8/webapps
+
+  informednode:
+    build: ./informednode
+    hostname: informednode
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - apache-sp
+      - arpsinode
+      - copsunode
+      - icmnode
+    environment:
+      - NODE_NAME=informednode
+      - INFORMEDUSER_PASSWORD=%mysql_informed_password%
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - informed-config:/etc/car
+      - buildnode_informed-webapps:/var/lib/tomcat8/webapps
+
+  carnode:
+    build: ./carnode
+    hostname: carnode
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - apache-sp
+      - arpsinode
+      - copsunode
+      - icmnode
+      - informednode
+    environment:
+      - NODE_NAME=carnode
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - car-config:/etc/car
+      - buildnode_car-webapps:/var/lib/tomcat8/webapps
+      - carmakeys:/var/www/carma
+
+  caradminnode:
+    build: ./caradminnode
+    hostname: caradminnode
+    links:
+      - node1
+      - node2
+      - node3
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - apache-sp
+      - arpsinode
+      - copsunode
+      - icmnode
+      - informednode
+      - carnode
+    environment:
+      - NODE_NAME=caradminnode
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - caradmin-config:/etc/car
+      - buildnode_caradmin-webapps:/var/lib/tomcat8/webapps
+
+  initnode:
+    build: ./initnode
+    hostname: initnode
+    depends_on:
+      - node1
+      - node2
+      - node3
+      - apache-sp
+      - arpsinode
+      - copsunode
+      - icmnode
+      - informednode
+      - carnode
+      - caradminnode
+    environment:
+      - NODE_NAME=initnode
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+
+volumes:
+  node1-mysql: {}
+  node2-mysql: {}
+  node3-mysql: {}
+  node1-interlock: {}
+  node2-interlock: {}
+  node3-interlock: {}
+  apache-sp-interlock: {}
+  arpsi-config: {}
+  arpsi-webapps: {}
+  copsu-config: {}
+  copsu-webapps: {}
+  car-config: {}
+  car-webapps: {}
+  caradmin-config: {}
+  caradmin-webapps: {}
+  icm-config: {}
+  icm-webapps: {}
+  informed-config: {}
+  informed-webapps: {}
+  regloader-config: {}
+  regloader-webapps: {}
+  carmakeys: {}
+  buildnode_arpsi-webapps:
+    external: true
+  buildnode_copsu-webapps:
+    external: true
+  buildnode_icm-webapps:
+    external: true
+  buildnode_informed-webapps:
+    external: true
+  buildnode_car-webapps:
+    external: true
+  buildnode_caradmin-webapps:
+    external: true
