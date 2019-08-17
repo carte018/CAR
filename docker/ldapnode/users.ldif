@@ -1,0 +1,219 @@
+dn: uid=corwin,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+objectclass: amberite
+uid: corwin
+cn: Corwin of Amber
+givenname: Corwin
+sn: Amber
+eduPersonPrincipalName: corwin@amber.org
+amberTitle: Prince
+eduPersonAffiliation: faculty
+eduPersonAffiliation: alum
+eduPersonOrgDN: dc=amber,dc=org
+mail: corwin@mail.amber.org
+isMemberOf: urn:mace:amber.org:groups:princes_in_amber
+isMemberOf: urn:mace:amber.org:groups:sons_of_oberon
+isMemberOf: urn:mace:amber.org:groups:pattern_walkers
+isMemberOf: urn:mace:amber.org:groups:pattern_makers
+isMemberOf: urn:mace:amber.org:groups:regicides
+isMemberOf: urn:mace:amber.org:groups:exiled
+eduPersonPrimaryAffiliation: faculty
+displayName: Prince Corwin of Amber
+eduPersonUniqueId: 9101@amber.org
+userPassword: corwin
+
+dn: uid=oberon,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+objectclass: amberite
+uid: oberon
+cn: Oberon of Amber
+givenname: Oberon
+sn: Amber
+eduPersonPrincipalName: oberon@amber.org
+amberTitle: King
+eduPersonAffiliation: faculty
+eduPersonOrgDN: dc=amber,dc=org
+mail: oberon@mail.amber.org
+isMemberOf: urn:mace:amber.org:groups:pattern_walkers
+isMemberOf: urn:mace:amber.org:groups:pattern_makers
+isMemberOf: urn:mace:amber.org:groups:kidnapped
+eduPersonPrimaryAffiliation: faculty
+displayName: Oberon, Leige of Amber
+eduPersonUniqueId: 0002@amber.org
+userPassword: oberon
+
+dn: uid=benedict,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+objectclass: amberite
+uid: benedict
+cn: Benedict of Amber
+givenname: Benedict
+sn: Amber
+eduPersonPrincipalName: benedict@amber.org
+amberTitle: Prince
+eduPersonAffiliation: faculty
+eduPersonAffiliation: staff
+eduPersonAffiliation: alum
+eduPersonPrimaryAffiliation: staff
+eduPersonOrgDn: dc=amber,dc=org
+mail: benedict@mail.amber.org
+isMemberOf: urn:mace:amber.org:groups:pattern_walkers
+isMemberOf: urn:mace:amber.org:groups:sons_of_oberon
+isMemberOf: urn:mace:amber.org:groups:exiled
+displayName: Prince Benedict the One-Armed
+eduPersonUniqueId: 9102@amber.org
+userPassword: benedict
+
+dn: uid=dworkin,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+objectclass: amberite
+objectclass: chaosian
+uid: dworkin
+amberTitle: King
+chaosFamily: Barimen
+cn: Dworkin Barimen
+givenName: Dworkin
+sn: Barimen
+eduPersonPrincipalName: dworkin@amber.org
+eduPersonAffiliation: alum
+eduPersonOrgDn: dc=amber,dc=org
+mail: dworkin@mail.amber.org
+isMemberOf: urn:mace:amber.org:groups:pattern_makers
+isMemberOf: urn:mace:amber.org:groups:pattern_walkers
+isMemberOf: urn:mace:amber.org:groups:exiled
+eduPersonPrimaryAffiliation: alum
+eduPersonUniqueId: 0001@amber.org
+displayName:  Mad Dworkin
+userPassword: dworkin
+
+dn: uid=dara,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+objectclass: amberite
+objectclass: chaosian
+uid: dara
+amberTitle: Maid
+chaosFamily: Barimen
+cn: Dara Barimen
+givenName: Dara
+sn: Barimen
+eduPersonPrincipalName: dara@amber.org
+eduPersonAffiliation: student
+eduPersonOrgDn: dc=amber,dc=org
+mail: dara@mail.amber.org
+eduPersonPrimaryAffiliation: student
+isMemberOf: urn:mace:amber.org:groups:pattern_walkers
+isMemberOf: urn:mace:amber.org:groups:pattern_students
+isMemberOf: urn:mace:amber.org:groups:chaosians
+eduPersonUniqueId: 9977@amber.org
+displayName: Dara of the Black Road
+userpassword: dara
+
+dn: uid=ugrad,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: ugrad
+cn: Ann Elk
+givenName: Ann
+sn: Elk
+displayName: Annie E.
+eduPersonPrincipalName: ugrad@amber.org
+eduPersonAffiliation: student
+eduPersonPrimaryAffiliation: student
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:undergraduates
+isMemberOf: urn:mace:amber.org:groups:pattern_students
+isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
+isMemberOf: urn:mace:amber.org:groups:research:firearms_project
+eduPersonUniqueID: 0135@amber.org
+userPassword: ugrad
+mail: ugrad@mail.amber.org
+
+dn: uid=grad,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: grad
+cn: Richard Luxury Yacht
+givenName: Richard
+sn: Yacht
+displayName: Throatwarbler Mangrove
+eduPersonPrincipalName: grad@amber.org
+eduPersonAffiliation: student
+eduPersonAffiliation: staff
+eduPersonPrimaryAFfiliation: student
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:gradstudents
+isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
+isMemberOf: urn:mace:amber.org:groups:research:avalon_project
+isMemberOf: urn:mace:amber.org:groups:instructors
+eduPersonUniqueID: 0251@amber.org
+userPassword: grad
+mail: grad@mail.amber.org
+
+dn: uid=faculty,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: faculty
+cn: John Keynes
+givenName: John
+sn: Keynes
+displayName: Professor Keynes
+eduPersonPrincipalName: faculty@amber.org
+eduPersonAffiliation: faculty
+eduPersonPrimaryAffiliation: faculty
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:research:covert_project
+isMemberOf: urn:mace:amber.org:groups:research:public_project
+isMemberOf: urn:mace:amber.org:groups:faculty:tenured
+isMemberOf: urn:mace:amber.org:groups:instructors
+eduPersonUniqueID: 1011@amber.org
+userPassword: faculty
+mail: iamfaculty@avalonmail.com
+
+dn: uid=sysadmin,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: sysadmin
+cn: System Administrator
+givenname: System
+sn: Admin
+displayName: System Admin
+eduPersonPrincipalName: sysadmin@amber.org
+eduPersonAffiliation: staff
+eduPersonPrimaryAffiliation: staff
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:itadmins
+eduPersonUniqueID: 1777@amber.org
+userPassword: sysadmin
+mail: sysadmin@mail.amber.org

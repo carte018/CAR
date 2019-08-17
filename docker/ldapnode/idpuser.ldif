@@ -1,0 +1,10 @@
+dn: uid=idpuser,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+cn: idpuser
+uid: idpuser
+givenName: idpuser
+sn: idpuser
+userPassword: idppw

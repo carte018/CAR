@@ -1,0 +1,3 @@
+dn: olcDatabase={1}mdb,cn=config
+add: olcAccess
+olcAccess: {1}to dn.subtree="ou=people,dc=amber,dc=org" by * read

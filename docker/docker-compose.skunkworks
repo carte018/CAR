@@ -219,6 +219,18 @@ services:
       - caradmin-config:/etc/car
       - buildnode_caradmin-webapps:/var/lib/tomcat8/webapps
 
+  ldapnode:
+    build: ./ldapnode
+    hostname: ldapnode
+    environment:
+      - LDAP_ORGANIZATION=Amber
+      - LDAP_DOMAIN=amber.org
+      - LDAP_RFC2307BIS_SCHEMA=true
+      - KEEP_EXISTING_CONFIG=false
+    volumes:
+      - ldap-data:/var/lib/ldap
+      - ldap-config:/etc/ldap
+
   initnode:
     build: ./initnode
     hostname: initnode
@@ -273,3 +285,5 @@ volumes:
     external: true
   buildnode_caradmin-webapps:
     external: true
+  ldap-data: {}
+  ldap-config: {}
