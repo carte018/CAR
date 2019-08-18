@@ -228,8 +228,7 @@ services:
       - LDAP_RFC2307BIS_SCHEMA=true
       - KEEP_EXISTING_CONFIG=false
     volumes:
-      - ldap-data:/var/lib/ldap
-      - ldap-config:/etc/ldap
+      - ldap-container: /container
 
   initnode:
     build: ./initnode
@@ -285,5 +284,4 @@ volumes:
     external: true
   buildnode_caradmin-webapps:
     external: true
-  ldap-data: {}
-  ldap-config: {}
+  ldap-container: {}
