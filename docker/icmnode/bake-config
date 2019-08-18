@@ -28,7 +28,7 @@ parse_args() {
 
 parse_args $*
 
-if [ $QUIET == "yes" -a $SKUNKWORKS == "yes" ]
+if [ "$QUIET" == "yes" -a "$SKUNKWORKS" == "yes" ]
 then
   echo "You have requested both quiet operation and skunkworks semantics."
   echo "If your last build was not in skunkworks mode, results may not be"
