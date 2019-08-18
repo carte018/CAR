@@ -28,6 +28,9 @@ parse_args() {
 		SKUNKWORKS=yes   # beta support
 		shift
 		;;
+	*)
+		shift
+		;;
     esac
   done
   set -- "${POSITIONAL[@]}"

@@ -18,6 +18,9 @@ parse_args() {
                 RESTART=yes
                 shift
                 ;;
+         *)
+         		shift
+         		;;
     esac
   done
   set -- "${POSITIONAL[@]}"
