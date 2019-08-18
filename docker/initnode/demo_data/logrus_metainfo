@@ -16,7 +16,7 @@
             }
         ]
     },
-    "iconurl": "https://apache-sp/Logrus_of_Chaos.png",
+    "iconurl": "https://localhost/Logrus_of_Chaos.png",
     "privacyurl": null,
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:chaos",

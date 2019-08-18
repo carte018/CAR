@@ -16,7 +16,7 @@
             }
         ]
     },
-    "iconurl": "https://apache-sp/Pattern_in_Rebma.png",
+    "iconurl": "https://localhost/Pattern_in_Rebma.png",
     "privacyurl": null,
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",

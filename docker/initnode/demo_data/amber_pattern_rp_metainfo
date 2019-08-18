@@ -16,7 +16,7 @@
             }
         ]
     },
-    "iconurl": "https://apache-sp/AmberPattern.png",
+    "iconurl": "https://localhost/AmberPattern.png",
     "privacyurl": null,
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
