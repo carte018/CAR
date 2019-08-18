@@ -222,7 +222,7 @@ fi
 
 echo
 echo
-echo "We will now rebuild the templated configuration files for this SP."
+echo "We will now rebuild the templated configuration files for this ARPSI instance."
 echo
 echo
 
