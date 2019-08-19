@@ -7,7 +7,7 @@ ADD people.ldif /tmp/people.ldif
 ADD idpuser.ldif /tmp/idpuser.ldif
 ADD idpuser.access /tmp/idpuser.access
 ADD users.ldif /tmp/users.ldif
-
+ 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
