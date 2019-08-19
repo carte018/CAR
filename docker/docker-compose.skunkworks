@@ -226,7 +226,7 @@ services:
       - LDAP_ORGANIZATION=Amber
       - LDAP_DOMAIN=amber.org
       - LDAP_RFC2307BIS_SCHEMA=true
-      - KEEP_EXISTING_CONFIG=false
+      - KEEP_EXISTING_CONFIG=true
     volumes:
       - buildnode_ldap-container:/container
       - buildnode_ldap-data:/var/lib/ldap
