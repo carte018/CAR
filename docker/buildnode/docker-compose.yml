@@ -18,6 +18,8 @@ services:
       - icm-webapps:/var/lib/icm/webapps
       - informed-webapps:/var/lib/informed/webapps
       - regloader-webapps:/var/lib/regloader/webapps
+      - ldap-container:/var/lib/ldap/container
+      - ldap-data:/var/lib/ldap/data
 volumes:
   arpsi-webapps: {}
   copsu-webapps: {}
@@ -26,4 +28,7 @@ volumes:
   icm-webapps: {}
   informed-webapps: {}
   regloader-webapps: {}
+  ldap-container: {}
+  ldap-data: {}
+  
 

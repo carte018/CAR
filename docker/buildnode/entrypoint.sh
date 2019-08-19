@@ -30,6 +30,14 @@ cp /var/build/caradmin/target/caradmin-0.0.1.war /var/lib/caradmin/webapps/carad
 cp /var/build/icm/target/icm-0.0.1.war /var/lib/icm/webapps/icm.war
 cp /var/build/informed/target/informed-0.0.1.war /var/lib/informed/webapps/informed.war
 cp -rp /var/build/regloader/* /var/lib/regloader/webapps/
+#
+# And if we are in skunkworks mode, dump in the LDAP data
+#
+if [ "$SKUNKWORKS" == "yes" ]
+then
+  cp -rp /ldap/* /var/lib/ldap/data/
+  cp -rp /container/* /var/lib/ldap/container/
+fi
 
 #
 # And terminate successfully so docker-compose will release the flow

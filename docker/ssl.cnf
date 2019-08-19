@@ -225,6 +225,7 @@ DNS.6 = icmnode
 DNS.7 = informednode
 DNS.8 = carnode
 DNS.9 = caradminnode
+DNS.10 = localhost
 IP.1 = 127.0.0.1
 IP.2 = 0:0:0:0:0:0:0:1
 
