@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Run the LDAP server
-$*
+# Run the LDAP server in background mode
+$* &
+
+sleep 20  # Give the LDAP server 20 seconds to complete initialization
 
 # If the database isn't loaded, load it
 if [ ! -e /var/lib/ldaploaded ] 
