@@ -35,8 +35,12 @@ cp -rp /var/build/regloader/* /var/lib/regloader/webapps/
 #
 if [ "$SKUNKWORKS" == "yes" ]
 then
-  cp -rp /ldap/* /var/lib/ldap/data/
-  cp -rp /container/* /var/lib/ldap/container/
+  cp -rp /tmp/ldap/* /var/lib/ldap/data/
+  echo "/var/lib/ldap/data contents:"
+  ls -l /var/lib/ldap/data/
+  cp -rp /tmp/container/* /var/lib/ldap/container/
+  echo "/var/lib/ldap/container contents:"
+  ls -l /var/lib/ldap/container/
 fi
 
 #
