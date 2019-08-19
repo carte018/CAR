@@ -1,6 +1,6 @@
 # See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
 # newer versions of the distribution.
-deb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted univers multiverse
+deb mirror://mirrors.ubuntu.com/mirrors.txt bionic main restricted universe multiverse
 deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-updates main restricted universe multiverse
 deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-backports main restricted universe multiverse
 deb mirror://mirrors.ubuntu.com/mirrors.txt bionic-security main restricted universe multiverse
