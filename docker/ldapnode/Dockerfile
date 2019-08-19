@@ -8,8 +8,6 @@ ADD idpuser.ldif /tmp/idpuser.ldif
 ADD idpuser.access /tmp/idpuser.access
 ADD users.ldif /tmp/users.ldif
 
-ADD slapd.conf /etc/ldap/slapd.conf
-
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod a+x /entrypoint.sh
 
