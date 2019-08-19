@@ -1,6 +1,11 @@
 #!/bin/bash
 
 # Run the LDAP server in background mode
+if [ -e /var/lib/ldaploaded ]
+then
+  export KEEP_EXISTING_CONFIG=true
+fi
+
 $* &
 
 sleep 20  # Give the LDAP server 20 seconds to complete initialization
