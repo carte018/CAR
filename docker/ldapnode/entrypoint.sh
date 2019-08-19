@@ -18,4 +18,4 @@ then
 	# Mark the database as loaded
 	touch /var/lib/ldaploaded
 fi
-
+wait
