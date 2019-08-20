@@ -231,6 +231,13 @@ services:
       - buildnode_ldap-container:/container
       - buildnode_ldap-data:/var/lib/ldap
       - buildnode_ldap-config:/etc/ldap
+      
+  idpnode:
+  	build: ./idp
+  	hostname: idpnode
+  	depends_on:
+  	  - ldapnode
+  	  - apache-sp
 
   initnode:
     build: ./initnode

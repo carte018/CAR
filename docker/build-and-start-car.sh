@@ -264,6 +264,11 @@ echo "carma_password=$carma_password" >> config.prev
 (cd caradminnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
 
 #
+# Configure the IDP node
+#
+(cd idp; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_uaser CARMA_PASSWORD=$carma_password ./bake-config $*)
+
+#
 # (Re)build the CAR components' source code using the buildnode
 #
 # We rely on docker-compose "up" (without the -d flag) terminating with the container
