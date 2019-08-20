@@ -58,9 +58,8 @@
     responsibility to ensure that the contents on disk are trustworthy.
     -->
     
-    <!--
-    <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="PATH_TO_YOUR_METADATA"/>
-    -->
+    <MetadataProvider id="LocalMetadata"  xsi:type="FilesystemMetadataProvider" metadataFile="%{idp.home}/metadata/local-sites.xml"/>
+    
 
 	<MetadataProvider id="InCommonMetadata"
                 xsi:type="FileBackedHTTPMetadataProvider"

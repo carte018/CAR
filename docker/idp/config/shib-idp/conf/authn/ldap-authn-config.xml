@@ -19,7 +19,7 @@
 
     <!-- Connection Configuration -->
     <bean id="connectionConfig" class="org.ldaptive.ConnectionConfig" abstract="true" p:ldapUrl="%{idp.authn.LDAP.ldapURL}"
-        p:useStartTLS="%{idp.authn.LDAP.useStartTLS:true}"
+        p:useStartTLS="%{idp.authn.LDAP.useStartTLS:false}"
         p:useSSL="%{idp.authn.LDAP.useSSL:false}"
         p:connectTimeoutDuration="%{idp.authn.LDAP.connectTimeout:PT3S}"
         p:responseTimeoutDuration="%{idp.authn.LDAP.responseTimeout:PT3S}"

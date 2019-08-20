@@ -46,7 +46,7 @@
     </AttributeFilterPolicy>
 	-->
 	
-    <!-- Attribute release for all SPs (global) tagged as 'Research and Scholarship' -->
+    <!-- Attribute release for all SPs (global) tagged as 'Research and Scholarship' 
     <AttributeFilterPolicy id="releaseRandSAttributeBundle">
         <PolicyRequirementRule xsi:type="EntityAttributeExactMatch"
 			attributeName="http://macedir.org/entity-category"
@@ -72,7 +72,7 @@
     </AttributeFilterPolicy>
 	
 	
-    <!-- Attribute release for all InCommon SPs -->
+    
     <AttributeFilterPolicy id="releaseToInCommon">	
         <PolicyRequirementRule xsi:type="EntityAttributeExactMatch"
 			attributeName="http://macedir.org/entity-category"
@@ -95,6 +95,58 @@
         <AttributeRule attributeID="mail">
             <PermitValueRule xsi:type="ANY" />
         </AttributeRule>
-    </AttributeFilterPolicy>
-	
-</AttributeFilterPolicyGroup>
+    </AttributeFilterPolicy> -->
+    
+    <!--  CAR instance gets all known attributes (to facilitate self-service) -->
+    <!--  The Amber Pattern also gets everything released by the ARP by default. -->
+    <!--  In the stock configuration, the Shibboleth IDP's ARP is applied *after*  -->
+    <!--  CAR decisions are processed.  This can be adjusted, but by default, -->
+    <!--  the IDP's ARP is still restrictive over final attribute release. -->
+    <!--  These two RPs, since there are no release restrictions, are entirely -->
+    <!--  controlled by CAR. -->
+    
+	<AttributeFilterPolicy id="CARgetsALL">
+        <PolicyRequirementRule xsi:type="OR">
+            <Rule xsi:type="Requester" value="https://localhost/car-demo-sp" />
+            <Rule xsi:type="Requester" value="https://pattern.amber.org/shibboleth" />
+        </PolicyRequirementRule>
+         <AttributeRule attributeID="eduPersonPrincipalName">
+            <PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="amberTitle">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="cn">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="displayName">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="eduPersonOrcid">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="eduPersonOrgDN">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="eduPersonPrimaryAffiliation">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="eduPersonScopedAffiliation">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="eduPersonTargetedID">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="eduPersonUniqueId">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="mail">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="sn">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+     </AttributeFilterPolicy>
+        
+  </AttributeFilterPolicyGroup>      
+        
