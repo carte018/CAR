@@ -230,6 +230,7 @@ services:
     volumes:
       - buildnode_ldap-container:/container
       - buildnode_ldap-data:/var/lib/ldap
+      - buildnode_ldap-config:/etc/ldap
 
   initnode:
     build: ./initnode
@@ -288,4 +289,6 @@ volumes:
   buildnode_ldap-container:
     external: true
   buildnode_ldap-data:
+    external: true
+  buildnode_ldap-config:
     external: true
