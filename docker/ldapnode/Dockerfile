@@ -1,4 +1,4 @@
-FROM osixia/openldap:1.2.4
+FROM osixia/openldap:1.2.5
 MAINTAINER Rob Carter "rob@duke.edu"
 
 ADD eduperson.schema /tmp/eduperson.schema
