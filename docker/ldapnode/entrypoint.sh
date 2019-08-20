@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run the LDAP server in background mode
-if [ -e /var/lib/ldaploaded ]
+if [ -e /var/lib/ldap/ldaploaded ]
 then
   export KEEP_EXISTING_CONFIG=true
 fi
@@ -11,7 +11,7 @@ $* &
 sleep 20  # Give the LDAP server 20 seconds to complete initialization
 
 # If the database isn't loaded, load it
-if [ ! -e /var/lib/ldaploaded ] 
+if [ ! -e /var/lib/ldap/ldaploaded ] 
 then
 	ldapadd -x -H ldap://localhost -D 'cn=admin,cn=config' -w 'config' -f /tmp/eduperson.schema
 	ldapadd -x -H ldap://localhost -D 'cn=admin,cn=config' -w 'config' -f /tmp/amberite.schema
@@ -21,6 +21,6 @@ then
 	ldapadd -c -x -H ldap://localhost -D 'cn=admin,dc=amber,dc=org' -w 'admin' -f /tmp/users.ldif
 
 	# Mark the database as loaded
-	touch /var/lib/ldaploaded
+	touch /var/lib/ldap/ldaploaded
 fi
 wait
