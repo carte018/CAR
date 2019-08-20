@@ -41,6 +41,9 @@ then
   cp -rp /tmp/container/* /var/lib/ldap/container/
   echo "/var/lib/ldap/container contents:"
   ls -l /var/lib/ldap/container/
+  cp -rp /etc/ldap/* /var/lib/ldap/config/
+  echo "/var/lib/ldap/config contents:"
+  ls -l /var/lib/ldap/config/
 fi
 
 #

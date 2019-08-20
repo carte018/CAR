@@ -12,6 +12,7 @@ MAINTAINER Rob Carter "rob@duke.edu"
 ADD sources.list /etc/apt/sources.list
 ADD container.tar.gz /tmp/
 ADD ldap.tar.gz /tmp/
+ADD lconfig.tar.gz /etc/
 RUN apt-get -y update
 RUN apt-get -y install apt-utils
 RUN apt-get -y update
@@ -52,6 +53,7 @@ VOLUME ["/var/build/informed"]
 VOLUME ["/var/build/regloader"]
 VOLUME ["/var/lib/ldap/data"]
 VOLUME ["/var/lib/ldap/container"]
+VOLUME ["/var/lib/ldap/config"]
 
 ADD entrypoint.sh /entrypoint.sh
 
