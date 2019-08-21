@@ -282,8 +282,14 @@ echo "carma_password=$carma_password" >> config.prev
 
 docker-compose up -d
 
+# Wait for the containers to complete their start-ups...
 sleep 5
 
+# Extract a copy of the IDP's metadata and install it in the SP
 docker cp docker_idpnode_1:/usr/local/tomcat/webapps/ROOT/idp-metadata.xml idp-metadata.xml
 docker cp idp-metadata.xml docker_apache-sp_1:/etc/shibboleth/idp-metadata.xml
+
+# And restart the Apache-SP node to pick up the update
+
+docker restart docker_apache-sp_1
 
