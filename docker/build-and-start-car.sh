@@ -237,36 +237,36 @@ echo "carma_password=$carma_password" >> config.prev
 # Configure the conf files in apache-sp
 #
 
-(cd apache-sp; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+(cd apache-sp; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user /bin/bash ./bake-config $*)
 
 #
 # Configure the conf files in arpsinode
-(cd arpsinode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+(cd arpsinode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user /bin/bash ./bake-config $*)
 
 #
 # Configure the conf files in the copsunode
-(cd copsunode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user ./bake-config $*)
+(cd copsunode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user /bin/bash ./bake-config $*)
 
 #
 # Configure the icm conf files
-(cd icmnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd icmnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 # 
 # Configure the informed conf files
-(cd informednode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd informednode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
 # Configure the car conf files
-(cd carnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd carnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
 # Configure the caradmin conf files
-(cd caradminnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd caradminnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
 # Configure the IDP node
 #
-(cd idp; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_uaser CARMA_PASSWORD=$carma_password ./bake-config $*)
+(cd idp; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_uaser CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
 # (Re)build the CAR components' source code using the buildnode
