@@ -234,11 +234,11 @@ services:
       - buildnode_ldap-config:/etc/ldap
       
   idpnode:
-  	build: ./idp
-  	hostname: idpnode
-  	depends_on:
-  	  - ldapnode
-  	  - apache-sp
+    build: ./idp
+    hostname: idpnode
+    depends_on:
+      - ldapnode
+      - apache-sp
 
   initnode:
     build: ./initnode
