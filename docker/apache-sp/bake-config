@@ -125,7 +125,7 @@ then
   then
     idp_entity_id=""
   fi
-  echo "If you plan to federate this instance bilaterally with a local IDP (the most common use case)"
+  echo "If you plan to federate this instance bilaterally with a local IDP \(the most common use case\)"
   echo "enter the entity ID of the IDP you wish to federate with.  [$idp_entity_id]:  "
   read i
   if [ -n "$i" ]
@@ -144,10 +144,10 @@ then
   then
     federation_discovery_service=""
   fi
-  echo "If you plan to operate this instance as part of a multilateral federation (an uncommon use"
-  echo "case, typically reserved for multitenant instances operated by federation operators) enter"
+  echo "If you plan to operate this instance as part of a multilateral federation \(an uncommon use"
+  echo "case, typically reserved for multitenant instances operated by federation operators\) enter"
   echo "the URL for your preferred federation discovery service. In most cases, the default value"
-  echo "(empty) will be correct here.  [$federation_discovery_service]:  "
+  echo "\(empty\) will be correct here.  [$federation_discovery_service]:  "
   read f
   if [ -n "$f" ]
   then
@@ -167,7 +167,7 @@ then
   then
     federation_metadata_retrieval_url="https://md.incommon.org/InCommon/InCommon-metadata.xml" 
   fi
-  echo "This SP must (periodically) retrieve SAML metadata that includes the metadata for the IDP(s)"
+  echo "This SP must \(periodically\) retrieve SAML metadata that includes the metadata for the IDP\(s\)"
   echo "you federate with.  This may be a federation-supplied metadata object or it may be a local"
   echo "metadata file describing a single IDP.  In either case, enter the URL from which this SP"
   echo "should retrieve trusted metadata.  [$federation_metadata_retrieval_url]:  "
