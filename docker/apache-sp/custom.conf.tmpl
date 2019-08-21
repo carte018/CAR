@@ -18,4 +18,9 @@ ServerName %apache-server-name%
   ErrorLog "/var/log/httpd/error_log"
   CustomLog "/var/log/httpd/access_log" combined
 
+  SSLProxyEngine on
+  SSLProxyVerify none
+  SSLProxyCheckPeerCN off
+  SSLProxyCheckPeerName off
+  SSLProxyCheckPeerExpire off
 </VirtualHost>
