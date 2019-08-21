@@ -73,7 +73,6 @@ services:
       - node1
       - node2
       - node3
-      - idpnode
     depends_on:
       - node1
       - node2
