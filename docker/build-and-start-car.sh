@@ -280,4 +280,10 @@ echo "carma_password=$carma_password" >> config.prev
 # shutdown), execute docker-compose
 #
 
-exec docker-compose up -d
+docker-compose up -d
+
+sleep 5
+
+docker cp docker_idpnode_1:/usr/local/tomcat/webapps/ROOT/idp-metadata.xml idp-metadata.xml
+docker cp idp-metadata.xml docker_apache-sp_1:/etc/shibboleth/idp-metadata.xml
+
