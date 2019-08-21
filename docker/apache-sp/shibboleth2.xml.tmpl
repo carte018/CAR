@@ -78,10 +78,12 @@
             <MetadataFilter type="Signature" certificate="fedsigner.pem"/>
         </MetadataProvider>
         -->
-	<MetadataProvider type="XML" uri="%federation-metadata-retrieval-url%"
+	<!--<MetadataProvider type="XML" uri="%federation-metadata-retrieval-url%"
 		backingFilePath="metadata.xml" reloadInterval="%federation-metadata-refresh-interval%">
-		<!--<MetadataFiter type="Signature" certificate="fedsigner.pem"/>-->
-	</MetadataProvider>
+		<MetadataFiter type="Signature" certificate="fedsigner.pem"/>
+	</MetadataProvider> -->
+	
+		<MetadataProvider type="XML" file="/etc/shibboleth/idp-metadata.xml"/>
 
         <!-- Example of locally maintained metadata. -->
         <!--
