@@ -79,8 +79,8 @@
         </MetadataProvider>
         -->
 	<MetadataProvider type="XML" uri="%federation-metadata-retrieval-url%"
-		backingFilePath="metadata.xml" reloadInterval="7200">
-		<MetadataFiter type="Signature" certificate="fedsigner.pem"/>
+		backingFilePath="metadata.xml" reloadInterval="%federation-metadata-refresh-interval%">
+		<!--<MetadataFiter type="Signature" certificate="fedsigner.pem"/>-->
 	</MetadataProvider>
 
         <!-- Example of locally maintained metadata. -->

@@ -163,8 +163,10 @@ then
   #
   if [ $SKUNKWORKS == "yes" ]
   then
+    federation_metadata_refresh_interval="180"
     federation_metadata_retrieval_url="https://idpnode/idp-metadata.xml"
   else
+  federation_metadata_refresh_interval="7200"
   if [ ! -n "$federation_metadata_retrieval_url" ]
   then
     federation_metadata_retrieval_url="https://md.incommon.org/InCommon/InCommon-metadata.xml" 
@@ -187,7 +189,7 @@ echo "We will now rebuild the templated configuration files for this SP."
 echo
 echo
 cat custom.conf.tmpl | sed 's/%apache-server-name%/'$apache_server_name'/g' > custom.conf
-cat shibboleth2.xml.tmpl | sed 's/%sp-entity-id%/'`echo $sp_entity_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%local-unique-id%/'`echo $local_unique_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%idp-entity-id%/'`echo $idp_entity_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-discovery-service%/'`echo $federation_discovery_service | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-metadata-retrieval-url%/'`echo $federation_metadata_retrieval_url | sed s/\\\//\\\\\\\\\\\//g`'/g' > shibboleth2.xml
+cat shibboleth2.xml.tmpl | sed 's/%sp-entity-id%/'`echo $sp_entity_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%local-unique-id%/'`echo $local_unique_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%idp-entity-id%/'`echo $idp_entity_id | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-discovery-service%/'`echo $federation_discovery_service | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-metadata-retrieval-url%/'`echo $federation_metadata_retrieval_url | sed s/\\\//\\\\\\\\\\\//g`'/g' | sed 's/%federation-metadata-refresh-interval%/'$federation_metadata_refresh_interval'/g' > shibboleth2.xml
 echo
 echo
 if [ ! -f sp-key.pem ]
