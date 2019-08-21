@@ -78,10 +78,6 @@ then
   # Set sp-entity-id for the SP
   #
 
-  if [ $SKUNKWORKS == "yes" ]
-  then
-      sp_entity_id="https://localhost/car-demo-sp
-  else
   if [ ! -n "$sp_entity_id" ]
   then
     sp_entity_id="https://$apache_server_name/car-demo-sp"
@@ -96,11 +92,11 @@ then
   then
     sp_entity_name="$s"
   fi
-  fi
+
   
   # Set local-unique-id attribute if any
   #
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
       local_unique_id="eduPersonUniqueID"
   else
@@ -121,7 +117,7 @@ then
   
   # Set idp-entity-id value (if using)
   #
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     idp_entity_id="urn:mace:multiverse:amber"
   else
@@ -140,7 +136,7 @@ then
   
   # Set federation-discovery-service value (if using)
   #
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     federation_discovery_service=""
   else
@@ -161,7 +157,7 @@ then
   
   # Set federation-metadata-retrieval-url
   #
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     federation_metadata_refresh_interval="180"
     federation_metadata_retrieval_url="https://idpnode/idp-metadata.xml"
