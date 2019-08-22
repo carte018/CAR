@@ -1,5 +1,5 @@
 apache_server_name=localhost
-sp_entity_id=https://localhost/car-demo-sp
+sp_entity_id=urn:mace:multiverse:amber
 local_unique_id=duDukeID
 idp_entity_id=https://shib.oit.duke.edu/shibboleth-idp
 federation_discovery_service=
