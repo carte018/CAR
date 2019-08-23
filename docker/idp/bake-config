@@ -31,7 +31,7 @@ parse_args $*
 #
 # Use APACHE_FQDN to set up the ACS URL(s)
 #
-export pemstr=`cat ../apache-sp/sp-cert.pem | grep -v '^-' | sed 's/\w//g'`
+export pemstr=`cat ../apache-sp/sp-cert.pem | grep -v '^-' | sed 's/ //g'`
 cat config/shib-idp/metadata/local-sites.xml.tmpl | sed 's/%apache-fqdn%/'$APACHE_FQDN'/g' | perl -e 'while (<STDIN>) { $_ =~ s/%car-demo-sp-certificate%/$ENV{"pemstr"}/; print }' > config/shib-idp/metadata/local-sites.xml
 cp config/shib-idp/metadata/idp-metadata.xml wwwroot/
 
