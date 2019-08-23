@@ -235,6 +235,8 @@ services:
   idpnode:
     build: ./idp
     hostname: idpnode
+    ports:
+      - 9444:443
     depends_on:
       - ldapnode
       - apache-sp
