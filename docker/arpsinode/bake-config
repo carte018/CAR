@@ -62,7 +62,7 @@ then
   # Ask some questions
   #
 
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
       echo "Skunkworks builds use the null authentication driver by default."
       echo "Be aware that, in a skunkworks build, your API endpoints will accept any"
@@ -77,7 +77,7 @@ then
   echo "Current options for validating basicauth credentials are:"
   echo "krb5 - Verify credentials by performing krb5 authentication"
   echo "null - Don't verify credentials -- simply accept any user/secret presented"
-  echo "For testing purposes, and in special cases in which a web service proxy (like Kong)"
+  echo "For testing purposes, and in special cases in which a web service proxy \(like Kong\)"
   echo "is being used to pre-authenitcate WS requests, the 'null' driver may be acceptable."
   echo "For any other purpose, the 'null' driver should NOT be used."
   echo
@@ -175,12 +175,12 @@ then
   
   if [ $SKUNKWORKS == "yes" ]
   then
-    echo "Skunkworks builds default to authorizing a single username (root) for access"
+    echo "Skunkworks builds default to authorizing a single username \(skunkworks\) for access"
     echo "to the APIs.  The user has full admin rights in the APIs, and because"
     echo "skunkworks builds use the NullAuth authentication module, any credential"
     echo "will be accepted as valid."
     
-    app_users="root"
+    app_users="skunkworks"
     app_admins=$app_users
   else
   if [ ! -n "$app_users" ]

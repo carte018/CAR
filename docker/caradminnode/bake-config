@@ -87,8 +87,8 @@ then
 
   if [ $SKUNKWORKS == "yes" ]
   then
-    echo "Skunkworks builds use the default 'sysadmin' SAML user (defined automatically"
-    echo "by the build in the skunkworks amber.org LDAP) as the initial 'super-admin'"
+    echo "Skunkworks builds use the default 'sysadmin' SAML user \(defined automatically"
+    echo "by the build in the skunkworks amber.org LDAP\) as the initial 'super-admin'"
     echo "for the caradmin interface.  When the build is complete, you will need to "
     echo "use the 'sysadmin' account to access the caradmin service and assign roles to"
     echo "other users in the skunkworks IDP."
@@ -104,8 +104,8 @@ then
   echo "entire CAR instance.  You must specify at least one user to "
   echo "receive this 'super-admin' role in order to bootstrap the"
   echo "configuration."
-  echo "Enter a comma-separated list of IDs (the values of REMOTE_UESR"
-  echo "you expect to be set when the users log in) or the user(s) you"
+  echo "Enter a comma-separated list of IDs \(the values of REMOTE_UESR"
+  echo "you expect to be set when the users log in\) or the user\(s\) you"
   echo "wish to grant overriding 'super-admin' privileges to."
   echo "[$super_admins]: "
   read sa

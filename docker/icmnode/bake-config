@@ -72,7 +72,7 @@ then
   # Ask some questions
   #
 
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     echo "Skunkworks installations use the null authentication module by default."
     echo "The null authentication module will accept any basicauth credentials provided"
@@ -86,7 +86,7 @@ then
   echo "Current options for validating basicauth credentials are:"
   echo "krb5 - Verify credentials by performing krb5 authentication"
   echo "null - Don't verify credentials -- simply accept any user/secret presented"
-  echo "For testing purposes, and in special cases in which a web service proxy (like Kong)"
+  echo "For testing purposes, and in special cases in which a web service proxy \(like Kong\)"
   echo "is being used to pre-authenitcate WS requests, the 'null' driver may be acceptable."
   echo "For any other purpose, the 'null' driver should NOT be used."
   echo
@@ -182,14 +182,14 @@ then
   fi
   fi
   
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
-     app_users="root"
+     app_users="root,skunkworks"
   else
   if [ ! -n "$app_users" ]
   then
-    app_users="root"
-    app_admins="root"
+    app_users="root,skunkworks"
+    app_admins="root,skunkworks"
   fi
   echo "We must now configure authorizations for the ICM WS.  The ICM is"
   echo "the primary outward-facing API exposed by the CARMA, and it"
@@ -212,7 +212,7 @@ then
     app_admins="$app_users"
   fi
   echo "We now need to configure the list of API admins who will have full rights in"
-  echo "the ICM WS (including the COPSU and ARPSI API reflections there.)"
+  echo "the ICM WS \(including the COPSU and ARPSI API reflections there.\)"
   echo "This is typically a subset of the app users you listed above."
   echo
   echo "[$app_admins] : "

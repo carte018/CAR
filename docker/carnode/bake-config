@@ -100,7 +100,7 @@ then
   echo "Current options for validating basicauth credentials are:"
   echo "krb5 - Verify credentials by performing krb5 authentication"
   echo "null - Don't verify credentials -- simply accept any user/secret presented"
-  echo "For testing purposes, and in special cases in which a web service proxy (like Kong)"
+  echo "For testing purposes, and in special cases in which a web service proxy \(like Kong\)"
   echo "is being used to pre-authenitcate WS requests, the 'null' driver may be acceptable."
   echo "For any other purpose, the 'null' driver should NOT be used."
   echo
