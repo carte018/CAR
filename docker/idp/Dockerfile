@@ -24,6 +24,9 @@ ADD ${SHBMSGS} /opt/shibboleth-idp/messages
 ADD ${SHBMD} /opt/shibboleth-idp/metadata
 ADD ${CARFLOWS} /opt/shibboleth-idp/flows/
 
+# Get openssl installed (for key management)
+RUN yum -y install openssl
+
 #
 # Modulate the startup to check for keys and create new ones if needed.
 #
