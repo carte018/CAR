@@ -255,6 +255,8 @@ services:
       - informednode
       - carnode
       - caradminnode
+      - idpnode
+      - ldapnode
     environment:
       - NODE_NAME=initnode
       - CARMA_USER=%carma_user%
