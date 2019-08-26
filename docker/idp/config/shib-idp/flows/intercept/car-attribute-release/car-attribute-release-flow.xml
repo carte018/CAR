@@ -1,0 +1,51 @@
+<!-- /*
+ * Copyright 20xx - 20xx Duke University
+    
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+ */-->
+
+<flow xmlns="http://www.springframework.org/schema/webflow"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.springframework.org/schema/webflow http://www.springframework.org/schema/webflow/spring-webflow.xsd"
+      parent="intercept.abstract">
+
+    <!-- Rudimentary impediment to direct execution of subflow. -->
+    <input name="calledAsSubflow" type="boolean" required="true" />
+
+    <action-state id="CARAttributeRelease">
+        <evaluate expression="InitializeCARContext" />
+        <evaluate expression="'proceed'" />
+        <transition on="proceed" to="ExternalTransfer" />
+    </action-state>
+
+    <view-state id="ExternalTransfer" view="car-attribute-release">
+        <on-render>
+            <evaluate expression="environment" result="viewScope.environment" />
+            <evaluate expression="flowRequestContext.getExternalContext().getNativeRequest()" result="viewScope.request" />
+            <evaluate expression="opensamlProfileRequestContext.getSubcontext(T(edu.duke.oit.idms.idp.car.CARContext))" result="viewScope.carContext" />
+        </on-render>
+
+        <transition on="proceed" to="FinalizeCAR" />
+    </view-state>
+
+    <action-state id="FinalizeCAR">
+        <evaluate expression="FinalizeCAR" />
+        <evaluate expression="'proceed'" />
+        <transition on="proceed" to="proceed" />
+    </action-state>
+
+    <end-state id="proceed" />
+
+    <bean-import resource="car-attribute-release-beans.xml" />
+
+</flow>

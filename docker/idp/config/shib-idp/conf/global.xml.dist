@@ -14,12 +14,6 @@
 
     <!-- Use this file to define any custom beans needed globally. -->
 
-	<bean id="JWTUtils" class="edu.duke.oit.idms.idp.car.JWTUtils"
-      p:carIdPPrivateKeyResource="%{car.idp.private.key}"
-      p:carCarmaCertificateResource="%{car.carma.cert}"
-      init-method="initialize"
-    />
-
     <!--
     Algorithm whitelists and blacklists that override or merge with library defaults. Normally you can leave
     these empty or commented and use the system defaults, but you can override those defaults using these lists.

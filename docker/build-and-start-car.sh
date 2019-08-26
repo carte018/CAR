@@ -290,6 +290,16 @@ docker cp docker_idpnode_1:/usr/local/tomcat/webapps/ROOT/idp-metadata.xml idp-m
 docker cp idp-metadata.xml docker_apache-sp_1:/etc/shibboleth/idp-metadata.xml
 docker exec -i -t docker_apache-sp_1 rm /var/run/apache2/apache2.pid
 
+# And exchange keys between the CAR module and the IDP (for skunkworks only)
+
+if [ "$SKUNKWORKS" == "yes" ]
+then
+    docker cp docker_idpnode_1:/opt/shibboleth-idp/credentials/car_idp.crt shibcert
+    docker cp docker_carnode_1 /var/www/carma/carmacert car_carma.crt
+    docker cp shibcert docker_carnode_1 /var/www/carma/shibcert
+    docker cp car_carma.crt docker_idpnode_1:/opt/shibboleth-idp/credentials/car_carma.crt
+fi
+
 # And restart the Apache-SP node to pick up the update
 
 docker restart docker_apache-sp_1
@@ -297,5 +307,13 @@ docker restart docker_apache-sp_1
 # And ensure that the Apache daemon started properly (with another restart attempt)
 
 docker exec -i -t docker_apache-sp_1 /etc/init.d/apache2 start
+
+#
+# And restart the carnode and the idpnode to pick up the updated keys
+#
+
+docker restart docker_carnode_1
+docker restart docker_idpnode_1
+
 
 
