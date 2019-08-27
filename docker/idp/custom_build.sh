@@ -14,5 +14,5 @@ find . -name \*.java -print > file
 javac @file
 rm -f file
 cd /opt/shibboleth-idp/bin/
-./ant.sh build-war
+./ant.sh "$@" build-war
 cd /opt/shibboleth-idp/edit-webapp/WEB-INF/classes
