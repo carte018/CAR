@@ -27,6 +27,11 @@ ADD ${CARFLOWS} /opt/shibboleth-idp/flows/
 # Get openssl installed (for key management)
 RUN yum -y install openssl
 
+# Prepare for rebuild
+RUN mkdir -p /opt/shibboleth-idp/webapp
+RUN mkdir -p /usr/local/tomcat/webapps/idp/credentials
+ADD initial.key /usr/local/tomcat/webapps/idp/credentials/car_idp.key
+ADD initial.crt /usr/local/tomcat/webapps/idp/credentials/car_carma.crt
 #
 # Modulate the startup to check for keys and create new ones if needed.
 #
