@@ -35,3 +35,12 @@ export pemstr=`cat ../apache-sp/sp-cert.pem | grep -v '^-' | sed 's/ //g'`
 cat config/shib-idp/metadata/local-sites.xml.tmpl | sed 's/%apache-fqdn%/'$APACHE_FQDN'/g' | perl -e 'while (<STDIN>) { $_ =~ s/%car-demo-sp-certificate%/$ENV{"pemstr"}/; print }' > config/shib-idp/metadata/local-sites.xml
 cp config/shib-idp/metadata/idp-metadata.xml wwwroot/
 
+#
+# Pull in the ARPSI configuration
+#
+if [ -f ../apache-sp/config.prev ]
+then
+    source ../apache-sp/config.prev
+fi
+
+cat config/shib-idp/conf/idp.properties.tmpl | sed 's/%apache-fqdn%/'$APACHE_FQDN'/g' | sed 's/%unique_id%/'$local_unique_id'/g' > config/shib-idp/conf/idp.properties	 
