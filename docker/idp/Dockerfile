@@ -33,6 +33,7 @@ RUN mkdir -p /usr/local/tomcat/webapps/idp/credentials
 ADD initial.key /usr/local/tomcat/webapps/idp/credentials/car_idp.key
 ADD initial.crt /usr/local/tomcat/webapps/idp/credentials/car_carma.crt
 ADD startup.sh /usr/bin/startup.sh
+ADD custom_build.sh /opt/shibboleth-idp/bin/custom_build.sh
 #
 # Modulate the startup to check for keys and create new ones if needed.
 #
