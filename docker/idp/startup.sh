@@ -12,6 +12,7 @@ find . -name \*.java -print > file;
 javac @file;
 rm -f file;
 jar cvf /opt/shibboleth-idp/dist/webapp/WEB-INF/lib/car-module-0.0.1.jar edu)
+cp /opt/shibboleth-idp/edit-webapp/WEB-INF/lib/* /opt/shiboleth-idp/dist/webapp/WEB-INF/lib/
 
 #rebuild idp war file to incorporate any post-install additions
 #/opt/shibboleth-idp/bin/custom_build.sh -q -Didp.target.dir=/opt/shibboleth-idp
