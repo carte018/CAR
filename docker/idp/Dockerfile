@@ -48,7 +48,6 @@ ADD custom_build.sh /opt/shibboleth-idp/bin/custom_build.sh
 #
 
 ADD entrypoint.sh /entrypoint.sh
-
 CWD /tmp
 RUN ls
 RUN jar uvf /opt/shibboleth-idp/war/idp.war credentials
