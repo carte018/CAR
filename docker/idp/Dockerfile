@@ -1,4 +1,4 @@
-FROM amber/idp:latest
+FROM amber/idp-base:latest
 
 # The build args below can be used at build-time to tell the build process where to find your config files.  This is for a completely burned-in config.
 ARG SHBCFG=config/shib-idp/conf
