@@ -38,9 +38,10 @@ RUN yum -y install openssl
 
 # Prepare for rebuild
 RUN mkdir -p /opt/shibboleth-idp/webapp
-RUN mkdir -p /usr/local/tomcat/webapps/idp/credentials
-ADD initial.key /usr/local/tomcat/webapps/idp/credentials/car_idp.key
-ADD initial.crt /usr/local/tomcat/webapps/idp/credentials/car_carma.crt
+RUN mkdir -p /tmp/credentials
+ADD initial.key /tmp/credentials/car_idp.key
+ADD initial.crt /tmp/credentials/car_carma.crt
+RUN "(cd /tmp; jar uvf /opt/shibboleth-idp/war/idp.war credentials)"
 ADD startup.sh /usr/bin/startup.sh
 ADD custom_build.sh /opt/shibboleth-idp/bin/custom_build.sh
 #
