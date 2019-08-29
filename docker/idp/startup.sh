@@ -6,9 +6,13 @@ export USERTOKEN="${USERTOKEN// /}"
 export ENV="${ENV//;/:}"
 export ENV="${ENV// /}"
 
-# Build a JAR for the CAR plugin
+# Build a JAR for the CAR plugin if it's not already been built
+if [ ! -e /opt/shibboleth-idp/car-built ]
+then
 (cd /opt/shibboleth-idp/edit-webapp/WEB-INF/classes;
 find . -name \*.java -print > file;
+export CLASSPATH=/opt/shibboleth-idp/dist/webapp/WEB-INF/lib/*:/opt/shibboleth-idp/edit-webapp/WEB-INF/lib/*:/usr/local/tomcat/lib/*;
+export JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto;
 javac @file;
 rm -f file;
 jar cvf /opt/shibboleth-idp/dist/webapp/WEB-INF/lib/car-module-0.0.1.jar edu)
@@ -17,7 +21,9 @@ cp /opt/shibboleth-idp/edit-webapp/WEB-INF/lib/* /opt/shiboleth-idp/dist/webapp/
 #rebuild idp war file to incorporate any post-install additions
 #/opt/shibboleth-idp/bin/custom_build.sh -q -Didp.target.dir=/opt/shibboleth-idp
 /opt/shibboleth-idp/bin/build.sh -q -Didp.target.dir=/opt/shibboleth-idp
-
+else
+echo "Skipping idp war file rebuild on restart -- to force rebuild, remove /opt/shibboleth-idp/car-built file and restart"
+fi
 
 # generic console logging pipe for anyone
 mkfifo -m 666 /tmp/logpipe
