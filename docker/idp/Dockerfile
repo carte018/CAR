@@ -28,7 +28,7 @@ ADD ${CARFLOWS} /opt/shibboleth-idp/flows/
 #
 # Add the requisite change to idp.properties
 #
-RUN sed -i .orig 's/https:\/\/localhost\/idp\/shibboleth/urn:mace:multiverse:amber/g' /opt/shibboleth-idp/conf/idp.properties
+RUN sed -i'.orig' 's/https:\/\/localhost\/idp\/shibboleth/urn:mace:multiverse:amber/g' /opt/shibboleth-idp/conf/idp.properties
 
 
 # Get openssl installed (for key management)
