@@ -81,6 +81,10 @@ fi
 if [ "$SKUNKWORKS" == "yes" ]
 then
   cp docker-compose.skunkworks docker-compose.yml.tmpl
+  #
+  # And build the customized base image from the TAP IDP image
+  #
+  (cd clean-idp; docker build --rm -t amber/idp-base .)
 else
   cp docker-compose.caronly docker-compose.yml.tmpl
 fi

@@ -1,0 +1,36 @@
+<EntityDescriptor entityID="https://localhost/idp/shibboleth" xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Extensions>
+      <shibmd:Scope regexp="false">amber.org</shibmd:Scope>
+    </Extensions>
+    <KeyDescriptor use="signing">
+      <ds:KeyInfo>
+        <ds:X509Data>
+          <ds:X509Certificate>
+MIIDBDCCAeygAwIBAgIJAPWz+rc7RWktMA0GCSqGSIb3DQEBCwUAMBQxEjAQBgNV
+BAMMCWxvY2FsaG9zdDAeFw0xOTA4MjkxNDMzMjZaFw0yNDA4MjcxNDMzMjZaMBQx
+EjAQBgNVBAMMCWxvY2FsaG9zdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBAL4PXnW4eBE3OdlPB08tNBsUS8qcnAnno1XpN2yvbpskpTSCEh2tCFcOYLRX
+qZvL1MRvDPUvUpnXFqrUoBCu96W8eru/JhDSYSxEGAyImryflT0sxisfAcPL5unA
+YjMwPpq1vpMTN4a19Mi/3W4dJo+MRaVuxzCerDVTUFP7msmy/G1nu6klWna8lcGd
+YYaae9Ft5RDhjyWiqirsTrEPyg0EmFH3cIEqecPER8xR/ChFUudQROr3czxiMjbD
+KcsinT1ZVTa2dwr0s8q5mTQSC3Ae+nMt228r/43AZvm9Q5nzV8gBD2F2DZg2YNe9
+ujiE/113SDpQqIWvBKFEI7j/zC0CAwEAAaNZMFcwNgYDVR0RBC8wLYIJbG9jYWxo
+b3N0hiBodHRwczovL2xvY2FsaG9zdC9pZHAvc2hpYmJvbGV0aDAdBgNVHQ4EFgQU
+26mTyYWaBr3Lsb46Z3sxcHwGFPswDQYJKoZIhvcNAQELBQADggEBADB8FxKiT/An
+cj/NP8b7GXk0nulChbU2rUvHDlcyDOVCXf6BmdrWUj39ew+0wQtDiCgdDyMwnejh
+6tc2j1fN+Y1HUrRPG0wBjRSLqBUz/+0I/zS9+qY19ogFwOFatpjrQUhPZchNcQVd
+jZDWfjgCzCGVH/fQXExQT5iH+eASBi4ii5Etd9nTOvPFvr2dq8rYcV1x9QXazsdu
+wcqB8jC9y3+Ex5o5fnZq+7UBfYhRpu6pFYntqOF52HYXl7yO8uFvi3Oz4XfiVSlY
+rmZK/bX7II8ioNBHTaayN//aSr6TDOQg3pIb2hiBOP699TaEDpBUWCCa7MgO6FiY
+0VydSi8i3l0=
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://localhost/idp/profile/SAML2/Redirect/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://localhost/idp/profile/SAML2/POST/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://localhost/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://localhost/idp/profile/SAML2/SOAP/ECP"/>
+  </IDPSSODescriptor>
+</EntityDescriptor>
