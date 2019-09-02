@@ -311,6 +311,7 @@ docker restart docker_apache-sp_1
 
 # And ensure that the Apache daemon started properly (with another restart attempt)
 
+docker exec -i -t docker_apache-sp_1 /etc/init.d/shibd restart
 docker exec -i -t docker_apache-sp_1 /etc/init.d/apache2 start
 
 #
