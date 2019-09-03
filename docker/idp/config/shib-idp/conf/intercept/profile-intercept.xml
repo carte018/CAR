@@ -31,6 +31,9 @@
                 <bean id="intercept/terms-of-use" parent="shibboleth.consent.TermsOfUseFlow" />
         
                 <bean id="intercept/attribute-release" parent="shibboleth.consent.AttributeReleaseFlow" p:activationCondition-ref="isFERPA" />
+                
+                <bean id="intercept/car-attribute-release" parent="shibboleth.InterceptFlow" />
+           
             </list>
         </property>
     </bean>
