@@ -291,8 +291,8 @@ sleep 5
 
 # Extract a copy of the IDP's metadata and install it in the SP
 docker cp docker_idpnode_1:/opt/shibboleth-idp/metadata/idp-metadata.xml idp-metadata.xml
-sed -i'' 's/https:\/\/[^\/]*\/idp\/shibboleth/urn:mace:multiverse:amber/' idp-metadata.xml
-sed -i'' 's/https:\/\/\([^\/]*\)\/idp\/profile/https:\/\/\1:9443\/idp\/profile/g' idp-metadata.xml
+sed -i'.older' 's/https:\/\/[^\/]*\/idp\/shibboleth/urn:mace:multiverse:amber/' idp-metadata.xml
+sed -i'.old' 's/https:\/\/\([^\/]*\)\/idp\/profile/https:\/\/\1:9443\/idp\/profile/g' idp-metadata.xml
 docker cp idp-metadata.xml docker_apache-sp_1:/etc/shibboleth/idp-metadata.xml
 docker exec -i -t docker_apache-sp_1 rm /var/run/apache2/apache2.pid
 
