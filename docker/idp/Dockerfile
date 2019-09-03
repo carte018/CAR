@@ -7,7 +7,7 @@ ARG SHBVIEWS=config/shib-idp/views
 ARG SHBEDWAPP=config/shib-idp/edit-webapp
 ARG SHBMSGS=config/shib-idp/messages
 ARG SHBMD=config/shib-idp/metadata
-ARG CARFLOWS=config/shib-idp/flows/intercept
+ARG CARFLOWS=config/shib-idp/flows
 
 # copy in the needed config files for adding CAR integration
 ## ADD ${SHBCFG} /opt/shibboleth-idp/conf
@@ -16,6 +16,7 @@ ADD ${SHBCFG}/attribute-resolver.xml /opt/shibboleth-idp/conf/attribute-resolver
 ADD ${SHBCFG}/global.xml /opt/shibboleth-idp/conf/global.xml
 ADD ${SHBCFG}/metadata-providers.xml /opt/shibboleth-idp/conf/metadata-providers.xml
 ADD ${SHBCFG}/relying-party.xml /opt/shibboleth-idp/conf/relying-party.xml
+ADD ${SHBCFG}/intercept/profile-intercept.xml /opt/shibboleth-idp/conf/intercept/profile-intercept.xml
 ADD ${SHBCFG}/idp.properties /tmp/idp.properties
 ##ADD ${SHBCREDS} /opt/shibboleth-idp/credentials
 ##ADD ${SHBVIEWS} /opt/shibboleth-idp/views
@@ -32,6 +33,7 @@ ADD ${CARFLOWS} /opt/shibboleth-idp/flows/
 #
 RUN sed -i'.orig' 's/https:\/\/localhost\/idp\/shibboleth/urn:mace:multiverse:amber/g' /opt/shibboleth-idp/conf/idp.properties
 RUN grep '^car\.' /tmp/idp.properties >> /opt/shibboleth-idp/conf/idp.properties
+RUN grep '^idp.session.StorageService' /tmp/idp.properties >> /opt/shibboleth-idp/conf/idp.properties
 
 # Get openssl installed (for key management)
 RUN yum -y install openssl
