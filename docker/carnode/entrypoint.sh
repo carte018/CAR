@@ -20,7 +20,7 @@ chown -R tomcat8:tomcat8 /var/lib/tomcat8/webapps
 # If we don't, create one now. 
 # If we do, leave it be.
 #
-if [ ! -e /var/www/carma/carmaprivkey.pk ]
+if [ ! -e /var/www/carma/carmaprivkey.p8 ]
 then
   # Create a new signing key and store it in the proper location
   openssl req -newkey rsa:2048 -x509 -nodes -keyout /tmp/signing.key -new -out /tmp/signing.cert -subj '/C=UF/ST=Sector 7/L=Vulcan/O=United Federation of Planets/OU=Vulcan Homeworld/CN=carsigning' -sha256 -days 3650
@@ -34,6 +34,7 @@ then
   
   # Build the directory for holding RH certificates
   mkdir -p /var/www/carma/rhcerts
+  chown -R tomcat8:tomcat8 /var/www/carma/
 
 fi
 
