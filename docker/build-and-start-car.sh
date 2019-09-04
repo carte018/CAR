@@ -305,6 +305,7 @@ then
     docker cp shibcert docker_carnode_1:/var/www/carma/shibcert
     docker cp car_carma.crt docker_idpnode_1:/opt/shibboleth-idp/credentials/
     docker exec docker_idpnode_1 cp -rp /opt/shibboleth-idp/credentials /usr/local/tomcat/webapps/idp/credentials
+    docker exec docker_carnode_1 chown -R tomcat8 /var/www/carma
 fi
 
 # And restart the Apache-SP node to pick up the update
