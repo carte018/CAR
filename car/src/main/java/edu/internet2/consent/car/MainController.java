@@ -244,6 +244,7 @@ public class MainController {
 			
 			if (privkey instanceof RSAPrivateKey) {
 					CarUtility.locError("ERR1134", LogCriticality.error,"Privkey is RSA key");
+					CarUtility.locError("ERR1134", LogCriticality.error,"JWE is " + jwe.getCipherText());
                 	jwe.decrypt(new RSADecrypter(privkey));
                 	CarUtility.locError("ERR1134", LogCriticality.error,"JWE decryption complete");
                 	SignedJWT sjwt = jwe.getPayload().toSignedJWT();
@@ -304,8 +305,7 @@ public class MainController {
 			}
 		} catch (Exception e) {
 			CarUtility.locError("ERR1103",LogCriticality.error,e.getMessage());
-			throw new RuntimeException(e);
-			//return null;
+			return null;
 		}
 	}
 			
