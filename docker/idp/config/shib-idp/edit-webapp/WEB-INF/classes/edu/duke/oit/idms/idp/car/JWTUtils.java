@@ -68,6 +68,10 @@ public class JWTUtils {
   
   private Resource carCarmaCertificateResource;
 
+  /** Class logger. */
+  @Nonnull
+  private final Logger log = LoggerFactory.getLogger(JWTUtils.class);
+  
   /**
    * 
    */
@@ -127,6 +131,9 @@ public class JWTUtils {
    */
   public static String signAndEncrypt(String request, String issuer) {
     
+	// debug
+	log.error("Request being signed and encrypted is: " + request + " with issuer " + issuer);
+	
     JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
       .expirationTime(new Date(new Date().getTime() + 300 * 1000))
       .issueTime(new Date())
