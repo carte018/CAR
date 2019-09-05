@@ -75,7 +75,7 @@ public class JWTUtils {
 
   /** Class logger. */
   @Nonnull
-  private final Logger log = LoggerFactory.getLogger(JWTUtils.class);
+  private static Logger log = LoggerFactory.getLogger(JWTUtils.class);
   
   /**
    * 
