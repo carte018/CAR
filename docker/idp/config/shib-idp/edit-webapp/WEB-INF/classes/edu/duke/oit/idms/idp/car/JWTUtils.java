@@ -87,7 +87,11 @@ public class JWTUtils {
     if (carCarmaCertificateResource == null) {
       throw new RuntimeException("carCarmaCertificateResource is null");
     } else {
-    	plog.error("Certificate for CAR encryption contains " + carCarmaCertificateResource.getFile().length() + " bytes");
+    	try {
+    		plog.error("Certificate for CAR encryption contains " + carCarmaCertificateResource.getFile().length() + " bytes");
+    	} catch Exception (e) {
+    		throw new RuntimeException("Failed to getting length of carma certificate file");
+    	}
     }
     
     if (carIdPPrivateKeyResource == null) {
