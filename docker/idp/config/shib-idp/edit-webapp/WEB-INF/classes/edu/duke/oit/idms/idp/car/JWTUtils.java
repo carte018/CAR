@@ -89,7 +89,7 @@ public class JWTUtils {
     } else {
     	try {
     		plog.error("Certificate for CAR encryption contains " + carCarmaCertificateResource.getFile().length() + " bytes");
-    	} catch Exception (e) {
+    	} catch (Exception e) {
     		throw new RuntimeException("Failed to getting length of carma certificate file");
     	}
     }
