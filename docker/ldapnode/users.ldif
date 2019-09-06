@@ -23,7 +23,7 @@ isMemberOf: urn:mace:amber.org:groups:regicides
 isMemberOf: urn:mace:amber.org:groups:exiled
 eduPersonPrimaryAffiliation: faculty
 displayName: Prince Corwin of Amber
-eduPersonUniqueId: 9101@amber.org
+localUniqueId: 9101
 userPassword: corwin
 
 dn: uid=oberon,ou=people,dc=amber,dc=org
@@ -47,7 +47,7 @@ isMemberOf: urn:mace:amber.org:groups:pattern_makers
 isMemberOf: urn:mace:amber.org:groups:kidnapped
 eduPersonPrimaryAffiliation: faculty
 displayName: Oberon, Leige of Amber
-eduPersonUniqueId: 0002@amber.org
+localUniqueId: 0002
 userPassword: oberon
 
 dn: uid=benedict,ou=people,dc=amber,dc=org
@@ -73,7 +73,7 @@ isMemberOf: urn:mace:amber.org:groups:pattern_walkers
 isMemberOf: urn:mace:amber.org:groups:sons_of_oberon
 isMemberOf: urn:mace:amber.org:groups:exiled
 displayName: Prince Benedict the One-Armed
-eduPersonUniqueId: 9102@amber.org
+localUniqueId: 9102
 userPassword: benedict
 
 dn: uid=dworkin,ou=people,dc=amber,dc=org
@@ -98,7 +98,7 @@ isMemberOf: urn:mace:amber.org:groups:pattern_makers
 isMemberOf: urn:mace:amber.org:groups:pattern_walkers
 isMemberOf: urn:mace:amber.org:groups:exiled
 eduPersonPrimaryAffiliation: alum
-eduPersonUniqueId: 0001@amber.org
+localUniqueId: 0001
 displayName:  Mad Dworkin
 userPassword: dworkin
 
@@ -124,7 +124,7 @@ eduPersonPrimaryAffiliation: student
 isMemberOf: urn:mace:amber.org:groups:pattern_walkers
 isMemberOf: urn:mace:amber.org:groups:pattern_students
 isMemberOf: urn:mace:amber.org:groups:chaosians
-eduPersonUniqueId: 9977@amber.org
+localUniqueId: 9977
 displayName: Dara of the Black Road
 userpassword: dara
 
@@ -147,7 +147,7 @@ isMemberOf: urn:mace:amber.org:groups:undergraduates
 isMemberOf: urn:mace:amber.org:groups:pattern_students
 isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
 isMemberOf: urn:mace:amber.org:groups:research:firearms_project
-eduPersonUniqueID: 0135@amber.org
+eduPersonUniqueID: 0135
 userPassword: ugrad
 mail: ugrad@mail.amber.org
 
@@ -171,7 +171,7 @@ isMemberOf: urn:mace:amber.org:groups:gradstudents
 isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
 isMemberOf: urn:mace:amber.org:groups:research:avalon_project
 isMemberOf: urn:mace:amber.org:groups:instructors
-eduPersonUniqueID: 0251@amber.org
+eduPersonUniqueID: 0251
 userPassword: grad
 mail: grad@mail.amber.org
 
@@ -194,7 +194,7 @@ isMemberOf: urn:mace:amber.org:groups:research:covert_project
 isMemberOf: urn:mace:amber.org:groups:research:public_project
 isMemberOf: urn:mace:amber.org:groups:faculty:tenured
 isMemberOf: urn:mace:amber.org:groups:instructors
-eduPersonUniqueID: 1011@amber.org
+eduPersonUniqueID: 1011
 userPassword: faculty
 mail: iamfaculty@avalonmail.com
 
@@ -214,6 +214,6 @@ eduPersonAffiliation: staff
 eduPersonPrimaryAffiliation: staff
 eduPersonOrgDn: dc=amber,dc=org
 isMemberOf: urn:mace:amber.org:groups:itadmins
-eduPersonUniqueID: 1777@amber.org
+eduPersonUniqueID: 1777
 userPassword: sysadmin
 mail: sysadmin@mail.amber.org
