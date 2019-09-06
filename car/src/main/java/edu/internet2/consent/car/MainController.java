@@ -207,6 +207,7 @@ public class MainController {
 		// Retrieve the base64 encoded encrypted, signed input object
 		
 		String b64input = request.getParameter("json");
+		CarUtility.locError("ERR1134",LogCriticality.error,"Request JSON is: " + b64input);
 		
 		// Turn it into a JWE
 		JWEObject jwe = null;

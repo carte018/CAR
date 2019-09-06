@@ -76,6 +76,8 @@ public class JWTUtils {
   /** Class logger. */
   @Nonnull
   private static Logger log = LoggerFactory.getLogger(JWTUtils.class);
+  @Nonnull
+  private final Logger plog = LoggerFactory.getLogger(JWTUtils.class);
   
   /**
    * 
@@ -84,11 +86,13 @@ public class JWTUtils {
    
     if (carCarmaCertificateResource == null) {
       throw new RuntimeException("carCarmaCertificateResource is null");
+    } else {
+    	plog.error("Certificate for CAR encryption contains " + carCarmaCertificateResource.getFile().length() + " bytes");
     }
     
     if (carIdPPrivateKeyResource == null) {
       throw new RuntimeException("carIdPPrivateKeyResource is null");
-    }
+    } 
 
     InputStream is = null;
     try {      
@@ -168,6 +172,7 @@ public class JWTUtils {
   
     String jweString = jweObject.serialize();
        
+    log.error("JWEString is " + jweString);
     return jweString;
   }
 
