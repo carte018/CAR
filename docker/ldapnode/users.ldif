@@ -147,7 +147,7 @@ isMemberOf: urn:mace:amber.org:groups:undergraduates
 isMemberOf: urn:mace:amber.org:groups:pattern_students
 isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
 isMemberOf: urn:mace:amber.org:groups:research:firearms_project
-eduPersonUniqueID: 0135
+localUniqueId: 0135
 userPassword: ugrad
 mail: ugrad@mail.amber.org
 
@@ -171,7 +171,7 @@ isMemberOf: urn:mace:amber.org:groups:gradstudents
 isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
 isMemberOf: urn:mace:amber.org:groups:research:avalon_project
 isMemberOf: urn:mace:amber.org:groups:instructors
-eduPersonUniqueID: 0251
+localUniqueId: 0251
 userPassword: grad
 mail: grad@mail.amber.org
 
@@ -194,7 +194,7 @@ isMemberOf: urn:mace:amber.org:groups:research:covert_project
 isMemberOf: urn:mace:amber.org:groups:research:public_project
 isMemberOf: urn:mace:amber.org:groups:faculty:tenured
 isMemberOf: urn:mace:amber.org:groups:instructors
-eduPersonUniqueID: 1011
+localUniqueId: 1011
 userPassword: faculty
 mail: iamfaculty@avalonmail.com
 
@@ -214,6 +214,6 @@ eduPersonAffiliation: staff
 eduPersonPrimaryAffiliation: staff
 eduPersonOrgDn: dc=amber,dc=org
 isMemberOf: urn:mace:amber.org:groups:itadmins
-eduPersonUniqueID: 1777
+localUniqueId: 1777
 userPassword: sysadmin
 mail: sysadmin@mail.amber.org
