@@ -327,11 +327,11 @@ docker exec -i -t docker_apache-sp_1 /etc/init.d/apache2 start
 docker restart docker_idpnode_1
 #
 # Wait for the IDP to autodeploy
-sleep 30
+# sleep 30
 #
 # Copy over the credentials tree
 #
-docker exec docker_idpnode_1 cp -rp /opt/shibboleth-idp/credentials /usr/local/tomcat/webapps/idp/credentials
+# docker exec docker_idpnode_1 cp -rp /opt/shibboleth-idp/credentials /usr/local/tomcat/webapps/idp/credentials
 
 
 
