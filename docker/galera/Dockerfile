@@ -17,6 +17,7 @@ RUN apt-get update -qq && \
 	rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 RUN apt-get -y install dirmngr
+RUN apt-get -y install gpg-agent
 
 # install mariadb
 
