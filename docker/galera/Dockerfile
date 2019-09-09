@@ -16,6 +16,8 @@ RUN apt-get update -qq && \
 	apt-get autoremove --yes && \
 	rm -rf /var/lib/{apt,dpkg,cache,log}/
 
+RUN apt-get install dirmngr
+
 # install mariadb
 
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
