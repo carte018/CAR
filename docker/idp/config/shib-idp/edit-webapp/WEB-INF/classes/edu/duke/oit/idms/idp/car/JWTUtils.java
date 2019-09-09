@@ -162,6 +162,8 @@ public class JWTUtils {
       throw new RuntimeException(e);
     }
     
+    log.error("Signed request JWT is: " + signedJWT.serialize())
+    
     JWEObject jweObject = new JWEObject(
         new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
             .contentType("JWT") // required to signal nested JWT
