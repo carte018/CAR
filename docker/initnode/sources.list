@@ -1,100 +1,19 @@
-deb http://repo.ialab.dsu.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://la-mirrors.evowise.com/ubuntu/ bionic main restricted universe multiverse
-deb http://archive.linux.duke.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.clarkson.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.cat.pdx.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://ny-mirrors.evowise.com/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.mirrors.pair.com/archive/ bionic main restricted universe multiverse
-deb http://mirror.team-cymru.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.siena.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.rit.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://www.club.cc.cmu.edu/pub/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.mirror.constant.com/ bionic main restricted universe multiverse
-deb http://mirror.ancl.hawaii.edu/linux/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.syringanetworks.net/ubuntu-archive/ bionic main restricted universe multiverse
-deb http://ftp.utexas.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.usinternet.com/ubuntu/archive/ bionic main restricted universe multiverse
-deb http://mirror.cs.unm.edu/archive/ bionic main restricted universe multiverse
-deb http://mirror.vcu.edu/pub/gnu+linux/ubuntu/ bionic main restricted universe multiverse
-deb http://ftp.ussg.iu.edu/linux/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.lstn.net/ubuntu/ bionic main restricted universe multiverse
-deb http://www.gtlib.gatech.edu/pub/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.securedservers.com/ bionic main restricted universe multiverse
-deb http://mirrors.us.kernel.org/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.enzu.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.atlantic.net/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.mirror.frontiernet.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.cs.jmu.edu/pub/ubuntu/ bionic main restricted universe multiverse
-deb http://us.archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.easynews.com/linux/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.ocf.berkeley.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.xtom.com/ubuntu/ bionic main restricted universe multiverse
-deb http://pubmirrors.dal.corespace.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.cs.pitt.edu/ubuntu/archive/ bionic main restricted universe multiverse
-deb http://mirrors.liquidweb.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.lcsee.wvu.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://repos.forethought.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.accretive-networks.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.tripadvisor.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrordenver.fdcservers.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.namecheap.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.team-cymru.org/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.xmission.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.sjc02.svwh.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.gigenet.com/ubuntuarchive/ bionic main restricted universe multiverse
-deb http://ftp.usf.edu/pub/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.vcea.wsu.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.pit.teraswitch.com/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.mirrors.tds.net/pub/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.advancedhosters.com/ubuntu/ bionic main restricted universe multiverse
-deb http://lug.mtu.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.mit.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.cc.vt.edu/pub2/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.genesisadaptive.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.umd.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.arpnetworks.com/Ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.math.princeton.edu/pub/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.maine.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.cs.utah.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.metrocast.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.sonic.net/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu.osuosl.org/ubuntu/ bionic main restricted universe multiverse
-deb http://repo.miserver.it.umich.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.lug.mtu.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.steadfastnet.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.uoregon.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.ubuntu.serverforge.org/ bionic main restricted universe multiverse
-deb http://mirrors.wikimedia.org/ubuntu/ bionic main restricted universe multiverse
-deb http://ubuntu-mirror.netzyp.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.mrjester.net/ubuntu/archive/ bionic main restricted universe multiverse
-deb http://mirror.us-midwest-1.nexcess.net/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.os6.org/ubuntu/ bionic main restricted universe multiverse
-deb http://mirrors.bloomu.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://reflector.westga.edu/repos/Ubuntu/archive/ bionic main restricted universe multiverse
-deb http://mirror.cc.columbia.edu/pub/linux/ubuntu/archive/ bionic main restricted universe multiverse
-deb http://mirror.math.ucdavis.edu/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.nodesdirect.com/ubuntu/ bionic main restricted universe multiverse
-deb http://fireball-public.phys.wvu.edu/mirror/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.tocici.com/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.cogentco.com/pub/linux/ubuntu/ bionic main restricted universe multiverse
-deb http://mirror.us.leaseweb.net/ubuntu/ bionic main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverseMacBook-P
-deb http://mirror.enzu.com/ubuntu/ bionic main 
-deb-src http://mirror.enzu.com/ubuntu/ bionic main 
-####deb http://archive.ubuntu.com/ubuntu/ bionic main restricted
+# See http://help.ubuntu.com/community/UpgradeNotes for how to upgrade to
+# newer versions of the distribution.
+deb http://archive.ubuntu.com/ubuntu/ bionic main restricted
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic main restricted
 
 ## Major bug fix updates produced after the final release of the
 ## distribution.
-####deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted
 
 ## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
 ## team. Also, please note that software in universe WILL NOT receive any
 ## review or updates from the Ubuntu security team.
-####deb http://archive.ubuntu.com/ubuntu/ bionic universe
+deb http://archive.ubuntu.com/ubuntu/ bionic universe
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic universe
-####deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates universe
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic-updates universe
 
 ## N.B. software from this repository is ENTIRELY UNSUPPORTED by the Ubuntu
@@ -102,9 +21,9 @@ deb-src http://mirror.enzu.com/ubuntu/ bionic main
 ## your rights to use the software. Also, please note that software in
 ## multiverse WILL NOT receive any review or updates from the Ubuntu
 ## security team.
-####deb http://archive.ubuntu.com/ubuntu/ bionic multiverse
+deb http://archive.ubuntu.com/ubuntu/ bionic multiverse
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic multiverse
-####deb http://archive.ubuntu.com/ubuntu/ bionic-updates multiverse
+deb http://archive.ubuntu.com/ubuntu/ bionic-updates multiverse
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic-updates multiverse
 
 ## N.B. software from this repository may not have been tested as
@@ -112,7 +31,7 @@ deb-src http://mirror.enzu.com/ubuntu/ bionic main
 ## newer versions of some applications which may provide useful features.
 ## Also, please note that software in backports WILL NOT receive any review
 ## or updates from the Ubuntu security team.
-####deb http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
 # deb-src http://archive.ubuntu.com/ubuntu/ bionic-backports main restricted universe multiverse
 
 ## Uncomment the following two lines to add software from Canonical's
@@ -122,9 +41,9 @@ deb-src http://mirror.enzu.com/ubuntu/ bionic main
 # deb http://archive.canonical.com/ubuntu bionic partner
 # deb-src http://archive.canonical.com/ubuntu bionic partner
 
-####deb http://security.ubuntu.com/ubuntu/ bionic-security main restricted
+deb http://security.ubuntu.com/ubuntu/ bionic-security main restricted
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security main restricted
-####deb http://security.ubuntu.com/ubuntu/ bionic-security universe
+deb http://security.ubuntu.com/ubuntu/ bionic-security universe
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security universe
-####deb http://security.ubuntu.com/ubuntu/ bionic-security multiverse
+deb http://security.ubuntu.com/ubuntu/ bionic-security multiverse
 # deb-src http://security.ubuntu.com/ubuntu/ bionic-security multiverse
