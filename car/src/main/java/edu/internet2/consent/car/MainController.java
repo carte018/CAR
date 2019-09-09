@@ -245,7 +245,7 @@ public class MainController {
 			
 			if (privkey instanceof RSAPrivateKey) {
 					CarUtility.locError("ERR1134", LogCriticality.error,"Privkey is RSA key");
-					CarUtility.locError("ERR1134", LogCriticality.error,"JWE is " + jwe.getCipherText());
+					CarUtility.locError("ERR1134", LogCriticality.error,"JWE is " + jwe.serialize());
                 	jwe.decrypt(new RSADecrypter(privkey));
                 	CarUtility.locError("ERR1134", LogCriticality.error,"JWE decryption complete");
                 	SignedJWT sjwt = jwe.getPayload().toSignedJWT();
