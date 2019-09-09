@@ -16,7 +16,7 @@ RUN apt-get update -qq && \
 	apt-get autoremove --yes && \
 	rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-RUN apt-get install dirmngr
+RUN apt-get -y install dirmngr
 
 # install mariadb
 
