@@ -54,6 +54,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.EncryptionMethod;
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEEncrypter;
 import com.nimbusds.jose.JWEHeader;
@@ -304,7 +305,11 @@ public class MainController {
 				CarUtility.locError("ERR1102",LogCriticality.error);
 				return null;
 			}
-		} catch (Exception e) {
+		} catch (JOSEException x) {
+			// for now, re-throw for debugging
+			throw new RuntimeException(x);
+		}
+		catch (Exception e) {
 			CarUtility.locError("ERR1103",LogCriticality.error,e.getMessage());
 			return null;
 		}
