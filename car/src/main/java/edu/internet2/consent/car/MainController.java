@@ -70,6 +70,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
 
 import edu.internet2.consent.arpsi.model.DecisionOnValues;
 import edu.internet2.consent.arpsi.model.DecisionsForInfoStatement;
@@ -124,7 +125,7 @@ public class MainController {
 		//
 		
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(new BouncyCastleProvider(),  1);
+		Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),  0);
 
 		CarConfig config = CarConfig.getInstance();
 		
@@ -205,7 +206,7 @@ public class MainController {
 		
 		// Add the BC provider for the crypto type we need
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(new BouncyCastleProvider(), 1);
+		Security.insertProviderAt(new BouncyCastleProviderSingleton.getInstance(), 0);
 		
 		// Retrieve the base64 encoded encrypted, signed input object
 		
