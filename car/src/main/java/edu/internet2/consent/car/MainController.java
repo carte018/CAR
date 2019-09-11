@@ -123,8 +123,8 @@ public class MainController {
 		// exp - expiration timestamp (as seconds since the epoch -- exp + 5 minutes)
 		//
 		
-		// Temporarily testing without BC provider
 		//Security.addProvider(new BouncyCastleProvider());
+		Security.insertProviderAt(new BouncyCastleProvider(),  0);
 
 		CarConfig config = CarConfig.getInstance();
 		
@@ -204,8 +204,8 @@ public class MainController {
 	private InputRequest cryptoParseInput(HttpServletRequest request) {
 		
 		// Add the BC provider for the crypto type we need
-		// Temporarily testing without BC
 		//Security.addProvider(new BouncyCastleProvider());
+		Security.insertProviderAt(new BouncyCastleProvider(), 0);
 		
 		// Retrieve the base64 encoded encrypted, signed input object
 		
