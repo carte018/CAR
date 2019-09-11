@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.security.cert.Certificate;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.CertificateFactory;
@@ -206,7 +207,7 @@ public class MainController {
 		
 		// Add the BC provider for the crypto type we need
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(new BouncyCastleProviderSingleton.getInstance(), 0);
+		Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(), 0);
 		
 		// Retrieve the base64 encoded encrypted, signed input object
 		
