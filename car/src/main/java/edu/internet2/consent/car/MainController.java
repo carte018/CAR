@@ -124,7 +124,7 @@ public class MainController {
 		//
 		
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(new BouncyCastleProvider(),  0);
+		Security.insertProviderAt(new BouncyCastleProvider(),  1);
 
 		CarConfig config = CarConfig.getInstance();
 		
@@ -205,7 +205,7 @@ public class MainController {
 		
 		// Add the BC provider for the crypto type we need
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(new BouncyCastleProvider(), 0);
+		Security.insertProviderAt(new BouncyCastleProvider(), 1);
 		
 		// Retrieve the base64 encoded encrypted, signed input object
 		
