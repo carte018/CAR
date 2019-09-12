@@ -53,6 +53,8 @@ import com.nimbusds.jwt.SignedJWT;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import java.security.Security;
+import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
+
 
 
 import javax.annotation.Nonnull;
@@ -88,8 +90,6 @@ public class JWTUtils {
    */
   public void initialize() {
 	  
-	  // force BouncyCastle implementation
-	  //Security.insertProviderAt(new BouncyCastleProvider(),1);
    
     if (carCarmaCertificateResource == null) {
       throw new RuntimeException("carCarmaCertificateResource is null");
@@ -151,6 +151,9 @@ public class JWTUtils {
    */
   public static String signAndEncrypt(String request, String issuer) {
     
+	  // force BouncyCastle implementation
+	  Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),1);
+	  
 	// debug
 	log.error("Request being signed and encrypted is: " + request + " with issuer " + issuer);
 	
