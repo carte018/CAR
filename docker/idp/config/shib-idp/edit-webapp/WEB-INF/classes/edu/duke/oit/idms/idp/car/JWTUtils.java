@@ -127,6 +127,7 @@ public class JWTUtils {
     is = null;
     try {      
       X509Certificate cert = X509Support.decodeCertificate(carCarmaCertificateResource.getFile());
+      plog.error("Public Key Encryption cert from CARMA has subject name: " + cert.getSubjectDN().getName())
       encrypter = new RSAEncrypter((RSAPublicKey)cert.getPublicKey());
       verifier = new RSASSAVerifier((RSAPublicKey)cert.getPublicKey());
     } catch (CertificateException e) {

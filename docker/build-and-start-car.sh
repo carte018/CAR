@@ -306,6 +306,9 @@ then
     docker restart docker_carnode_1
     docker cp docker_carnode_1:/var/www/carma/carmacert car_carma.crt
     docker cp car_carma.crt docker_idpnode_1:/opt/shibboleth-idp/credentials/
+    # This is for debugging only
+    # docker cp docker_carnode_1:/var/www/carma/carmaprivkey.p8 car_privkey.p8
+    # docker cp car_privkey.p8 docker_idpnode_1:/opt/shibboleth-idp/credentials/
 #    docker exec docker_idpnode_1 cp -rp /opt/shibboleth-idp/credentials /usr/local/tomcat/webapps/idp/credentials
     
 fi
