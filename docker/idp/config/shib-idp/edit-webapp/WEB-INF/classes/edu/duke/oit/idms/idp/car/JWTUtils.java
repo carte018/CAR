@@ -89,7 +89,7 @@ public class JWTUtils {
   public void initialize() {
 	  
 	  // force BouncyCastle implementation
-	  Security.insertProviderAt(new BouncyCastleProvider(),1);
+	  //Security.insertProviderAt(new BouncyCastleProvider(),1);
    
     if (carCarmaCertificateResource == null) {
       throw new RuntimeException("carCarmaCertificateResource is null");
