@@ -126,7 +126,8 @@ public class MainController {
 		//
 		
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),  0);
+		//Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);  // remove before add
+		Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),  1);
 
 		CarConfig config = CarConfig.getInstance();
 		
@@ -207,7 +208,8 @@ public class MainController {
 		
 		// Add the BC provider for the crypto type we need
 		//Security.addProvider(new BouncyCastleProvider());
-		Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(), 0);
+		//Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+		Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(), 1);
 		
 		// Retrieve the base64 encoded encrypted, signed input object
 		

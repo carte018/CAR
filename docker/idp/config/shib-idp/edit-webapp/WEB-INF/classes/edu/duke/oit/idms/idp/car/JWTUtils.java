@@ -51,6 +51,9 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import org.slf4j.Logger;
@@ -83,6 +86,9 @@ public class JWTUtils {
    * 
    */
   public void initialize() {
+	  
+	  // force BouncyCastle implementation
+	  Security.insertProviderAt(new BouncyCastleProvider(),1);
    
     if (carCarmaCertificateResource == null) {
       throw new RuntimeException("carCarmaCertificateResource is null");
