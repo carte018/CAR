@@ -151,7 +151,7 @@ public class JWTUtils {
    */
   public static String signAndEncrypt(String request, String issuer) {
     
-	  // force BouncyCastle implementation
+	  // force BouncyCastle implementation 
 	  Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),1);
 	  
 	// debug
