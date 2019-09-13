@@ -15,14 +15,19 @@
  */
 package edu.duke.oit.idms.idp.car;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyException;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -188,6 +193,27 @@ public class JWTUtils {
     }
   
     String jweString = jweObject.serialize();
+    
+    // Verify that we can decrypt it and re-encrypt if we can
+    try {
+		File privinfile = new File("/opt/shibboleth-idp/credentials/car_privkey.p8");
+		byte[] privbytes = new byte[(int) privinfile.length()];
+		FileInputStream pfis = new FileInputStream(privinfile);
+		pfis.read(privbytes);
+		pfis.close();
+		PKCS8EncodedKeySpec pspec = new PKCS8EncodedKeySpec(privbytes);
+		KeyFactory keyf = KeyFactory.getInstance("RSA");
+		PrivateKey privkey = keyf.generatePrivate(pspec);
+		if (privkey instanceof RSAPrivateKey) {
+        	jweObject.decrypt(new RSADecrypter(privkey));
+        	log.error("IDP successfully decrypted encrypted JWE");
+		} else {
+			log.error("PrivateKey is not an RSA Key!");
+		}
+    } catch (Exception e) {
+    	throw new RuntimeException(e);
+    }
+    // End debug verify decrypt
        
     log.error("JWEString is " + jweString);
     return jweString;
