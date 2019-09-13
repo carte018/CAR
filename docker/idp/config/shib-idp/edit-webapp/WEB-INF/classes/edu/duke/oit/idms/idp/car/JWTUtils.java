@@ -195,6 +195,7 @@ public class JWTUtils {
     String jweString = jweObject.serialize();
     
     // Verify that we can decrypt it and re-encrypt if we can
+    /*
     try {
 		File privinfile = new File("/opt/shibboleth-idp/credentials/car_privkey.p8");
 		byte[] privbytes = new byte[(int) privinfile.length()];
@@ -212,7 +213,7 @@ public class JWTUtils {
 		}
     } catch (Exception e) {
     	throw new RuntimeException(e);
-    }
+    } */
     // End debug verify decrypt
        
     log.error("JWEString is " + jweString);
