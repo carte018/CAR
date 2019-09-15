@@ -140,7 +140,7 @@ public class JWTUtils {
       FileInputStream in = new FileInputStream(carCarmaCertificateResource.getFile());
       CertificateFactory cf = CertificateFactory.getInstance("X.509");
       Certificate cert = cf.generateCertificate(in);
-      plog.error("Public Key Encryption Cert from CARMA has subject name: " + cert.getSubjectDN().getName());
+      plog.error("Public Key Encryption Cert from CARMA: " + cert.toString());
       pbk = cert.getPublicKey();
       
       if (pbk instanceof RSAPublicKey) {
