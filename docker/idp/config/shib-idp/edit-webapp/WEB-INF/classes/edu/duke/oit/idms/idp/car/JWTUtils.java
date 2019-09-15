@@ -23,7 +23,10 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyException;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -130,11 +133,26 @@ public class JWTUtils {
     }
     
     is = null;
-    try {      
-      X509Certificate cert = X509Support.decodeCertificate(carCarmaCertificateResource.getFile());
-      plog.error("Public Key Encryption cert from CARMA has subject name: " + cert.getSubjectDN().getName());
-      encrypter = new RSAEncrypter((RSAPublicKey)cert.getPublicKey());
-      verifier = new RSASSAVerifier((RSAPublicKey)cert.getPublicKey());
+    try {  
+    	
+      // Alternate certificate processing
+      PublicKey pbk;
+      FileInputStream in = new FileInputStream(carCarmaCertificateResource.getFile());
+      CertificateFactory cf = CertificateFactory.getInstance("X.509");
+      Certificate cert = cf.generateCertificate(in);
+      plog.error("Public Key Encryption Cert from CARMA has subject name: " + cert.getSubjectDN().getName());
+      pbk = cert.getPublicKey();
+      
+      if (pbk instanceof RSAPublicKey) {
+    	  encrypter = new RSAEncrypter((RSAPublicKey) pbk);
+    	  verifier = new RSASSAVerifier((RSAPublicKey)pbk);
+      } else {
+    	  throw new RuntimeException("Failed loading RSA public key from certificate file");
+      }
+      //X509Certificate cert = X509Support.decodeCertificate(carCarmaCertificateResource.getFile());
+      //plog.error("Public Key Encryption cert from CARMA has subject name: " + cert.getSubjectDN().getName());
+      //encrypter = new RSAEncrypter((RSAPublicKey)cert.getPublicKey());
+      //verifier = new RSASSAVerifier((RSAPublicKey)cert.getPublicKey());
     } catch (CertificateException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
