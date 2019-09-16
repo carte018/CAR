@@ -13,7 +13,7 @@
 { "infoitemidentifier": { "iiid":"mail","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"mail","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"sn","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"sn","valuelist": [".*"]}
 ],
-	"rhdentifier": {
+	"rhidentifier": {
             "rhid": "urn:mace:multiverse:amber",
             "rhtype": "entityId"
         },
