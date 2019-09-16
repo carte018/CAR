@@ -307,6 +307,7 @@ then
     docker cp docker_carnode_1:/var/www/carma/carmacert car_carma.crt
     docker cp car_carma.crt docker_idpnode_1:/opt/shibboleth-idp/credentials/
     docker cp car_carma.crt docker_idpnode_1:/tmp/credentials/
+    docker exec -i -t docker_idpnode_1 cp -f /opt/shibboleth-idp/credentials/car_idp.key /tmp/credentials/car_idp.key
     # This is for debugging only
     docker cp docker_carnode_1:/var/www/carma/carmaprivkey.p8 car_privkey.p8
     docker cp car_privkey.p8 docker_idpnode_1:/opt/shibboleth-idp/credentials/
