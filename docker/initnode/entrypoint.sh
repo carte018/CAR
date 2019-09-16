@@ -137,7 +137,7 @@ echo "Inserting CARMA ARPSI policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/carma_arpsi 'https://apache-sp/consent/v1/icm/org-info-release-policies'
 
 echo "Inserting CARMA META policy"
-curl -u "$[CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/carma_icm 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/carma_icm 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 
 # 
 # Replace the entrypoint routine with one that only forces deployments
