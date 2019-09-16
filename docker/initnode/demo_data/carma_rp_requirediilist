@@ -1,4 +1,4 @@
-'{ "requiredlist" : [
+{ "requiredlist" : [
 { "infoitemidentifier": { "iiid":"eduPersonPrincipalName","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonPrincipalName","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"eduPersonScopedAffiliation","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonScopedAffiliation","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"amberTitle","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"amberTitle","valuelist": [".*"]},
@@ -21,4 +21,4 @@
             "rpid": "https://localhost/car-demo-sp",
             "rptype": "entityId"
         }
- }'
+ }
