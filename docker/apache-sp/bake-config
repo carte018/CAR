@@ -98,7 +98,7 @@ then
   #
   if [ "$SKUNKWORKS" == "yes" ]
   then
-      local_unique_id="eduPersonUniqueID"
+      local_unique_id="eduPersonUniqueId"
   else
   if [ ! -n "$local_unique_id" ]
   then
