@@ -1,0 +1,11 @@
+{
+    "optionallist": null,
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "https://localhost/car-demo-sp",
+        "rptype": "entityId"
+    }
+}

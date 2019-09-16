@@ -117,6 +117,28 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 echo "Inserting Logrus required attributes"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/logrus_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:chaos/entityId/https:!!logrus.coc.org!shibboleth'
  
+#
+# And the CARMA instance itself needs a definition
+#
+echo "Inserting CARMA metainfo"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/carma_rp_metainfo 'https://apache-sp/consent/v1/informed/rpic/metainformation/entityId/urn:mace:multiverse:amber/entityId/https:!!localhost!car-demo-sp'
+
+echo "Inserting CARMA optional attributes"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/carma_rp_optionaliilist 'https://apache-sp/consent/v1/informed/rpic/optionaliilist/entityId/urn:mace:multiverse:amber/entityId/https:!!localhost!car-demo-sp'
+
+echo "Inserting CARMA required attributes"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/carma_rp_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:amber/entityId/https:!!localhost!car-demo-sp'
+
+#
+# And apply the base policies for CARMA, which mandate release of everything to ourselves
+#
+
+echo "Inserting CARMA ARPSI policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/carma_arpsi 'https://apache-sp/consent/v1/icm/org-info-release-policies'
+
+echo "Inserting CARMA META policy"
+curl -u "$[CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/carma_icm 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+
 # 
 # Replace the entrypoint routine with one that only forces deployments
 # -- on restart, we must not overwrite registration information.

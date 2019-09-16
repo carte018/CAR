@@ -1,0 +1,24 @@
+'{ "requiredlist" : [
+{ "infoitemidentifier": { "iiid":"eduPersonPrincipalName","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonPrincipalName","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonScopedAffiliation","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonScopedAffiliation","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"amberTitle","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"amberTitle","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"cn","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"cn","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"displayName","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"displayName","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonOrcid","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonOrcid","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonOrgDN","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonOrgDN","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonPrimaryAffiliation","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonPrimaryAffiliation","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonTargetedID","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonTargetedID","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonUniqueId","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonUniqueId","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"isMemberOf","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"isMemberOf","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"mail","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"mail","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"sn","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"sn","valuelist": [".*"]}
+],
+	"rhdentifier": {
+            "rhid": "urn:mace:multiverse:amber",
+            "rhtype": "entityId"
+        },
+        "rpidentifier": {
+            "rpid": "https://localhost/car-demo-sp",
+            "rptype": "entityId"
+        }
+ }'

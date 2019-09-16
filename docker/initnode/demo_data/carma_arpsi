@@ -1,0 +1,30 @@
+{
+  "description": "Release everything to CARMa (required)",
+  "userPropertyArray": [
+    {
+      "userPropName": "eduPersonUniqueId",
+      "userPropValue": ".*"
+    }
+  ],
+  "relyingPartyPropertyArray": [
+    {
+      "RP-PropName": "entityId",
+      "RP-PropValue": "https://localhost/car-demo-sp"
+    }
+  ],
+  "resourceHolderId": {
+    "RH-type": "entityId",
+    "RH-value": "urn:mace:multiverse:amber"
+  },
+  "arrayOfInfoReleaseStatement": null,
+  "allOtherOrgInfoReleaseStatement": {
+    "allOtherInfoId": {
+      "allOtherInfoType": "allOtherInfoType",
+      "allOtherInfoValue": "allOtherInfoValue"
+    },
+    "directiveAllOtherValues": {
+      "orgReleaseDirective": "permit",
+      "allOtherValuesConst": "allOtherValues"
+    }
+  }
+}
