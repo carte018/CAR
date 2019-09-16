@@ -306,6 +306,9 @@ then
     docker restart docker_carnode_1
     docker cp docker_carnode_1:/var/www/carma/carmacert car_carma.crt
     docker cp car_carma.crt docker_idpnode_1:/opt/shibboleth-idp/credentials/
+    docker cp car_carma.crt docker_idpnode_1:/tmp/credentials/
+    docker cp docker_idpnode_1:/opt/shibboleth-idp/credentails/car_idp.key car_idp.key
+    docker cp car_idp.key docker_idpnode_1:/tmp/credentials/car_idp.key
     # This is for debugging only
     docker cp docker_carnode_1:/var/www/carma/carmaprivkey.p8 car_privkey.p8
     docker cp car_privkey.p8 docker_idpnode_1:/opt/shibboleth-idp/credentials/
