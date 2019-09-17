@@ -898,7 +898,8 @@ public class CarUtility {
 			return lr;
 		} catch (Exception e) {
 			CarUtility.locError("ERR1134", LogCriticality.error, "Returning null after failure getting RP MI: " + e.getMessage());
-			return null;  // on error, just fail
+			throw new RuntimeException(e);
+			// return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
 			HttpClientUtils.closeQuietly(httpClient);
