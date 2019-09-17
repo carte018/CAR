@@ -281,7 +281,6 @@ public class JWTUtils {
     } catch (Exception e) {
     	throw new RuntimeException(e);
     } finally {
-    }
 		Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
 	}
   }
