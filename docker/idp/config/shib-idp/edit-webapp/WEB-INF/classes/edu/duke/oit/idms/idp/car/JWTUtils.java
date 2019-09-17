@@ -249,8 +249,6 @@ public class JWTUtils {
 	  Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),1);
 
     try {
-      JWEObject jweObject = JWEObject.parse(jweString);
-
       jweObject.decrypt(decrypter);
       
       SignedJWT signedJWT = jweObject.getPayload().toSignedJWT();
@@ -272,6 +270,8 @@ public class JWTUtils {
       String base64Response2 = new String(Base64Support.decode(base64Response), "UTF-8");
       String json = new String(Base64Support.decode(base64Response2), "UTF-8");
       return json;
+    } catch (NullPointerException e) {
+    	throw new RuntimeException(e);
     } catch (JOSEException e) {
       throw new RuntimeException(e);
     } catch (ParseException e) {
