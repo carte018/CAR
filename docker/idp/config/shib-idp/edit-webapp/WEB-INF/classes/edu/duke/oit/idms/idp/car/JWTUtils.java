@@ -208,7 +208,9 @@ public class JWTUtils {
       jweObject.encrypt(encrypter);
     } catch (JOSEException e) {
       throw new RuntimeException(e);
-    }
+    }finally {
+		Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+	}
   
     String jweString = jweObject.serialize();
     
@@ -243,7 +245,9 @@ public class JWTUtils {
    * @return string
    */
   public static String decryptAndVerifySignature(String jweString) {
-        
+	  // force BouncyCastle implementation 
+	  Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),1);
+
     try {
       JWEObject jweObject = JWEObject.parse(jweString);
 
@@ -274,7 +278,9 @@ public class JWTUtils {
       throw new RuntimeException(e);
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(e);
-    }
+    }finally {
+		Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
+	}
   }
   
   /**
