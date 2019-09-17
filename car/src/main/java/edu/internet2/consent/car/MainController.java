@@ -201,6 +201,8 @@ public class MainController {
 		} catch (Exception e) {
 			CarUtility.locError("ERR1111",LogCriticality.error,e.getMessage());
 			return null;
+		} finally {
+			Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
 		}
 	}
 	
@@ -318,6 +320,8 @@ public class MainController {
 		catch (Exception e) {
 			CarUtility.locError("ERR1103",LogCriticality.error,e.getMessage());
 			return null;
+		}finally {
+			Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
 		}
 	}
 			
