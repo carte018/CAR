@@ -854,6 +854,7 @@ public class CarUtility {
 			int n = rand.nextInt(10);
 			if (System.currentTimeMillis() <= ci.getCacheTime() + (50+n) * 60 * 1000) {
 				CarUtility.locDebugErr("ERR0811","infoItemMetaData");
+				CarUtility.locError("ERR1134", LogCriticality.error,"Returning from cache: " + ci.getData() == null ? "null" : ci.getData().getRpidentifier().getRpid());
 				return ci.getData();
 			}
 		}
@@ -874,12 +875,15 @@ public class CarUtility {
 		String rbody = null;
 		
 		try {
+			CarUtility.locError("ERR1134", LogCriticality.error,"Request to " + informedhost + " URI " + sb.toString() + " authzheader: " + authzheader);
 			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
 			rbody = CarUtility.extractBody(response);
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) {
+				CarUtility.locError("ERR1134",  LogCriticality.error, "ResponseCode " + status);
 				if (status == 404)
 					icache.storeCachedRPMetaInformation(rhid, rpid, null);
+					CarUtility.locError("ERR1134",  LogCriticality.error, "404 cached");
 				try {
 					EntityUtils.consumeQuietly(response.getEntity());
 				} catch (Exception x) {
@@ -893,6 +897,7 @@ public class CarUtility {
 				icache.storeCachedRPMetaInformation(rhid, rpid, lr);
 			return lr;
 		} catch (Exception e) {
+			CarUtility.locError("ERR1134", LogCriticality.error, "Returning null after failure getting RP MI: " + e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			HttpClientUtils.closeQuietly(response);
