@@ -101,13 +101,7 @@ public class JWTUtils {
    
     if (carCarmaCertificateResource == null) {
       throw new RuntimeException("carCarmaCertificateResource is null");
-    } else {
-    	try {
-    		plog.error("Certificate for CAR encryption contains " + carCarmaCertificateResource.getFile().length() + " bytes");
-    	} catch (Exception e) {
-    		throw new RuntimeException("Failed to getting length of carma certificate file");
-    	}
-    }
+    } 
     
     if (carIdPPrivateKeyResource == null) {
       throw new RuntimeException("carIdPPrivateKeyResource is null");
@@ -140,7 +134,6 @@ public class JWTUtils {
       FileInputStream in = new FileInputStream(carCarmaCertificateResource.getFile());
       CertificateFactory cf = CertificateFactory.getInstance("X.509");
       Certificate cert = cf.generateCertificate(in);
-      plog.error("Public Key Encryption Cert from CARMA: " + cert.toString());
       pbk = cert.getPublicKey();
       
       if (pbk instanceof RSAPublicKey) {
@@ -177,10 +170,7 @@ public class JWTUtils {
     
 	  // force BouncyCastle implementation 
 	  Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),1);
-	  
-	// debug
-	log.error("Request being signed and encrypted is: " + request + " with issuer " + issuer);
-	
+	  	
     JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
       .expirationTime(new Date(new Date().getTime() + 300 * 1000))
       .issueTime(new Date())
@@ -196,7 +186,6 @@ public class JWTUtils {
       throw new RuntimeException(e);
     }
     
-    log.error("Signed request JWT is: " + signedJWT.serialize());
     
     JWEObject jweObject = new JWEObject(
         new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
@@ -213,30 +202,7 @@ public class JWTUtils {
 	}
   
     String jweString = jweObject.serialize();
-    
-    // Verify that we can decrypt it and re-encrypt if we can
-    /*
-    try {
-		File privinfile = new File("/opt/shibboleth-idp/credentials/car_privkey.p8");
-		byte[] privbytes = new byte[(int) privinfile.length()];
-		FileInputStream pfis = new FileInputStream(privinfile);
-		pfis.read(privbytes);
-		pfis.close();
-		PKCS8EncodedKeySpec pspec = new PKCS8EncodedKeySpec(privbytes);
-		KeyFactory keyf = KeyFactory.getInstance("RSA");
-		PrivateKey privkey = keyf.generatePrivate(pspec);
-		if (privkey instanceof RSAPrivateKey) {
-        	jweObject.decrypt(new RSADecrypter(privkey));
-        	log.error("IDP successfully decrypted encrypted JWE");
-		} else {
-			log.error("PrivateKey is not an RSA Key!");
-		}
-    } catch (Exception e) {
-    	throw new RuntimeException(e);
-    } */
-    // End debug verify decrypt
        
-    log.error("JWEString is " + jweString);
     return jweString;
   }
 
