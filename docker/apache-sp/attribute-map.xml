@@ -74,7 +74,7 @@
     <Attribute name="urn:mace:dir:attribute-def:eduPersonNickname" id="nickname" aliases="eduPersonNickname"/>
     <Attribute name="urn:mace:dir:attribute-def:eduPersonPrimaryOrgUnitDN" id="primary-orgunit-dn"/>
     <Attribute name="urn:mace:dir:attribute-def:eduPersonOrgUnitDN" id="orgunit-dn"/>
-    <Attribute name="urn:mace:dir:attribute-def:eduPersonOrgDN" id="org-dn"/>
+    <Attribute name="urn:mace:dir:attribute-def:eduPersonOrgDN" id="org-dn" aliases="eduPersonOrgDN"/>
 
     <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.1.1.5" id="primary-affiliation" aliases="eduPersonPrimaryAffiliation">
         <AttributeDecoder xsi:type="StringAttributeDecoder" caseSensitive="false"/>
@@ -88,13 +88,13 @@
     
     <!--<Attribute name="urn:oid:1.3.6.1.4.1.5923.1.5.1.1" id="member" aliases="AJP_isMemberOf"/>-->
     <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.5.1.1" id="isMemberOf"/>
-    <Attribute name="urn:mace:amber.org:attribute-def:ismemberof" id="isMemberOf"/>
+    <!-- <Attribute name="urn:mace:amber.org:attribute-def:ismemberof" id="isMemberOf"/> -->
     
     <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.6.1.1" id="eduCourseOffering"/>
     <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.6.1.2" id="eduCourseMember"/>
 
     <!-- Examples of LDAP-based attributes, uncomment to use these... -->
-    <Attribute name="urn:mace:dir:attribute-def:cn" id="cn"/>
+    <!-- <Attribute name="urn:mace:dir:attribute-def:cn" id="cn"/>
     <Attribute name="urn:mace:dir:attribute-def:sn" id="sn"/>
     <Attribute name="urn:mace:dir:attribute-def:givenName" id="givenName"/>
     <Attribute name="urn:mace:dir:attribute-def:displayName" id="displayName"/>
@@ -119,7 +119,7 @@
     <Attribute name="urn:mace:dir:attribute-def:o" id="o"/>
     <Attribute name="urn:mace:dir:attribute-def:ou" id="ou"/>
     <Attribute name="urn:mace:dir:attribute-def:businessCategory" id="businessCategory"/>
-    <Attribute name="urn:mace:dir:attribute-def:physicalDeliveryOfficeName" id="physicalDeliveryOfficeName"/>
+    <Attribute name="urn:mace:dir:attribute-def:physicalDeliveryOfficeName" id="physicalDeliveryOfficeName"/> -->
 
     <Attribute name="urn:oid:2.5.4.3" id="cn"/>
     <Attribute name="urn:oid:2.5.4.4" id="sn"/>
@@ -147,6 +147,8 @@
     <Attribute name="urn:oid:2.5.4.11" id="ou"/>
     <Attribute name="urn:oid:2.5.4.15" id="businessCategory"/>
     <Attribute name="urn:oid:2.5.4.19" id="physicalDeliveryOfficeName"/>
+    <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.1.1.16" id="eduPersonOrcid"/>
+    
     
     <!--  Skunkworks builds will require these Amberite attributes mapped -->
     

@@ -105,7 +105,7 @@
     <!--  These two RPs, since there are no release restrictions, are entirely -->
     <!--  controlled by CAR. -->
     
-	<AttributeFilterPolicy id="CARgetsALL">
+	<AttributeFilterPolicy id="CARrpsGetALL">
         <PolicyRequirementRule xsi:type="OR">
             <Rule xsi:type="Requester" value="https://localhost/car-demo-sp" />
             <Rule xsi:type="Requester" value="https://pattern.amber.org/shibboleth" />
@@ -144,6 +144,9 @@
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
         <AttributeRule attributeID="sn">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="isMemberOf">
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
      </AttributeFilterPolicy>

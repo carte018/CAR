@@ -37,15 +37,15 @@ car.rhcertdir=/var/www/carma/rhcerts
 
 car.carma.issuerid=localhost
 
-car.carma.logouturl=https://localhost/Shibboleth.sso/Logout
+car.carma.logouturl=https://localhost/Shibboleth.sso/Logout?returnto=https://localhost/idp/profile/Logout
 
 # TTLs in seconds for value, rp, and ii metainformation caches
 car.vmic.ttl=3600
 car.rpmic.ttl=3600
 car.iimic.ttl=3600
 
-# URL to return to in the even of a transaction being cancelled (optional)
-cancelURL=https://www.internet2.edu
+# URL to return to in the event of a transaction being cancelled (optional)
+cancelURL=https://spaces.at.internet2.edu/display/CAR
 
 car.basicauth.validator.class=%basicauth_class%
 
