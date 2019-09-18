@@ -104,28 +104,31 @@ public class FinalizeCAR extends AbstractProfileInterceptorAction {
   @Override
   protected boolean doPreExecute(@Nonnull final ProfileRequestContext profileRequestContext,
       @Nonnull final ProfileInterceptorContext interceptorContext) {
-
+	  log.error("doPreExecute");
     attributeContext = attributeContextLookupStrategy.apply(profileRequestContext);
     if (attributeContext == null) {
       throw new RuntimeException("Invalid attribute context");
     }
-
+    log.error("End doPreExecute");
     return super.doPreExecute(profileRequestContext, interceptorContext);
   }
   
   /** {@inheritDoc} */
   @Override protected void doExecute(@Nonnull final ProfileRequestContext profileRequestContext,
       @Nonnull final ProfileInterceptorContext interceptorContext) {
-
+	  log.error("doExecute");
     final Map<String, IdPAttribute> attributes = profileRequestContext.getSubcontext(CARContext.class).getIdPAttributes();
-
+    log.error("doExecute2");
     final HttpServletRequest request = getHttpServletRequest();
+    log.error("doExecute3");
     if (request == null) {
       throw new RuntimeException("Invalid profile context");
     }
-    
+    log.error("json retrieval");
     String jweString = request.getParameter("json");
+    log.error("jweString POSTed was: " + jweString);
     String jsonDecoded = JWTUtils.decryptAndVerifySignature(jweString);
+    log.error("Decoded JSON string was: " + jsonDecoded);
     
     
     JsonReader reader = null;
@@ -138,14 +141,17 @@ public class FinalizeCAR extends AbstractProfileInterceptorAction {
         reader.close();
       }
     }
-    
+    log.error("Reader established");
     String carInstanceId = jsonData.getJsonObject("decisionResponse").getJsonObject("header").getString("carInstanceId");
+    log.error("Found carInstance: " + carInstanceId);
     String decisionId = jsonData.getJsonObject("decisionResponse").getJsonObject("header").getString("decisionId");
+    log.error("Found decisionId: " + decisionId);
     
     log.info("carInstanceId=" + carInstanceId + ", decisionId=" + decisionId);
     
     JsonArray decisions = jsonData.getJsonObject("decisionResponse").getJsonArray("decisions");
     Map<String, Set<String>> approvedAttributes = new HashMap<String, Set<String>>();
+    log.error("Decision array has " + decisions.size() + " values");
     for (int i = 0; i < decisions.size(); i++) {
       JsonValue decision = decisions.get(i);
       String attributeName = ((JsonObject) decision).getString("name");
@@ -158,7 +164,7 @@ public class FinalizeCAR extends AbstractProfileInterceptorAction {
         approvedAttributes.get(attributeName).add(value);
       }
     }
-    
+    log.error("Processing attribute release");
     final Map<String, IdPAttribute> releasedAttributes = new HashMap<String, IdPAttribute>(attributes);
 
     for (IdPAttribute attribute : attributes.values()) {
@@ -206,7 +212,7 @@ public class FinalizeCAR extends AbstractProfileInterceptorAction {
       
       releasedAttributes.get(attribute.getId()).setValues(newValues);
     }
-
+    log.error("{} Releasing attributes '{}'",getLogPrefix(),releasedAttributes);
     //log.debug("{} Releasing attributes '{}'", getLogPrefix(), releasedAttributes);
     //final MapDifference<String, IdPAttribute> diff = Maps.difference(attributes, releasedAttributes);
     //log.debug("{} Not releasing attributes '{}'", getLogPrefix(), diff.entriesOnlyOnLeft());
