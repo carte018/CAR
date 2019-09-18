@@ -216,7 +216,6 @@ public class MainController {
 		// Retrieve the base64 encoded encrypted, signed input object
 		
 		String b64input = request.getParameter("json");
-		CarUtility.locError("ERR1134",LogCriticality.error,"Request JSON is: " + b64input);
 		
 		// Turn it into a JWE
 		JWEObject jwe = null;
@@ -244,27 +243,20 @@ public class MainController {
 			FileInputStream pfis = new FileInputStream(privinfile);
 			pfis.read(privbytes);
 			pfis.close();
-			CarUtility.locError("ERR1134",LogCriticality.error, "Read private key file - retrieved " + privbytes.length + " bytes");
 			// privbytes now has the private key in der format
 			PKCS8EncodedKeySpec pspec = new PKCS8EncodedKeySpec(privbytes);
 			KeyFactory keyf = KeyFactory.getInstance("RSA");
 			PrivateKey privkey = keyf.generatePrivate(pspec);
-			CarUtility.locError("ERR1134", LogCriticality.error,"PrivKey populated");
 			// privkey now has the PrivateKey object
 			
 			if (privkey instanceof RSAPrivateKey) {
-					CarUtility.locError("ERR1134", LogCriticality.error,"Privkey is RSA key");
-					CarUtility.locError("ERR1134", LogCriticality.error,"JWE is " + jwe.serialize());
                 	jwe.decrypt(new RSADecrypter(privkey));
-                	CarUtility.locError("ERR1134", LogCriticality.error,"JWE decryption complete");
                 	SignedJWT sjwt = jwe.getPayload().toSignedJWT();
-                	CarUtility.locError("ERR1134", LogCriticality.error,"Signed JWT extracted");
                     // Use certificate to validate signature
                     PublicKey pbk;
                     FileInputStream in = new FileInputStream(shibcertfile);
                     CertificateFactory cf = CertificateFactory.getInstance("X.509");
                     Certificate cert = cf.generateCertificate(in);
-                    CarUtility.locError("ERR1134", LogCriticality.error,"Shib cert retrieved for signature validation");
 
                     pbk = cert.getPublicKey();
                     if (pbk instanceof RSAPublicKey) {
