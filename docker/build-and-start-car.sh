@@ -330,6 +330,14 @@ docker exec -i -t docker_apache-sp_1 /etc/init.d/apache2 start
 
 
 docker restart docker_idpnode_1
+
+#
+# And address timing issue with overlay filesystem caching in the carnode --
+# force carnode to redeploy internally
+#
+
+docker exec -i -t docker_carnode_1 touch /var/lib/tomcat8/webapps/car.war
+
 #
 # Wait for the IDP to autodeploy
 # sleep 30
