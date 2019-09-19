@@ -33,6 +33,7 @@ parse_args $*
 #
 export pemstr=`cat ../apache-sp/sp-cert.pem | grep -v '^-' | sed 's/ //g'`
 cat config/shib-idp/metadata/local-sites.xml.tmpl | sed 's/%apache-fqdn%/'$APACHE_FQDN'/g' | perl -e 'while (<STDIN>) { $_ =~ s/%car-demo-sp-certificate%/$ENV{"pemstr"}/; print }' > config/shib-idp/metadata/local-sites.xml
+cat config/shib-idp/metadata/idp-metadata.xml.tmpl | sed 's/%apache-fqdn%/'$APACHE_FQDN'/g' > config/shib-idp/metadata/idp-metadata.xml
 cp config/shib-idp/metadata/idp-metadata.xml wwwroot/
 
 #
