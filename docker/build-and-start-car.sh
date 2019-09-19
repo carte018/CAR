@@ -129,6 +129,16 @@ cp ssl.key apache-sp/ssl.key
 cp ssl.pem apache-sp/ssl.pem
 
 #
+# If we're in skunkworks mode, we need to make an early adjustment to the IDP configuration
+# so that the Apache/SP build will incorporate the right endpoint URLs in the IDP metadata
+#
+
+if [ "$SKUNKWORKS" == "yes" ]
+then
+  cat idp/config/shib-idp/metadata/idp-metadata.xml.tmpl | sed 's/%apache_fqdn%/'apache_fqdn'/' > idp/config/shib-idp/metadata/idp-metadata.xml
+fi
+
+#
 # If we aren't called with the "-q" flag, update the docker-compose script with credential information
 #
 # Required for both caronly and skunkworks builds.
