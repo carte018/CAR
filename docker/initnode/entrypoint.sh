@@ -13,6 +13,20 @@
 
 sleep 30
 
+
+#
+# Start by baking out the rp metainfo objects
+#
+
+echo "Baking amber_pattern_rp_metainfo"
+cat /tmp/demo_data/amber_pattern_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_pattern_rp_metainfo
+echo "Baking carma_rp_metainfo"
+cat /tmp/demo_data/carma_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/carma_rp_metainfo
+echo "Baking logrus_metainfo"
+cat /tmp/demo_data/logrus_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/logrus_metainfo
+echo "Baking rebma_pattern_rp_metainfo"
+cat /tmp/demo_data/rebma_pattern_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/rebma_pattern_rp_metainfo
+
 #
 # Force tomcat8 to deply the ARPSI
 #

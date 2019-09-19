@@ -236,7 +236,7 @@ then
  fi
 fi
 
-cat docker-compose.yml.tmpl | sed 's/%mysql_root_password%/'$mysql_root_password'/g' | sed 's/%mysql_replication_password%/'$mysql_replication_password'/g' | sed 's/%mysql_arpsi_password%/'$mysql_arpsi_password'/g' | sed 's/%mysql_copsu_password%/'$mysql_copsu_password'/g' | sed 's/%mysql_icm_password%/'$mysql_icm_password'/g' | sed 's/%mysql_informed_password%/'$mysql_informed_password'/g' | sed 's/%carma_user%/'$carma_user'/g' | sed 's/%carma_password%/'$carma_password'/g' > docker-compose.yml 
+cat docker-compose.yml.tmpl | sed 's/%mysql_root_password%/'$mysql_root_password'/g' | sed 's/%mysql_replication_password%/'$mysql_replication_password'/g' | sed 's/%mysql_arpsi_password%/'$mysql_arpsi_password'/g' | sed 's/%mysql_copsu_password%/'$mysql_copsu_password'/g' | sed 's/%mysql_icm_password%/'$mysql_icm_password'/g' | sed 's/%mysql_informed_password%/'$mysql_informed_password'/g' | sed 's/%carma_user%/'$carma_user'/g' | sed 's/%carma_password%/'$carma_password'/g' | sed 's/%apache_fqdn%/'$apache_fqdn'/g' > docker-compose.yml 
 
 echo "mysql_root_password=$mysql_root_password" > config.prev
 echo "mysql_replication_password=$mysql_replication_password" >> config.prev

@@ -261,6 +261,7 @@ services:
       - NODE_NAME=initnode
       - CARMA_USER=%carma_user%
       - CARMA_PASSWORD=%carma_password%
+      - APACHE_FQDN=%apache_fqdn%
 
 volumes:
   node1-mysql: {}
