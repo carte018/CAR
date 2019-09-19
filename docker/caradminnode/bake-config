@@ -122,7 +122,7 @@ echo "We will now rebuild the templated configuration files for this CARADMIN no
 echo
 echo
 
-cat caradmin.conf.tmpl | sed 's/%basicauth_class%/'$basicauth_class'/g' | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%app_users%/'$app_users'/g' | sed 's/%app_admins%/'$app_admins'/g' | sed 's/%carma_user%/'$CARMA_USER'/g' | sed 's/%carma_password%/'$CARMA_PASSWORD'/g' | sed 's/%institution_name%/'$institution_name'/g' | sed 's/%super_admins%/'$super_admins'/g' > caradmin.conf
+cat caradmin.conf.tmpl | sed 's/%basicauth_class%/'$basicauth_class'/g' | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%app_users%/'$app_users'/g' | sed 's/%app_admins%/'$app_admins'/g' | sed 's/%carma_user%/'$CARMA_USER'/g' | sed 's/%carma_password%/'$CARMA_PASSWORD'/g' | sed 's/%institution_name%/'$institution_name'/g' | sed 's/%super_admins%/'$super_admins'/g' |  sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > caradmin.conf
 
 
 echo
