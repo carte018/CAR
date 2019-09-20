@@ -61,7 +61,7 @@
         <AttributeEncoder xsi:type="SAML2String" name="urn:oid:0.9.2342.19200300.100.1.42" friendlyName="pager" encodeType="false" />
     </AttributeDefinition>
     
-    <AttributeDefinition xsi:type="Simple" id="commonName">
+    <AttributeDefinition xsi:type="Simple" id="cn">
     	<InputDataConnector ref="myLDAP" attributeNames="cn"/>
     	<AttributeEncoder xsi:type="SAML1String" name="urn:mace:dir:attribute-def:cn" encodeType="false" />
     	<AttributeEncoder xsi:type="SAML2String" name="urn:oid:2.5.4.3" friendlyName="cn" encodeType="false" />
