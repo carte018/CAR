@@ -143,10 +143,13 @@
         <AttributeRule attributeID="mail">
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
-        <AttributeRule attributeID="sn">
+        <AttributeRule attributeID="surname">
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
         <AttributeRule attributeID="isMemberOf">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="givenName">
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
      </AttributeFilterPolicy>
