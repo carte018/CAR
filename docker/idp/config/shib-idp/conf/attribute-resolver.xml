@@ -134,7 +134,7 @@
     </AttributeDefinition>
 
     <AttributeDefinition xsi:type="Simple" id="givenName">
-        <InputDataConnector ref="myLDAP" attributeNames="givenName"/>
+        <InputDataConnector ref="myLDAP" attributeNames="givenname"/>
         <AttributeEncoder xsi:type="SAML1String" name="urn:mace:dir:attribute-def:givenName" encodeType="false" />
         <AttributeEncoder xsi:type="SAML2String" name="urn:oid:2.5.4.42" friendlyName="givenName" encodeType="false" />
     </AttributeDefinition>

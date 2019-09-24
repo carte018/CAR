@@ -71,11 +71,12 @@
                 <label for="donotcache">#springMessageText("idp.login.donotcache", "Don't Remember Login")</label>
                </div>
             #end
-
+			#if ($enableDefaultConsent)
               <div class="form-element-wrapper">
                 <input id="_shib_idp_revokeConsent" type="checkbox" name="_shib_idp_revokeConsent" value="true">
                 <label for="_shib_idp_revokeConsent">#springMessageText("idp.attribute-release.revoke", "Clear prior granting of permission for release of your information to this service.")</label>
               </div>
+            #end
 
             #if ($passwordEnabled)
               <div class="form-element-wrapper">

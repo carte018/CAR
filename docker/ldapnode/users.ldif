@@ -25,6 +25,7 @@ eduPersonPrimaryAffiliation: faculty
 displayName: Prince Corwin of Amber
 localUniqueId: 9101
 userPassword: corwin
+eduPersonOrcid: 9999-9999-9999-0002
 
 dn: uid=oberon,ou=people,dc=amber,dc=org
 objectclass: top
@@ -49,6 +50,8 @@ eduPersonPrimaryAffiliation: faculty
 displayName: Oberon, Leige of Amber
 localUniqueId: 0002
 userPassword: oberon
+eduPersonOrcid: 9999-9999-9999-0001
+
 
 dn: uid=benedict,ou=people,dc=amber,dc=org
 objectclass: top
@@ -75,6 +78,8 @@ isMemberOf: urn:mace:amber.org:groups:exiled
 displayName: Prince Benedict the One-Armed
 localUniqueId: 9102
 userPassword: benedict
+eduPersonOrcid: 9999-9999-9999-0013
+
 
 dn: uid=dworkin,ou=people,dc=amber,dc=org
 objectclass: top
@@ -101,6 +106,8 @@ eduPersonPrimaryAffiliation: alum
 localUniqueId: 0001
 displayName:  Mad Dworkin
 userPassword: dworkin
+eduPersonOrcid: 9999-9999-9999-0000
+
 
 dn: uid=dara,ou=people,dc=amber,dc=org
 objectclass: top
@@ -127,6 +134,8 @@ isMemberOf: urn:mace:amber.org:groups:chaosians
 localUniqueId: 9977
 displayName: Dara of the Black Road
 userpassword: dara
+eduPersonOrcid: 9999-9999-9999-00015
+
 
 dn: uid=ugrad,ou=people,dc=amber,dc=org
 objectclass: top
@@ -174,6 +183,8 @@ isMemberOf: urn:mace:amber.org:groups:instructors
 localUniqueId: 0251
 userPassword: grad
 mail: grad@mail.amber.org
+eduPersonOrcid: 9999-9999-9999-1973
+
 
 dn: uid=faculty,ou=people,dc=amber,dc=org
 objectclass: top
@@ -197,6 +208,8 @@ isMemberOf: urn:mace:amber.org:groups:instructors
 localUniqueId: 1011
 userPassword: faculty
 mail: iamfaculty@avalonmail.com
+eduPersonOrcid: 9999-9999-9999-2518
+
 
 dn: uid=sysadmin,ou=people,dc=amber,dc=org
 objectclass: top

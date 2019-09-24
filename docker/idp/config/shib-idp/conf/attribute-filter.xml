@@ -109,6 +109,8 @@
         <PolicyRequirementRule xsi:type="OR">
             <Rule xsi:type="Requester" value="https://localhost/car-demo-sp" />
             <Rule xsi:type="Requester" value="https://pattern.amber.org/shibboleth" />
+            <Rule xsi:type="Requester" value="https://pattern.rebma.org/shibboleth" />
+            <Rule xsi:type="Requester" value="https://logrus.coc.org/shibboleth" />
         </PolicyRequirementRule>
          <AttributeRule attributeID="eduPersonPrincipalName">
             <PermitValueRule xsi:type="ANY" />
