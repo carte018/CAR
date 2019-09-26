@@ -96,4 +96,100 @@
 			<EmailAddress>oberon@chaos.org</EmailAddress>
 		</ContactPerson>
 	</EntityDescriptor>
+	<EntityDescriptor entityID="https://content-r-us.com/shibboleth">
+		<SPSSODescriptor AuthnRequestsSigned="0" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol http://schemas.xmlsoap.org/ws/2003/07/secext">
+			<KeyDescriptor>
+				<ds:KeyInfo>
+					<ds:X509Data>
+						<ds:X509Certificate>
+%car-demo-sp-certificate%
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+			<NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+			<AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://%apache-fqdn%/Shibboleth.sso/SAML2/POST" index="0" isDefault="true" />
+		</SPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="en">Amber</OrganizationName>
+			<OrganizationDisplayName xml:lang="en">Castle Amber</OrganizationDisplayName>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<Givenname>Oberon</Givenname>
+			<EmailAddress>oberon@amber.org</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+	<EntityDescriptor entityID="https://research-r-us.com/shibboleth">
+		<SPSSODescriptor AuthnRequestsSigned="0" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol http://schemas.xmlsoap.org/ws/2003/07/secext">
+			<KeyDescriptor>
+				<ds:KeyInfo>
+					<ds:X509Data>
+						<ds:X509Certificate>
+%car-demo-sp-certificate%
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+			<NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+			<AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://%apache-fqdn%/Shibboleth.sso/SAML2/POST" index="0" isDefault="true" />
+		</SPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="en">Amber</OrganizationName>
+			<OrganizationDisplayName xml:lang="en">Castle Amber</OrganizationDisplayName>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<Givenname>Oberon</Givenname>
+			<EmailAddress>oberon@amber.org</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+	<EntityDescriptor entityID="https://scholars.amber.org/shibboleth">
+		<SPSSODescriptor AuthnRequestsSigned="0" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol http://schemas.xmlsoap.org/ws/2003/07/secext">
+			<KeyDescriptor>
+				<ds:KeyInfo>
+					<ds:X509Data>
+						<ds:X509Certificate>
+%car-demo-sp-certificate%
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+			<NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+			<AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://%apache-fqdn%/Shibboleth.sso/SAML2/POST" index="0" isDefault="true" />
+		</SPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="en">Amber</OrganizationName>
+			<OrganizationDisplayName xml:lang="en">Castle Amber</OrganizationDisplayName>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<Givenname>Oberon</Givenname>
+			<EmailAddress>oberon@amber.org</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
+	<EntityDescriptor entityID="https://payroll.amber.org/shibboleth">
+		<SPSSODescriptor AuthnRequestsSigned="0" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol http://schemas.xmlsoap.org/ws/2003/07/secext">
+			<KeyDescriptor>
+				<ds:KeyInfo>
+					<ds:X509Data>
+						<ds:X509Certificate>
+%car-demo-sp-certificate%
+						</ds:X509Certificate>
+					</ds:X509Data>
+				</ds:KeyInfo>
+			</KeyDescriptor>
+			<NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+			<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+			<AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://%apache-fqdn%/Shibboleth.sso/SAML2/POST" index="0" isDefault="true" />
+		</SPSSODescriptor>
+		<Organization>
+			<OrganizationName xml:lang="en">Amber</OrganizationName>
+			<OrganizationDisplayName xml:lang="en">Castle Amber</OrganizationDisplayName>
+		</Organization>
+		<ContactPerson contactType="technical">
+			<Givenname>Oberon</Givenname>
+			<EmailAddress>oberon@amber.org</EmailAddress>
+		</ContactPerson>
+	</EntityDescriptor>
 </EntitiesDescriptor>

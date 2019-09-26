@@ -1,0 +1,44 @@
+{
+    "defaultshowagain": "show",
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "We serve the Research Needs of Scholars"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Research-r-Us (We Are Your People)"
+            }
+        ]
+    },
+    "iconurl": null,
+    "privacyurl": null,
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "https://research-r-us.com/shibboleth",
+        "rptype": "entityId"
+    },
+    "rpproperties": [
+       
+        {
+            "rppropertyname": "entity-category",
+            "rppropertyvalue": "http://id.multiverse.org/category/registered-by-multiverse"
+        },
+        {
+            "rppropertyname": "registrar",
+            "rppropertyvalue": "http://registrar.multiverse.org"
+        },
+        {
+        	"rppropertyname": "entityId",
+        	"rppropertyvalue": "https://research-r-us.com/shibboleth"
+        }
+    ]
+}
