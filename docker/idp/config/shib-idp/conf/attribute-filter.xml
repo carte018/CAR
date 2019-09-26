@@ -154,6 +154,12 @@
         <AttributeRule attributeID="givenName">
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
+        <AttributeRule attributeID="eduPersonOrgUnitDN">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
+        <AttributeRule attributeID="departmentCode">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
      </AttributeFilterPolicy>
         
   </AttributeFilterPolicyGroup>      

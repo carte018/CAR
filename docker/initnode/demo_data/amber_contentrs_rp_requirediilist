@@ -1,0 +1,42 @@
+{
+    "requiredlist": [
+        {
+            "infoitemidentifier": {
+                "iiid": "eduPersonOrgDN",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To verify you are with one of our customers (required)"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "eduPersonOrgDN",
+            "valuelist": [
+                ".*"
+            ]
+        }
+    ],
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "content-r-us.com/shibboleth",
+        "rptype": "entityId"
+    }
+}

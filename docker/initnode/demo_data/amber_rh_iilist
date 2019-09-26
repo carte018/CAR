@@ -51,6 +51,14 @@
 		{
 			"iiid": "sn",
 			"iitype": "attribute"
+		},
+		{
+			"iiid": "eduPersonOrgUnitDN",
+			"iitype": "attribute"
+		},
+		{
+			"iiid": "departmentCode",
+			"iitype": "attribute"
 		}
 	],
 	"rhidentifier": {

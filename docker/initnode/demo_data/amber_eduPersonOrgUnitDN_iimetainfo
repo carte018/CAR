@@ -1,0 +1,33 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Unique Identifier for Department"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Organizational Unit"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "eduPersonOrgUnitDN",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false
+}

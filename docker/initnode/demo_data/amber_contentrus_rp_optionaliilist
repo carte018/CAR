@@ -1,0 +1,72 @@
+{
+    "optionallist": [
+        {
+            "infoitemidentifier": {
+                "iiid": "displayName",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To personalize our pages for your viewing"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "displayName",
+            "valuelist": [
+                ".*"
+            ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "mail",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To contact you about events and offers you may be interested in"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "mail",
+            "valuelist": [
+                ".*"
+            ]
+        }
+    ],
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "rpidentifier": {
+        "rpid": "https://content-r-us.com/shibboleth",
+        "rptype": "entityId"
+    }
+}

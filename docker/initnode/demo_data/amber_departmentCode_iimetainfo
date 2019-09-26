@@ -1,0 +1,33 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Departmental Fund code"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Local Fund Code for Department (scoped for federated use)"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "departmentCode",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    },
+    "sensitivity": false
+}

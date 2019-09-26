@@ -26,7 +26,8 @@ echo "Baking logrus_metainfo"
 cat /tmp/demo_data/logrus_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/logrus_metainfo
 echo "Baking rebma_pattern_rp_metainfo"
 cat /tmp/demo_data/rebma_pattern_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/rebma_pattern_rp_metainfo
-
+echo "Baking content-ro-us metainfo"
+cat /tmp/demo_data/amber_contentrus_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_contentrus_rp_metainfo
 #
 # Force tomcat8 to deply the ARPSI
 #
@@ -63,7 +64,7 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 #
 # Load attributes available through the Amber RH
 #
-for num in amberTitle cn displayName eduPersonOrcid eduPersonOrgDN eduPersonPrimaryAffiliation eduPersonPrincipalName eduPersonScopedAffiliation eduPersonTargetedID eduPersonUniqueId isMemberOf mail sn
+for num in amberTitle cn displayName eduPersonOrcid eduPersonOrgDN eduPersonPrimaryAffiliation eduPersonPrincipalName eduPersonScopedAffiliation eduPersonTargetedID eduPersonUniqueId isMemberOf mail sn eduPersonOrgUnitDN departmentCode
 do
   echo "Inserting attribute $num"
   curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8'  --insecure -X PUT -d @/tmp/demo_data/amber_${num}_iimetainfo 'https://apache-sp/consent/v1/informed/iiic/iimetainformation/entityId/urn:mace:multiverse:amber/attribute/'$num 
@@ -142,6 +143,18 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 
 echo "Inserting CARMA required attributes"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/carma_rp_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:amber/entityId/https:!!localhost!car-demo-sp'
+
+#
+# And the contentrus RP
+#
+echo "Inserting ContentRUs metainfo"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-Type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_metainfo 'https://apache-sp/consent/v1/informed/rpic/metainformation/entityId/urn:mace:multiverse:amber/entityId/https:!!content-r-us.com!shibboleth'
+
+echo "Inserting ContentRUs optional attributes"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_optionallist 'https://apache-sp/consent/v1/informed/rpic/optionaliilist/entityId/urn:mace:multiverse:amber/entityId/https:!!content-r-us.com!shibboleth'
+
+echo "Inserting ContentRUs required attributes"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json; charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:https:!!content-r-us.com!shibboleth'
 
 #
 # And apply the base policies for CARMA, which mandate release of everything to ourselves
