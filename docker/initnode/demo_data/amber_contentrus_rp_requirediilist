@@ -38,5 +38,6 @@
     "rpidentifier": {
         "rpid": "content-r-us.com/shibboleth",
         "rptype": "entityId"
-    }
+    },
+    "state": "active"
 }
