@@ -111,6 +111,10 @@
             <Rule xsi:type="Requester" value="https://pattern.amber.org/shibboleth" />
             <Rule xsi:type="Requester" value="https://pattern.rebma.org/shibboleth" />
             <Rule xsi:type="Requester" value="https://logrus.coc.org/shibboleth" />
+            <Rule xsi:type="Requester" value="https://content-r-us.com/shibboleth" />
+            <Rule xsi:type="Requester" value="https://research-r-us.com/shibboleth" />
+            <Rule xsi:type="Requester" value="https://scholars.amber.org/shibboleth" />
+            <Rule xsi:type="Requester" value="https://payroll.amber.org/shibboleth" />
         </PolicyRequirementRule>
          <AttributeRule attributeID="eduPersonPrincipalName">
             <PermitValueRule xsi:type="ANY" />
