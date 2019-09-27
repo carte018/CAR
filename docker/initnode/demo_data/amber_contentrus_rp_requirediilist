@@ -24,7 +24,7 @@
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "content-r-us.com/shibboleth",
+        "rpid": "https://content-r-us.com/shibboleth",
         "rptype": "entityId"
     }
 }
