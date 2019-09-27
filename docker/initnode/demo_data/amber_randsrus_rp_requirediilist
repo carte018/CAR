@@ -36,7 +36,7 @@
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "research-r-us.com/shibboleth",
+        "rpid": "https://research-r-us.com/shibboleth",
         "rptype": "entityId"
     }
 }
