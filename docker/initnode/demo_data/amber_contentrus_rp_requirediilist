@@ -38,8 +38,5 @@
     "rpidentifier": {
         "rpid": "content-r-us.com/shibboleth",
         "rptype": "entityId"
-    },
-    "state": "active",
-    "updated": 1564949780486,
-    "version": 3
+    }
 }
