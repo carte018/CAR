@@ -9,7 +9,7 @@
                 "locales": [
                     {
                         "locale": "en",
-                        "value": "To verify you are with one of our customers"
+                        "value": "To verify you are with one of our customers (required)"
                     },
                     {
                         "locale": "es",
