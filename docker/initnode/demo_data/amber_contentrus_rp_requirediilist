@@ -10,18 +10,6 @@
                     {
                         "locale": "en",
                         "value": "To verify you are with one of our customers (required)"
-                    },
-                    {
-                        "locale": "es",
-                        "value": null
-                    },
-                    {
-                        "locale": "de",
-                        "value": null
-                    },
-                    {
-                        "locale": "fr",
-                        "value": null
                     }
                 ]
             },
