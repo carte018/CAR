@@ -151,7 +151,7 @@ echo "Inserting ContentRUs metainfo"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-Type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_metainfo 'https://apache-sp/consent/v1/informed/rpic/metainformation/entityId/urn:mace:multiverse:amber/entityId/https:!!content-r-us.com!shibboleth'
 
 echo "Inserting ContentRUs optional attributes"
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_optionallist 'https://apache-sp/consent/v1/informed/rpic/optionaliilist/entityId/urn:mace:multiverse:amber/entityId/https:!!content-r-us.com!shibboleth'
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_optionaliilist 'https://apache-sp/consent/v1/informed/rpic/optionaliilist/entityId/urn:mace:multiverse:amber/entityId/https:!!content-r-us.com!shibboleth'
 
 echo "Inserting ContentRUs required attributes"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json; charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_contentrus_rp_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:https:!!content-r-us.com!shibboleth'
