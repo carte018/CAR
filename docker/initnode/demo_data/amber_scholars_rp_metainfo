@@ -23,7 +23,7 @@
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "https://scholars.amber.com/shibboleth",
+        "rpid": "https://scholars.amber.org/shibboleth",
         "rptype": "entityId"
     },
     "rpproperties": [
@@ -38,7 +38,7 @@
         },
         {
         	"rppropertyname": "entityId",
-        	"rppropertyvalue": "https://scholars.amber.com/shibboleth"
+        	"rppropertyvalue": "https://scholars.amber.org/shibboleth"
         },
         {
         	"rppropertyname": "entity-category",
