@@ -26,8 +26,13 @@ echo "Baking logrus_metainfo"
 cat /tmp/demo_data/logrus_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/logrus_metainfo
 echo "Baking rebma_pattern_rp_metainfo"
 cat /tmp/demo_data/rebma_pattern_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/rebma_pattern_rp_metainfo
-echo "Baking content-ro-us metainfo"
+echo "Baking content-r-us metainfo"
 cat /tmp/demo_data/amber_contentrus_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_contentrus_rp_metainfo
+echo "Baking research-r-us metainfo"
+cat /tmp/demo_data/amber_randsrus_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_randsrus_rp_metainfo
+echo "Baking scholarly garage metainfo"
+cat /tmp/demo_data/amber_scholars_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/apache_scholars_rp_metainfo
+
 #
 # Force tomcat8 to deply the ARPSI
 #
@@ -167,6 +172,18 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 
 echo "Inserting ResearchRUs required attributes"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json; charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_randsrus_rp_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:amber/entityId/https:!!research-r-us.com!shibboleth'
+
+#
+# And the scholars RP
+#
+echo "Inserting scholarly garage metainfo"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_scholars_rp_metainfofo 'https://apache-sp/consent/v1/informed/rpic/metainformation/entityId/urn:mace:multiverse:amber/entityId/https:!!scholars.amber.org!shibboleth'
+
+echo "Inserting scholarly garage optional attributes"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_scholars_rp_optionaliilist 'https://apache-sp/consent/v1/informed/rpic/optionaliilist/entityId/urn:mace:multiverse:amber/entityId/https:!!scholars.amber.org!shibboleth'
+
+echo "Inserting scholarly garage required attributes"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_scholars_rp_requirediilist 'https://apache-sp/consent/v1/informed/rpic/requirediilist/entityId/urn:mace:multiverse:amber/entityId/https:/!!scholars.amber.org!shibboleth'
 
 #
 # And apply the base policies for CARMA, which mandate release of everything to ourselves

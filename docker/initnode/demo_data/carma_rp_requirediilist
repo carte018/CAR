@@ -11,7 +11,9 @@
 { "infoitemidentifier": { "iiid":"eduPersonUniqueId","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonUniqueId","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"isMemberOf","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"isMemberOf","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"mail","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"mail","valuelist": [".*"]},
-{ "infoitemidentifier": { "iiid":"sn","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"sn","valuelist": [".*"]}
+{ "infoitemidentifier": { "iiid":"sn","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"sn","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"eduPersonOrgUnitDN","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonOrgUnitDN","valuelist": [".*"]},
+{ "infoitemidentifier": { "iiid":"departmentCode","iitype":"attribute" },"reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"departmentCode","valuelist":[".*"]}
 ],
 	"rhidentifier": {
             "rhid": "urn:mace:multiverse:amber",

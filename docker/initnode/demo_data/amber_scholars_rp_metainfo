@@ -4,7 +4,7 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "We serve the Research Needs of Scholars"
+                "value": "A Place for Scholarly Mechanics"
             }
         ]
     },
@@ -12,7 +12,7 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "Research-r-Us (We Are Your People)"
+                "value": "Scholarly Garage"
             }
         ]
     },
@@ -23,7 +23,7 @@
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "https://research-r-us.com/shibboleth",
+        "rpid": "https://scholars.amber.com/shibboleth",
         "rptype": "entityId"
     },
     "rpproperties": [
@@ -38,11 +38,15 @@
         },
         {
         	"rppropertyname": "entityId",
-        	"rppropertyvalue": "https://research-r-us.com/shibboleth"
+        	"rppropertyvalue": "https://scholars.amber.com/shibboleth"
         },
         {
-        	"rppropertyname": "entityId",
+        	"rppropertyname": "entity-category",
         	"rppropertyvalue": "http://refeds.org/category/research-and-scholarship"
+        },
+        {
+        	"rppropertyname": "localITSite",
+        	"rppropertyvalue": "true"
         }
     ]
 }
