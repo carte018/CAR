@@ -132,12 +132,14 @@ givenName: Dara
 sn: Barimen
 eduPersonPrincipalName: dara@amber.org
 eduPersonAffiliation: student
+eduPersonAffiliation: staff
 eduPersonOrgDn: dc=amber,dc=org
 mail: dara@mail.amber.org
 eduPersonPrimaryAffiliation: student
 isMemberOf: urn:mace:amber.org:groups:pattern_walkers
 isMemberOf: urn:mace:amber.org:groups:pattern_students
 isMemberOf: urn:mace:amber.org:groups:chaosians
+isMemberOf: urn:mace:amber.org:groups:payroll:employees
 localUniqueId: 9977
 displayName: Dara of the Black Road
 userpassword: dara
@@ -191,6 +193,7 @@ isMemberOf: urn:mace:amber.org:groups:gradstudents
 isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
 isMemberOf: urn:mace:amber.org:groups:research:avalon_project
 isMemberOf: urn:mace:amber.org:groups:instructors
+isMemberOf: urn:mace:amber.org:groups:payroll:employees
 localUniqueId: 0251
 userPassword: grad
 mail: grad@mail.amber.org
@@ -218,6 +221,8 @@ isMemberOf: urn:mace:amber.org:groups:research:covert_project
 isMemberOf: urn:mace:amber.org:groups:research:public_project
 isMemberOf: urn:mace:amber.org:groups:faculty:tenured
 isMemberOf: urn:mace:amber.org:groups:instructors
+isMemberOf: urn:mace:amber.org:groups:payroll:employers
+isMemberOf: urn:mace:amber.org:groups:payroll:employees
 localUniqueId: 1011
 userPassword: faculty
 mail: iamfaculty@avalonmail.com

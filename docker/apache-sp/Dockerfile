@@ -106,6 +106,10 @@ ADD Amber-Icon.png /var/www/Amber-Icon.png
 ADD AmberPattern.png /var/www/AmberPattern.png
 ADD Logrus_of_Chaos.png /var/www/Logrus_of_Chaos.png
 ADD Pattern_in_Rebma.png /var/www/Pattern_In_Rebma.png
+ADD ContentRUs.png /var/www/ContentRUs.png
+ADD PeanutsLogo.png /var/www/PeanutsLogo.png
+ADD RandSRUs.png /var/www/RandSRUs.png
+ADD ScholarlyGarage.png /var/www/ScholarlyGarage.png
 
 VOLUME ["/interlock"]
 VOLUME ["/var/log/httpd"]

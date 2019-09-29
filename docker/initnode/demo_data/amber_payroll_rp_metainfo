@@ -4,7 +4,7 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "A Place for Scholarly Mechanics"
+                "value": "The work is hard, but we pay Peanuts!"
             }
         ]
     },
@@ -12,22 +12,25 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "Scholarly Garage"
+                "value": "Peanuts:  The Amber Payroll System"
             }
         ]
     },
-    "iconurl": "https://%apache_fqdn%/ScholarlyGarage.png",
+    "iconurl": "https://%apache_fqdn%/PeanutsLogo.png",
     "privacyurl": null,
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
         "rhtype": "entityId"
     },
     "rpidentifier": {
-        "rpid": "https://scholars.amber.com/shibboleth",
+        "rpid": "https://payroll.amber.org/shibboleth",
         "rptype": "entityId"
     },
     "rpproperties": [
-       
+        {
+            "rppropertyname": "castlerp",
+            "rppropertyvalue": "true"
+        },
         {
             "rppropertyname": "entity-category",
             "rppropertyvalue": "http://id.multiverse.org/category/registered-by-multiverse"
@@ -37,16 +40,12 @@
             "rppropertyvalue": "http://registrar.multiverse.org"
         },
         {
-        	"rppropertyname": "entityId",
-        	"rppropertyvalue": "https://scholars.amber.com/shibboleth"
-        },
-        {
-        	"rppropertyname": "entity-category",
-        	"rppropertyvalue": "http://refeds.org/category/research-and-scholarship"
-        },
-        {
         	"rppropertyname": "localITSite",
         	"rppropertyvalue": "true"
+        },
+        {
+        	"rppropertyname": "entityId",
+        	"rppropertyvalue": "https://payroll.amber.org/shibboleth"
         }
     ]
 }
