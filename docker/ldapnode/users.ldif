@@ -168,7 +168,7 @@ isMemberOf: urn:mace:amber.org:groups:research:firearms_project
 localUniqueId: 0135
 userPassword: ugrad
 mail: ugrad@mail.amber.org
-eduPersonOrgDN: cn=mechanical_engineering,dc=amber,dc=org
+eduPersonOrgUnitDN: cn=mechanical_engineering,dc=amber,dc=org
 localDepartmentCode: 12171555
 
 dn: uid=grad,ou=people,dc=amber,dc=org
@@ -195,7 +195,7 @@ localUniqueId: 0251
 userPassword: grad
 mail: grad@mail.amber.org
 eduPersonOrcid: 9999-9999-9999-1973
-eduPersonOrgDN: cn=graduate_school,dc=amber,dc=org
+eduPersonOrgUnitDN: cn=graduate_school,dc=amber,dc=org
 localDepartmentCode: 12180000
 
 
@@ -222,7 +222,7 @@ localUniqueId: 1011
 userPassword: faculty
 mail: iamfaculty@avalonmail.com
 eduPersonOrcid: 9999-9999-9999-2518
-eduPersonOrgDN: cn=public_policy,dc=amber,dc=org
+eduPersonOrgUnitDN: cn=public_policy,dc=amber,dc=org
 localDepartmentCode: 12130100
 
 
