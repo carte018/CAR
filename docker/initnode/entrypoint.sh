@@ -31,9 +31,9 @@ cat /tmp/demo_data/amber_contentrus_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${A
 echo "Baking research-r-us metainfo"
 cat /tmp/demo_data/amber_randsrus_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_randsrus_rp_metainfo
 echo "Baking scholarly garage metainfo"
-cat /tmp/demo_data/amber_scholars_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/apache_scholars_rp_metainfo
+cat /tmp/demo_data/amber_scholars_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_scholars_rp_metainfo
 echo "Baking peanuts metainfo"
-cat /tmp/demo_data/amber_payroll_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/apache_payroll_rp_metainfo
+cat /tmp/demo_data/amber_payroll_rp_metainfo.tmpl | sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > /tmp/demo_data/amber_payroll_rp_metainfo
 
 #
 # Force tomcat8 to deploy the ARPSI
