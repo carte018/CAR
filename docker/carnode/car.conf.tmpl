@@ -45,7 +45,11 @@ car.rpmic.ttl=3600
 car.iimic.ttl=3600
 
 # URL to return to in the event of a transaction being cancelled (optional)
-cancelURL=https://spaces.at.internet2.edu/display/CAR
+# (for now, we use logout as the Cancel URL and land on the IDP logout URL
+# because the IDP controls the logout UI and modifying it on the fly is a bit 
+# complicated.
+#
+cancelURL=https://%apache_fqdn%/Shibboleth.sso/Logout?return=https://?%apache_fqdn%:9443/idp/profile/Logout
 
 car.basicauth.validator.class=%basicauth_class%
 
