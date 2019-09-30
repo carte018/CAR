@@ -48,7 +48,9 @@ public class DashboardController {
 		if ((config = CarAdminUtils.init(req)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
 			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
-			eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
+			config = AdminConfig.getInstance();
+			eval.addObject("logouturl",config.getProperty("logouturl", false));
+			//eval.addObject("logouturl","/Shibboleth.sso/Logout");  // config failure precludesusing config'd logouturl
 			CarAdminUtils.injectStrings(eval, new String[] { 
 					  "top_heading",
 					  "sign_out",
