@@ -11,6 +11,7 @@ services:
       - $thisdir/../../icm:/var/build/icm
       - $thisdir/../../informed:/var/build/informed
       - $thisdir/../../regloader:/var/build/regloader
+      - $thisdir/../../demorp:/var/build/demorp
       - arpsi-webapps:/var/lib/arpsi/webapps
       - copsu-webapps:/var/lib/copsu/webapps
       - car-webapps:/var/lib/car/webapps
@@ -29,6 +30,7 @@ volumes:
   icm-webapps: {}
   informed-webapps: {}
   regloader-webapps: {}
+  demorp-webapps: {}
   ldap-container: {}
   ldap-data: {}
   ldap-config: {}

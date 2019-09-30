@@ -18,6 +18,8 @@ cd /var/build/car
 mvn install
 cd /var/build/regloader
 mvn install
+cd /var/build/demorp
+mvn install
 
 #
 # And cp the results into the presumed-mounted volumes
@@ -30,6 +32,8 @@ cp /var/build/caradmin/target/caradmin-0.0.1.war /var/lib/caradmin/webapps/carad
 cp /var/build/icm/target/icm-0.0.1.war /var/lib/icm/webapps/icm.war
 cp /var/build/informed/target/informed-0.0.1.war /var/lib/informed/webapps/informed.war
 cp -rp /var/build/regloader/* /var/lib/regloader/webapps/
+cp -rp /varbuild/demorp/target/demorp-0.0.1.war /var/lib/car/webapps/demorp.war
+
 #
 # And if we are in skunkworks mode, dump in the LDAP data
 #

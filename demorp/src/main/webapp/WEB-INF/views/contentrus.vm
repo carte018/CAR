@@ -1,0 +1,43 @@
+#**
+ * Copyright 2015 - 2019 Duke University
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+
+ *#
+<div id="sidebar">
+	<div class="content-section">
+		This is a sidebar
+	</div>
+</div>
+
+<div id="left">
+	<div class="content-section">
+		#if($odn)
+		<h2>Content-R-Us</h2>
+		<b>You appear to be visiting from $eduPersonOrgDNHere's what we know about you:</b>
+		<ul>
+			#foreach($n in $anames)
+				#if($map.get($n).getClass().isArray())
+					#foreach($v in $map.get($n))
+						<li>$n == $v</li>
+					#end
+				#else
+					<li>$n == $map.get($n)</li>
+				#end
+			#end
+		#else
+			<b>You appear to have no home organization!  We cannot support you unless you are with one of our customer sites -- perhaps you need to consent to releasing more information to us at login?</b>
+		#end
+	</div>
+</div>
+		

@@ -1,0 +1,70 @@
+#**
+ * Copyright 2015 - 2019 Duke University
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+
+ *#
+
+<html>
+  <head>
+  		<meta charset="utf-8">
+          <link rel="stylesheet" type="text/css" href="/caradmin/resources/css/main.css">
+  
+   
+   		<!--<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->
+   		
+        <script rel="stylesheet" src="/caradmin/resources/js/bundle.js"></script>
+        <script type="text/javascript" src="/caradmin/resources/js/main.js"></script>
+        
+        #if($listsortingdnd)
+        <link rel="stylesheet" href="/caradmin/resources/css/jquery-ui.min.css"> 
+		<script src="/caradmin/resources/js/external/jquery/jquery.js"></script>
+		<script src="/caradmin/resources/js/jquery-ui.min.js"></script>
+		<script src="/caradmin/resources/js/spin.min.js"></script>
+		#end
+		
+        <title>$top_heading</title>
+  </head>
+
+  <body>
+    <div id="header">
+      <div id="logo"><img src="$top_logo_url"></div>
+      <h1>$top_heading</h1>
+
+      <div id="login-details">
+        $authuser&nbsp;&nbsp;<a href="$logouturl">$sign_out</a>
+      </div>
+    </div>
+
+
+    <div id="menu">
+      <ul id="menu-options">
+        <li><a href="/caradmin/" #if($activetab=="dashboard")class="active-tab"#end>Dashboard</a></li>
+        <li><a href="/caradmin/rhregistration" #if($activetab=="rhregistration")class="active-tab"#end>Resource Holders</a>
+        	<ul class="dropdown-content">
+        		#foreach($rhd in $availablerhs)
+        			<li><a href="/caradmin/rhregistration/$rhd.getRhidentifier().getRhtype()/$CarAdminUtils.idEscape($rhd.getRhidentifier().getRhid())/">$CarAdminUtils.localize($rhd.getDisplayname(),$lang)</a></li>
+        		#end
+        	</ul>
+        <li><a href="/caradmin/rpregistration" #if($activetab=="rpregistration")class="active-tab"#end>Relying Parties</a></li>
+        <li><a href="/caradmin/systemsettings" #if($activetab=="systemsettings")class="active-tab"#end>System Settings</a>
+            <ul class="dropdown-content">
+              <li><a href="/caradmin/manageadmins">Manage Admin Roles</a></li>
+              <li><a href="/caradmin/systemsettings/translatorview">Translator View</a></li>
+              <li><a href="#">Component Configuration</a></li>
+              <li><a href="#">Style</a></li>
+            </ul>
+        </li>
+      </ul>
+    </div>
+    <div id="main">

@@ -1,0 +1,463 @@
+/*
+ * Copyright 2015 - 2019 Duke University
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License Version 2 as published by
+    the Free Software Foundation.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License Version 2
+    along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
+
+ */
+.sans {
+	font-family: sans-serif;
+}
+.addbutton {
+	/*background-color: white;
+	color: darkblue;*/
+	/*float: left;*/
+}
+
+.eightypercent {
+	width: 80%;
+}
+
+.doublespace {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+.mono {
+	font-family: monospace;
+}
+.addbutton:hover {
+	/*background-color: darkblue;
+	color: white;*/
+}
+
+.iibutton {
+	background-color: white;
+	color: darkblue;
+	/*float: right;*/
+}
+.iibutton:hover {
+	background-color: darkblue;
+	color: white;
+}
+.iidetailbutton {
+	background-color: white;
+	color: darkblue;
+	/*float: left;*/
+	vertical-align: top;
+	margin-left: 2px;
+	font-size: 0.7em;
+	height: 1.5em;
+}
+.iidetailbutton:hover {
+	background-color: darkblue;
+	color: white;
+}
+
+.deletebutton {
+	background-color: white;
+	color: darkred;
+	/*float: left;*/
+	vertical-align: top;
+	margin-left: 2px;
+	font-size: 0.7em;
+	height: 1.5em;
+}
+
+.midtext {
+	position: relative;
+	top: -0.2em;
+}
+.deletebutton:hover {
+	background-color: darkred;
+	color: white;
+}
+
+.iideletebutton {
+	background-color: white;
+	color: darkred;
+	/*float: left;*/
+	vertical-align: top;
+	margin-left: 2px;
+	font-size: 0.7em;
+	height: 1.5em;
+}
+
+.iideletebutton:hover {
+	background-color: darkred;
+	color: white;
+}
+
+
+.addprop {
+	background-color: white;
+	color: darkblue;
+	/*float: left;*/
+}
+.addprop:hover {
+	background-color: darkblue;
+	color: white;
+}
+.newbutton {
+	background-color: white;
+	color: darkblue;
+	/*float: left;*/
+}
+
+.newbutton:hover {
+	background-color: darkblue;
+	color: white;
+}
+
+.headerdiv {
+	background-color: darkblue;
+}
+
+.heading {
+	color: white;
+	font-size: 24pt;
+}
+
+.innerhead2 {
+	color: black;
+	font-size: 18pt;
+	font-weight: bold;
+}
+
+.innerhead3 {
+	color: black;
+	font-size: 14pt;
+	font-weight: bold;
+}
+
+.clear {
+	/*clear: both;*/
+}
+
+th {
+	width: 30%;
+}
+
+.outline {
+	border: 1px solid black;
+}
+
+.hidden {
+	display: none;
+}
+
+.leftgravity {
+	/*float: left;*/
+}
+.scrollable {
+	overflow: auto;
+}
+.rightgravity {
+	/*float: right;*/
+}
+.editbutton {
+	background-color: white;
+	color: darkblue;
+}
+.editbutton:hover {
+	background-color: darkblue;
+	color: white;
+}
+
+
+.rhinfo {
+	background-color: lightgray;
+	color: black;
+	font-style: underline;
+	margin-top: 15px;
+	margin-bottom: 5px;
+	/*clear: both;*/
+}
+
+.rpinfo {
+	background-color: lightgray;
+	color: black;
+	font_style: underline;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	/*clear: both;*/
+}
+
+.longtext {
+	overflow: auto;
+	max-height: 4em;
+	max-width: 50%;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.editable:hover {
+	color: blue;
+	cursor: pointer;
+}
+
+.clickable:hover {
+	color: blue;
+	cursor: pointer;
+}
+
+.rplist {
+	overflow: auto;
+	max-height: 20em;
+	margin: 15px;
+	font-family: monospace;
+	border: 2px solid black;
+}
+
+.heading1 {
+	font-weight: bold;
+	font-size: 1.2em;
+	font-style: normal;
+}
+
+.heading2 {
+	font-weight: normal;
+	font-size: 1.1em;
+	font-style: italic;
+}
+
+.labelsp {
+	/*float: left;*/
+	margin-left: 10px;
+	margin-right: 5px;
+}
+
+.valuesp {
+	/*float: left;*/
+	font-family: monospace;
+}
+
+.heading3 {
+	font-weight: bold;
+	font-size: 1.1em;
+	/*clear: both;*/
+	margin-top: 2px;
+	margin-bottom: 2px;
+	margin-left: 10px;
+}
+.attrlist {
+	border: 1px solid black;
+	/*float: left;*/
+	width: 50%;
+	overflow: auto;
+	margin-left: 10px;
+}
+.attr {
+	font-family: monospace;	
+}
+.proplist {
+	clear: both;
+	border: 1px solid black;
+	float: left;
+	width: 80%;
+	overflow: auto;
+	max-height: 10em;
+	margin-left: 15px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+.iidetails {
+	clear: both;
+	border: 1px solid black;
+	float: left;
+	width: 80%;
+	overflow: auto;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+.outlined {
+	border: 1px solid black;
+}
+.left80 {
+	/*float: left;*/
+	width: 80%;
+}
+.left60 {
+/*	float: left;*/
+	width: 60%;
+}
+.left30 {
+/*	float: left;*/
+	display: inline-block;
+	width: 25%;
+	margin-left: 15px;
+	overflow: auto;
+}
+.left30hidden {
+	/*float: left;*/
+	display:none;
+	width: 25%;
+	margin-left: 15px;
+	overflow: auto;
+}
+.bold {
+	font-weight: bold;
+}
+.right30 {
+	/*float: left;*/
+	width: 25%;
+	margin-right: 5%;
+	display: inline-block;
+	overflow: auto;
+}
+.right30hidden {
+	/*float: left;*/
+	width: 25;
+	margin-right: 5%;
+	display: none;
+	overflow: auto;
+}
+.mid40 {
+	width: 20%;
+	margin-left: 5%;
+	margin-right: 5%;
+	display: inline-block;
+/*	float: left;*/
+	overflow: auto;
+}
+.rpproperties {
+	clear: both;
+	border: 1px solid black;
+	float: left;
+	width: 80.1%;
+	overflow: auto;
+	margin-left: 15px;
+}
+.floatright {
+	/*float: right;*/
+}
+.floatleft {
+	/*float: left;*/
+}
+.iblock {
+	display: inline-block;
+}
+
+.nowrap {
+	white-space: nowrap;
+}
+
+.trueinline {
+	display: inline;
+}
+.labelspbold {
+	font-weight: bold;
+	/*float: left;*/
+	margin-left: 10px;
+	margin-right: 5px;
+}
+.warning {
+	font-weight: light;
+	font-style: italic;
+}
+.unselected {
+	background-color: white;
+}
+.unselected:hover {
+	color: blue;
+	cursor: pointer;
+}
+.marked {
+	background-color: lightblue;
+}
+.marked:hover {
+	color: blue;
+	cursor: pointer;
+}
+.block {
+	display: block;
+}
+.indent1div {
+	margin-left: 10px;
+	margin-right: 5px;
+}
+.indent2div {
+	margin-left: 20px;
+	margin-right: 5px;
+}
+.indent3div {
+	margin-left: 30px;
+	margin-right: 5px;
+}
+.wrappingtable {
+	table-layout: fixed;
+}
+.wrappingtd {
+	word-wrap: break-word;
+}
+.leftalign {
+	float: left;
+}
+.rightalign {
+	float: right;
+}
+.clearalign {
+	clear: both;
+}
+.smaller {
+	font-size: 0.8em;
+}
+
+.langok {
+	color: green;
+}
+.langnotok {
+	color: red;
+}
+.centertd {
+	text-align: center;
+}
+tr.spacer td {
+	background-color: #f6eab8 !important;
+	padding: 0 !important;
+	line-height: 0.25em;
+}
+h2.header-edit{
+  float: right;
+}
+
+h2.header-edit a{
+  border-bottom: none;
+}
+/* tooltipping */
+.hovertip {
+  /*  position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; */ /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.hovertip .hovertiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #115;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.hovertip:hover .hovertiptext {
+    visibility: visible;
+    transition-delay: 1.2s;
+    
+}
