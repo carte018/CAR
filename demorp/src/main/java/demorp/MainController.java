@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class MainController {
 
 	@RequestMapping(value="/demo/{appname}",method=RequestMethod.GET)
-	public ModelAndView handleDashboardGet(HttpServletRequest req,  @PathParam("appname") String appname) {
+	public ModelAndView handleDashboardGet(HttpServletRequest req,  @PathVariable("appname") String appname) {
 		//
 		// Simple process of selecting a VM based on URI and then stuffing what we received
 		// into it.  The bulk of interesting processing actually happens in the Velocity 
