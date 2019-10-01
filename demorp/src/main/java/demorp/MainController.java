@@ -2,6 +2,7 @@ package demorp;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
@@ -30,12 +31,16 @@ public class MainController {
 		
 		if (appname.equalsIgnoreCase("contentrus")) {
 			retval = new ModelAndView("contentrus");
+			retval.addObject("sitename","Content-R-Us");
 		} else if (appname.equalsIgnoreCase("randsrus")) {
 			retval = new ModelAndView("randsrus");
+			retval.addObject("sitename","Research-R-Us");
 		} else if (appname.equalsIgnoreCase("scholars")) {
 			retval = new ModelAndView("scholars");
+			retval.addObject("sitename","Scholarly Garage");
 		} else if (appname.equalsIgnoreCase("payroll")) {
 			retval = new ModelAndView("payroll");
+			retval.addObject("sitename","Peanuts:  Your Payroll Site");
 		}
 		
 		// And stuff the attributes we received into the context
@@ -55,6 +60,11 @@ public class MainController {
 		
 		if (map.get("eduPersonOrgDN") != null) {
 			retval.addObject("odn","true");
+		}
+		
+		// Special case faculty affiliation
+		if (map.get("eduPersonScopedAffiliation") != null && Arrays.asList(map.get("eduPersonScopedAffiliation")).contains("faculty@amber.org")) {
+			retval.addObject("isfaculty","true");
 		}
 		
 		//  And hand off to the Velocity template

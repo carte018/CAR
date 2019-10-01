@@ -115,13 +115,27 @@
         <ApplicationOverride id="admin" entityID="https://admin.example.org/shibboleth"/>
         -->
         
-        <ApplicationOverride id="pattern" entityID="https://pattern.amber.org/shibboleth"/>
-        <ApplicationOverride id="rebma" entityID="https://pattern.rebma.org/shibboleth"/>
-        <ApplicationOverride id="logrus" entityID="https://logrus.coc.org/shibboleth"/>
-        <ApplicationOverride id="contentrus" entityID="https://content-r-us.com/shibboleth"/>
-        <ApplicationOverride id="randsrus" entityID="https://research-r-us.com/shibboleth" />
-        <ApplicationOverride id="scholars" entityID="https://scholars.amber.org/shibboleth" />
-        <ApplicationOverride id="payroll" entityID="https://payroll.amber.org/shibboleth" />
+        <ApplicationOverride id="pattern" entityID="https://pattern.amber.org/shibboleth">
+        	<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/pattern/Shibboleth.sso" />
+        </ApplicationOverride>
+        <ApplicationOverride id="rebma" entityID="https://pattern.rebma.org/shibboleth">
+        	<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/rebma/Shibboleth.sso" />
+        </ApplicationOverride>
+        <ApplicationOverride id="logrus" entityID="https://logrus.coc.org/shibboleth">
+        		<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/logrus/Shibboleth.sso" />
+        </ApplicationOverride>
+        <ApplicationOverride id="contentrus" entityID="https://content-r-us.com/shibboleth">
+        		<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/contentrus/Shibboleth.sso" />
+        </ApplicationOverride>
+        <ApplicationOverride id="randsrus" entityID="https://research-r-us.com/shibboleth">
+        		<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/researchrus/Shibboleth.sso" />
+        </ApplicationOverride>
+        <ApplicationOverride id="scholars" entityID="https://scholars.amber.org/shibboleth">
+        		<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/scholars/Shibboleth.sso" />
+        </ApplicationOverride>
+        <ApplicationOverride id="payroll" entityID="https://payroll.amber.org/shibboleth">
+        		<Sessions lifetime="28800" timeout="3600" checkAddress="false" handlerURL="/payroll/Shibboleth.sso" />
+        </ApplicationOverride>
     </ApplicationDefaults>
     
     <!-- Policies that determine how to process and authenticate runtime messages. -->

@@ -22,9 +22,9 @@
 
 <div id="left">
 	<div class="content-section">
-		#if($odn)
+		#if($map.get("eduPersonPrincipalName" && $map.get("eduPersonUniqueId") && $map.get("amberTitle"))
 		<h2>$sitename</h2>
-		<b>You appear to be visiting from $eduPersonOrgDN Here's what we know about you:</b>
+		<b>You appear to be a $map.get("amberTitle") -- welcome!  Here's what we know about you:</b>
 		<ul>
 			#foreach($n in $anames)
 				#if($map.get($n).getClass().isArray())
@@ -35,8 +35,14 @@
 					<li>$n == $map.get($n)</li>
 				#end
 			#end
+			#if($map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employers")
+				<b>I see you have one or more direct reports (you're an employer).  Our condolences.</b>
+			#end
+			#if($map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employees")
+				<b>You appear to be an employee.  Your monthly peanut allotment will be displayed.</b>
+			#end
 		#else
-			<b>You appear to have no home organization!  We cannot support you unless you are with one of our customer sites -- perhaps you need to consent to releasing more information to us at login?</b>
+			<b>Are you new around here?  Maybe you're lost?  Or maybe you didn't tell us enough about yourself...</b>
 		#end
 	</div>
 </div>

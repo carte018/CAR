@@ -35,6 +35,20 @@
 					<li>$n == $map.get($n)</li>
 				#end
 			#end
+			<br><br>
+			#if(! $map.get("eduPersonScopedAffiliation"))
+				<b>What?  No Affiliation?  We spell our site 'Research'!</b>
+			#else
+				#if(! $map.get("eduPersonScopedAffiliation").contains("faculty"))
+					#if($map.get("eduPersonScopedAffiliation").contains("student"))
+						<b>You would receive access to student-oriented content on our site</b>
+					#else
+						<b>No student content for you!</b>
+					#end
+				#else
+					<b>Faculty, like yourself, receive full access to our site</b>
+				#end
+			#end
 		#else
 			<b>You appear to have no home organization!  We cannot support you unless you are with one of our customer sites -- perhaps you need to consent to releasing more information to us at login?</b>
 		#end

@@ -29,6 +29,36 @@
             "valuelist": [
                 ".*"
             ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "eduPersonScopedAffiliation",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To establish your research relationship with your organization (required)"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "eduPersonScopedAffiliation",
+            "valuelist": [
+                ".*"
+            ]
         }
     ],
     "rhidentifier": {

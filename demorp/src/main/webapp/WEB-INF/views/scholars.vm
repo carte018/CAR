@@ -22,9 +22,9 @@
 
 <div id="left">
 	<div class="content-section">
-		#if($odn)
+		#if($isfaculty)
 		<h2>$sitename</h2>
-		<b>You appear to be visiting from $eduPersonOrgDN Here's what we know about you:</b>
+		<b>You appear to be a faculty member -- you're gonna like it here.  Here's what we know about you:</b>
 		<ul>
 			#foreach($n in $anames)
 				#if($map.get($n).getClass().isArray())
@@ -35,8 +35,20 @@
 					<li>$n == $map.get($n)</li>
 				#end
 			#end
+			<br>
+			#foreach($a in $map.get("eduPersonScopedAffiliation"))
+				#if($a.startsWith("student")
+					<b>You appear to be a student, too -- how nice!  We'll add some student material for you!</b>
+				#end
+				#if($a.startsWith("staff")
+					<b>Faculty administration is an underappreciated discipline.  We'll add some staff content for you!</b>
+				#end
+				#if($a.startsWith("alum")
+					<b>Couldn't get enough of us, so you stayed (or you came back) after getting your PhD?  Excellent!</b>
+				#end
+			#end
 		#else
-			<b>You appear to have no home organization!  We cannot support you unless you are with one of our customer sites -- perhaps you need to consent to releasing more information to us at login?</b>
+			<b>You don't appear to be a faculty member.  Get a real job, why don't you?  And cut that hair!</b>
 		#end
 	</div>
 </div>
