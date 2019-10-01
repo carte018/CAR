@@ -46,14 +46,29 @@ public class MainController {
 		
 		// And stuff the attributes we received into the context
 		
-		Enumeration<String> names = req.getAttributeNames();
 		ArrayList<String> anames = new ArrayList<String>();
+		anames.add("amberTitle");
+		anames.add("cn");
+		anames.add("departmentCode");
+		anames.add("displayName");
+		anames.add("eduPersonOrcid");
+		anames.add("eduPersonOrgDN");
+		anames.add("eduPersonOrgUnitDN");
+		anames.add("eduPersonPrimaryAffiliation");
+		anames.add("eduPersonPrincipalName");
+		anames.add("eduPersonScopedAffiliation");
+		anames.add("eduPersonTargetedID");
+		anames.add("eduPersonUniqueId");
+		anames.add("isMemberOf");
+		anames.add("mail");
+		anames.add("sn");
+		
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		
-		while (names.hasMoreElements()) {
-			String n = names.nextElement();
-			map.put(n,req.getAttribute(n));
-			anames.add(n);
+		for (String n : anames) {
+			if (req.getAttribute(n) != null) {
+				map.put(n,req.getAttribute(n));
+			}
 		}
 		
 		retval.addObject("map",map);
