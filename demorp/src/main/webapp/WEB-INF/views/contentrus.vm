@@ -27,13 +27,17 @@
 		<b>You appear to be visiting from $eduPersonOrgDN Here's what we know about you:</b>
 		<ul>
 			#foreach($n in $anames)
+			  #if($map.get($n))
 				#if($map.get($n).getClass().isArray())
 					#foreach($v in $map.get($n))
 						<li>$n == $v</li>
 					#end
 				#else
+				  #if ($map.get($n))
 					<li>$n == $map.get($n)</li>
+				  #end
 				#end
+			  #end
 			#end
 		#else
 			<b>You appear to have no home organization!  We cannot support you unless you are with one of our customer sites -- perhaps you need to consent to releasing more information to us at login?</b>

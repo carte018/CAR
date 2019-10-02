@@ -27,6 +27,7 @@
 		<b>You appear to be visiting from $eduPersonOrgDN Here's what we know about you:</b>
 		<ul>
 			#foreach($n in $anames)
+			  #if($map.get($n))
 				#if($map.get($n).getClass().isArray())
 					#foreach($v in $map.get($n))
 						<li>$n == $v</li>
@@ -34,6 +35,7 @@
 				#else
 					<li>$n == $map.get($n)</li>
 				#end
+			  #end
 			#end
 			<br><br>
 			#if(! $map.get("eduPersonScopedAffiliation"))

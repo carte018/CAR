@@ -27,6 +27,7 @@
 		<b>You appear to be a faculty member -- you're gonna like it here.  Here's what we know about you:</b>
 		<ul>
 			#foreach($n in $anames)
+			  #if($map.get($n))
 				#if($map.get($n).getClass().isArray())
 					#foreach($v in $map.get($n))
 						<li>$n == $v</li>
@@ -34,8 +35,10 @@
 				#else
 					<li>$n == $map.get($n)</li>
 				#end
+			  #end
 			#end
 			<br>
+			#if($map.get("eduPersonScopedAffiliation")
 			#foreach($a in $map.get("eduPersonScopedAffiliation"))
 				#if($a.startsWith("student")
 					<b>You appear to be a student, too -- how nice!  We'll add some student material for you!</b>
@@ -46,6 +49,7 @@
 				#if($a.startsWith("alum")
 					<b>Couldn't get enough of us, so you stayed (or you came back) after getting your PhD?  Excellent!</b>
 				#end
+			#end
 			#end
 		#else
 			<b>You don't appear to be a faculty member.  Get a real job, why don't you?  And cut that hair!</b>

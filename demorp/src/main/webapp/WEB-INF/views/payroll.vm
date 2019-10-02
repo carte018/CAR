@@ -22,23 +22,26 @@
 
 <div id="left">
 	<div class="content-section">
-		#if($map.get("eduPersonPrincipalName" && $map.get("eduPersonUniqueId") && $map.get("amberTitle"))
+		#if($map.get("eduPersonPrincipalName") && $map.get("eduPersonUniqueId") && $map.get("amberTitle"))
 		<h2>$sitename</h2>
 		<b>You appear to be a $map.get("amberTitle") -- welcome!  Here's what we know about you:</b>
 		<ul>
 			#foreach($n in $anames)
+			  #if($map.get($n))
 				#if($map.get($n).getClass().isArray())
 					#foreach($v in $map.get($n))
 						<li>$n == $v</li>
 					#end
+				 #end
 				#else
 					<li>$n == $map.get($n)</li>
 				#end
+			  #end
 			#end
-			#if($map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employers")
+			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employers")
 				<b>I see you have one or more direct reports (you're an employer).  Our condolences.</b>
 			#end
-			#if($map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employees")
+			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employees")
 				<b>You appear to be an employee.  Your monthly peanut allotment will be displayed.</b>
 			#end
 		#else

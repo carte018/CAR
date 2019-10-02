@@ -33,16 +33,22 @@ public class MainController {
 		if (appname.equalsIgnoreCase("contentrus")) {
 			retval = new ModelAndView("contentrus");
 			retval.addObject("sitename","Content-R-Us");
+			retval.addObject("top_heading","Content-R-Us");
 		} else if (appname.equalsIgnoreCase("randsrus")) {
 			retval = new ModelAndView("randsrus");
 			retval.addObject("sitename","Research-R-Us");
+			retval.addObject("top_heading","Research-R-Us");
 		} else if (appname.equalsIgnoreCase("scholars")) {
 			retval = new ModelAndView("scholars");
 			retval.addObject("sitename","Scholarly Garage");
+			retval.addObject("top_heading","Scholarly Garage");
 		} else if (appname.equalsIgnoreCase("payroll")) {
 			retval = new ModelAndView("payroll");
 			retval.addObject("sitename","Peanuts:  Your Payroll Site");
+			retval.addObject("top_heading","Peanuts");
 		}
+		
+		retval.addObject("top_logo_url","/Pattern_in_Rebma.png");
 		
 		// And stuff the attributes we received into the context
 		
