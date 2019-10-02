@@ -32,7 +32,6 @@
 					#foreach($v in $map.get($n))
 						<li>$n == $v</li>
 					#end
-				 #end
 				#else
 					<li>$n == $map.get($n)</li>
 				#end
@@ -41,7 +40,7 @@
 			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employers"))
 				<b>I see you have one or more direct reports (you're an employer).  Our condolences.</b>
 			#end
-			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employees")
+			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employees"))
 				<b>You appear to be an employee.  Your monthly peanut allotment will be displayed.</b>
 			#end
 		#else
