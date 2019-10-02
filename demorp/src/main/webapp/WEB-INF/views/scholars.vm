@@ -38,7 +38,7 @@
 			  #end
 			#end
 			<br>
-			#if($map.get("eduPersonScopedAffiliation")
+			#if($map.get("eduPersonScopedAffiliation"))
 			#foreach($a in $map.get("eduPersonScopedAffiliation"))
 				#if($a.startsWith("student")
 					<b>You appear to be a student, too -- how nice!  We'll add some student material for you!</b>

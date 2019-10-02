@@ -53,7 +53,15 @@ public class MainController {
 			retval.addObject("logouturl","/payroll/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:9443/idp/profile/Logout");
 		}
 		
-		retval.addObject("top_logo_url","/Pattern_in_Rebma.png");
+		retval.addObject("top_logo_url","/Pattern_In_Rebma.png");
+		
+		if (req.getAttribute("displayName") != null) {
+			retval.addObject("authuser",req.getAttribute("displayName"));
+		} else {
+			retval.addObject("authuser",req.getRemoteUser());
+		}
+		
+		retval.addObject("sign_out","sign out " + retval.getModel().get("authuser"));
 		
 		// And stuff the attributes we received into the context
 		

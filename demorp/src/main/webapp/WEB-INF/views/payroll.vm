@@ -38,7 +38,7 @@
 				#end
 			  #end
 			#end
-			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employers")
+			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employers"))
 				<b>I see you have one or more direct reports (you're an employer).  Our condolences.</b>
 			#end
 			#if($map.get("isMemberOf") && $map.get("isMemberOf").asList().contains("urn:mace:amber.org:groups:payroll:employees")
