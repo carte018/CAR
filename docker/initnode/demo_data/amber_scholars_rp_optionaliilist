@@ -27,7 +27,7 @@
     		},
     		"sourceitemname": "eduPersonScopedAffiliation",
     		"valuelist": [
-    			"[staff|student|alum|affiliate|emeritus]@.*"
+    			"staff@.*|student@.*|alum@.*|affiliate@.*|emeritus@.*"
     		]
     	},
         {

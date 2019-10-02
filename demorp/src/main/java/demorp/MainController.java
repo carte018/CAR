@@ -98,7 +98,7 @@ public class MainController {
 		}
 		
 		// Special case faculty affiliation
-		if (map.get("eduPersonScopedAffiliation") != null && Arrays.asList(map.get("eduPersonScopedAffiliation")).contains("faculty@amber.org")) {
+		if (map.get("eduPersonScopedAffiliation") != null && ((String) map.get("eduPersonScopedAffiliation")).contains("faculty")) {
 			retval.addObject("isfaculty","true");
 		}
 		
