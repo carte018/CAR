@@ -105,7 +105,7 @@ then
     inst_short="Amber"
   else
     echo "The CARMA likewise sometimes needs a short form of the institutional name to"
-    echo "use in building UI components.  Here at Duke University, we use simply "Duke", 
+    echo "use in building UI components.  Here at Duke University, we use simply \"Duke\"," 
     echo "but other institutions may prefer an acronym or a different sort of shortened name."
     echo "Enter the name to use for your institution in these cases.  [$inst_short]: "
     read is
