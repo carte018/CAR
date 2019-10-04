@@ -131,6 +131,7 @@ then
     then
       ilogo_url="$iu"
     fi 
+  fi
 fi
 echo
 echo
