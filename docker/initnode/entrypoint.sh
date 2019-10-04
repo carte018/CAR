@@ -210,6 +210,25 @@ sleep 2
 echo "Inserting CARMA META policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/carma_icm 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 sleep 2
+
+echo "Inserting Faculty R&S Org policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type:application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orgfaculty.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
+sleep 2
+echo "Inserting Faculty R&S ICM policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type:application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmfac.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+sleep 2
+
+echo "Inserting Grad R&S Org policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orggrad.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
+sleep 2
+echo "Inserting Grad R&S ICM policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmgrad.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+
+echo "Inserting Student R&S Org policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orgstudent.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
+sleep 2
+echo "Inserting Generic R&S ICM policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmgen.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 # 
 # Replace the entrypoint routine with one that only forces deployments
 # -- on restart, we must not overwrite registration information.

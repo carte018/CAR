@@ -1,0 +1,132 @@
+    {
+            "allOtherInfoReleaseStatement": null,
+            "arrayOfInfoReleaseStatement": [
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonOrgDN"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonPrincipalName"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "displayName"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Consent",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonScopedAffiliation"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ",*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "mail"
+                    }
+                }
+            ],
+            "description": "Faculty RandS Release Policy",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "entity-category",
+                    "RP-PropValue": "http://refeds.org/category/research-and-scholarship"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "eduPersonScopedAffiliation",
+                    "userPropValue": "faculty.*"
+                }
+            ]
+    }

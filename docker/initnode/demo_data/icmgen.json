@@ -1,0 +1,30 @@
+    {
+            "allOtherOrgInfoReleaseStatement": {
+                "allOtherInfoId": {
+                    "allOtherInfoType": "allOtherInfoType",
+                    "allOtherInfoValue": "allOtherInfoValue"
+                },
+                "icmDirectiveAllOtherValues": {
+                    "allOtherValuesConst": "allOtherValues",
+                    "icmReleaseDirective": "COPSU"
+                }
+            },
+            "arrayOfInfoReleaseStatement": [],
+            "description": "Generic RandS policy (consent for all)",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "entity-category",
+                    "RP-PropValue": "http://refeds.org/category/research-and-scholarship"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "eduPersonUniqueId",
+                    "userPropValue": "^.*$"
+                }
+            ]
+    }

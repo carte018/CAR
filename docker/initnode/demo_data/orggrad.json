@@ -1,0 +1,154 @@
+    {
+            "allOtherInfoReleaseStatement": null,
+            "arrayOfInfoReleaseStatement": [
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonOrgDN"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonPrincipalName"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "deny",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "none",
+                        "releaseDirective": "deny"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "displayName"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonScopedAffiliation"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "cn"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Legitimate Interest",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Legitimate Interest",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "mail"
+                    }
+                }
+            ],
+            "description": "Grad Student RandS Policy",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "entity-category",
+                    "RP-PropValue": "http://refeds.org/category/research-and-scholarship"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "isMemberOf",
+                    "userPropValue": "urn:mace:amber.org:groups:gradstudents"
+                }
+            ]
+    }

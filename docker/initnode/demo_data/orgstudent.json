@@ -1,0 +1,141 @@
+    {
+            "allOtherInfoReleaseStatement": null,
+            "arrayOfInfoReleaseStatement": [
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Consent",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonPrincipalName"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Consent",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "displayName"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "deny",
+                            "valueObjectList": [
+                                {
+                                    "value": "^.*:courses.*$"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Consent",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "isMemberOf"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "deny",
+                            "valueObjectList": [
+                                {
+                                    "value": "^student@.*$"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Consent",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonScopedAffiliation"
+                    }
+                },
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": "^.*@amber.org$"
+                                }
+                            ]
+                        },
+                        {
+                            "policyBasis": "Consent",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": "^.*@mail.amber.org$"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Consent",
+                        "releaseDirective": "deny"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "mail"
+                    }
+                }
+            ],
+            "description": "Student R&S policy (generic)",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "entity-category",
+                    "RP-PropValue": "http://refeds.org/category/research-and-scholarship"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "eduPersonUniqueId",
+                    "userPropValue": "^.*$"
+                }
+            ]
+    }

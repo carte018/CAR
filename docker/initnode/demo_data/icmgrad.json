@@ -1,0 +1,30 @@
+    {
+            "allOtherOrgInfoReleaseStatement": {
+                "allOtherInfoId": {
+                    "allOtherInfoType": "allOtherInfoType",
+                    "allOtherInfoValue": "allOtherInfoValue"
+                },
+                "icmDirectiveAllOtherValues": {
+                    "allOtherValuesConst": "allOtherValues",
+                    "icmReleaseDirective": "ARPSI"
+                }
+            },
+            "arrayOfInfoReleaseStatement": [],
+            "description": "Grad students get no consent for RandS",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "entity-category",
+                    "RP-PropValue": "http://refeds.org/category/research-and-scholarship"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "isMemberOf",
+                    "userPropValue": "urn:mace:amber.org:groups:gradstudents"
+                }
+            ]
+    }
