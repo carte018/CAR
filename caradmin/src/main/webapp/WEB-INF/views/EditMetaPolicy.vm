@@ -182,7 +182,7 @@
 						<th class="wrappingtd">$item_type_heading</th>
 						<th class="wrappingtd">$item_id_heading</th>
 						<th class="wrappingtd">$directive_heading</th>
-						<th class="wrappingtd">$valus_heading</th>
+						<th class="wrappingtd">$values_heading</th>
 						<th class="wrappingtd" style="width: 10%;"></th>
 					</tr>
 				</thead>

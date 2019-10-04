@@ -79,7 +79,7 @@ VOLUME ["/etc/car"]
 # RUN ln -s /var/lib/tomcat7/* /usr/share/tomcat7/
 
 # ADD tomcat7.init /etc/init.d/tomcat7
-# rather, tomcat8 as /etc/efault/tomcat8
+# rather, tomcat8 as /etc/default/tomcat8
 ADD tomcat8 /etc/default/tomcat8
 
 ADD entrypoint.sh /entrypoint.sh

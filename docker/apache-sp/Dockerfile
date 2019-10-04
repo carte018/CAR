@@ -110,6 +110,8 @@ ADD ContentRUs.png /var/www/ContentRUs.png
 ADD PeanutsLogo.png /var/www/PeanutsLogo.png
 ADD RandSRUs.png /var/www/RandSRUs.png
 ADD ScholarlyGarage.png /var/www/ScholarlyGarage.png
+ADD amber-logo.png /var/www/amber-logo.png
+ADD index.html /var/www/index.html
 
 VOLUME ["/interlock"]
 VOLUME ["/var/log/httpd"]

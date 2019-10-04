@@ -1,0 +1,20 @@
+<head>
+<title>LDAP Management</title>
+</head>
+<body>
+<h1>Personalized Accounts Created</h1>
+Congratulations!  You've started your personal tour of the CAR Sliced Bread environment!  
+<br>
+Your new user identities in the Sliced Bread environment are ready to use.  Your accounts are:
+<ul>
+<li>$facuser (password: $facuser) - a faculty member in the Amber Public Policy department</li>
+<li>$staffuser (password: $staffuser) - an IT professional in the Amber OIT organization (we call it the Shadows)</li>
+<li>$graduser (password: $graduser) - a Graduate Student studying Public Policy</li>
+<li>$ugraduser (password: $ugraduser) - an Undergraduate Student studying Mechanical Engineering</li>
+</ul>
+Please make a note of them, as you'll need those usernames and passwords in order to log in to the demo sites.
+<br>
+You may now continue your journey by visiting the various links you'll find on the Sliced Bread <a href="/">Landing Page</a>.
+<br>
+Be Seeing You!
+</body>

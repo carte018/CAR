@@ -176,6 +176,7 @@ services:
       - node1
       - node2
       - node3
+      - ldapnode
     depends_on:
       - node1
       - node2

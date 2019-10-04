@@ -1,0 +1,30 @@
+<head>
+<title>LDAP Management</title>
+</head>
+<body>
+<h1>Create Demo Accounts</h1>
+<hr>
+<p>You can use the form below to establish a set of test accounts to use in following through
+the Sliced Bread demo script.  We'll collect some personal information (feel free to use 
+fictitious info if you'd like, but realize that this information will be used to create your 
+test accounts, so it needs to be unqiue and also something you're comfortable with using and
+remembering).</p>
+<p>This tool will create four test users for you, with userids and matching passwords ending 
+in:
+<ul>
+<li>-faculty -- this will be a user emulating a faculty member</li>  
+<li>-staff -- this will be a user emulating a staff member</li>
+<li>-ugrad -- this will be a user emulating an undergraduate</li>
+<li>-grad -- this will be a user emulating a graduate student</li>
+</ul>
+</p>
+<br>
+<br>
+<form name="ldapform" method="POST" action ="#">
+<label>First Initial:</label><input type="text" name="initial" placeholder="Your first initial"/>
+<label>Middle Initial:</label><input type="text" name="middle" placeholder="Your middle initial"/>
+<label>Last Name:</label><input type="text" name="lastname" placeholder="Your last name"/>
+
+<input type="submit">
+</form>
+</body>

@@ -1,0 +1,42 @@
+version: '3'
+services:
+  buildnode:
+    build: .
+    hostname: buildnode
+    environment:
+      - INST_SHORT=%inst_short%
+      - INST_LONG=%inst_long%
+      - ILOGO_URL=%ilogo_url%
+    volumes:
+      - $thisdir/../../arpsi:/var/build/arpsi
+      - $thisdir/../../copsu:/var/build/copsu
+      - $thisdir/../../car:/var/build/car
+      - $thisdir/../../caradmin:/var/build/caradmin
+      - $thisdir/../../icm:/var/build/icm
+      - $thisdir/../../informed:/var/build/informed
+      - $thisdir/../../regloader:/var/build/regloader
+      - $thisdir/../../demorp:/var/build/demorp
+      - arpsi-webapps:/var/lib/arpsi/webapps
+      - copsu-webapps:/var/lib/copsu/webapps
+      - car-webapps:/var/lib/car/webapps
+      - caradmin-webapps:/var/lib/caradmin/webapps
+      - icm-webapps:/var/lib/icm/webapps
+      - informed-webapps:/var/lib/informed/webapps
+      - regloader-webapps:/var/lib/regloader/webapps
+      - ldap-container:/var/lib/ldap/container
+      - ldap-data:/var/lib/ldap/data
+      - ldap-config:/var/lib/ldap/config
+volumes:
+  arpsi-webapps: {}
+  copsu-webapps: {}
+  car-webapps: {}
+  caradmin-webapps: {}
+  icm-webapps: {}
+  informed-webapps: {}
+  regloader-webapps: {}
+  demorp-webapps: {}
+  ldap-container: {}
+  ldap-data: {}
+  ldap-config: {}
+  
+

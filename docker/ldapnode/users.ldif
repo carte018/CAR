@@ -258,3 +258,117 @@ userPassword: sysadmin
 mail: sysadmin@mail.amber.org
 eduPersonOrgUnitDN: cn=oit,dc=amber,dc=org
 localDepartmentCode: 10010939
+
+dn: uid=kjk-staff,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+objectclass: amberite
+uid: kjk-staff 
+cn: KJK as Corwin of Amber
+givenname: Corwin
+sn: Amber
+eduPersonPrincipalName: kjk-staff@amber.org
+amberTitle: Prince
+eduPersonAffiliation: faculty
+eduPersonAffiliation: alum
+eduPersonOrgDN: dc=amber,dc=org
+mail: corwin@mail.amber.org
+isMemberOf: urn:mace:amber.org:groups:princes_in_amber
+isMemberOf: urn:mace:amber.org:groups:sons_of_oberon
+isMemberOf: urn:mace:amber.org:groups:pattern_walkers
+isMemberOf: urn:mace:amber.org:groups:pattern_makers
+isMemberOf: urn:mace:amber.org:groups:regicides
+isMemberOf: urn:mace:amber.org:groups:exiled
+eduPersonPrimaryAffiliation: faculty
+displayName: Prince Corwin of Amber
+localUniqueId: 9999101
+userPassword: kjk-staff
+eduPersonOrcid: 9999-9999-9999-0002
+eduPersonOrgUnitDN: cn=castle,dc=amber,dc=org
+localDepartmentCode: 10010011
+
+dn: uid=kjk-ugrad,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: kjk-ugrad
+cn: Ann Elk
+givenName: Ann
+sn: Elk
+displayName: Annie E.
+eduPersonPrincipalName: kjk-ugrad@amber.org
+eduPersonAffiliation: student
+eduPersonPrimaryAffiliation: student
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:undergraduates
+isMemberOf: urn:mace:amber.org:groups:pattern_students
+isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
+isMemberOf: urn:mace:amber.org:groups:research:firearms_project
+localUniqueId: 9990135
+userPassword: kjk-ugrad
+mail: ugrad@mail.amber.org
+eduPersonOrgUnitDN: cn=mechanical_engineering,dc=amber,dc=org
+localDepartmentCode: 12171555
+
+dn: uid=kjk-grad,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: kjk-grad
+cn: Richard Luxury Yacht
+givenName: Richard
+sn: Yacht
+displayName: Throatwarbler Mangrove
+eduPersonPrincipalName: kjk-grad@amber.org
+eduPersonAffiliation: student
+eduPersonAffiliation: staff
+eduPersonPrimaryAFfiliation: student
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:gradstudents
+isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
+isMemberOf: urn:mace:amber.org:groups:research:avalon_project
+isMemberOf: urn:mace:amber.org:groups:instructors
+isMemberOf: urn:mace:amber.org:groups:payroll:employees
+localUniqueId: 9990251
+userPassword: kjk-grad
+mail: grad@mail.amber.org
+eduPersonOrcid: 9999-9999-9999-1973
+eduPersonOrgUnitDN: cn=graduate_school,dc=amber,dc=org
+localDepartmentCode: 12180000
+
+
+dn: uid=kjk-faculty,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: faculty
+cn: John Keynes
+givenName: John
+sn: Keynes
+displayName: Professor Keynes
+eduPersonPrincipalName: kjk-faculty@amber.org
+eduPersonAffiliation: faculty
+eduPersonPrimaryAffiliation: faculty
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:research:covert_project
+isMemberOf: urn:mace:amber.org:groups:research:public_project
+isMemberOf: urn:mace:amber.org:groups:faculty:tenured
+isMemberOf: urn:mace:amber.org:groups:instructors
+isMemberOf: urn:mace:amber.org:groups:payroll:employers
+isMemberOf: urn:mace:amber.org:groups:payroll:employees
+localUniqueId: 9991011
+userPassword: kjk-faculty
+mail: iamfaculty@avalonmail.com
+eduPersonOrcid: 9999-9999-9999-2518
+eduPersonOrgUnitDN: cn=public_policy,dc=amber,dc=org
+localDepartmentCode: 12130100
+
