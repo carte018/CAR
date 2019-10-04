@@ -287,7 +287,7 @@ echo "carma_password=$carma_password" >> config.prev
 #
 # We rely on docker-compose "up" (without the -d flag) terminating with the container
 
-(cd buildnode;APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` bake-config; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` docker-compose up)
+(cd buildnode;APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` ./bake-config; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` docker-compose up)
 
 #
 # After the relevant configs are baked (or not, if we're just running to start up after a 
