@@ -17,7 +17,7 @@
         ]
     },
     "iconurl": "https://%apache_fqdn%/PeanutsLogo.png",
-    "privacyurl": null,
+    "privacyurl": "https://docs.google.com/document/d/195_W9556rNrgy2QARzqdsq-72wdzTe56qFuIuVJHDE0",
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
         "rhtype": "entityId"

@@ -16,8 +16,8 @@
             }
         ]
     },
-    "iconurl": null,
-    "privacyurl": null,
+    "iconurl": "https://idms-carsb-dev-01.oit.duke.edu/ContentRUs.png",
+    "privacyurl": "https://docs.google.com/document/d/1cy9Ahll7ueMydW2sqMfLMf9b0LyDB3cbyQwMGwHINg4", 
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
         "rhtype": "entityId"
