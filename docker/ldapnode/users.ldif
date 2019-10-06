@@ -350,7 +350,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 objectclass: eduPerson
-uid: faculty
+uid: kjk-faculty
 cn: John Keynes
 givenName: John
 sn: Keynes
