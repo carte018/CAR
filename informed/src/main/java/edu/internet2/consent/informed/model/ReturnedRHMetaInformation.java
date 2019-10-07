@@ -36,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ReturnedRHMetaInformation {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long rhmetainfoid;
 	

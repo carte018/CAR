@@ -793,7 +793,7 @@ USE `informed`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ActivityStreamEntry` (
-  `aseid` bigint(20) NOT NULL,
+  `aseid` bigint(20) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) DEFAULT NULL,
   `timestamp` bigint(20) DEFAULT NULL,
   `user` varchar(255) DEFAULT NULL,
@@ -809,7 +809,7 @@ CREATE TABLE `ActivityStreamEntry` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `AdminRoleMapping` (
-  `adminRoleId` bigint(20) NOT NULL,
+  `adminRoleId` bigint(20) NOT NULL AUTO_INCREMENT,
   `subject` varchar(255) DEFAULT NULL,
   `roleName` varchar(255) DEFAULT NULL,
   `target` varchar(255) DEFAULT NULL,
@@ -827,7 +827,7 @@ CREATE TABLE `AdminRoleMapping` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `InfoItemIdentifier` (
-  `iiiid` bigint(20) NOT NULL,
+  `iiiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `iiid` varchar(255) DEFAULT NULL,
   `iitype` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`iiiid`)
@@ -841,7 +841,7 @@ CREATE TABLE `InfoItemIdentifier` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `InfoItemValueList` (
-  `ivlid` bigint(20) NOT NULL,
+  `ivlid` bigint(20) NOT NULL AUTO_INCREMENT,
   `sourceitemname` varchar(255) DEFAULT NULL,
   `infoitemidentifier_iiiid` bigint(20) DEFAULT NULL,
   `reason_istringid` bigint(20) DEFAULT NULL,
@@ -874,7 +874,7 @@ CREATE TABLE `InfoItemValueList_valuelist` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `InternationalizedString` (
-  `istringid` bigint(20) NOT NULL,
+  `istringid` bigint(20) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`istringid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -902,7 +902,7 @@ CREATE TABLE `InternationalizedString_LocaleString` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `LocaleString` (
-  `localstringid` bigint(20) NOT NULL,
+  `localstringid` bigint(20) NOT NULL AUTO_INCREMENT,
   `locale` varchar(255) DEFAULT NULL,
   `value` varchar(4000) DEFAULT NULL,
   PRIMARY KEY (`localstringid`)
@@ -916,7 +916,7 @@ CREATE TABLE `LocaleString` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `RPIdentifier` (
-  `rpiid` bigint(20) NOT NULL,
+  `rpiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rpid` varchar(255) DEFAULT NULL,
   `rptype` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`rpiid`)
@@ -930,7 +930,7 @@ CREATE TABLE `RPIdentifier` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedInfoItemMetaInformation` (
-  `riimiid` bigint(20) NOT NULL,
+  `riimiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `iimode` int(11) DEFAULT NULL,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
@@ -965,7 +965,7 @@ CREATE TABLE `ReturnedInfoItemMetaInformation` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedInfoTypeList` (
-  `typelistID` bigint(20) NOT NULL,
+  `typelistID` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhtype` varchar(255) DEFAULT NULL,
   `rhvalue` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`typelistID`)
@@ -993,7 +993,7 @@ CREATE TABLE `ReturnedInfoTypeList_infotypes` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRHInfoItemList` (
-  `infoitemlistid` bigint(20) NOT NULL,
+  `infoitemlistid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`infoitemlistid`)
@@ -1023,7 +1023,7 @@ CREATE TABLE `ReturnedRHInfoItemList_InfoItemIdentifier` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRHMetaInformation` (
-  `rhmetainfoid` bigint(20) NOT NULL,
+  `rhmetainfoid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
   `description_istringid` bigint(20) DEFAULT NULL,
@@ -1046,7 +1046,7 @@ CREATE TABLE `ReturnedRHMetaInformation` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRHRPList` (
-  `rplistid` bigint(20) NOT NULL,
+  `rplistid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`rplistid`)
@@ -1076,7 +1076,7 @@ CREATE TABLE `ReturnedRHRPList_RPIdentifier` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRPMetaInformation` (
-  `rpmiid` bigint(20) NOT NULL,
+  `rpmiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `iconurl` varchar(40000) DEFAULT NULL,
   `privacyurl` varchar(4000) DEFAULT NULL,
   `rhid` varchar(255) DEFAULT NULL,
@@ -1122,7 +1122,7 @@ CREATE TABLE `ReturnedRPMetaInformation_ReturnedRPProperty` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRPOptionalInfoItemList` (
-  `infoitemlistid` bigint(20) NOT NULL,
+  `infoitemlistid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
   `rpidentifier_rpiid` bigint(20) DEFAULT NULL,
@@ -1158,7 +1158,7 @@ CREATE TABLE `ReturnedRPOptionalInfoItemList_InfoItemValueList` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRPProperty` (
-  `rppropertyid` bigint(20) NOT NULL,
+  `rppropertyid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rppropertyname` varchar(255) DEFAULT NULL,
   `rppropertyvalue` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`rppropertyid`),
@@ -1173,7 +1173,7 @@ CREATE TABLE `ReturnedRPProperty` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRPRequiredInfoItemList` (
-  `infoitemlistid` bigint(20) NOT NULL,
+  `infoitemlistid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
   `rpidentifier_rpiid` bigint(20) DEFAULT NULL,
@@ -1209,7 +1209,7 @@ CREATE TABLE `ReturnedRPRequiredInfoItemList_InfoItemValueList` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedUserRPMetaInformation` (
-  `rumiid` bigint(20) NOT NULL,
+  `rumiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `lastinteracted` bigint(20) NOT NULL,
   `showagain` bit(1) NOT NULL,
   `userid` varchar(255) DEFAULT NULL,
@@ -1228,7 +1228,7 @@ CREATE TABLE `ReturnedUserRPMetaInformation` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedValueMetaInformation` (
-  `vmiid` bigint(20) NOT NULL,
+  `vmiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `displayname` varchar(255) DEFAULT NULL,
   `infoitemname` varchar(255) DEFAULT NULL,
   `infoitemvalue` varchar(255) DEFAULT NULL,
@@ -1250,7 +1250,7 @@ CREATE TABLE `ReturnedValueMetaInformation` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SupportedIIType` (
-  `sitiid` bigint(20) NOT NULL,
+  `sitiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhtype` varchar(255) DEFAULT NULL,
   `rhid` varchar(255) DEFAULT NULL,
   `iitype` varchar(255) DEFAULT NULL,
@@ -1266,7 +1266,7 @@ CREATE TABLE `SupportedIIType` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SupportedLanguage` (
-  `sliid` bigint(20) NOT NULL,
+  `sliid` bigint(20) NOT NULL AUTO_INCREMENT,
   `lang` varchar(255) DEFAULT NULL,
   `displayname` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`sliid`)
@@ -1280,7 +1280,7 @@ CREATE TABLE `SupportedLanguage` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SupportedRHType` (
-  `srhiid` bigint(20) NOT NULL,
+  `srhiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhtype` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`srhiid`)
@@ -1294,7 +1294,7 @@ CREATE TABLE `SupportedRHType` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SupportedRPType` (
-  `srpiid` bigint(20) NOT NULL,
+  `srpiid` bigint(20) NOT NULL AUTO_INCREMENT,
   `rhtype` varchar(255) DEFAULT NULL,
   `rhid` varchar(255) DEFAULT NULL,
   `rptype` varchar(255) DEFAULT NULL,
@@ -1310,7 +1310,7 @@ CREATE TABLE `SupportedRPType` (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `SupportedUserType` (
-  `sutid` bigint(20) NOT NULL,
+  `sutid` bigint(20) NOT NULL AUTO_INCREMENT,
   `utype` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`sutid`)

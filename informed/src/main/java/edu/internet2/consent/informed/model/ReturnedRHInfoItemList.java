@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ReturnedRHInfoItemList {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long infoitemlistid;
 	

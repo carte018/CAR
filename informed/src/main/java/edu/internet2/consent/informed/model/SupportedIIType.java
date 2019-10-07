@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Entity
 public class SupportedIIType {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private long sitiid;
 	

@@ -31,7 +31,7 @@ public class ActivityStreamEntry {
 
 	@Id
 	@JsonIgnore
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long aseid;
 	
 	@JsonProperty("type")

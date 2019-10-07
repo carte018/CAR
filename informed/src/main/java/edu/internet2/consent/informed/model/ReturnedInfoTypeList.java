@@ -34,7 +34,7 @@ public class ReturnedInfoTypeList {
 
 	// mandatory ID for index
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long typelistID;
 	

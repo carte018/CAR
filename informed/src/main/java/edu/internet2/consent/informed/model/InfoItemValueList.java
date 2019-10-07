@@ -38,7 +38,7 @@ public class InfoItemValueList {
 	
 	@JsonIgnore
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long ivlid;
 
 	@JsonProperty("infoitemidentifier")

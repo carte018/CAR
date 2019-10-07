@@ -38,7 +38,7 @@ public class ReturnedInfoItemMetaInformation {
 	
 	@Id
 	@JsonIgnore
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long riimiid;
 	
 	@JsonProperty("rhidentifier")

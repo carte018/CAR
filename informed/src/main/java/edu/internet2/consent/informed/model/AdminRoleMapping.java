@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AdminRoleMapping {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long adminRoleId;
 	
 	@JsonProperty("subject")

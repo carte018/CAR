@@ -37,7 +37,7 @@ public class InternationalizedString {
 
 	@Id
 	@JsonIgnore
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long istringid;
 	
 	public Long getIstringid() {

@@ -33,7 +33,7 @@ public class InfoItemIdentifier {
 
 	@Id
 	@JsonIgnore
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long iiiid;
 	
 	@JsonProperty("iitype")

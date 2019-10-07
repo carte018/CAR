@@ -37,7 +37,7 @@ public class ReturnedUserRPMetaInformation {
 
 	@Id
 	@JsonIgnore
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long rumiid;
 	
 	@Embedded
