@@ -41,7 +41,7 @@ ADD sslsigner.crt /etc/ssl/certs/sslsigner.crt
 # Timezone - default to UTC for logging, etc.  If you prefer to use a different zone, 
 # replace in the cp below -- eg., "UTC -> America/New_York" and uncomment the "RUN cp" command
 
-RUN DEBIAN_FRONTEND=noninteracdtive apt-get -y install tzdata
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
 # RUN cp /usr/share/zoneinfo/UTC /etc/localtime
 
 #
@@ -111,6 +111,7 @@ ADD PeanutsLogo.png /var/www/PeanutsLogo.png
 ADD RandSRUs.png /var/www/RandSRUs.png
 ADD ScholarlyGarage.png /var/www/ScholarlyGarage.png
 ADD amber-logo.png /var/www/amber-logo.png
+ADD amber-logo.png /var/www/amber_logo.png
 ADD index.html /var/www/index.html
 
 VOLUME ["/interlock"]
