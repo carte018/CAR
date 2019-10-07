@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -v
 
 #
 # Assume /var/build has all the components as subdirectories 
