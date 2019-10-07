@@ -139,7 +139,7 @@ echo "We will now rebuild the templated configuration files."
 echo
 echo
 
-cat docker-compose.yml.tmpl | sed 's/%inst_long%/'"$inst_long"'/g' | sed 's/%inst_short%/'"$inst_short"'/g' | sed 's^%ilogo_url%^'$ilogo_url'^g' > docker_compose.yml
+cat docker-compose.yml.tmpl | sed 's/%inst_long%/'"$inst_long"'/g' | sed 's/%inst_short%/'"$inst_short"'/g' | sed 's^%ilogo_url%^'$ilogo_url'^g' > docker-compose.yml
 
 echo
 echo "Registering SSL certificate trusts"

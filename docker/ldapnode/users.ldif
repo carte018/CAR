@@ -329,7 +329,7 @@ displayName: Throatwarbler Mangrove
 eduPersonPrincipalName: kjk-grad@amber.org
 eduPersonAffiliation: student
 eduPersonAffiliation: staff
-eduPersonPrimaryAFfiliation: student
+eduPersonPrimaryAffiliation: student
 eduPersonOrgDn: dc=amber,dc=org
 isMemberOf: urn:mace:amber.org:groups:gradstudents
 isMemberOf: urn:mace:amber.org:groups:research:unicorn_project
