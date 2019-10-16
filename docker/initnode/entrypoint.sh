@@ -7,11 +7,11 @@
 # as soon as the node's container is started, which may (frequently) happen before
 # the other components have successfully deployed their servlets.  
 #
-# Here, we simply wait 30 seconds to give the other components time to 
+# Here, we simply wait 60 seconds to give the other components time to 
 # deploy their servlets before starting to populate registration information.
 #
 
-sleep 30
+sleep 60
 
 
 #
