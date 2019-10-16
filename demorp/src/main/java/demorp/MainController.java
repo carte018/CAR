@@ -464,6 +464,11 @@ public class MainController {
 			retval.addObject("isfaculty","true");
 		}
 		
+		// Special case researcher case based on research groups
+		if (map.get("isMemberOf") != null && ((String) map.get("isMemberOf")).contains(":research:")) {
+			retval.addObject("isresearch","true");
+		}
+		
 		
 		//  And hand off to the Velocity template
 		

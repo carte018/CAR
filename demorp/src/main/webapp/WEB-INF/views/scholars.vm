@@ -22,9 +22,13 @@
 
 <div id="left">
 	<div class="content-section">
-		#if($isfaculty)
+		#if($isfaculty || $isresearch)
 		<h2>$sitename</h2>
+		#if($isfaculty)
 		<b>You appear to be a faculty member -- you're gonna like it here.  Here's what we know about you:</b>
+		#else
+		<b>You must be working with of our PIs -- welcome, scholar!  Here's what we know about you:</b>
+		#end
 		<ul>
 			#foreach($n in $anames)
 			  #if($map.get($n))
@@ -39,7 +43,7 @@
 			#end
 			<br>
 			#if($map.get("eduPersonScopedAffiliation"))
-			#foreach($a in $map.get("eduPersonScopedAffiliation"))
+			#foreach($a in $map.get("eduPersonScopedAffiliation").split(";"))
 				#if($a.startsWith("student"))
 					<b>You appear to be a student, too -- how nice!  We'll add some student material for you!</b>
 				#end
@@ -51,8 +55,18 @@
 				#end
 			#end
 			#end
+			#if($map.get("isMemberOf"))
+				#foreach($g in $map.get("isMemberOf").split(";"))
+					#if($g.contains("_project"))
+						<div class="content-section">
+							<h3>$g.replaceAll("^.*:","").replaceAll("_project$","")</h3>
+							We'll add custom content related to your $g.replaceAll("^.*:","") here.
+						</div>
+					#end
+				#end
+			#end
 		#else
-			<b>You don't appear to be a faculty member.  Get a real job, why don't you?  And cut that hair!</b>
+			<b>You don't appear to be a faculty member or involved in research.  Get a real job, why don't you?  And cut that hair!</b>
 		#end
 	</div>
 </div>

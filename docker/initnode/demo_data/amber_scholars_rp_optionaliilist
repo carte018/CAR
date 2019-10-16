@@ -62,6 +62,36 @@
         },
         {
         	"infoitemidentifier": {
+        		"iiid": "isMemberOf",
+        		"iitype": "attribute"
+        	},
+        	"reason": {
+        		"locales": [
+        			{
+        				"locale": "en"
+        				"value": "To enable relevant project-specific content"
+        			},
+        			{
+        				"locale": "es",
+        				"value": null
+        			},
+        			{
+        				"locale": "de",
+        				"value": null
+        			},
+        			{
+        				"locale": "fr",
+        				"value": null
+        			}
+        		]
+        	},
+        	"sourceitemname": "isMemberOf",
+        	"valuelist": [
+        		"urn:mace:amber.org:groups:research.*"
+        	]
+        },
+        {
+        	"infoitemidentifier": {
         		"iiid": "eduPersonPrincipalName",
         		"iitype": "attribute"
         	},
