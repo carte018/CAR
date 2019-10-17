@@ -1,35 +1,6 @@
 {
     "requiredlist": [
-        {
-            "infoitemidentifier": {
-                "iiid": "eduPersonScopedAffiliation",
-                "iitype": "attribute"
-            },
-            "reason": {
-                "locales": [
-                    {
-                        "locale": "en",
-                        "value": "To verify your faculty status"
-                    },
-                    {
-                        "locale": "es",
-                        "value": null
-                    },
-                    {
-                        "locale": "de",
-                        "value": null
-                    },
-                    {
-                        "locale": "fr",
-                        "value": null
-                    }
-                ]
-            },
-            "sourceitemname": "eduPersonScopedAffiliation",
-            "valuelist": [
-                "faculty@.*"
-            ]
-        }
+        
     ],
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",

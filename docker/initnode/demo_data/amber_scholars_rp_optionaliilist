@@ -27,7 +27,7 @@
     		},
     		"sourceitemname": "eduPersonScopedAffiliation",
     		"valuelist": [
-    			"staff@.*|student@.*|alum@.*|affiliate@.*|emeritus@.*"
+    			"staff@.*|student@.*|alum@.*|affiliate@.*|emeritus@.*|faculty@.*"
     		]
     	},
         {
@@ -68,7 +68,7 @@
         	"reason": {
         		"locales": [
         			{
-        				"locale": "en"
+        				"locale": "en",
         				"value": "To enable relevant project-specific content"
         			},
         			{
