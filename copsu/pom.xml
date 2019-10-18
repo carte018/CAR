@@ -267,6 +267,11 @@
     	<artifactId>hibernate-c3p0</artifactId>
     	<version>5.4.0.Final</version>
 	</dependency>
+	<dependency>
+    	<groupId>org.ehcache</groupId>
+    	<artifactId>ehcache</artifactId>
+    	<version>3.7.0</version>
+	</dependency>
   </dependencies>
 
   <properties>

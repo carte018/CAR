@@ -64,7 +64,7 @@ public class KrbAuth implements edu.internet2.consent.arpsi.auth.BasicAuthHandle
 		if (manager == null) {
 			manager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
 			try {
-				ExpiryPolicy<Object,Object> ep = ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(900,ChronoUnit.SECONDS));
+				ExpiryPolicy<Object,Object> ep = ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(86400,ChronoUnit.SECONDS));
 
 				cache = manager.createCache("creds", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,ResourcePoolsBuilder.heap(1000)).withExpiry(ep));
 			} catch (Exception e) {

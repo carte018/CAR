@@ -25,8 +25,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 import javax.security.auth.kerberos.KerberosPrincipal;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+
+
+import org.apache.commons.codec.digest.DigestUtils;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.expiry.ExpiryPolicy;
+
 public class KrbAuth implements BasicAuthHandler {
 
+	private static CacheManager manager = null;
+	private static Cache<String,String> cache = null;
+	
 	@Override
 	public boolean validateCredential(String user, String credential,CarConfig config) {
 
@@ -44,6 +60,22 @@ public class KrbAuth implements BasicAuthHandler {
 	}
 	private boolean checkAuthentication(String username, String password, String realm, String service) {
 		
+		if (manager == null) {
+			manager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+			try {
+				ExpiryPolicy<Object,Object> ep = ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(86400,ChronoUnit.SECONDS));
+
+				cache = manager.createCache("creds", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,ResourcePoolsBuilder.heap(1000)).withExpiry(ep));
+			} catch (Exception e) {
+				CarUtility.locError("ERR1134", LogCriticality.error,"Cache creation failed: " + e.getMessage());
+			}
+		}
+		
+	//	String key = DigestUtils.sha256Hex(username + ":" + password + ":" + realm + ":" + service);
+		String key = DigestUtils.sha256Hex(username + ":" + password + ":" + realm);  // service isn't relevant at this point
+		if (cache != null && cache.containsKey(key)) {
+			return (cache.get(key).equals("true"));
+		}
 		Krb5LoginModule mod = new Krb5LoginModule();
 		
 		HashMap<String,Object> shared = new HashMap<String,Object>();
@@ -61,6 +93,7 @@ public class KrbAuth implements BasicAuthHandler {
 		
 		try {
 			if (mod.login()) {
+				cache.put(key, "true");
 				return true;
 			} else {
 				return false;
