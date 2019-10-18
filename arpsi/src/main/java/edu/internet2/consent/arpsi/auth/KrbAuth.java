@@ -19,14 +19,31 @@ package edu.internet2.consent.arpsi.auth;
 import edu.internet2.consent.arpsi.cfg.ArpsiConfig;
 import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
+
 import com.sun.security.auth.module.Krb5LoginModule;
 import javax.security.auth.Subject;
+
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import javax.security.auth.kerberos.KerberosPrincipal;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.expiry.ExpiryPolicy;
+
 
 public class KrbAuth implements edu.internet2.consent.arpsi.auth.BasicAuthHandler {
+	
+	private static CacheManager manager = null;
+	private static Cache<String,String> cache = null;
+	
 	@Override
 	public boolean validateCredential(String user, String credential,ArpsiConfig config) {
 
@@ -43,6 +60,25 @@ public class KrbAuth implements edu.internet2.consent.arpsi.auth.BasicAuthHandle
 		}
 	}
 	private boolean checkAuthentication(String username, String password, String realm, String service) {
+		
+		if (manager == null) {
+			manager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+			try {
+				ExpiryPolicy<Object,Object> ep = ExpiryPolicyBuilder.timeToLiveExpiration(Duration.of(900,ChronoUnit.SECONDS));
+
+				cache = manager.createCache("creds", CacheConfigurationBuilder.newCacheConfigurationBuilder(String.class,String.class,ResourcePoolsBuilder.heap(1000)).withExpiry(ep));
+			} catch (Exception e) {
+				ArpsiUtility.locError(500,"ERR0065",LogCriticality.error,e.getMessage());
+			}
+		}
+		
+	//	String key = DigestUtils.sha256Hex(username + ":" + password + ":" + realm + ":" + service);
+		String key = DigestUtils.sha256Hex(username + ":" + password + ":" + realm);  // service isn't relevant at this point
+		if (cache != null && cache.containsKey(key)) {
+			return (cache.get(key).equals("true"));
+		}
+		
+		
 		Krb5LoginModule mod = new Krb5LoginModule();
 		
 		HashMap<String,Object> shared = new HashMap<String,Object>();
@@ -60,6 +96,7 @@ public class KrbAuth implements edu.internet2.consent.arpsi.auth.BasicAuthHandle
 		
 		try {
 			if (mod.login()) {
+				cache.put(key, "true");
 				return true;
 			} else {
 				return false;
