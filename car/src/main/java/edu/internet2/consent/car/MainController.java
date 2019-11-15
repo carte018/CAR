@@ -870,7 +870,8 @@ public class MainController {
 			
 			// And add the rp properties from the metainfo we got
 			ArrayList<RelyingPartyProperty> arpp = new ArrayList<RelyingPartyProperty>();
-			for (ReturnedRPProperty rrpp : rpmetainformation.getRpproperties()) {
+			// Concurrency protection
+			for (ReturnedRPProperty rrpp : new ArrayList<ReturnedRPProperty>(rpmetainformation.getRpproperties())) {
 				RelyingPartyProperty rpp = new RelyingPartyProperty();
 				rpp.setRpPropName(rrpp.getRppropertyname());
 				rpp.setRpPropValue(rrpp.getRppropertyvalue());
@@ -1082,7 +1083,8 @@ public class MainController {
 				
 				// And add the rp properties from the metainfo we got
 				ArrayList<RelyingPartyProperty> arpp2 = new ArrayList<RelyingPartyProperty>();
-				for (ReturnedRPProperty rrpp : rpmetainformation.getRpproperties()) {
+				//Concurrency protection
+				for (ReturnedRPProperty rrpp : new ArrayList<ReturnedRPProperty>(rpmetainformation.getRpproperties())) {
 					RelyingPartyProperty rpp = new RelyingPartyProperty();
 					rpp.setRpPropName(rrpp.getRppropertyname());
 					rpp.setRpPropValue(rrpp.getRppropertyvalue());

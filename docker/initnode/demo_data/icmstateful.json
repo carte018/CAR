@@ -1,0 +1,43 @@
+{
+            "allOtherOrgInfoReleaseStatement": null,
+            "arrayOfInfoReleaseStatement": [
+                {
+                    "arrayOfIcmDirectiveOnValues": [
+                        {
+                            "icmReleaseDirective": "ARPSI",
+                            "releaseDirective": "ARPSI",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "icmDirectiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "icmReleaseDirective": "ARPSI"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonUniqueId"
+                    }
+                }
+            ],
+            "description": "Unique ID mandatory for private RPs",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "privateRP",
+                    "RP-PropValue": "true"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "eduPersonUniqueId",
+                    "userPropValue": "^.*$"
+                }
+            ]
+}

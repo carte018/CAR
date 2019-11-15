@@ -16,6 +16,7 @@
  */
 package edu.internet2.consent.copsu.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -43,6 +44,7 @@ public class CopsuUtility {
 	private static final Log LOG=LogFactory.getLog(CopsuUtility.class);
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
+	private static boolean registered = false;
 	
 	public static boolean isAuthorized(HttpServletRequest request, HttpHeaders headers, String entity, CopsuConfig config) {
 		// For the moment, COPSU authorization is always granted
@@ -195,10 +197,18 @@ public class CopsuUtility {
 
 	
 	public static Session getHibernateSession() {
-		try {
-			Class.forName(new Configuration().configure().getProperty("hibernate.connection.driver.class"));
-		} catch (Exception e) {
-			return null;
+		if (! registered) {
+			try {
+				File cfile = new File("/etc/car/copsu/hibernate.cfg.xml");
+				if (cfile.exists()) {
+					Class.forName(new Configuration().configure(cfile).getProperty("hibernate.connection.driver.class"));
+				} else {
+					Class.forName(new Configuration().configure().getProperty("hibernate.connections.driver.class"));
+				}
+				registered = true;
+			} catch (Exception e) {
+				return null;
+			}
 		}
 		SessionFactory sf = FactoryFactory.getSessionFactory();
 		Session sess = sf.openSession();

@@ -38,6 +38,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -72,6 +73,7 @@ import edu.internet2.consent.icm.model.ResolvedAnyDecision;
 import edu.internet2.consent.icm.model.UserProperty;
 import edu.internet2.consent.icm.model.UserReleaseDirective;
 import edu.internet2.consent.icm.model.ValueObject;
+import edu.internet2.consent.icm.util.IcmHttpClientFactory;
 import edu.internet2.consent.icm.util.IcmUtility;
 
 
@@ -203,7 +205,16 @@ public class IcmInfoReleaseDecisionController {
 
 		sb.append("/consent/v1/copsu/user-info-release-decision");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		String authzHeader = IcmUtility.buildAuthorizationHeader(config);
@@ -264,8 +275,9 @@ public class IcmInfoReleaseDecisionController {
 			// If we except along the way, fail
 			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 		// And repeat the process getting the ARPSI response
 		StringBuilder sb2 = new StringBuilder();
@@ -273,7 +285,16 @@ public class IcmInfoReleaseDecisionController {
 		String arpsiPort = config.getProperty("arpsi.server.port", true);
 		
 		sb2.append("/consent/v1/arpsi/org-info-release-decision");
-		HttpClient httpClient2 = HttpClientBuilder.create().build();
+		//HttpClient httpClient2 = HttpClientBuilder.create().build();
+		HttpClient httpClient2 = null;
+		try {
+			httpClient2 = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response2 = null;
 		String authzHeader2 = IcmUtility.buildAuthorizationHeader(config);
 		
@@ -294,8 +315,9 @@ public class IcmInfoReleaseDecisionController {
 			// If we except along the way, fail
 			return IcmUtility.locError(500, "ERR0060",LogCriticality.error);
 		} finally {
+			EntityUtils.consumeQuietly(response2.getEntity());
 			HttpClientUtils.closeQuietly(response2);
-			HttpClientUtils.closeQuietly(httpClient2);
+			//HttpClientUtils.closeQuietly(httpClient2);
 		}
 		
 		// At this point, we should have a copsu decision in copsuDecision and an arpsi decision in arpsiDecision
@@ -381,10 +403,18 @@ public class IcmInfoReleaseDecisionController {
 		matchQuery.setParameter("rhtype",  inputRequest.getResourceHolderId().getRHType());
 		matchQuery.setParameter("username", inputRequest.getUserId().getUserValue());
 		matchQuery.setParameter("relyingpartyname", inputRequest.getRelyingPartyId().getRPvalue());
-		List<String> upnames = new ArrayList<String>();
-		List<String> upvalues = new ArrayList<String>();
-		List<String> rpnames = new ArrayList<String>();
-		List<String> rpvalues = new ArrayList<String>();
+		
+		int upct = 1;
+		int rpct = 1;
+		if (inputRequest.getArrayOfUserProperty() != null)
+				upct = (((int) (inputRequest.getArrayOfUserProperty().size() / 10) + 1) * 10);
+		if (inputRequest.getArrayOfRelyingPartyProperty() != null) 
+				rpct = (((int) (inputRequest.getArrayOfRelyingPartyProperty().size() / 10) + 1) * 10);
+		
+		List<String> upnames = new ArrayList<String>(upct);
+		List<String> upvalues = new ArrayList<String>(upct);
+		List<String> rpnames = new ArrayList<String>(rpct);
+		List<String> rpvalues = new ArrayList<String>(rpct);
 		
 		for (UserProperty uprop : inputRequest.getArrayOfUserProperty()) {
 			upnames.add(uprop.getUserPropName());

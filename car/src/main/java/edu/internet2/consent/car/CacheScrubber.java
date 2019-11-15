@@ -110,7 +110,15 @@ public class CacheScrubber extends TimerTask {
 		Iterator<Entry<String,CachedRPMetaInformation>> iter = rpmic.getCache().iterator();
 		long c = 0;
 		long n = 0;
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		while (iter.hasNext()) {
 			c += 1;
 			Entry<String,CachedRPMetaInformation> e = iter.next();

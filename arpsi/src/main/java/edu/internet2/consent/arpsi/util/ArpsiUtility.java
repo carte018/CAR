@@ -16,6 +16,7 @@
  */
 package edu.internet2.consent.arpsi.util;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
@@ -41,6 +42,7 @@ public class ArpsiUtility {
 	private static final Log LOG=LogFactory.getLog(ArpsiUtility.class);
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
+	private static boolean registered = false;
 	
 	// Determine if the header-authenticated user is authorized to use the ARPSI service at 
 	// all.
@@ -190,10 +192,17 @@ public class ArpsiUtility {
 
 	
 	public static Session getHibernateSession() {
-		try {
-			Class.forName(new Configuration().configure().getProperty("hibernate.connection.driver.class"));
-		} catch (Exception e) {
-			return null;
+		if (!registered) {
+			try {
+				File cfile = new File("/etc/car/arpsi/hibernate.cfg.xml");
+				if (cfile.exists())
+					Class.forName(new Configuration().configure(cfile).getProperty("hibernate.connection.driver.class"));
+				else
+					Class.forName(new Configuration().configure().getProperty("hibernate.connection.driver.class"));
+				registered = true;
+			} catch (Exception e) {
+				return null;
+			}
 		}
 		SessionFactory sf = FactoryFactory.getSessionFactory();
 		Session sess = sf.openSession();

@@ -56,6 +56,50 @@ public class IcmAllOtherInfoReleaseStatement {
 	public void setDirectiveAllOtherValues(IcmDirectiveAllOtherValues icmDirectiveAllOtherValues) {
 		this.icmDirectiveAllOtherValues = icmDirectiveAllOtherValues;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((allOtherInfoId == null) ? 0 : allOtherInfoId.hashCode());
+		result = prime * result + ((icmDirectiveAllOtherValues == null) ? 0 : icmDirectiveAllOtherValues.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof IcmAllOtherInfoReleaseStatement)) {
+			return false;
+		}
+		IcmAllOtherInfoReleaseStatement other = (IcmAllOtherInfoReleaseStatement) obj;
+		if (allOtherInfoId == null) {
+			if (other.allOtherInfoId != null) {
+				return false;
+			}
+		} else if (!allOtherInfoId.equals(other.allOtherInfoId)) {
+			return false;
+		}
+		if (icmDirectiveAllOtherValues == null) {
+			if (other.icmDirectiveAllOtherValues != null) {
+				return false;
+			}
+		} else if (!icmDirectiveAllOtherValues.equals(other.icmDirectiveAllOtherValues)) {
+			return false;
+		}
+		return true;
+	}
 	
 	
 }

@@ -90,6 +90,66 @@ public class ActivityStreamEntry {
 		ObjectMapper om = new ObjectMapper();
 		return om.writeValueAsString(this);
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (aseid ^ (aseid >>> 32));
+		result = prime * result + ((operation == null) ? 0 : operation.hashCode());
+		result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof ActivityStreamEntry)) {
+			return false;
+		}
+		ActivityStreamEntry other = (ActivityStreamEntry) obj;
+		if (aseid != other.aseid) {
+			return false;
+		}
+		if (operation == null) {
+			if (other.operation != null) {
+				return false;
+			}
+		} else if (!operation.equals(other.operation)) {
+			return false;
+		}
+		if (timestamp != other.timestamp) {
+			return false;
+		}
+		if (type == null) {
+			if (other.type != null) {
+				return false;
+			}
+		} else if (!type.equals(other.type)) {
+			return false;
+		}
+		if (user == null) {
+			if (other.user != null) {
+				return false;
+			}
+		} else if (!user.equals(other.user)) {
+			return false;
+		}
+		return true;
+	}
 	
 	
 }

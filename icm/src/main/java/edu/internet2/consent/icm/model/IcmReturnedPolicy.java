@@ -89,4 +89,58 @@ public class IcmReturnedPolicy {
 		String retval = mapper.writeValueAsString(this);
 		return retval;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ReturnedPolicyIdentifier == null) ? 0 : ReturnedPolicyIdentifier.hashCode());
+		result = prime * result + ((policy == null) ? 0 : policy.hashCode());
+		result = prime * result + ((policyMetaData == null) ? 0 : policyMetaData.hashCode());
+		result = prime * result + (int) (priority ^ (priority >>> 32));
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof IcmReturnedPolicy)) {
+			return false;
+		}
+		IcmReturnedPolicy other = (IcmReturnedPolicy) obj;
+		if (ReturnedPolicyIdentifier == null) {
+			if (other.ReturnedPolicyIdentifier != null) {
+				return false;
+			}
+		} else if (!ReturnedPolicyIdentifier.equals(other.ReturnedPolicyIdentifier)) {
+			return false;
+		}
+		if (policy == null) {
+			if (other.policy != null) {
+				return false;
+			}
+		} else if (!policy.equals(other.policy)) {
+			return false;
+		}
+		if (policyMetaData == null) {
+			if (other.policyMetaData != null) {
+				return false;
+			}
+		} else if (!policyMetaData.equals(other.policyMetaData)) {
+			return false;
+		}
+		if (priority != other.priority) {
+			return false;
+		}
+		return true;
+	}
 }

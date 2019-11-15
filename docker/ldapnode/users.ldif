@@ -228,6 +228,9 @@ isMemberOf: urn:mace:amber.org:groups:faculty:tenured
 isMemberOf: urn:mace:amber.org:groups:instructors
 isMemberOf: urn:mace:amber.org:groups:payroll:employers
 isMemberOf: urn:mace:amber.org:groups:payroll:employees
+isMemberOf: urn:mace:amber.org:groups:departments:physics
+isMemberOf: urn:mace:amber.org:groups:departments:psychology
+isMemberOf: urn:mace:amber.org:groups:departments:math
 localUniqueId: 1011
 userPassword: faculty
 mail: iamfaculty@avalonmail.com

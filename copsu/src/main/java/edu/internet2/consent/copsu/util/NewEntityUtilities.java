@@ -178,7 +178,7 @@ public class NewEntityUtilities {
 		
 		// Make this idempotent (to facilitate calling without prior testing where appropriate)
 		//
-		Query<ReturnedPolicy> idempotentTest = sess.createQuery("from ReturnedPolicy where infoReleasePolicy.userId.userValue = :userValue and infoReleasePolicy.relyingPartyId.RPvalue = :rpValue",ReturnedPolicy.class);
+		Query<ReturnedPolicy> idempotentTest = sess.createQuery("from ReturnedPolicy where infoReleasePolicy.userId.userValue = :userValue and infoReleasePolicy.relyingPartyId.RPvalue = :rpValue and state = 0",ReturnedPolicy.class);
 		idempotentTest.setParameter("userValue", user.getUserValue());
 		idempotentTest.setParameter("rpValue", "newRPTemplateValue");
 		List<ReturnedPolicy> idemResult = idempotentTest.list();

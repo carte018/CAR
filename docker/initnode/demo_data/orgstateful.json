@@ -1,0 +1,45 @@
+{
+            "allOtherInfoReleaseStatement": null,
+            "arrayOfInfoReleaseStatement": [
+                {
+                    "arrayOfDirectiveOnValues": [
+                        {
+                            "policyBasis": "Contract",
+                            "releaseDirective": "permit",
+                            "valueObjectList": [
+                                {
+                                    "value": ".*"
+                                }
+                            ]
+                        }
+                    ],
+                    "directiveAllOtherValues": {
+                        "allOtherValuesConst": "allOtherValues",
+                        "policyBasis": "Contract",
+                        "releaseDirective": "permit"
+                    },
+                    "infoId": {
+                        "info-type": "attribute",
+                        "info-value": "eduPersonUniqueId"
+                    }
+                }
+            ],
+            "description": "PrivateRPs get ePUID for stateful privacy",
+            "relyingPartyPropertyArray": [
+                {
+                    "RP-PropName": "entityId",
+                    "RP-PropValue": "https://scholars.amber.org/shibboleth"
+                }
+            ],
+            "resourceHolderId": {
+                "RH-type": "entityId",
+                "RH-value": "urn:mace:multiverse:amber"
+            },
+            "userPropertyArray": [
+                {
+                    "userPropName": "eduPersonUniqueId",
+                    "userPropValue": "^.*$"
+                }
+            ]
+ }
+    

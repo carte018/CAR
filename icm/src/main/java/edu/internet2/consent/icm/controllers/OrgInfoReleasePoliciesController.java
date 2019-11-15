@@ -37,9 +37,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import edu.internet2.consent.icm.cfg.IcmConfig;
 import edu.internet2.consent.icm.model.LogCriticality;
+import edu.internet2.consent.icm.util.IcmHttpClientFactory;
 import edu.internet2.consent.icm.util.IcmUtility;
 
 @Path("/org-info-release-policies")
@@ -103,7 +105,16 @@ public class OrgInfoReleasePoliciesController {
 		sb.append("/consent/v1/arpsi/org-info-release-policies/");
 		sb.append(policy_id);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -114,8 +125,9 @@ public class OrgInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0060", LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -135,7 +147,16 @@ public class OrgInfoReleasePoliciesController {
 		sb.append("/consent/v1/arpsi/org-info-release-policies/");
 		sb.append(policy_id);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -150,8 +171,9 @@ public class OrgInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0060",LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -172,7 +194,16 @@ public class OrgInfoReleasePoliciesController {
 		sb.append("/consent/v1/arpsi/org-info-release-policies/");
 		sb.append(policy_id);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -183,8 +214,9 @@ public class OrgInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500,"ERR0060",LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -213,7 +245,16 @@ public class OrgInfoReleasePoliciesController {
 			sb.append(request.getQueryString());
 		}
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -224,8 +265,9 @@ public class OrgInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500,"ERR0060",LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -248,7 +290,16 @@ public class OrgInfoReleasePoliciesController {
 
 		sb.append("/consent/v1/arpsi/org-info-release-policies");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -259,8 +310,9 @@ public class OrgInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0060",LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 }

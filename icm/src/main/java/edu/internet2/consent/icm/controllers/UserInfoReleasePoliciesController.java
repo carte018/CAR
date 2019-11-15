@@ -42,6 +42,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,6 +57,7 @@ import edu.internet2.consent.icm.model.UserInfoReleaseStatement;
 import edu.internet2.consent.icm.model.UserPolicyMetadata;
 import edu.internet2.consent.icm.model.UserReleaseDirective;
 import edu.internet2.consent.icm.model.UserReturnedPolicy;
+import edu.internet2.consent.icm.util.IcmHttpClientFactory;
 import edu.internet2.consent.icm.util.IcmUtility;
 import edu.internet2.consent.icm.model.LogCriticality;
 
@@ -335,7 +337,16 @@ public class UserInfoReleasePoliciesController {
 		sb.append("/consent/v1/copsu/user-info-release-policies/");
 		sb.append(policy_id);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -363,8 +374,9 @@ public class UserInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 		
@@ -384,7 +396,16 @@ public class UserInfoReleasePoliciesController {
 		sb.append("/consent/v1/copsu/user-info-release-policies/");
 		sb.append(policy_id);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -402,8 +423,9 @@ public class UserInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 				
@@ -428,7 +450,16 @@ public class UserInfoReleasePoliciesController {
 		
 		String rbody = null;
 		int status;
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		try {
 			response = IcmUtility.forwardRequest(httpClient,"GET",copsuHost,copsuPort,sb.toString(),request,null);
@@ -447,8 +478,9 @@ public class UserInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 
@@ -472,7 +504,16 @@ public class UserInfoReleasePoliciesController {
 			sb.append(request.getQueryString());
 		}
 		// Now we have the target:  send the request to the COPSU
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -497,8 +538,9 @@ public class UserInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -522,7 +564,16 @@ public class UserInfoReleasePoliciesController {
 		
 		sb.append("/consent/v1/copsu/user-info-release-policies");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -550,8 +601,9 @@ public class UserInfoReleasePoliciesController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 }

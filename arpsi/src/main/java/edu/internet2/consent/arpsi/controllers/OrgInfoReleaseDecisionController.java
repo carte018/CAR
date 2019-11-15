@@ -243,10 +243,18 @@ public class OrgInfoReleaseDecisionController {
 		matchQuery.setParameter("rhtype", inputRequest.getResourceHolderId().getRHType());
 		matchQuery.setParameter("username", inputRequest.getUserId().getUserValue(),StringType.INSTANCE);
 		matchQuery.setParameter("relyingpartyname", inputRequest.getRelyingPartyId().getRPvalue(),StringType.INSTANCE);
-		List<String> upnames = new ArrayList<String>();
-		List<String> upvalues = new ArrayList<String>();
-		List<String> rpnames = new ArrayList<String>();
-		List<String> rpvalues = new ArrayList<String>();
+		
+		int upct = 1;
+		int rpct = 1;
+		if (inputRequest.getArrayOfUserProperty() != null)
+			upct = (((int) (inputRequest.getArrayOfUserProperty().size() / 10) + 1) * 10);
+		if (inputRequest.getArrayOfRelyingPartyProperty() != null)
+			rpct = (((int) (inputRequest.getArrayOfRelyingPartyProperty().size() / 10) + 1) * 10);
+		
+		List<String> upnames = new ArrayList<String>(upct);
+		List<String> upvalues = new ArrayList<String>(upct);
+		List<String> rpnames = new ArrayList<String>(rpct);
+		List<String> rpvalues = new ArrayList<String>(rpct);
 		
 		
 		for (UserProperty uprop : inputRequest.getArrayOfUserProperty()) {

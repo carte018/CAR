@@ -118,6 +118,83 @@ public class OrgInfoReleasePolicy {
 	@JsonProperty("allOtherInfoReleaseStatement")
 	private AllOtherOrgInfoReleaseStatement allOtherOrgInfoReleaseStatement;
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((allOtherOrgInfoReleaseStatement == null) ? 0 : allOtherOrgInfoReleaseStatement.hashCode());
+		result = prime * result + ((arrayOfInfoReleaseStatement == null) ? 0 : arrayOfInfoReleaseStatement.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((relyingPartyPropertyArray == null) ? 0 : relyingPartyPropertyArray.hashCode());
+		result = prime * result + ((resourceHolderId == null) ? 0 : resourceHolderId.hashCode());
+		result = prime * result + ((userPropertyArray == null) ? 0 : userPropertyArray.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof OrgInfoReleasePolicy)) {
+			return false;
+		}
+		OrgInfoReleasePolicy other = (OrgInfoReleasePolicy) obj;
+		if (allOtherOrgInfoReleaseStatement == null) {
+			if (other.allOtherOrgInfoReleaseStatement != null) {
+				return false;
+			}
+		} else if (!allOtherOrgInfoReleaseStatement.equals(other.allOtherOrgInfoReleaseStatement)) {
+			return false;
+		}
+		if (arrayOfInfoReleaseStatement == null) {
+			if (other.arrayOfInfoReleaseStatement != null) {
+				return false;
+			}
+		} else if (!arrayOfInfoReleaseStatement.equals(other.arrayOfInfoReleaseStatement)) {
+			return false;
+		}
+		if (description == null) {
+			if (other.description != null) {
+				return false;
+			}
+		} else if (!description.equals(other.description)) {
+			return false;
+		}
+		if (relyingPartyPropertyArray == null) {
+			if (other.relyingPartyPropertyArray != null) {
+				return false;
+			}
+		} else if (!relyingPartyPropertyArray.equals(other.relyingPartyPropertyArray)) {
+			return false;
+		}
+		if (resourceHolderId == null) {
+			if (other.resourceHolderId != null) {
+				return false;
+			}
+		} else if (!resourceHolderId.equals(other.resourceHolderId)) {
+			return false;
+		}
+		if (userPropertyArray == null) {
+			if (other.userPropertyArray != null) {
+				return false;
+			}
+		} else if (!userPropertyArray.equals(other.userPropertyArray)) {
+			return false;
+		}
+		return true;
+	}
+
 	// no overrides here
 		
 }

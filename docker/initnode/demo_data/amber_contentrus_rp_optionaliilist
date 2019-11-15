@@ -59,6 +59,36 @@
             "valuelist": [
                 ".*"
             ]
+        },
+        {
+            "infoitemidentifier": {
+                "iiid": "isMemberOf",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To assess charges to your department correctly"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "isMemberOf",
+            "valuelist": [
+                "urn:mace:amber.org:groups:departments:.*"
+            ]
         }
     ],
     "rhidentifier": {

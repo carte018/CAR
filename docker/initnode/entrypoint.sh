@@ -229,6 +229,13 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 sleep 2
 echo "Inserting Generic R&S ICM policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmgen.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+
+echo "Inserting OrgStatefulPrivacy policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orgstateful.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
+sleep 2
+echo "Inserting IcmStateful policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmstateful.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+
 # 
 # Replace the entrypoint routine with one that only forces deployments
 # -- on restart, we must not overwrite registration information.

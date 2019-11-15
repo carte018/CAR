@@ -423,10 +423,19 @@ public class CarUtility {
 	}
 	
 	public static ReturnedValueMetaInformation getValueMetaInformation(String iiid, String iivalue, CarConfig config) {
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		ReturnedValueMetaInformation retval = getValueMetaInformation(iiid, iivalue, config, httpClient);
 		// Idempotent, so safe here
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling -- leave open
+		// HttpClientUtils.closeQuietly(httpClient);
 		return retval;
 	}
 	
@@ -488,8 +497,14 @@ public class CarUtility {
 		} catch (Exception e) {
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling -- leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 		
 	}
@@ -506,7 +521,15 @@ public class CarUtility {
 		sb.append("/");
 		sb.append(idEscape(rhid.getRhid()));
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
 		String rbody = null;
@@ -531,8 +554,14 @@ public class CarUtility {
 			CarUtility.locError("ERR1133", LogCriticality.error, rbody);
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling -- leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -544,7 +573,15 @@ public class CarUtility {
 	
 		sb.append("/consent/v1/informed/rhic/metainformation/");
 				
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String rbody = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
@@ -563,15 +600,30 @@ public class CarUtility {
 		} catch (Exception e) {
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling -- leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
 	public static ReturnedInfoItemMetaInformation getInfoItemMetaInformation(String rhid, String iivalue, CarConfig config) {
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		ReturnedInfoItemMetaInformation retval = getInfoItemMetaInformation(rhid, iivalue, config, httpClient);
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling -- leave open for reuse
+		//HttpClientUtils.closeQuietly(httpClient);
 		return retval;
 	}
 	
@@ -633,8 +685,14 @@ public class CarUtility {
 		} catch (Exception e) {
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	public static void setShowAgain(String utype,String uname,String rpid,boolean value,CarConfig config) {
@@ -668,7 +726,15 @@ public class CarUtility {
 		// Note for posterity
 		CarUtility.locError("ERR1135",LogCriticality.info, value?"true":"false");
 		// and perform the put
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String rbody = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
@@ -678,8 +744,14 @@ public class CarUtility {
 		} catch (Exception e) {
 			CarUtility.locError("ERR0081", LogCriticality.debug, "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 
@@ -696,7 +768,15 @@ public class CarUtility {
 		sb.append(uservalue);
 		
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
 		String rbody = null;
@@ -716,29 +796,62 @@ public class CarUtility {
 			locError("ERR1116",LogCriticality.error, e.getMessage());
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
 	public static ReturnedRPMetaInformation getRPMetaInformation(String iiid, String iivalue, CarConfig config) {
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		// HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		ReturnedRPMetaInformation retval = getRPMetaInformation(iiid, iivalue, config, httpClient);
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling - leave open for reuse
+		//HttpClientUtils.closeQuietly(httpClient);
 		return retval;
 	}
 	
 	public static ReturnedRPMetaInformation getRPMetaInformation(String rhid,String rptype, String rpid, CarConfig config) {
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		ReturnedRPMetaInformation retval = getRPMetaInformation(rhid,rptype,rpid,config,httpClient);
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling -- leave open for reuse
+		//HttpClientUtils.closeQuietly(httpClient);
 		return retval;
 	}
 	
 	public static ArrayList<ReturnedRPMetaInformation> getRPsForRH(String rhtype,String rhid,CarConfig config) {
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		ArrayList<ReturnedRPMetaInformation> retval = getRPsForRH(rhtype,rhid,config,httpClient);
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling - leave open for reuse
+		// HttpClientUtils.closeQuietly(httpClient);
 		return retval;
 	}
 	public static ArrayList<ReturnedRPMetaInformation> getRPsForRH(String rhtype,String rhid,CarConfig config,HttpClient httpClient) {
@@ -774,8 +887,14 @@ public class CarUtility {
 		} catch (Exception e) {
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -835,8 +954,14 @@ public class CarUtility {
 		} catch (Exception e) {
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -854,7 +979,8 @@ public class CarUtility {
 			int n = rand.nextInt(10);
 			if (System.currentTimeMillis() <= ci.getCacheTime() + (50+n) * 60 * 1000) {
 				CarUtility.locDebugErr("ERR0811","infoItemMetaData");
-				CarUtility.locError("ERR1134", LogCriticality.error,"Returning from cache: " + ci.getData() == null ? "null" : ci.getData().getRpidentifier().getRpid());
+				// DEBUG only
+				// CarUtility.locError("ERR1134", LogCriticality.error,"Returning from cache: " + ci.getData() == null ? "null" : ci.getData().getRpidentifier().getRpid());
 				return ci.getData();
 			}
 		}
@@ -901,8 +1027,14 @@ public class CarUtility {
 			throw new RuntimeException(e);
 			// return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -924,7 +1056,15 @@ public class CarUtility {
 		sb.append(rptype + "/");
 		sb.append(CarUtility.idEscape(rpid));
 				
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
 		String rbody = null;
@@ -942,8 +1082,14 @@ public class CarUtility {
 			CarUtility.locError("ERR0074", LogCriticality.error, e.getMessage());
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -964,7 +1110,15 @@ public class CarUtility {
 		sb.append("entityId/");
 		sb.append(CarUtility.idEscape(rpid));
 				
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String rbody = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
@@ -981,8 +1135,14 @@ public class CarUtility {
 			CarUtility.locError("ERR0074", LogCriticality.error, e.getMessage());
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -997,7 +1157,15 @@ public class CarUtility {
 		
 		sb.append("/consent/v1/icm/user-info-release-policies");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String rbody = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
@@ -1015,6 +1183,15 @@ public class CarUtility {
 		} catch (Exception e) {
 			// Error
 			return null;
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -1036,7 +1213,15 @@ public class CarUtility {
 		sb.append("/consent/v1/icm/user-info-release-policies/");
 		sb.append(baseId);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String rbody = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
@@ -1050,8 +1235,14 @@ public class CarUtility {
 		} catch (Exception e) {
 			CarUtility.locError("ERR0081", LogCriticality.debug,  "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 		return retval;
 	}
@@ -1069,7 +1260,15 @@ public class CarUtility {
 		sb.append(rh);
 		sb.append("&relying-party=allRPs");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String rbody = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
@@ -1090,8 +1289,14 @@ public class CarUtility {
 			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 
@@ -1104,7 +1309,15 @@ public class CarUtility {
 		sb.append("/consent/v1/icm/user-info-release-policies/");
 		sb.append(baseId);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
 		String rbody = null;
@@ -1124,8 +1337,14 @@ public class CarUtility {
 			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	public static edu.internet2.consent.icm.model.UserReturnedPolicy getCOPSUPolicy(String user,String rh,String rp,CarConfig config) {
@@ -1142,7 +1361,15 @@ public class CarUtility {
 		sb.append("&relying-party=");
 		sb.append(rp);
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
 		String rbody = null;
@@ -1163,8 +1390,14 @@ public class CarUtility {
 			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -1175,7 +1408,15 @@ public class CarUtility {
 		
 		sb.append("/consent/v1/arpsi/org-info-release-decision");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"arpsi");
 		String rbody = null;
@@ -1194,8 +1435,14 @@ public class CarUtility {
 			CarUtility.locError("ERR0081", LogCriticality.debug, "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, CarConfig config) {
@@ -1207,7 +1454,15 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 	
 	sb.append("/consent/v1/icm/info-release-decision");
 	
-	HttpClient httpClient = HttpClientBuilder.create().build();
+	//HttpClient httpClient = HttpClientBuilder.create().build();
+	HttpClient httpClient = null;
+	try {
+		httpClient = CarHttpClientFactory.getHttpsClient();
+	} catch (Exception e) {
+		// Log and create a raw client instead
+		CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+		httpClient = HttpClientBuilder.create().build();
+	}
 	HttpResponse response = null;
 	String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
 	String rbody = null;
@@ -1228,8 +1483,14 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		CarUtility.locError("ERR0081", LogCriticality.debug, "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		return null;  // null on any failure
 	} finally {
+		try {
+		EntityUtils.consumeQuietly(response.getEntity());
+		} catch (Exception e) {
+			// ignore
+		}
 		HttpClientUtils.closeQuietly(response);
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling - leave open for reuse
+		// HttpClientUtils.closeQuietly(httpClient);
 	}
 }
 public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,String rptype, String rpid,CarConfig config) {
@@ -1249,7 +1510,15 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 	sb.append(rptype + "/");
 	sb.append(CarUtility.idEscape(rpid));
 		
-	HttpClient httpClient = HttpClientBuilder.create().build();
+	//HttpClient httpClient = HttpClientBuilder.create().build();
+	HttpClient httpClient = null;
+	try {
+		httpClient = CarHttpClientFactory.getHttpsClient();
+	} catch (Exception e) {
+		// Log and create a raw client instead
+		CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+		httpClient = HttpClientBuilder.create().build();
+	}
 	HttpResponse response = null;
 	String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
 	String rbody = null;
@@ -1266,8 +1535,14 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 	} catch (Exception e) {
 		return null;  // on error, just fail
 	} finally {
+		try {
+		EntityUtils.consumeQuietly(response.getEntity());
+		} catch (Exception e) {
+			// ignore
+		}
 		HttpClientUtils.closeQuietly(response);
-		HttpClientUtils.closeQuietly(httpClient);
+		// Pooling - leave open for reuse
+		// HttpClientUtils.closeQuietly(httpClient);
 	}
 }
 public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,String rpid,CarConfig config) {
@@ -1287,7 +1562,15 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		sb.append("entityId/");
 		sb.append(CarUtility.idEscape(rpid));
 				
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
 		String rbody = null;
@@ -1304,8 +1587,14 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		} catch (Exception e) {
 			return null;  // on error, just fail
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 
@@ -1321,7 +1610,15 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		sb.append(user.getUserValue());
 		sb.append("&resource-holder=newRPTemplate&relying-party=newRPTemplateValue");
 		
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
 		HttpResponse response = null;
 		String authzheader = CarUtility.buildAuthorizationHeader(config,"icm");
 		String rbody = null;
@@ -1335,8 +1632,14 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		} catch (Exception e) {
 			return null;
 		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
 		}
 		
 		ArrayList<edu.internet2.consent.icm.model.UserReturnedPolicy> responseList = null;

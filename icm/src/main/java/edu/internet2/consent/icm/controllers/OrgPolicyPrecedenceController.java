@@ -33,10 +33,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 
 import edu.internet2.consent.icm.cfg.IcmConfig;
 import edu.internet2.consent.icm.model.LogCriticality;
 import edu.internet2.consent.icm.model.PATCH;
+import edu.internet2.consent.icm.util.IcmHttpClientFactory;
 import edu.internet2.consent.icm.util.IcmUtility;
 
 @Path("/org-policy-precedence")
@@ -98,7 +100,16 @@ public class OrgPolicyPrecedenceController {
 			sb.append(request.getQueryString());
 		}
 
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -110,8 +121,9 @@ public class OrgPolicyPrecedenceController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0064", LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 	
@@ -128,7 +140,16 @@ public class OrgPolicyPrecedenceController {
 
 		sb.append("/consent/v1/arpsi/org-policy-precedence");
 
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = IcmHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+
 		HttpResponse response = null;
 		
 		try {
@@ -139,8 +160,9 @@ public class OrgPolicyPrecedenceController {
 		} catch (Exception e) {
 			return IcmUtility.locError(500, "ERR0064", LogCriticality.error, e.getMessage());
 		} finally {
+			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
-			HttpClientUtils.closeQuietly(httpClient);
+			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
 }

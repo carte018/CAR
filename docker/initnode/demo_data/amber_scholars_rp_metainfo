@@ -47,6 +47,10 @@
         {
         	"rppropertyname": "localITSite",
         	"rppropertyvalue": "true"
+        },
+        {
+        	"rppropertyname": "privateRP",
+        	"rppropertyvalue": "true"
         }
     ]
 }

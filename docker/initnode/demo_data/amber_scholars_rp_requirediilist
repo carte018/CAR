@@ -1,6 +1,35 @@
 {
     "requiredlist": [
-        
+        {
+            "infoitemidentifier": {
+                "iiid": "eduPersonUniqueId",
+                "iitype": "attribute"
+            },
+            "reason": {
+                "locales": [
+                    {
+                        "locale": "en",
+                        "value": "To save your search results (required)"
+                    },
+                    {
+                        "locale": "es",
+                        "value": null
+                    },
+                    {
+                        "locale": "de",
+                        "value": null
+                    },
+                    {
+                        "locale": "fr",
+                        "value": null
+                    }
+                ]
+            },
+            "sourceitemname": "eduPersonUniqueId",
+            "valuelist": [
+                ".*"
+            ]
+        }
     ],
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
