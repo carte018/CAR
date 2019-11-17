@@ -14,7 +14,7 @@
 { "infoitemidentifier": { "iiid":"sn","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"sn","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"eduPersonOrgUnitDN","iitype":"attribute" }, "reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"eduPersonOrgUnitDN","valuelist": [".*"]},
 { "infoitemidentifier": { "iiid":"departmentCode","iitype":"attribute" },"reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"departmentCode","valuelist":[".*"]},
-{ "infoitemidentifier": { "iiid":"ferpaFlag","iitype":"attribute" },"reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"ferpaFlag","vvaluelist":[".*"]}
+{ "infoitemidentifier": { "iiid":"ferpaFlag","iitype":"attribute" },"reason": { "locales": [ { "locale": "en","value": "internal requirement" } ] }, "sourceitemname":"ferpaFlag","valuelist":[".*"]}
 ],
 	"rhidentifier": {
             "rhid": "urn:mace:multiverse:amber",
