@@ -413,7 +413,7 @@ objectClass: organizationalPerson
 objectClass: inetOrgPerson
 objectClass: eduPerson
 objectClass: amberite
-uid: fgrad
+uid: kjk-fgrad
 cn: Throatwarbler Mangrove
 givenName: Throatwarbler
 sn: Mangrove
