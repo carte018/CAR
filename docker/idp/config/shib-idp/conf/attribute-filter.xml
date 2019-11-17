@@ -164,6 +164,9 @@
         <AttributeRule attributeID="departmentCode">
         	<PermitValueRule xsi:type="ANY" />
         </AttributeRule>
+        <AttributeRule attributeID="ferpaFlag">
+        	<PermitValueRule xsi:type="ANY" />
+        </AttributeRule>
      </AttributeFilterPolicy>
         
   </AttributeFilterPolicyGroup>      

@@ -104,7 +104,7 @@ public class MainController {
 		
 		// At this point we've got an LDAP connection...
 		
-		Attribute objectclass, cn, sn, mail, amberTitle, userPassword, eduPersonPrincipalName, eduPersonOrgDN, eduPersonOrgUnitDN, localDepartmentCode, uid, givenName, displayName, eduPersonAffiliation, eduPersonPrimaryAffiliation, localUniqueId, eduPersonOrcid,isMemberOf;
+		Attribute objectclass, cn, sn, mail, amberTitle, userPassword, eduPersonPrincipalName, eduPersonOrgDN, eduPersonOrgUnitDN, localDepartmentCode, uid, givenName, displayName, eduPersonAffiliation, eduPersonPrimaryAffiliation, localUniqueId, eduPersonOrcid,isMemberOf,ferpaFlag;
 		
 		// Create the faculty user
 		String facuser = prefix + "-faculty";
@@ -304,6 +304,82 @@ public class MainController {
 				} catch (Exception e) {
 					throw new RuntimeException("Failed adding grad object to LDAP: ", e);
 				}
+				
+				uniqueid = rand.nextInt(1000);
+				uniqueid = uniqueid + 880000;  // prefix starting with 88
+				
+				// Create the fgrad user
+				String fgraduser = prefix + "-fgrad";
+				
+				objectclass = new BasicAttribute("objectclass");
+				objectclass.add("top");
+				objectclass.add("person");
+				objectclass.add("organizationalPerson");
+				objectclass.add("inetOrgPerson");
+				objectclass.add("eduPerson");
+				objectclass.add("amberite");
+				
+				cn = new BasicAttribute("cn",first.toUpperCase() + " " + middle.toUpperCase() + " " + last);
+				sn = new BasicAttribute("sn",last);
+				givenName = new BasicAttribute("givenName",first.toUpperCase());
+				mail = new BasicAttribute("mail",prefix + "-fgrad@amber.org");
+				amberTitle = new BasicAttribute("amberTitle","Graduate Assistant");
+				userPassword = new BasicAttribute("userPassword",fgraduser);
+				eduPersonPrincipalName = new BasicAttribute("eduPersonPrincipalName",fgraduser + "@amber.org");
+				eduPersonOrgDN = new BasicAttribute("eduPersonOrgDN","dc=amber,dc=org");
+				eduPersonOrgUnitDN = new BasicAttribute("eduPersonOrgUnitDN","cn=graduate_school,dc=amber,dc=org");
+				localDepartmentCode = new BasicAttribute("localDepartmentCode","12180000");
+				uid = new BasicAttribute("uid",fgraduser);
+				displayName = new BasicAttribute("displayName",first.toUpperCase() + " " + req.getParameter("lastname"));
+				eduPersonAffiliation = new BasicAttribute("eduPersonAffiliation");
+				eduPersonAffiliation.add("student");
+				eduPersonAffiliation.add("staff");
+				eduPersonPrimaryAffiliation = new BasicAttribute("eduPersonPrimaryAffiliation","student");
+				localUniqueId = new BasicAttribute("localUniqueId", String.valueOf(uniqueid));
+				eduPersonOrcid = new BasicAttribute("eduPersonOrcid","9180-7863-"+uniqueid+"-0001");
+				isMemberOf = new BasicAttribute("isMemberOf");
+				isMemberOf.add("urn:mace:amber.org:groups:research:unicorn_project");
+				isMemberOf.add("urn:mace:amber.org:groups:research:avalon_project");
+				isMemberOf.add("urn:mace:amber.org:groups:payroll:employees");
+				isMemberOf.add("urn:mace:amber.org:groups:gradstudents");
+				isMemberOf.add("urn:mace:amber.org:groups:instructors");
+				isMemberOf.add("urn:mace:amber.org:groups:courses:2019:fall:pubpol428_1");
+				isMemberOf.add("urn:mace:amber.org:groups:courses:2019:fall:pubpol401_2");
+				isMemberOf.add("urn:mace:amber.org:groups:courses:2019:fall:pubpol910_12");
+				isMemberOf.add("urn:mace:amber.org:groups:courses:2019:fall:cps100_2L");
+				isMemberOf.add("urn:mace:amber.org:groups:courses:2019:fall:research_101");
+				isMemberOf.add("urn:mace:amber.org:groups:ferpastudents");
+				ferpaFlag = new BasicAttribute("ferpaFlag","1");
+				
+				
+				entry = new BasicAttributes();
+				entry.put(objectclass);
+				entry.put(cn);
+				entry.put(sn);
+				entry.put(givenName);
+				entry.put(mail);
+				entry.put(amberTitle);
+				entry.put(userPassword);
+				entry.put(eduPersonPrincipalName);
+				entry.put(eduPersonOrgDN);
+				entry.put(eduPersonOrgUnitDN);
+				entry.put(localDepartmentCode);
+				entry.put(uid);
+				entry.put(displayName);
+				entry.put(eduPersonAffiliation);
+				entry.put(eduPersonPrimaryAffiliation);
+				entry.put(localUniqueId);
+				entry.put(eduPersonOrcid);
+				entry.put(isMemberOf);
+				entry.put(ferpaFlag);
+				
+				entryDN = "uid=" + fgraduser + ",ou=people,dc=amber,dc=org";
+				try {
+					dirContext.createSubcontext(entryDN,entry);
+				} catch (Exception e) {
+					throw new RuntimeException("Failed adding fgrad object to LDAP: ", e);
+				}
+				
 		
 				uniqueid = rand.nextInt(1000);
 				uniqueid = uniqueid + 880000;  // prefix starting with 88

@@ -1,0 +1,32 @@
+{
+    "asnd": false,
+    "description": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "Assertion of FERPA privilege"
+            }
+        ]
+    },
+    "displayname": {
+        "locales": [
+            {
+                "locale": "en",
+                "value": "ferpaFlag"
+            }
+        ]
+    },
+    "httpHeader": null,
+    "iiidentifier": {
+        "iiid": "ferpaFlag",
+        "iitype": "attribute"
+    },
+    "iimode": null,
+    "multivalued": false,
+    "policytype": "PAO",
+    "presentationtype": "TRANSPARENT",
+    "rhidentifier": {
+        "rhid": "urn:mace:multiverse:amber",
+        "rhtype": "entityId"
+    }
+}

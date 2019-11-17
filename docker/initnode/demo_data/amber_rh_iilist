@@ -59,6 +59,10 @@
 		{
 			"iiid": "departmentCode",
 			"iitype": "attribute"
+		},
+		{
+			"iiid": "ferpaFlag",
+			"iitype": "attribute"
 		}
 	],
 	"rhidentifier": {

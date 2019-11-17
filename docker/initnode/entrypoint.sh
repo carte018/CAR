@@ -71,7 +71,7 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 #
 # Load attributes available through the Amber RH
 #
-for num in amberTitle cn displayName eduPersonOrcid eduPersonOrgDN eduPersonPrimaryAffiliation eduPersonPrincipalName eduPersonScopedAffiliation eduPersonTargetedID eduPersonUniqueId isMemberOf mail sn eduPersonOrgUnitDN departmentCode
+for num in amberTitle cn displayName eduPersonOrcid eduPersonOrgDN eduPersonPrimaryAffiliation eduPersonPrincipalName eduPersonScopedAffiliation eduPersonTargetedID eduPersonUniqueId isMemberOf mail sn eduPersonOrgUnitDN departmentCode ferpaFlag
 do
   echo "Inserting attribute $num"
   curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8'  --insecure -X PUT -d @/tmp/demo_data/amber_${num}_iimetainfo 'https://apache-sp/consent/v1/informed/iiic/iimetainformation/entityId/urn:mace:multiverse:amber/attribute/'$num 
@@ -218,11 +218,21 @@ echo "Inserting Faculty R&S ICM policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type:application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmfac.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 sleep 2
 
+echo "Inserting FERPA R&S ICM policy (no matching org policy)"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type:application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/ferparandsicm.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+sleep 2
+
 echo "Inserting Grad R&S Org policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orggrad.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
 sleep 2
 echo "Inserting Grad R&S ICM policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmgrad.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
+
+echo "Inserting OrgStatefulPrivacy policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orgstateful.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
+sleep 2
+echo "Inserting IcmStateful policy"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmstateful.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 
 echo "Inserting Student R&S Org policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orgstudent.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
@@ -230,11 +240,6 @@ sleep 2
 echo "Inserting Generic R&S ICM policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmgen.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 
-echo "Inserting OrgStatefulPrivacy policy"
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/orgstateful.json 'https://apache-sp/consent/v1/icm/org-info-release-policies'
-sleep 2
-echo "Inserting IcmStateful policy"
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmstateful.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 
 # 
 # Replace the entrypoint routine with one that only forces deployments

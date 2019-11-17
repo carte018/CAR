@@ -249,6 +249,12 @@
     	<AttributeEncoder xsi:type="SAML2String" name="urn:oid:1.3.6.1.4.1.4275.1.1.9000.9000.1.1" friendlyName="amberTitle" encodeType="false" />
     </AttributeDefinition>
     
+    <AttributeDefinition xsi:type="Simple" id="ferpaFlag">
+    	<InputDataConnector ref="myLDAP" attributeNames="ferpaFlag"/>
+    	<AttributeEncoder xsi:type="SAML1String" name="urn:oid:1.3.6.1.4.1.4275.1.1.9000.9000.4.1" encodeType="false" />
+    	<AttributeEncoder xsi:type="SAML2String" name="urn:oid:1.3.6.1.4.1.4275.1.1.9000.9000.4.1" friendlyName="ferpaFlag" encodeType="false" />
+    </AttributeDefinition>
+    
     <AttributeDefinition xsi:type="Simple" id="chaosFamily">
     	<InputDataConnector ref="myLDAP" attributeNames="chaosFamily"/>
     	<AttributeEncoder xsi:type="SAML1String" name="urn:mace:amber.org:attribute-def:chaosFamily" encodeType="false" />

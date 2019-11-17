@@ -1,0 +1,148 @@
+{
+    "allOtherOrgInfoReleaseStatement": null,
+    "arrayOfInfoReleaseStatement": [
+        {
+            "arrayOfIcmDirectiveOnValues": [
+                {
+                    "icmReleaseDirective": "COPSU",
+                    "releaseDirective": "COPSU",
+                    "valueObjectList": [
+                        {
+                            "value": ".*"
+                        }
+                    ]
+                }
+            ],
+            "icmDirectiveAllOtherValues": {
+                "allOtherValuesConst": "allOtherValues",
+                "icmReleaseDirective": "COPSU"
+            },
+            "infoId": {
+                "info-type": "attribute",
+                "info-value": "eduPersonPrincipalName"
+            }
+        },
+        {
+            "arrayOfIcmDirectiveOnValues": [
+                {
+                    "icmReleaseDirective": "COPSU",
+                    "releaseDirective": "COPSU",
+                    "valueObjectList": [
+                        {
+                            "value": ".*"
+                        }
+                    ]
+                }
+            ],
+            "icmDirectiveAllOtherValues": {
+                "allOtherValuesConst": "allOtherValues",
+                "icmReleaseDirective": "COPSU"
+            },
+            "infoId": {
+                "info-type": "attribute",
+                "info-value": "displayName"
+            }
+        },
+        {
+            "arrayOfIcmDirectiveOnValues": [
+                {
+                    "icmReleaseDirective": "COPSU",
+                    "releaseDirective": "COPSU",
+                    "valueObjectList": [
+                        {
+                            "value": ".*"
+                        }
+                    ]
+                }
+            ],
+            "icmDirectiveAllOtherValues": {
+                "allOtherValuesConst": "allOtherValues",
+                "icmReleaseDirective": "COPSU"
+            },
+            "infoId": {
+                "info-type": "attribute",
+                "info-value": "eduPersonTargetedID"
+            }
+        },
+        {
+            "arrayOfIcmDirectiveOnValues": [
+                {
+                    "icmReleaseDirective": "COPSU",
+                    "releaseDirective": "COPSU",
+                    "valueObjectList": [
+                        {
+                            "value": ".*"
+                        }
+                    ]
+                }
+            ],
+            "icmDirectiveAllOtherValues": {
+                "allOtherValuesConst": "allOtherValues",
+                "icmReleaseDirective": "COPSU"
+            },
+            "infoId": {
+                "info-type": "attribute",
+                "info-value": "eduPersonScopedAffiliation"
+            }
+        },
+        {
+            "arrayOfIcmDirectiveOnValues": [
+                {
+                    "icmReleaseDirective": "COPSU",
+                    "releaseDirective": "COPSU",
+                    "valueObjectList": [
+                        {
+                            "value": ".*"
+                        }
+                    ]
+                }
+            ],
+            "icmDirectiveAllOtherValues": {
+                "allOtherValuesConst": "allOtherValues",
+                "icmReleaseDirective": "COPSU"
+            },
+            "infoId": {
+                "info-type": "attribute",
+                "info-value": "cn"
+            }
+        },
+        {
+            "arrayOfIcmDirectiveOnValues": [
+                {
+                    "icmReleaseDirective": "COPSU",
+                    "releaseDirective": "COPSU",
+                    "valueObjectList": [
+                        {
+                            "value": ".*"
+                        }
+                    ]
+                }
+            ],
+            "icmDirectiveAllOtherValues": {
+                "allOtherValuesConst": "allOtherValues",
+                "icmReleaseDirective": "COPSU"
+            },
+            "infoId": {
+                "info-type": "attribute",
+                "info-value": "mail"
+            }
+        }
+    ],
+    "description": "Ferpa students get consent over R&S releases",
+    "relyingPartyPropertyArray": [
+        {
+            "RP-PropName": "entity-category",
+            "RP-PropValue": "http://refeds.org/category/research-and-scholarship"
+        }
+    ],
+    "resourceHolderId": {
+        "RH-type": "entityId",
+        "RH-value": "urn:mace:multiverse:amber"
+    },
+    "userPropertyArray": [
+        {
+            "userPropName": "ferpaFlag",
+            "userPropValue": "1"
+        }
+    ]
+}
