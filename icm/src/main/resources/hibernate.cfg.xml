@@ -9,11 +9,17 @@
     <!-- <property name="hibernate.connection.password">ConsentingAdults</property>-->
     <property name="hibernate.connection.autocommit">false</property>
 
-	<property name="hibernate.c3p0.min_size">1</property>
-	<property name="hibernate.c3p0.max_size">10</property>
-	<property name="hibernate.c3p0.timeout">3605</property>
-	<property name="hibernate.c3p0.max_statements">50</property>
-	<property name="hibernate.c3p0.idle_test_period">3600</property>
+	<property name="hibernate.c3p0.min_size">20</property>
+	<property name="hibernate.c3p0.max_size">900</property>
+	<property name="hibernate.c3p0.timeout">28800</property>
+	<property name="hibernate.c3p0.max_statements">5</property>
+	<property name="hibernate.c3p0.idle_test_period">90</property>
+	<property name="hibernate.c3p0.testConnectionOnCheckout">false</property>
+	<property name="hibernate.c3p0.testConnectionOnCheckin">true</property>
+	<property name="hibernate.c3p0.acquireRetryAttempts">12</property>
+	<property name="hibernate.c3p0.acquireRetryDelan">15</property>
+	<property name="hibernate.query.plan_cache_max_size">32</property>
+	<property name="hibernate.query.plan_parameter_metadata_max_size">16</property>
 	 <property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
 	 
     <!-- Do not go into production with this in place; this is for testing only -->
