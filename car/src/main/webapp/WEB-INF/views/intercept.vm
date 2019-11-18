@@ -448,7 +448,9 @@ $( document ).ready(function() {
   	maytable = $("table#may-decision-table tbody");
   	maytable.html("");
   	choices = $.makeArray($(".decision"));
+  	var $dispcount=0;
   	$.each(choices, function() {
+  		$dispcount = $dispcount + 1;
   		var row="";
   		var $type = "";
   		$value = $(this).find("input.attr_value").val();
