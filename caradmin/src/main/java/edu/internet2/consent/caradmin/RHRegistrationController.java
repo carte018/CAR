@@ -747,6 +747,9 @@ public class RHRegistrationController {
 		ArrayList<String> targets = new ArrayList<String>();
 		roles.add("RHRegistrar");
 		roles.add("DelegatedRHRegistrar");
+		// And RHAuditors
+		roles.add("RHAuditor");
+		roles.add("DelegatedRHAuditor");
 		targets.add(CarAdminUtils.idUnEscape(rhvalue));
 		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
@@ -980,6 +983,9 @@ public class RHRegistrationController {
 		ArrayList<String> roles = new ArrayList<String>();
 		roles.add("RHRegistrar");
 		roles.add("DelegatedRHRegistrar");
+		// And RHAuditors
+		roles.add("RHAuditor");
+		roles.add("DelegatedRHAuditor");
 		if ((config = CarAdminUtils.init(req,roles,null)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
 			 eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));

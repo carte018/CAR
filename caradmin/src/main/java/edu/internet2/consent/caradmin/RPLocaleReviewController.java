@@ -360,6 +360,10 @@ public class RPLocaleReviewController {
 		roles.add("RPRegistrar");
 		roles.add("DelegatedRPRegistrar");
 		
+		// RPAuditors can review
+		roles.add("RPAuditor");
+		roles.add("DelegatedRPAuditor");
+		
 		targets.add(CarAdminUtils.idUnEscape(rpidin));
 		targets.add(CarAdminUtils.idUnEscape(rhidin));
 		

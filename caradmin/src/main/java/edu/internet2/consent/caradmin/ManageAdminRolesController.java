@@ -116,6 +116,12 @@ public class ManageAdminRolesController {
 		ArrayList<AdminRoleMapping> translator = new ArrayList<AdminRoleMapping>();
 		ArrayList<AdminRoleMapping> superadmin = new ArrayList<AdminRoleMapping>();
 		
+		ArrayList<AdminRoleMapping> rhauditor = new ArrayList<AdminRoleMapping>();
+		ArrayList<AdminRoleMapping> delrhauditor = new ArrayList<AdminRoleMapping>();
+		ArrayList<AdminRoleMapping> rpauditor = new ArrayList<AdminRoleMapping>();
+		ArrayList<AdminRoleMapping> delrpauditor = new ArrayList<AdminRoleMapping>();
+		
+		
 		for (AdminRoleMapping a : arm) {
 			if (a.getRoleName().contentEquals("superadmin"))
 				superadmin.add(a);
@@ -133,6 +139,14 @@ public class ManageAdminRolesController {
 				delpoladmin.add(a);
 			else if (a.getRoleName().contentEquals("Translator")) 
 				translator.add(a);
+			else if (a.getRoleName().contentEquals("RHAuditor"))
+				rhauditor.add(a);
+			else if (a.getRoleName().contentEquals("DelegatedRHAuditor"))
+				delrhauditor.add(a);
+			else if (a.getRoleName().contentEquals("RPAuditor"))
+				rpauditor.add(a);
+			else if (a.getRoleName().contentEquals("DelegatedRPAuditor"))
+				delrpauditor.add(a);
 			
 		}
 		
@@ -144,6 +158,10 @@ public class ManageAdminRolesController {
 		retval.addObject("poladmin",poladmin);
 		retval.addObject("delpoladmin",delpoladmin);
 		retval.addObject("translator",translator);
+		retval.addObject("rhauditor",rhauditor);
+		retval.addObject("delrhauditor",delrhauditor);
+		retval.addObject("rpauditor",rpauditor);
+		retval.addObject("delrpauditor",delrpauditor);
 		
 		retval.addObject("CarAdminUtils",CarAdminUtils.class);
 		retval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
@@ -220,6 +238,9 @@ public class ManageAdminRolesController {
 		// roletype is one of "superadmin", "RHRegistrar", "DelegatedRHRegistrar", 
 		// "RPRegistrar","DelegatedRPRegistrar","PolicyAdmin","DelegatedPolicyAdmin", or
 		// "Translator".  Anything else will be ignored.
+		//
+		// Now also with "RHAuditor", "DelegatedRHAuditor", "RPAuditor", and "DelegatedRPAuditor"
+		//
 		
 		String roletype = req.getParameter("roletype");
 		
@@ -242,6 +263,14 @@ public class ManageAdminRolesController {
 			prefix="dpa";
 		else if (roletype.contentEquals("Translator"))
 			prefix="trans";
+		else if (roletype.contentEquals("RHAuditor"))
+			prefix="rha";
+		else if (roletype.contentEquals("DelegatedRHAuditor"))
+			prefix="drha";
+		else if (roletype.contentEquals("RPAuditor"))
+			prefix="rpa";
+		else if (roletype.contentEquals("DelegatedRPAuditor"))
+			prefix="drpa";
 		else
 			return retval;  // this is an invalid request
 		

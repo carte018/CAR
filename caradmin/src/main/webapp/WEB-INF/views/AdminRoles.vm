@@ -41,7 +41,7 @@
 		archive, and update Relying Party registration information, including RP metainformation
 		and the configuration of RP information item requests.</li>
 		<li><em>DelegatedRPRegistrar:</em> Users with the DelegatedRPRegistrar role have rights 
-		equivalent to those of RPRegistrars, but extending only to a single Relying Pary.  As such, 
+		equivalent to those of RPRegistrars, but extending only to a single Relying Party.  As such, 
 		they cannot create new Relying Party registrations, but they may otherwise operate on 
 		their delegated RPs as if they were RPRegistrars.</li>
 		<li><em>PolicyAdmin:</em> Users with the PolicyAdmin role have access to modify policies 
@@ -50,12 +50,26 @@
 		<li><em>DelegatedPolicyAdmin:</em> Users with the DelegatedPolicyAdmin role have access to 
 		modify policies for a single Resource Holder.  Rights over the delegated RH are the same 
 		as those afforded PolcyAdmins over all registered Resource Holders.</li>
-		<li>Translator:</li> Users with the Translator role have full rights to modify the i18n
+		<li><em>Translator:</em> Users with the Translator role have full rights to modify the i18n
 		strings used by the CAR UIs to construct views in users' preferred languages (including 
 		whatever the default language for a given CAR instance is).  The Translator role affords 
 		no other rights, although it does allow certain read privileges sufficient to allow holders
 		to access the resources they can manage (eg., a Translator can see all the registered
 		RHs and RPs, but can only manipulate their language bindings).</li>
+		<li><em>RHAuditor:</em> Users with the RHAuditor role have read-only access to information
+		about resource holders, including the policies associated with them.  Auditors cannot add or make
+		changes to resource holder configurations, but can review all aspects of the configuration of any RH.
+		</li>
+		<li><em>DelegatedRHAuditor:</em> Users with the DelegatedRHAuditor role have the same read-only access
+		that full RHAuditors have, but restricted (where feasible) to only a specific RH.</li>
+		<li><em>RPAuditor:</em> Users with the RPAuditor role have read-only access to information
+		about relying parties.  Full RPAuditors have such access globally, across RHs.  The RPAuditor
+		role enables reading of virtually every property associated with an RP, but affords no create,
+		update, or delete access.</li>
+		<li><em>DelegatedRPAuditor:</em> Users with the DelegatedRPAuditor role have read-only access to 
+		information about specific relying parties restricted to a particular RH.  Otherwise, similar to 
+		RPAuditor access.</li>
+		
 		</ul>
 		<p>
 		Roles may be assigned to individual users, user groups (currently identified by the 
@@ -351,6 +365,148 @@
 				<td><input type="text" name="trans_subject_add"></td>
 				<td>Translator</td>
 				<td><a href="#" id="trans_add" class="addlink">Add</a></td><input type="hidden" name="trans_is_add" id="trans_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+		<div class="content-section">
+		<h2>RHAuditor role</h2>
+		<form name="rhaform" id="rhaform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="RHAuditor">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($rhauditor.isEmpty())
+			<tr><td colspan=3><em>No RHAuditors configured</em></td></tr>
+			#end
+			#foreach($r in $rhauditor)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="rha_id_$ctr" id="rha_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="rha_subject_$ctr" id="rha_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="rha_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="rha_is_delete_$ctr" id="rha_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="rha_subject_add"></td>
+				<td>RHAuditor</td><input type="hidden" name=rha_role_add" value="RHAuditor">
+				<td><a href="#" id="rha_add" class="addlink">Add</a></td><input type="hidden" name="rha_is_add" id="rha_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>DelegatedRHAuditor role</h2>
+		<form name="drhaform" id="drhaform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="DelegatedRHAuditor">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Target</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($delrhauditor.isEmpty())
+			<tr><td colspan=4><em>No DelegatedRHAuditors configured</em></td></tr>
+			#end
+			#foreach($r in $delrhauditor)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="drha_id_$ctr" id="drha_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="drha_subject_$ctr" id="drha_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td>$r.getTarget()</td><input type="hidden" name="drha_target_$ctr" id="drha_target_$ctr" value="r.getTarget()">
+				<td><a href="#" id="drha_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="drha_is_delete_$ctr" id="drha_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="drha_subject_add"></td>
+				<td>DelegatedRHAuditor</td><input type="hidden" name="drha_role_add" value="DelegatedRHAuditor">
+				<td><input type="text" name="drha_target_add"></td>
+				<td><a href="#" id="drha_add" class="addlink">Add</a></td><input type="hidden" name="drha_is_add" id="drha_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>RPAuditor role</h2>
+		<form name="rpaform" id="rpaform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="RPAuditor">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($rpauditor.isEmpty())
+			<tr><td colspan=3><em>No RPAuditors configured</em></td></tr>
+			#end
+			#foreach($r in $rpauditor)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="rpa_id_$ctr" id="rpa_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="rpa_subject_$ctr" id="rpa_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td><a href="#" id="rpa_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="rpa_is_delete_$ctr" id="rpa_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="rpa_subject_add"></td>
+				<td>RPAuditor</td><input type="hidden" name="rpa_role_add" value="RPAuditor">
+				<td><a href="#" id="rpa_add" class="addlink">Add</a></td><input type="hidden" name="rpa_is_add" id="rpa_is_add" value="0">
+			</tr>
+		</table>
+		<input type="hidden" name="ctr" value="$ctr">
+		</div>
+		</form>
+	</div>
+	<div class="content-section">
+		<h2>DelegatedRPAuditor role</h2>
+		<form name="drpaform" id="drpaform" action="#" method="POST">
+		<input type="hidden" name="roletype" value="DelegatedRPAuditor">
+		<div class="form-set">
+		<table class="full-width display">
+			<tr>
+				<th>User, Group, or Entitlement</th>
+				<th>Role</th>
+				<th>Target</th>
+				<th>Action</th>
+			</tr>
+			#set($ctr=0)
+			#if($delrpauditor.isEmpty())
+			<tr><td colspan=4><em>No DelegatedRPAuditors configured</em></td></tr>
+			#end
+			#foreach($r in $delrpauditor)
+			#set($ctr=$ctr+1)
+			<tr>
+				<input type="hidden" name="drpa_id_$ctr" id="drpa_id_$ctr" value="$r.getAdminRoleId()">
+				<td>$r.getSubject()</td><input type="hidden" name="drpa_subject_$ctr" id="drpa_subject_$ctr" value="$r.getSubject()">
+				<td>$r.getRoleName()</td>
+				<td>$r.getTarget()</td><input type="hidden" name="drpa_target_$ctr" id="drpa_target_$ctr" value="$r.getTarget()">
+				<td><a href="#" id="drpa_delete_$ctr" class="deletelink">Delete</a></td><input type="hidden" name="drpa_is_delete_$ctr" id="drpa_is_delete_$ctr" value="0">
+			</tr>
+			#end
+			<tr>
+				<td><input type="text" name="drpa_subject_add"></td>
+				<td>DelegatedRPAuditor</td><input type="hidden" name="drpa_role_add" value="DelegatedRPAuditor">
+				<td><input type="text" name="drpa_target_add"></td>
+				<td><a href="#" id="drpa_add" class="addlink">Add</a></td><input type="hidden" name="drpa_is_add" id="drpa_is_add" value="0">
 			</tr>
 		</table>
 		<input type="hidden" name="ctr" value="$ctr">

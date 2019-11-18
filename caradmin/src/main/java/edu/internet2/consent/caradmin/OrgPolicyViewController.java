@@ -73,6 +73,9 @@ public class OrgPolicyViewController {
 		roles.add("PolicyAdmin");
 		roles.add("DelegatedPolicyAdmin");
 		
+		// Also, now, allow policy viewing to RHAuditors
+		roles.add("RHAuditor");
+		
 		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {
 			ModelAndView eval = new ModelAndView("errorPage");
 			eval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
@@ -281,6 +284,10 @@ public class OrgPolicyViewController {
 		roles.add("DelegatedRHRegistrar");
 		roles.add("PolicyAdmin");
 		roles.add("DelegatedPolicyAdmin");
+		
+		// And also RHAuditors
+		roles.add("RHAuditor");
+		roles.add("DelegatedRHAuditor");
 		
 		targets.add(CarAdminUtils.idUnEscape(rhid));
 		

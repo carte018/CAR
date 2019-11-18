@@ -1581,6 +1581,10 @@ public class RPRegistrationController {
 		roles.add("RPRegistrar");
 		roles.add("DelegatedRPRegistrar");
 		
+		// RPAutidors can review
+		roles.add("RPAuditor");
+		roles.add("DelegatedRPAuditor");
+		
 		
 		AdminConfig config = null;
 		if ((config = CarAdminUtils.init(req,roles,null)) == null) {
@@ -1932,6 +1936,11 @@ public class RPRegistrationController {
 		roles.add("DelegatedRPRegistrar");
 		roles.add("RHRegistrar");
 		roles.add("DelegatedRHRegistrar");
+		
+		// Also, RPAuditors
+		roles.add("RPAuditor");
+		roles.add("DelegatedRPAuditor");
+		
 		// No targets for this
 		
 		if ((config = CarAdminUtils.init(req,roles,targets)) == null) {

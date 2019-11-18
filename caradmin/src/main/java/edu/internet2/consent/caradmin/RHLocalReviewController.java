@@ -67,6 +67,7 @@ public class RHLocalReviewController {
 		roles.add("RHRegistrar");
 		roles.add("DelegatedRHRegistrar");
 		
+		
 		targets.add(CarAdminUtils.idUnEscape(rhid));
 		
 		if (CarAdminUtils.init(req,roles,targets) == null) {
@@ -242,6 +243,10 @@ public class RHLocalReviewController {
 		roles.add("Translator");
 		roles.add("RHRegistrar");
 		roles.add("DelegatedRHRegistrar");
+		
+		// RHAuditors can read
+		roles.add("RHAuditor");
+		roles.add("DelegatedRHAuditor");
 		
 		targets.add(CarAdminUtils.idUnEscape(rhid));
 		
