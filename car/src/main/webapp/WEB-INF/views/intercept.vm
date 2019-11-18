@@ -430,13 +430,13 @@ $( document ).ready(function() {
   
   function sensflip(targ,val) {
   	document.getElementById(targ).innerHTML=val;
-  	document.getElementById(targ).className='labelcl';
+  	//document.getElementById(targ).className='labelcl';
   	$("#"+targ)[0].onclick = null;
   	$("#"+targ).click(function(e) { e.preventDefault(); sensuflip(targ,val); });
   }
   function sensuflip(targ,val) {
     document.getElementById(targ).innerHTML="Click to show sensitive information";
-    document.getElementById(targ).className='showcl';
+    //document.getElementById(targ).className='showcl';
     $("#"+targ)[0].onclick = null;
     $("#"+targ).click(function(e) { e.preventDefault(); sensflip(targ,val); });
   }
@@ -485,7 +485,12 @@ $( document ).ready(function() {
 				} else {
 					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
 				}
-				row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+				if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
+					row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+				} else {
+					row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>"; 
+				}
+				// row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
 				if ($type == "must") {
 					musttable.append(row);
 				} else if ($type == "may") {
@@ -501,7 +506,12 @@ $( document ).ready(function() {
 				} else {
 					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
 				}
-				row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+				//row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+				if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
+					row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+				} else {
+					row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+				} 
 			}
 			if ($type == "must") {
 				musttable.append(row);
