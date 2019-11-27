@@ -43,7 +43,8 @@ public class DecisionResponse {
 	
 	public String toJson() throws JsonProcessingException {
 		// Return JSON representation of self
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		String retval = mapper.writeValueAsString(this);
 		return retval;
 	}

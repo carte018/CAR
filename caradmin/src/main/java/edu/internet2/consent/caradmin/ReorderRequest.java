@@ -44,7 +44,8 @@ public class ReorderRequest {
 	}
 	
 	public String toJSON() throws JsonProcessingException {
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		String retval = om.writeValueAsString(this);
 		return retval;
 	}

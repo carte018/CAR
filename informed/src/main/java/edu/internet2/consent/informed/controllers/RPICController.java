@@ -48,6 +48,7 @@ import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList;
 import edu.internet2.consent.informed.util.InformedUtility;
+import edu.internet2.consent.informed.util.OMSingleton;
 
 @Path("/rpic")
 public class RPICController {
@@ -171,7 +172,8 @@ public class RPICController {
 			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rril));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
@@ -216,7 +218,8 @@ public class RPICController {
 			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rril));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
@@ -289,7 +292,8 @@ public class RPICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		ReturnedRPOptionalInfoItemList roil = null;
 		
 		try {
@@ -448,7 +452,8 @@ public class RPICController {
 			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper(); 
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK, mapper.writeValueAsString(rril));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
@@ -491,7 +496,8 @@ public class RPICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(rril));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -564,7 +570,9 @@ public class RPICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedRPRequiredInfoItemList rril = null;
 		
 		try {
@@ -723,7 +731,9 @@ public class RPICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rrmi));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -768,7 +778,9 @@ public class RPICController {
 			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rrmi));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
@@ -852,7 +864,9 @@ public class RPICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedRPMetaInformation rrmi = null;
 		
 		try {

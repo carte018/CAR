@@ -19,6 +19,8 @@ package edu.internet2.consent.icm.model;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.internet2.consent.icm.util.OMSingleton;
+
 public class ReturnedPrecedenceObject {
 
 	private String policyBaseId;
@@ -44,7 +46,9 @@ public class ReturnedPrecedenceObject {
 	}
 	
 	public String toJSON() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		String retval = mapper.writeValueAsString(this);
 		return retval;
 	}

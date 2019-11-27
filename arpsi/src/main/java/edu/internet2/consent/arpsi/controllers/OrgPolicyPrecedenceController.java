@@ -46,6 +46,7 @@ import edu.internet2.consent.arpsi.model.PATCH;
 import edu.internet2.consent.arpsi.model.PrecedenceInstruction;
 import edu.internet2.consent.arpsi.model.ReturnedPrecedenceObject;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
+import edu.internet2.consent.arpsi.util.OMSingleton;
 
 @Path("/org-policy-precedence")
 public class OrgPolicyPrecedenceController {
@@ -254,7 +255,8 @@ public class OrgPolicyPrecedenceController {
 			List<PrecedenceInstruction> piList = null;
 			ListOfReturnedPrecedenceObject lorp = new ListOfReturnedPrecedenceObject();
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				piList = mapper.readValue(entity, new TypeReference<List<PrecedenceInstruction>>(){});
 			} catch (JsonParseException e) {
 				return ArpsiUtility.locError(400, "ERR005",LogCriticality.info);

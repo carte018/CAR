@@ -41,6 +41,7 @@ import edu.internet2.consent.informed.cfg.InformedConfig;
 import edu.internet2.consent.informed.model.ActivityStreamEntry;
 import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.util.InformedUtility;
+import edu.internet2.consent.informed.util.OMSingleton;
 
 @Path("activitystream")
 public class ActivityStreamController {
@@ -73,7 +74,9 @@ public class ActivityStreamController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ActivityStreamEntry entry = null;
 		
 		try {
@@ -167,7 +170,9 @@ public class ActivityStreamController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper om = new ObjectMapper();
+				//ObjectMapper om = new ObjectMapper();
+				ObjectMapper om = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,om.writeValueAsString(lase));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);

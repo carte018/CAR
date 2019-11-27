@@ -21,6 +21,7 @@ import edu.internet2.consent.copsu.cfg.CopsuConfig;
 import edu.internet2.consent.copsu.model.*;
 import edu.internet2.consent.copsu.util.CopsuUtility;
 import edu.internet2.consent.copsu.util.NewEntityUtilities;
+import edu.internet2.consent.copsu.util.OMSingleton;
 import edu.internet2.consent.exceptions.CopsuInitializationException;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -118,7 +119,8 @@ public class UserInfoReleasePolicyController {
 			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		InfoReleasePolicy inputPolicy = null;
 		
 		try {
@@ -382,7 +384,8 @@ public class UserInfoReleasePolicyController {
 			return CopsuUtility.locError(500,"ERR0004", LogCriticality.error);
 		}
 
-		ObjectMapper mapper = new ObjectMapper();  // to handle input JSON
+		//ObjectMapper mapper = new ObjectMapper();  // to handle input JSON
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		InfoReleasePolicy inputPolicy = null;
 		
 		try {
@@ -477,7 +480,8 @@ public class UserInfoReleasePolicyController {
 		
 		// this is a possibly expensive cheat
 		//
-		ObjectMapper copier = new ObjectMapper();
+		//ObjectMapper copier = new ObjectMapper();
+		ObjectMapper copier = OMSingleton.getInstance().getOm();
 		ReturnedPolicy newPolicy = new ReturnedPolicy();
 		try {
 			String serialized = original.toJSON();

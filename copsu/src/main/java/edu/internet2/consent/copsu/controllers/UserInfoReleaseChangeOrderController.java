@@ -50,6 +50,7 @@ import edu.internet2.consent.copsu.model.LogCriticality;
 import edu.internet2.consent.copsu.model.ReturnedChangeOrder;
 import edu.internet2.consent.copsu.model.UserId;
 import edu.internet2.consent.copsu.util.CopsuUtility;
+import edu.internet2.consent.copsu.util.OMSingleton;
 import edu.internet2.consent.exceptions.CopsuInitializationException;
 
 @Path("/user-info-release-change-orders")
@@ -226,7 +227,8 @@ public class UserInfoReleaseChangeOrderController {
 		// are handled via this interface.
 		//
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		ChangeOrder inputChangeOrder = null;
 		
 		try {

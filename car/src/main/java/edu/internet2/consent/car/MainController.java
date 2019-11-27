@@ -104,7 +104,6 @@ import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
 
-
 @Controller
 public class MainController {
 	
@@ -280,7 +279,8 @@ public class MainController {
                             	String b64 = jcs.getStringClaim("request");
                             	String json = new String(Base64.decodeBase64(b64.getBytes()));
                             	
-                        		ObjectMapper mapper = new ObjectMapper();
+                        		//ObjectMapper mapper = new ObjectMapper();
+                            	ObjectMapper mapper = OMSingleton.getInstance().getOm();
                         		InputRequest retval = null;
                         		try {
                         			WrappedInputRequest w = mapper.readValue(json, WrappedInputRequest.class);
@@ -336,7 +336,8 @@ public class MainController {
 		// decode
 		String decoded = new String(Base64.decodeBase64(b64input.getBytes()));
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		InputRequest retval = null;
 		try {
 			WrappedInputRequest w = mapper.readValue(decoded, WrappedInputRequest.class);
@@ -625,7 +626,8 @@ public class MainController {
 			rpmetainformation.getRpproperties().add(rrrpp);  // add the entity ID as entityId property
 			// Debug
 			try {
-				ObjectMapper m2 = new ObjectMapper();
+				//ObjectMapper m2 = new ObjectMapper();
+				ObjectMapper m2 = OMSingleton.getInstance().getOm();
 				CarUtility.locError("ERR0083",LogCriticality.debug, m2.writeValueAsString(rpmetainformation));
 			} catch (Exception e) {
 				// ignore
@@ -803,7 +805,8 @@ public class MainController {
 			}
 			
 			try {
-				ObjectMapper m = new ObjectMapper();
+				//ObjectMapper m = new ObjectMapper();
+				ObjectMapper m = OMSingleton.getInstance().getOm();
 				CarUtility.locError("ERR0078",LogCriticality.debug, m.writeValueAsString(desiredAttributes));
 			} catch (Exception ign) {
 				// ignore
@@ -882,7 +885,8 @@ public class MainController {
 			
 			// And convert the request to JSON for passing to the service
 			
-			ObjectMapper mapper = new ObjectMapper();
+			//ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper = OMSingleton.getInstance().getOm();
 			String decisionRequestJson = null;
 			try {
 				decisionRequestJson = mapper.writeValueAsString(dro);
@@ -908,7 +912,8 @@ public class MainController {
 				r.addObject("intercept_view","1");
 			} else {
 				try {
-					ObjectMapper tmapper = new ObjectMapper();
+					//ObjectMapper tmapper = new ObjectMapper();
+					ObjectMapper tmapper = OMSingleton.getInstance().getOm();
 					String m = tmapper.writeValueAsString(response);
 					CarUtility.locError("ERR0803",LogCriticality.debug, m);
 				} catch (Exception e) {
@@ -1093,7 +1098,8 @@ public class MainController {
 				
 				deco.setArrayOfRelyingPartyProperty(arpp2);
 				
-				ObjectMapper mapper2 = new ObjectMapper();
+				//ObjectMapper mapper2 = new ObjectMapper();
+				ObjectMapper mapper2 = OMSingleton.getInstance().getOm();
 				String decisionRequestJson2 = null;
 				try {
 					decisionRequestJson2 = mapper2.writeValueAsString(dro);
@@ -1405,7 +1411,8 @@ public class MainController {
 				debugReturn.addObject("injectedMayDecisions",mayDecisions);
 				Collections.sort(nochoiceDecisions);
 				debugReturn.addObject("injectedNochoiceDecisions",nochoiceDecisions);
-				ObjectMapper omapper = new ObjectMapper();
+				//ObjectMapper omapper = new ObjectMapper();
+				ObjectMapper omapper = OMSingleton.getInstance().getOm();
 				try {
 					debugReturn.addObject("sensitivity",omapper.writeValueAsString(sensitivity));
 					CarUtility.locError("ERR1112",LogCriticality.debug,omapper.writeValueAsString(sensitivity));

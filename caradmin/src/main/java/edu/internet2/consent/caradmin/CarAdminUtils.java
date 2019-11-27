@@ -176,7 +176,8 @@ public class CarAdminUtils {
 		StringBuilder sb = new StringBuilder();
 		sb.append("/consent/v1/informed/adminrole/");
 		
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		
 		String json;
 		try {
@@ -263,7 +264,8 @@ public class CarAdminUtils {
 			//HttpClientUtils.closeQuietly(httpClient);
 		}
 		
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		
 		ArrayList<AdminRoleMapping> larm =  new ArrayList<AdminRoleMapping>();
 		
@@ -722,7 +724,9 @@ public class CarAdminUtils {
 					}
 					return defval;
 				}
-				ObjectMapper om = new ObjectMapper();
+				//ObjectMapper om = new ObjectMapper();
+				ObjectMapper om = OMSingleton.getInstance().getOm();
+				
 				asl = om.readValue(rbody, new TypeReference<List<SupportedLanguage>>(){});
 				
 				if (asl == null || asl.isEmpty()) {
@@ -789,7 +793,9 @@ public class CarAdminUtils {
 				}
 				return defval;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			
 			asr = om.readValue(rbody, new TypeReference<List<SupportedRHType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
@@ -857,7 +863,9 @@ public class CarAdminUtils {
 				}
 				return defval;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			
 			asr = om.readValue(rbody, new TypeReference<List<SupportedRPType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
@@ -925,7 +933,8 @@ public class CarAdminUtils {
 				}
 				return defval;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			asr = om.readValue(rbody, new TypeReference<List<SupportedIIType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
@@ -993,7 +1002,8 @@ public class CarAdminUtils {
 				}
 				return defval;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			asr = om.readValue(rbody, new TypeReference<List<SupportedUserType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
@@ -1398,7 +1408,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ArrayList<ActivityStreamEntry> aase = om.readValue(rbody, new TypeReference<List<ActivityStreamEntry>>(){});
 			return aase;
 		} catch (Exception e) {
@@ -1420,7 +1431,8 @@ public class CarAdminUtils {
 		sb.append("/consent/v1/icm/icm-info-release-policies/");
 		
 		String json = null;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			json = om.writeValueAsString(iirp);
 		} catch (Exception x) {
@@ -1466,7 +1478,8 @@ public class CarAdminUtils {
 		sb.append("/consent/v1/icm/icm-info-release-policies/"+pid);
 		
 		String json = null;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			json = om.writeValueAsString(oirp);
 		} catch (Exception x) {
@@ -1511,7 +1524,8 @@ public class CarAdminUtils {
 		sb.append("/consent/v1/icm/org-info-release-policies/"+pid);
 		
 		String json = null;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			json = om.writeValueAsString(oirp);
 		} catch (Exception x) {
@@ -1558,7 +1572,8 @@ public class CarAdminUtils {
 		sb.append("/consent/v1/icm/org-info-release-policies/");
 		
 		String json = null;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			json = om.writeValueAsString(oirp);
 		} catch (Exception x) {
@@ -1602,7 +1617,8 @@ public class CarAdminUtils {
 		sb.append("/consent/v1/informed/activitystream/");
 		
 		String json = null;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			json = om.writeValueAsString(e);
 		} catch (Exception x) {
@@ -1776,7 +1792,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ArrayList<ReturnedPrecedenceObject> arpo = om.readValue(rbody,  new TypeReference<List<ReturnedPrecedenceObject>>(){});
 			edu.internet2.consent.arpsi.model.ListOfReturnedPrecedenceObject lrpo = new edu.internet2.consent.arpsi.model.ListOfReturnedPrecedenceObject();
 			lrpo.setContained(arpo);
@@ -1934,7 +1951,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ArrayList<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>arpo = om.readValue(rbody, new TypeReference<List<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>>(){});
 			ListOfReturnedPrecedenceObject lrpo = new ListOfReturnedPrecedenceObject();
 			lrpo.setContained(arpo);
@@ -1988,7 +2006,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedInfoTypeList ritl = om.readValue(rbody, ReturnedInfoTypeList.class);
 			return ritl;
 		} catch (Exception e) {
@@ -2455,7 +2474,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedInfoItemMetaInformation ri = om.readValue(rbody, ReturnedInfoItemMetaInformation.class);
 			return ri;
 		} catch (Exception e) {
@@ -2506,7 +2526,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRHInfoItemList ri = om.readValue(rbody,  ReturnedRHInfoItemList.class);
 			return ri;
 		} catch (Exception e) {
@@ -2561,7 +2582,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<IcmReturnedPolicy> lr = om.readValue(rbody,  new TypeReference<List<IcmReturnedPolicy>>(){});
 			if (lr != null ) {
 				ArrayList<IcmReturnedPolicy> alr = new ArrayList<IcmReturnedPolicy>();
@@ -2622,7 +2644,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<OrgReturnedPolicy> lr = om.readValue(rbody, new TypeReference<List<OrgReturnedPolicy>>(){});
 			if (lr != null) {
 				ArrayList<OrgReturnedPolicy> alr = new ArrayList<OrgReturnedPolicy>();
@@ -2685,7 +2708,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<UserReturnedPolicy> lr = om.readValue(rbody,  new TypeReference<List<UserReturnedPolicy>>(){});
 			if (lr != null) {
 				ArrayList<UserReturnedPolicy> alr = new ArrayList<UserReturnedPolicy>();
@@ -2746,7 +2770,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<ReturnedRPMetaInformation> lr = om.readValue(rbody, new TypeReference<List<ReturnedRPMetaInformation>>(){});
 			if (lr != null) {
 				ArrayList<ReturnedRPMetaInformation> alr = new ArrayList<ReturnedRPMetaInformation>();
@@ -2806,7 +2831,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<ReturnedRHMetaInformation> lr = om.readValue(rbody, new TypeReference<List<ReturnedRHMetaInformation>>(){});
 			if (lr != null) {
 				ArrayList<ReturnedRHMetaInformation> alr = new ArrayList<ReturnedRHMetaInformation>();
@@ -2868,7 +2894,8 @@ public class CarAdminUtils {
 					// ignore
 				}
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRHMetaInformation lr = om.readValue(rbody, ReturnedRHMetaInformation.class);
 			return lr;
 		} catch (Exception e) {
@@ -2929,7 +2956,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPMetaInformation lr = om.readValue(rbody, ReturnedRPMetaInformation.class);
 			
 			return lr;
@@ -2990,7 +3018,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPOptionalInfoItemList lr = om.readValue(rbody,  ReturnedRPOptionalInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
@@ -3120,7 +3149,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			retval = om.readValue(rbody, new TypeReference<List<IcmReturnedPolicy>>() {});
 			return retval;
 		} catch (Exception e) {
@@ -3171,7 +3201,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ArrayList<IcmReturnedPolicy> alr = om.readValue(rbody,  new TypeReference<List<IcmReturnedPolicy>>() {});
 			if (alr == null || alr.isEmpty()) {
 				return null;
@@ -3230,7 +3261,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ArrayList<OrgReturnedPolicy>alr = om.readValue(rbody, new TypeReference<List<OrgReturnedPolicy>>() {});
 			if (alr == null || alr.isEmpty()) {
 				return null;
@@ -3291,7 +3323,8 @@ public class CarAdminUtils {
 					}
 					return null;
 				}
-				ObjectMapper om = new ObjectMapper();
+				//ObjectMapper om = new ObjectMapper();
+				ObjectMapper om = OMSingleton.getInstance().getOm();
 				retval = om.readValue(rbody,  new TypeReference<List<OrgReturnedPolicy>>() {});
 				return retval;
 			} catch (Exception e) {
@@ -3350,7 +3383,8 @@ public class CarAdminUtils {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody,  ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {

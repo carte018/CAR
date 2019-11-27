@@ -121,7 +121,8 @@ public class SystemSettingsController {
 		}
 		
 		retval.addObject("rhrpmap",rhrpmap);
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			retval.addObject("irdplist",om.writeValueAsString(irdplist));
 		} catch (Exception e) {

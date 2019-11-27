@@ -784,7 +784,8 @@ public class CarmaController {
 		dro.setArrayOfInfoIdsPlusValues(apv);
 		String jsonObject = null;
 		try {
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			jsonObject = om.writeValueAsString(dro);
 		} catch (Exception e) {
 			// ignore exception here -- we'll push the fail up
@@ -847,7 +848,8 @@ public class CarmaController {
 		// And make the ICM request
 		String ijson = null;
 		try {
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ijson = om.writeValueAsString(idro);
 		} catch (Exception e) {
 			// ignore and throw up the line
@@ -1214,7 +1216,8 @@ public class CarmaController {
 		String json = null;
 		try {
 			//json = u.toJSON();
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			json = om.writeValueAsString(u);
 			
 			String baseid = CarUtility.postCOPSUPolicy(json, config);

@@ -75,6 +75,7 @@ import edu.internet2.consent.icm.model.UserReleaseDirective;
 import edu.internet2.consent.icm.model.ValueObject;
 import edu.internet2.consent.icm.util.IcmHttpClientFactory;
 import edu.internet2.consent.icm.util.IcmUtility;
+import edu.internet2.consent.icm.util.OMSingleton;
 
 
 
@@ -130,7 +131,8 @@ public class IcmInfoReleaseDecisionController {
 		
 		// Authorized.  Now we parse the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		DecisionRequestObject inputRequest = null;
 		
 		try {
@@ -224,7 +226,8 @@ public class IcmInfoReleaseDecisionController {
 		String copsuEntity = null;
 		try {
 			// map this to a COPSU request
-			ObjectMapper convert = new ObjectMapper();
+			//ObjectMapper convert = new ObjectMapper();
+			ObjectMapper convert = OMSingleton.getInstance().getOm();
 			DecisionRequestObject idro = convert.readValue(entity, DecisionRequestObject.class);
 
 			edu.internet2.consent.copsu.model.UserId ui = new edu.internet2.consent.copsu.model.UserId();
@@ -267,7 +270,8 @@ public class IcmInfoReleaseDecisionController {
 			if (status >= 300)
 				return IcmUtility.locError(status,"ERR0055",LogCriticality.error);
 			
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			copsuDecision = om.readValue(rbody,edu.internet2.consent.copsu.model.DecisionResponseObject.class);
 			IcmUtility.locLog("LOG0016",LogCriticality.info,copsuDecision.getDecisionId());
 
@@ -308,7 +312,8 @@ public class IcmInfoReleaseDecisionController {
 			if (status2 >= 300) 
 				return IcmUtility.locError(status2, "ERR0059",LogCriticality.error);
 			
-			ObjectMapper om2 = new ObjectMapper();
+			//ObjectMapper om2 = new ObjectMapper();
+			ObjectMapper om2 = OMSingleton.getInstance().getOm();
 			arpsiDecision = om2.readValue(rbody2, DecisionResponseObject.class);
 			IcmUtility.locLog("LOG0017",LogCriticality.info,arpsiDecision.getDecisionId());
 		} catch (Exception e) {

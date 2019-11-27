@@ -19,6 +19,8 @@ package edu.internet2.consent.icm.model;
 import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.internet2.consent.icm.util.OMSingleton;
+
 import java.util.Objects;
 
 import javax.ws.rs.core.Response;
@@ -80,7 +82,9 @@ public class ErrorModel {
 		return sb.toString();
 	}
 	public String toJSON() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		return mapper.writeValueAsString(this);
 	}
 	public Response toResponse() {

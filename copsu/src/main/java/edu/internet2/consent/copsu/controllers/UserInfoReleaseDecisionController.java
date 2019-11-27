@@ -54,6 +54,7 @@ import edu.internet2.consent.copsu.model.ReturnedPolicy;
 import edu.internet2.consent.copsu.model.ValueObject;
 import edu.internet2.consent.copsu.util.CopsuUtility;
 import edu.internet2.consent.copsu.util.NewEntityUtilities;
+import edu.internet2.consent.copsu.util.OMSingleton;
 import edu.internet2.consent.exceptions.CopsuInitializationException;
 
 @Path("/user-info-release-decision")
@@ -110,7 +111,8 @@ public class UserInfoReleaseDecisionController {
 			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		// Parse the input document
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		DecisionRequestObject inputRequest = null;
 		
 		try {

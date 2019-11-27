@@ -34,7 +34,8 @@ public class WrappedDecisionResponse {
 	}
 	
 	public String toJson() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		String retval = mapper.writeValueAsString(this);
 		return retval;
 	}

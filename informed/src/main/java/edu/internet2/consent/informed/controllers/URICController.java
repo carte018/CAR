@@ -44,6 +44,7 @@ import edu.internet2.consent.informed.cfg.InformedConfig;
 import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.util.InformedUtility;
+import edu.internet2.consent.informed.util.OMSingleton;
 
 @Path("/uric")
 public class URICController {
@@ -154,7 +155,9 @@ public class URICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rurpmi));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -226,7 +229,9 @@ public class URICController {
 
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedUserRPMetaInformation rurpmi = null;
 		
 		try {

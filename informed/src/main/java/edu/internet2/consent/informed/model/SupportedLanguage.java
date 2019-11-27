@@ -26,6 +26,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.internet2.consent.informed.util.OMSingleton;
+
 @Entity
 public class SupportedLanguage {
 
@@ -83,7 +85,8 @@ public class SupportedLanguage {
 	}
 	
 	public String toJSON() throws JsonProcessingException {
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		return om.writeValueAsString(this);
 	}
 }

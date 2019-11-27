@@ -1673,7 +1673,8 @@ public class RPRegistrationController {
 		retval.addObject("rpmetalist",irpm);
 		retval.addObject("CarAdminUtils",CarAdminUtils.class);
 		try {
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			retval.addObject("JSON",om.writeValueAsString(irpm));
 		} catch (Exception e) {
 			CarAdminUtils.locError("ERR0018",LogCriticality.error);
@@ -2059,7 +2060,8 @@ public class RPRegistrationController {
 		retval.addObject("displist",displist);
 		retval.addObject("activetab","rpregistration");
 		retval.addObject("logouturl",config.getProperty("logouturl", false));
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		try {
 			retval.addObject("JSON",om.writeValueAsString(airpmi));
 		} catch (Exception e) {

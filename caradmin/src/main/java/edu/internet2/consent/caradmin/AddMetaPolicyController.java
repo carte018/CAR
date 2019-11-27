@@ -336,7 +336,8 @@ public class AddMetaPolicyController {
 			}
 			
 			CarAdminUtils.locError("ERR0057",LogCriticality.debug,String.valueOf(hasone.keySet().size()));
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			try {
 				CarAdminUtils.locError("ERR0060",LogCriticality.debug,om.writeValueAsString(aiirs));
 			} catch (Exception e) {

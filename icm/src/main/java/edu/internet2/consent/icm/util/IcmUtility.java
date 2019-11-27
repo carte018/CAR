@@ -291,6 +291,7 @@ public class IcmUtility {
 				sendEntity.setContentType("application/json");
 				((HttpPut)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
+				IcmUtility.locError(400, "ERR0037", LogCriticality.error,"Exception in sendRequest (1): " + e.getMessage());
 				throw new RuntimeException(e);
 			}
 		} else if (targetMethod.equalsIgnoreCase("POST")) {
@@ -300,6 +301,7 @@ public class IcmUtility {
 				sendEntity.setContentType("application/json");
 				((HttpPost)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
+				IcmUtility.locError(400, "ERR0037", LogCriticality.error, "Exception in sendRequest (2): " + e.getMessage());
 				throw new RuntimeException(e);
 			}
 		} else if (targetMethod.equalsIgnoreCase("DELETE")) {
@@ -311,6 +313,7 @@ public class IcmUtility {
 				sendEntity.setContentType("application/json");
 				((HttpPatch)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
+				IcmUtility.locError(400, "ERR0037", LogCriticality.error,"Exception in sendRequest (3): " + e.getMessage());
 				throw new RuntimeException(e);
 			}
 		}
@@ -321,6 +324,7 @@ public class IcmUtility {
 			retval = httpClient.execute(httpRequest);
 			return retval;
 		} catch (Exception e) {
+			IcmUtility.locError(400,"ERR0037",LogCriticality.error,"Exception in sendRequest (4): " + e.getMessage());
 			throw new RuntimeException(e);
 		} 
 		// No finally here -- we must return the response and let the caller close it and the client

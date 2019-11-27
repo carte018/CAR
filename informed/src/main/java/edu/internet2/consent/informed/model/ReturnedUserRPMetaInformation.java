@@ -32,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.internet2.consent.informed.util.OMSingleton;
+
 @Entity
 public class ReturnedUserRPMetaInformation {
 
@@ -110,7 +112,8 @@ public class ReturnedUserRPMetaInformation {
 	}
 	
 	public String toJSON() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		return mapper.writeValueAsString(this);
 	}
 }

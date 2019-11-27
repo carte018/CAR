@@ -59,6 +59,7 @@ import edu.internet2.consent.icm.model.UserReleaseDirective;
 import edu.internet2.consent.icm.model.UserReturnedPolicy;
 import edu.internet2.consent.icm.util.IcmHttpClientFactory;
 import edu.internet2.consent.icm.util.IcmUtility;
+import edu.internet2.consent.icm.util.OMSingleton;
 import edu.internet2.consent.icm.model.LogCriticality;
 
 @Path("/user-info-release-policies")
@@ -351,15 +352,20 @@ public class UserInfoReleasePoliciesController {
 		
 		try {
 			// First, translate Icm object to Copsu object for pass-thru
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			UserInfoReleasePolicy uirp = om.readValue(entity,  UserInfoReleasePolicy.class);
 			InfoReleasePolicy irp = convertToCopsuPolicy(uirp);
+			
 			String sendEntity = irp.toJSON();
+			
 			
 			response = IcmUtility.forwardRequest(httpClient, "PUT", copsuHost, copsuPort, sb.toString(), request, sendEntity);
 			
+			
 			String rbody = IcmUtility.extractBody(response);
 			int status = IcmUtility.extractStatusCode(response);
+			
 			
 			// On error, send status code and body from COPSU
 			if (status >= 300)
@@ -467,7 +473,8 @@ public class UserInfoReleasePoliciesController {
 			status = IcmUtility.extractStatusCode(response);
 			if (status >= 300)
 				return buildResponse(Status.fromStatusCode(status),rbody);
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<ReturnedPolicy> lr = om.readValue(rbody, new TypeReference<List<ReturnedPolicy>>() {});
 			ListOfUserReturnedPolicy ulr = new ListOfUserReturnedPolicy();
 			for (ReturnedPolicy l : lr) {
@@ -528,7 +535,8 @@ public class UserInfoReleasePoliciesController {
 				return buildResponse(Status.fromStatusCode(status),rbody);
 			
 			// otherwise, deserialize, convert to an ICM object, and return it re-serialized
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<ReturnedPolicy> lr = om.readValue(rbody, new TypeReference<List<ReturnedPolicy>>() {});
 			ListOfUserReturnedPolicy ulr = new ListOfUserReturnedPolicy();
 			for (ReturnedPolicy l : lr) {
@@ -579,7 +587,8 @@ public class UserInfoReleasePoliciesController {
 		try {
 			
 			// Convert input to COPSU form
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			UserInfoReleasePolicy uirp = om.readValue(entity,  UserInfoReleasePolicy.class);
 			InfoReleasePolicy irp = convertToCopsuPolicy(uirp);
 			String sendEntity = irp.toJSON();

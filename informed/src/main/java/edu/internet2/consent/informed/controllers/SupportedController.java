@@ -49,6 +49,7 @@ import edu.internet2.consent.informed.model.SupportedRHType;
 import edu.internet2.consent.informed.model.SupportedRPType;
 import edu.internet2.consent.informed.model.SupportedUserType;
 import edu.internet2.consent.informed.util.InformedUtility;
+import edu.internet2.consent.informed.util.OMSingleton;
 
 @Path("/supported")
 public class SupportedController {
@@ -175,7 +176,8 @@ public class SupportedController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(utl));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -217,7 +219,8 @@ public class SupportedController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(utl.get(0)));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -242,7 +245,8 @@ public class SupportedController {
 		}
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedUserType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedUserType.class);
@@ -306,7 +310,8 @@ public class SupportedController {
 		}
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedUserType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedUserType.class);
@@ -397,7 +402,8 @@ public class SupportedController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -440,7 +446,8 @@ public class SupportedController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -466,7 +473,8 @@ public class SupportedController {
 		}
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedLanguage sl = null;
 		try {
 			sl = om.readValue(entity,SupportedLanguage.class);
@@ -531,7 +539,8 @@ public class SupportedController {
 		}
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedLanguage sl = null;
 		try {
 			sl = om.readValue(entity,SupportedLanguage.class);
@@ -633,7 +642,8 @@ public class SupportedController {
 				}
 			}
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retval));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -681,7 +691,8 @@ public class SupportedController {
 		} else {
 
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -706,7 +717,8 @@ public class SupportedController {
 		}
 		
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedRPType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedRPType.class);
@@ -794,7 +806,8 @@ public class SupportedController {
 		} else {
 
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -823,7 +836,8 @@ public class SupportedController {
 		String rhid = InformedUtility.idUnEscape(rhidin);
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedRPType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedRPType.class);
@@ -927,7 +941,8 @@ public class SupportedController {
 				}
 			}
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retval));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
@@ -975,7 +990,8 @@ public class SupportedController {
 		} else {
 
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
@@ -1001,7 +1017,8 @@ public class SupportedController {
 		
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedIIType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedIIType.class);
@@ -1089,7 +1106,8 @@ public class SupportedController {
 		} else {
 
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -1118,7 +1136,8 @@ public class SupportedController {
 		String rhid = InformedUtility.idUnEscape(rhidin);
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedIIType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedIIType.class);
@@ -1212,7 +1231,8 @@ public class SupportedController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -1255,7 +1275,8 @@ public class SupportedController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -1281,7 +1302,8 @@ public class SupportedController {
 		}
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedRHType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedRHType.class);
@@ -1346,7 +1368,8 @@ public class SupportedController {
 		}
 
 		// parse out the input into an instance
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		SupportedRHType sl = null;
 		try {
 			sl = om.readValue(entity,SupportedRHType.class);

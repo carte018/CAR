@@ -45,6 +45,7 @@ import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
 import edu.internet2.consent.informed.util.InformedUtility;
+import edu.internet2.consent.informed.util.OMSingleton;
 
 @Path("/iiic")
 public class IIICController {
@@ -163,7 +164,9 @@ public class IIICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rvmi));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -202,7 +205,9 @@ public class IIICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(riimi));
 			} catch (Exception e) {
 				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
@@ -315,7 +320,9 @@ public class IIICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedValueMetaInformation rvmi = null;
 		
 		try {
@@ -404,7 +411,9 @@ public class IIICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedInfoItemMetaInformation riimi = null;
 		
 		try {

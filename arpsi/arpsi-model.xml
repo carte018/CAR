@@ -14,5 +14,13 @@
         <include>**/*.class</include>
       </includes>
     </fileSet>
+    <fileSet>
+    	<directory>target/classes/edu/internet2/consent/arpsi/util</directory>
+    	<outputDirectory>/edu/internet2/consent/arpsi/util</outputDirectory>
+    	<includes>
+    	  <include>OMSingleton.class</include>
+    	  <include>OMSingleton$1.class</include>
+    	</includes>
+    </fileSet>
   </fileSets>
 </assembly>

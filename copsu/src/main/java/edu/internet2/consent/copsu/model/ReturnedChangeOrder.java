@@ -38,6 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.copsu.cfg.CopsuConfig;
 import edu.internet2.consent.copsu.util.FactoryFactory;
+import edu.internet2.consent.copsu.util.OMSingleton;
 
 @javax.persistence.Entity
 public class ReturnedChangeOrder {
@@ -110,7 +111,8 @@ public class ReturnedChangeOrder {
 	
 	public String toJSON() throws JsonProcessingException{
 		// Return JSON representation of self
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		String retval = mapper.writeValueAsString(this);
 		return retval;
 	}
@@ -216,7 +218,8 @@ public class ReturnedChangeOrder {
 			// for every policy in the result list...
 			// Make the changes specified in the changeOrder
 			ReturnedPolicy newrp = new ReturnedPolicy();
-			ObjectMapper copier = new ObjectMapper();
+			//ObjectMapper copier = new ObjectMapper();
+			ObjectMapper copier = OMSingleton.getInstance().getOm();
 			String serialized = rp.toJSON();
 			newrp = (ReturnedPolicy) copier.readValue(serialized.getBytes(),ReturnedPolicy.class);
 			

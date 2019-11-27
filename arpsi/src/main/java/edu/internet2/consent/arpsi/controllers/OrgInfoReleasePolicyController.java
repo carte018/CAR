@@ -59,6 +59,7 @@ import edu.internet2.consent.arpsi.model.SupersedingPolicyId;
 import edu.internet2.consent.arpsi.model.UserId;
 import edu.internet2.consent.arpsi.model.UserProperty;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
+import edu.internet2.consent.arpsi.util.OMSingleton;
 
 @Path("/org-info-release-policies")
 public class OrgInfoReleasePolicyController {
@@ -118,7 +119,8 @@ public class OrgInfoReleasePolicyController {
 		
 		// Map the input into an org policy 
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		OrgInfoReleasePolicy inputPolicy = null;
 		
 		try {
@@ -529,7 +531,8 @@ public class OrgInfoReleasePolicyController {
 		}
 
 		
-		ObjectMapper mapper = new ObjectMapper(); 
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		OrgInfoReleasePolicy inputPolicy = null;
 		
 		try {
@@ -577,7 +580,8 @@ public class OrgInfoReleasePolicyController {
 			return ArpsiUtility.locError(400, "ERR0021",LogCriticality.info,"resourceHolder");
 		}
 		
-		ObjectMapper copier = new ObjectMapper();
+		//ObjectMapper copier = new ObjectMapper();
+		ObjectMapper copier = OMSingleton.getInstance().getOm();
 		OrgReturnedPolicy newPolicy = new OrgReturnedPolicy();
 		
 		try {

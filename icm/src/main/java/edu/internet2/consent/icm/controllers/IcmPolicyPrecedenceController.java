@@ -45,6 +45,7 @@ import edu.internet2.consent.icm.model.PATCH;
 import edu.internet2.consent.icm.model.PrecedenceInstruction;
 import edu.internet2.consent.icm.model.ReturnedPrecedenceObject;
 import edu.internet2.consent.icm.util.IcmUtility;
+import edu.internet2.consent.icm.util.OMSingleton;
 import edu.internet2.consent.icm.cfg.IcmConfig;
 
 @Path("/icm-policy-precedence")
@@ -217,7 +218,8 @@ public class IcmPolicyPrecedenceController {
 		ListOfReturnedPrecedenceObject lorp = new ListOfReturnedPrecedenceObject();
 		
 		try {
-			ObjectMapper mapper = new ObjectMapper();
+			//ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper = OMSingleton.getInstance().getOm();
 			piList = mapper.readValue(entity,  new TypeReference<List<PrecedenceInstruction>>(){});
 		} catch (JsonParseException e) {
 			return IcmUtility.locError(400, "ERR0005", LogCriticality.info);

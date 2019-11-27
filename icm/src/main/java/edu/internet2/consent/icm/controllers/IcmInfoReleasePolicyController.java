@@ -59,6 +59,7 @@ import edu.internet2.consent.icm.model.SupersedingPolicyId;
 import edu.internet2.consent.icm.model.UserId;
 import edu.internet2.consent.icm.model.UserProperty;
 import edu.internet2.consent.icm.util.IcmUtility;
+import edu.internet2.consent.icm.util.OMSingleton;
 
 @Path("/icm-info-release-policies")
 
@@ -119,7 +120,8 @@ public class IcmInfoReleasePolicyController {
 
 		// Map the input object into an icm policy
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		IcmInfoReleasePolicy inputPolicy = null;
 		
 		try {
@@ -516,7 +518,9 @@ public class IcmInfoReleasePolicyController {
 			return IcmUtility.locError(500,"ERR0004",LogCriticality.error);
 		}
 		
-		ObjectMapper mapper = new ObjectMapper(); 
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		IcmInfoReleasePolicy inputPolicy = null;
 		
 		try {
@@ -565,7 +569,9 @@ public class IcmInfoReleasePolicyController {
 			return IcmUtility.locError(400, "ERR0021",LogCriticality.info,"ResourceHolderId");
 		}
 		
-		ObjectMapper copier = new ObjectMapper();
+		//ObjectMapper copier = new ObjectMapper();
+		ObjectMapper copier = OMSingleton.getInstance().getOm();
+		
 		IcmReturnedPolicy newPolicy = new IcmReturnedPolicy();
 		
 		try {

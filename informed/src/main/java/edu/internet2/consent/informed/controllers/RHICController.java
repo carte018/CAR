@@ -48,6 +48,7 @@ import edu.internet2.consent.informed.model.ReturnedRHInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRHRPList;
 import edu.internet2.consent.informed.util.InformedUtility;
+import edu.internet2.consent.informed.util.OMSingleton;
 
 // Controller for /rhic resources
 // These are resources that are unique to one or more resource holders, irrespective
@@ -187,7 +188,8 @@ public class RHICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retlist));
 			} catch (Exception e) {
 				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
@@ -229,7 +231,8 @@ public class RHICController {
 			return InformedUtility.locError(404, "ERR0065", LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retlist));
 			} catch (Exception e) {
 				return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
@@ -304,7 +307,9 @@ public class RHICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedInfoTypeList ritl = null;
 		
 		try {
@@ -450,7 +455,9 @@ public class RHICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(lrhmi));
 			} catch (Exception e) {
 				return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
@@ -518,7 +525,9 @@ public class RHICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedRHMetaInformation ritl = null;
 		
 		try {
@@ -667,7 +676,9 @@ public class RHICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rrpl));
 			} catch (Exception e) {
 				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
@@ -730,7 +741,9 @@ public class RHICController {
 		String rhvalue = InformedUtility.idUnEscape(rhvaluein);
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedRHRPList rrpl = null;
 		
 		try {
@@ -872,7 +885,9 @@ public class RHICController {
 			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
 		} else {
 			try {
-				ObjectMapper mapper = new ObjectMapper();
+				//ObjectMapper mapper = new ObjectMapper();
+				ObjectMapper mapper = OMSingleton.getInstance().getOm();
+				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rhil));
 			} catch (Exception e) {
 				return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
@@ -942,7 +957,9 @@ public class RHICController {
 		
 		// Deserialize the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
 		ReturnedRHInfoItemList rril = null;
 		
 		try {

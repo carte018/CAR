@@ -487,7 +487,8 @@ public class CarUtility {
 				return null;
 			}
 			
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedValueMetaInformation lr = om.readValue(rbody,  ReturnedValueMetaInformation.class);
 			if (lr != null) {
 				//add to the cache
@@ -539,7 +540,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) 
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRHInfoItemList ril = om.readValue(rbody, ReturnedRHInfoItemList.class);
 			List<InfoItemIdentifier> lr = null;
 			if (ril != null) 
@@ -591,7 +593,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300)
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<ReturnedRHMetaInformation> lr = om.readValue(rbody,  new TypeReference<List<ReturnedRHMetaInformation>>() {});
 			if (lr != null)
 				return (ArrayList<ReturnedRHMetaInformation>) lr;
@@ -673,7 +676,8 @@ public class CarUtility {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedInfoItemMetaInformation lr = om.readValue(rbody, ReturnedInfoItemMetaInformation.class);
 		
 			if (lr != null) {
@@ -715,7 +719,8 @@ public class CarUtility {
 		ui.setUserid(uname);
 		u.setUseridentifier(ui);
 		u.setShowagain(value);
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		String ujson = null;
 		try {
 			ujson = mapper.writeValueAsString(u);
@@ -787,7 +792,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300)
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedUserRPMetaInformation lr = om.readValue(rbody, ReturnedUserRPMetaInformation.class);
 			if (lr == null)
 				locError("ERR1116", LogCriticality.info, "serialization returned null ReturnedUserRPMetaInformation");
@@ -880,7 +886,8 @@ public class CarUtility {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			@SuppressWarnings("unchecked")
 			ArrayList<ReturnedRPMetaInformation> alr = (ArrayList<ReturnedRPMetaInformation>) om.readValue(rbody,  new TypeReference<List<ReturnedRPMetaInformation>>(){});
 			return alr;			
@@ -946,7 +953,8 @@ public class CarUtility {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPMetaInformation lr = om.readValue(rbody, ReturnedRPMetaInformation.class);
 			if (lr != null) 
 				icache.storeCachedRPMetaInformation(rhid, rptype, rpid, lr);
@@ -1017,7 +1025,8 @@ public class CarUtility {
 				}
 				return null;
 			}
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPMetaInformation lr = om.readValue(rbody, ReturnedRPMetaInformation.class);
 			if (lr != null)
 				icache.storeCachedRPMetaInformation(rhid, rpid, lr);
@@ -1075,7 +1084,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) 
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody, ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
@@ -1128,7 +1138,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300)
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody, ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
@@ -1176,7 +1187,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300)
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			UserReturnedPolicy urirp = om.readValue(rbody, UserReturnedPolicy.class);
 			retval = urirp.getPolicyMetaData().getPolicyId().getBaseId();
 			return retval;
@@ -1198,7 +1210,8 @@ public class CarUtility {
 	// blind put of a policy -- we simply ignore errors, since we can't do anything useful with them in this context
 	public static boolean putCOPSUPolicy(String baseId, UserInfoReleasePolicy policy, CarConfig config) {
 		boolean retval = false;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		String jsonToPut = null;
 		String icmhost = config.getProperty("car.icm.hostname", true);
 		String icmport = config.getProperty("car.icm.port", true);
@@ -1279,7 +1292,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300)
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<edu.internet2.consent.icm.model.UserReturnedPolicy> retlist = om.readValue(rbody,new TypeReference<List<edu.internet2.consent.icm.model.UserReturnedPolicy>>(){});
 			if (retlist == null || retlist.isEmpty())
 				return null;
@@ -1328,7 +1342,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300)
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<UserReturnedPolicy> retlist = om.readValue(rbody, new TypeReference<List<edu.internet2.consent.icm.model.UserReturnedPolicy>>(){});
 			if (retlist == null || retlist.isEmpty()) 
 				return null;
@@ -1380,7 +1395,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) 
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			List<edu.internet2.consent.icm.model.UserReturnedPolicy>retlist = om.readValue(rbody, new TypeReference<List<edu.internet2.consent.icm.model.UserReturnedPolicy>>(){});
 			if (retlist == null || retlist.isEmpty())
 				return null;
@@ -1427,7 +1443,8 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) 
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			edu.internet2.consent.arpsi.model.DecisionResponseObject retval = new edu.internet2.consent.arpsi.model.DecisionResponseObject();
 			retval = om.readValue(rbody, edu.internet2.consent.arpsi.model.DecisionResponseObject.class);
 			return retval;
@@ -1475,7 +1492,8 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 			CarUtility.locError("ERR1134",LogCriticality.info, String.valueOf(status));
 			return null;
 		}
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		IcmDecisionResponseObject retval = new IcmDecisionResponseObject();
 		retval = om.readValue(rbody, IcmDecisionResponseObject.class);
 		return retval;		
@@ -1529,7 +1547,8 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		int status = CarUtility.extractStatusCode(response);
 		if (status >= 300)
 			return null;
-		ObjectMapper om = new ObjectMapper();
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
 		ReturnedRPOptionalInfoItemList lr = om.readValue(rbody, ReturnedRPOptionalInfoItemList.class);
 		return lr;				
 	} catch (Exception e) {
@@ -1581,7 +1600,8 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) 
 				return null;
-			ObjectMapper om = new ObjectMapper();
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedRPOptionalInfoItemList lr = om.readValue(rbody, ReturnedRPOptionalInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
@@ -1644,7 +1664,8 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		
 		ArrayList<edu.internet2.consent.icm.model.UserReturnedPolicy> responseList = null;
 		try {
-			ObjectMapper mapper = new ObjectMapper();
+			//ObjectMapper mapper = new ObjectMapper();
+			ObjectMapper mapper = OMSingleton.getInstance().getOm();
 			responseList = mapper.readValue(rbody, new TypeReference<List<UserReturnedPolicy>>() {});
 		} catch (Exception e) {
 			return null;

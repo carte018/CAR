@@ -63,6 +63,7 @@ import edu.internet2.consent.arpsi.model.ResolvedDecision;
 import edu.internet2.consent.arpsi.model.UserProperty;
 import edu.internet2.consent.arpsi.model.ValueObject;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
+import edu.internet2.consent.arpsi.util.OMSingleton;
 
 @Path("/org-info-release-decision")
 public class OrgInfoReleaseDecisionController {
@@ -115,7 +116,8 @@ public class OrgInfoReleaseDecisionController {
 	
 		// Authorized.  Now we parse the input
 		
-		ObjectMapper mapper = new ObjectMapper();
+		//ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
 		DecisionRequestObject inputRequest = null;
 		
 		try {
