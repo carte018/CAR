@@ -113,7 +113,7 @@ public class MainController {
 		return bar;
 	}
 	
-	private String signAndEncryptToRHAsJWT(String payload) {
+	private String signAndEncryptToRHAsJWT(String payload,String rhid) {
 		// Take the input payload and return a base64 string
 		// to send as "json" in the result response POST
 		// containing a JWT signed with our private key and
@@ -131,8 +131,24 @@ public class MainController {
 		CarConfig config = CarConfig.getInstance();
 		
 		String myprivfile=config.getProperty("car.privatekeyfile", true);
-		String shibcertfile = config.getProperty("car.rhcertfile", true);
+		String shibcertfile = config.getProperty("car.rhcertfile", true);  // If everything is using the same RH key
 		
+		// In case there is a unique key for this RH...
+		
+		int rct = 1;
+		String rhent = "begin";
+		while (rhent != null) {
+			rhent = config.getProperty("car.rhcertentity."+rct, false);
+			if (rhent != null && rhent.equals(rhid)) {
+				String cf = config.getProperty("car.rhcertfile."+rct,false);
+				if (cf != null && ! cf.equalsIgnoreCase("")) {
+					shibcertfile = cf;
+				}
+			}
+			rct += 1;
+		}
+		
+		// Now shibcertfile has the appropriate key file name
 		// Start by base64ing the payload string (usually a JSON blob)
 		String base64 = new String(Base64.encodeBase64(payload.getBytes()));
 		
@@ -1818,7 +1834,7 @@ public class MainController {
 					resultView.addObject("json",new String(Base64.encodeBase64(w.toJson().getBytes())));
 				} else {
 					CarUtility.locLog("LOG1003",LogCriticality.debug);
-					resultView.addObject("json",signAndEncryptToRHAsJWT(new String(Base64.encodeBase64(w.toJson().getBytes()))));
+					resultView.addObject("json",signAndEncryptToRHAsJWT(new String(Base64.encodeBase64(w.toJson().getBytes())),rhid));
 				}
 				resultView.addObject("returnUrl",returntourl);
 				// debug
