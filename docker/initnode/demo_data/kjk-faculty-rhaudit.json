@@ -1,0 +1,9 @@
+    {
+        "adminRoleId": 15,
+        "archived": 0,
+        "created": 1575764179358,
+        "roleName": "RHAuditor",
+        "status": "active",
+        "subject": "kjk-faculty@amber.org",
+        "target": null
+    }

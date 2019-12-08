@@ -240,6 +240,11 @@ sleep 2
 echo "Inserting Generic R&S ICM policy"
 curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/icmgen.json 'https://apache-sp/consent/v1/icm/icm-info-release-policies'
 
+#
+# Make kjk-faculty an rh auditor for demo purposes
+#
+echo "Adding rhaudit capability for kjk-faculty"
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/kjk-faculty-rhaudit.json 'https://apache-sp/consent/v1/iinformed/adminrole/'
 
 # 
 # Replace the entrypoint routine with one that only forces deployments

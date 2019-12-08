@@ -385,10 +385,10 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 objectclass: eduPerson
 uid: kjk-faculty
-cn: John Keynes
-givenName: John
-sn: Keynes
-displayName: Professor Keynes
+cn: Kurt Godel
+givenName: Kurt
+sn: Godel
+displayName: Professor Godel
 eduPersonPrincipalName: kjk-faculty@amber.org
 eduPersonAffiliation: faculty
 eduPersonPrimaryAffiliation: faculty
@@ -403,7 +403,7 @@ localUniqueId: 9991011
 userPassword: kjk-faculty
 mail: iamfaculty@avalonmail.com
 eduPersonOrcid: 9999-9999-9999-2518
-eduPersonOrgUnitDN: cn=public_policy,dc=amber,dc=org
+eduPersonOrgUnitDN: cn=mathematics,dc=amber,dc=org
 localDepartmentCode: 12130100
 
 dn: uid=kjk-fgrad,ou=people,dc=amber,dc=org

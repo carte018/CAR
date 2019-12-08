@@ -94,6 +94,10 @@ ADD fedsigner.pem /etc/shibboleth/fedsigner.pem
 #
 # Shibboleth SP configuration
 ADD shibboleth2.xml /etc/shibboleth/shibboleth2.xml
+
+# Demo configuration for Sliced Bread environment with SeamlessAccess
+ADD shibboleth2.xml.sb-sa /etc/shibboleth/shibboleth2.xml.sb-sa
+
 #
 # Key and certificate for Shibboleth SP
 ADD sp-key.pem /etc/shibboleth/sp-key.pem

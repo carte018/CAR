@@ -468,27 +468,38 @@ public class MainController {
 		//
 		ModelAndView retval = null;
 		
+		// In the event we are on sliced bread, we may have the Amber IDP at port 9443
+		// and the Chaos IDP at port 9493.  We need to detect which IDP we're authenticated
+		// through and use the proper port.  If we can't tell, we default to 9443 and Amber.
+		
+		String idpport="9443";
+		if ((req.getAttribute("eduPersonOrgDN") != null && ((String)req.getAttribute("eduPersonOrgDN")).contains("chaos")) ||
+					(req.getAttribute("eduPersonPrincipalName") != null && ((String)req.getAttribute("eduPersonPrincipalName")).contains("chaos")) || 
+					(req.getAttribute("eduPersonUniqueId") != null && ((String)req.getAttribute("eduPersonUniqueId")).contains("chaos"))) {
+			idpport="9493";
+		}
+		
 		if (appname.equalsIgnoreCase("contentrus")) {
 			retval = new ModelAndView("contentrus");
 			retval.addObject("sitename","Content-R-Us");
 			retval.addObject("top_heading","Content-R-Us");
 			// hack for sliced bread demo -- parameterize later
-			retval.addObject("logouturl","/contentrus/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:9443/idp/profile/Logout");
+			retval.addObject("logouturl","/contentrus/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
 		} else if (appname.equalsIgnoreCase("randsrus")) {
 			retval = new ModelAndView("randsrus");
 			retval.addObject("sitename","Research-R-Us");
 			retval.addObject("top_heading","Research-R-Us");
-			retval.addObject("logouturl","/randsrus/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:9443/idp/profile/Logout");
+			retval.addObject("logouturl","/randsrus/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
 		} else if (appname.equalsIgnoreCase("scholars")) {
 			retval = new ModelAndView("scholars");
 			retval.addObject("sitename","Scholarly Garage");
 			retval.addObject("top_heading","Scholarly Garage");
-			retval.addObject("logouturl","/scholars/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:9443/idp/profile/Logout");
+			retval.addObject("logouturl","/scholars/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
 		} else if (appname.equalsIgnoreCase("payroll")) {
 			retval = new ModelAndView("payroll");
 			retval.addObject("sitename","Peanuts:  Your Payroll Site");
 			retval.addObject("top_heading","Peanuts");
-			retval.addObject("logouturl","/payroll/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:9443/idp/profile/Logout");
+			retval.addObject("logouturl","/payroll/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
 		}
 		
 		retval.addObject("top_logo_url","/Pattern_In_Rebma.png");
