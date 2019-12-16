@@ -70,7 +70,7 @@ then
     institution_name="$im"
   fi
 
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     echo "Skunkworks builds use the default 'sysadmin' SAML user \(defined automatically"
     echo "by the build in the skunkworks amber.org LDAP\) as the initial 'super-admin'"

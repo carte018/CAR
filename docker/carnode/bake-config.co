@@ -69,7 +69,7 @@ then
     institution_name="$im"
   fi
   
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
       echo "Skunkworks deployments default to using the null authentication "
       echo "module which accepts any credentials for API access without validation."

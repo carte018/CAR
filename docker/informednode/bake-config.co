@@ -167,7 +167,7 @@ then
   fi
   fi
   
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     app_users="root"
     app_admins="$app_users"

@@ -58,6 +58,7 @@ fi
 if [ "$QUIET" != "yes" ]
 then
  if [ "$DATABASE" == "yes" ]
+ then
  echo "The components of the CAR system rely on database tables to store various information."
  echo "Access to those database tables requires the use of schema users.  Before we begin, we need"
  echo "to set passwords for those schema users (and for the defautl MariaDB users the database will"
@@ -120,7 +121,7 @@ then
  echo "configuration files and the hibernate.cfg.xml files for each container."
  fi
  fi
- if [ $SKUNKWORKS != "yes" ]
+ if [ "$SKUNKWORKS" != "yes" ]
  then
  echo
  echo
@@ -209,7 +210,7 @@ cp buildnode/Dockerfile.co buildnode/Dockerfile
 # After the relevant configs are baked, execute docker-compose to build containers (build only)
 #
 
-docker-compose build -d
+docker-compose build
 
 # And we're done.
 #

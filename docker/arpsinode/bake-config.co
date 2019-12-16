@@ -157,7 +157,7 @@ then
   fi
   fi
   
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS"vi  == "yes" ]
   then
     echo "Skunkworks builds default to authorizing a single username \(skunkworks\) for access"
     echo "to the APIs.  The user has full admin rights in the APIs, and because"

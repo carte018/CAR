@@ -62,7 +62,7 @@ then
   # Ask some questions
   #
 
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     echo "Skunkworks builds use Castle Amber as the fictional setting for their operations."
     institution_name="Castle Amber"
@@ -82,7 +82,7 @@ then
     fi
   fi
   
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     echo "Skunkworks builds use Amber as the short name for the organization."
     institution_short_name="Amber"
@@ -99,7 +99,7 @@ then
     fi
   fi
   
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     echo "Skunkworks builds use the built-in Amber icon."
     ilogo_url="/amber_logo.png"

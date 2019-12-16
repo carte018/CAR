@@ -164,7 +164,7 @@ then
   fi
   
   # ARPSI app_users carries forward for Skunkworks
-  if [ $SKUNKWORKS == "yes" ]
+  if [ "$SKUNKWORKS" == "yes" ]
   then
     app_users="root"
     app_admins="$app_users"
