@@ -1,0 +1,114 @@
+version: '3'
+services:
+  arpsinode:
+    build: ./arpsinode
+    hostname: arpsinode
+    environment:
+      - NODE_NAME=arpsinode
+      - ARPSIUSER_PASSWORD=%mysql_arpsi_password%
+    volumes:
+      - arpsi-config:/etc/car
+      - buildnode_arpsi-webapps:/var/lib/tomcat8/webapps
+
+  copsunode:
+    build: ./copsunode
+    hostname: copsunode
+    environment:
+      - NODE_NAME=copsunode
+      - COPSUUSER_PASSWORD=%mysql_copsu_password%
+    volumes:
+      - copsu-config:/etc/car
+      - buildnode_copsu-webapps:/var/lib/tomcat8/webapps
+
+  icmnode:
+    build: ./icmnode
+    hostname: icmnode
+    depends_on:
+      - arpsinode
+      - copsunode
+    environment:
+      - NODE_NAME=icmnode
+      - ICMUSER_PASSWORD=%mysql_icm_password%
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - icm-config:/etc/car
+      - buildnode_icm-webapps:/var/lib/tomcat8/webapps
+
+  informednode:
+    build: ./informednode
+    hostname: informednode
+    depends_on:
+      - arpsinode
+      - copsunode
+      - icmnode
+    environment:
+      - NODE_NAME=informednode
+      - INFORMEDUSER_PASSWORD=%mysql_informed_password%
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - informed-config:/etc/car
+      - buildnode_informed-webapps:/var/lib/tomcat8/webapps
+
+  carnode:
+    build: ./carnode
+    hostname: carnode
+    depends_on:
+      - arpsinode
+      - copsunode
+      - icmnode
+      - informednode
+    environment:
+      - NODE_NAME=carnode
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - car-config:/etc/car
+      - buildnode_car-webapps:/var/lib/tomcat8/webapps
+      - carmakeys:/var/www/carma
+
+  caradminnode:
+    build: ./caradminnode
+    hostname: caradminnode
+    depends_on:
+      - arpsinode
+      - copsunode
+      - icmnode
+      - informednode
+      - carnode
+    environment:
+      - NODE_NAME=caradminnode
+      - CARMA_USER=%carma_user%
+      - CARMA_PASSWORD=%carma_password%
+    volumes:
+      - caradmin-config:/etc/car
+      - buildnode_caradmin-webapps:/var/lib/tomcat8/webapps
+volumes:
+  arpsi-config: {}
+  arpsi-webapps: {}
+  copsu-config: {}
+  copsu-webapps: {}
+  car-config: {}
+  car-webapps: {}
+  caradmin-config: {}
+  caradmin-webapps: {}
+  icm-config: {}
+  icm-webapps: {}
+  informed-config: {}
+  informed-webapps: {}
+  regloader-config: {}
+  regloader-webapps: {}
+  carmakeys: {}
+  buildnode_arpsi-webapps:
+    external: true
+  buildnode_copsu-webapps:
+    external: true
+  buildnode_icm-webapps:
+    external: true
+  buildnode_informed-webapps:
+    external: true
+  buildnode_car-webapps:
+    external: true
+  buildnode_caradmin-webapps:
+    external: true

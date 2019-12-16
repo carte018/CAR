@@ -1,0 +1,135 @@
+#!/bin/bash
+
+parse_args() {
+  POSITIONAL=()
+  while [[ $# -gt 0 ]]
+  do
+    key="$1"
+    case "$key" in
+        -q)
+                QUIET=yes
+                shift
+                ;;
+ 		-d)
+ 				DATABASE=yes
+ 				shift
+ 				;;
+         *)
+         		shift
+         		;;
+    esac
+  done
+  set -- "${POSITIONAL[@]}"
+}
+
+QUIET=no
+DATABASE=no
+
+parse_args $*
+
+
+
+# 
+# If we have a previously-configured arpsi config, start with its defaults
+# as ours, overridden by our own config.prev file.
+#
+
+if [ -f ../arpsinode/config.prev ]
+then
+    source ../arpsinode/config.prev
+fi
+
+
+#
+# if the config.prev file exists, load it
+#
+
+if [ -f config.prev ]
+then
+    source config.prev
+fi
+
+#
+# if we were called with the -q flag, don't ask questions, otherwise do
+#
+
+if [ "$QUIET" != "yes" ]
+then
+  # Ask some questions
+  #
+
+  echo "The CARADMIN UI occasionally has to resort to a pre-configured name by"
+  echo "which to refer to your institution as a whole when conveying to"
+  echo "end users details of consent transactions.  At Duke University,"
+  echo "for example, we use the string 'Duke' for this purpose."
+  echo "Enter the name to use to identify your institution to users of your"
+  echo "CARADMIN UI. [$institution_name]: "
+  read im
+  if [ -n "$im" ]
+  then
+    institution_name="$im"
+  fi
+
+  if [ $SKUNKWORKS == "yes" ]
+  then
+    echo "Skunkworks builds use the default 'sysadmin' SAML user \(defined automatically"
+    echo "by the build in the skunkworks amber.org LDAP\) as the initial 'super-admin'"
+    echo "for the caradmin interface.  When the build is complete, you will need to "
+    echo "use the 'sysadmin' account to access the caradmin service and assign roles to"
+    echo "other users in the skunkworks IDP."
+  
+    super_admins="1777@amber.org,sysadmin@amber.org"
+  else
+  echo "The CARADMIN UI provides a mechanism for managing which of the"
+  echo "administrative features it exposes is accesible to which"
+  echo "logged-in users.  In order to bootstrap that configuration,"
+  echo "however, it needs at least one user pre-specified as a "
+  echo "'super-admin'. Authenticating to the web UI as this user will "
+  echo "afford the user with full administrative rights over the "
+  echo "entire CAR instance.  You must specify at least one user to "
+  echo "receive this 'super-admin' role in order to bootstrap the"
+  echo "configuration."
+  echo "Enter a comma-separated list of IDs \(the values of REMOTE_UESR"
+  echo "you expect to be set when the users log in\) or the user\(s\) you"
+  echo "wish to grant overriding 'super-admin' privileges to."
+  echo "[$super_admins]: "
+  read sa
+  if [ -n "$sa" ]
+  then
+    super_admins="$sa"
+  fi
+  fi
+  
+fi
+echo
+echo
+echo "We will now rebuild the templated configuration files for this CARADMIN node."
+echo
+echo
+
+cat caradmin.conf.tmpl | sed 's/%basicauth_class%/'$basicauth_class'/g' | sed 's/%krb_default_realm%/'$krb_default_realm'/g' | sed 's/%app_users%/'$app_users'/g' | sed 's/%app_admins%/'$app_admins'/g' | sed 's/%carma_user%/'$CARMA_USER'/g' | sed 's/%carma_password%/'$CARMA_PASSWORD'/g' | sed 's/%institution_name%/'$institution_name'/g' | sed 's/%super_admins%/'$super_admins'/g' |  sed 's/%apache_fqdn%/'${APACHE_FQDN}'/g' > caradmin.conf
+
+echo
+echo "Registering SSL certificate trusts"
+echo
+cp ../apache-sp/ssl.pem ./ssl.pem
+
+
+echo "Saving configuration for later reuse"
+echo
+echo "krb_default_realm=$krb_default_realm" > config.prev
+echo "kdc_fqdn_1=$kdc_fqdn_1" >> config.prev
+echo "kdc_fqdn_2=$kdc_fqdn_2" >> config.prev
+echo "kdc_fqdn_3=$kdc_fqdn_3" >> config.prev
+echo "kdc_fqdn_admin=$kdc_fqdn_admin" >> config.prev
+echo "basicauth_class=$basicauth_class" >> config.prev
+echo "app_users=$app_users" >> config.prev
+echo "app_admins=$app_admins" >> config.prev
+echo "carma_user=$CARMA_USER" >> config.prev
+echo "carma_password=$CARMA_PASSWORD" >> config.prev
+echo "institution_name=$institution_name" >> config.prev
+echo "super_admins=$super_admins">>config.prev
+echo "Done."
+echo "Your saved configuration options are available in the file config.prev in the car directory."
+echo
+

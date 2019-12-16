@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="hibernate.connection.driver.class">com.mysql.jdbc.Driver</property>
+    <property name="hibernate.connection.url">jdbc:mysql:loadbalance://node1:3306,node2:3306,node3:3306/arpsi</property>
+    <property name="hibernate.connection.username">arpsiuser</property>
+    <property name="hibernate.connection.password">ResistanceIsFutile</property>
+    <property name="hibernate.connection.autocommit">false</property>
+
+	<property name="hibernate.c3p0.min_size">20</property>
+	<property name="hibernate.c3p0.max_size">900</property>
+	<property name="hibernate.c3p0.timeout">28800</property>
+	<property name="hibernate.c3p0.maxStatementsPerConnection">5</property>
+	<property name="hibernate.c3p0.idle_test_period">90</property>
+	<property name="hibernate.c3p0.preferredTestQuery">select 1;</property> 
+	<property name="hibernate.c3p0.testConnectionOnCheckout">false</property>
+	<property name="hibernate.c3p0.testConnectionOnCheckin">true</property>
+	<property name="hibernate.query.plan_cache_max_size">32</property>
+	<property name="hibernate.query.plan_parameter_metadata_max_size">16</property>
+	
+	<property name="hibernate.c3p0.acquireRetryAttempts">12</property>
+	<property name="hibernate.c3p0.acquireRetryDelay">15</property>
+	<property name="hibernate.c3p0.breakAfterAcquireFailure">false</property>
+	 
+    <!-- Do not go into production with this in place; this is for testing only -->
+    <!-- Enabling this will destroy your database and all associated data! -->
+    <!-- <property name="hbm2ddl.auto">create</property> -->  
+    <!--  Enable this to show SQL being processed  -->
+    <!-- <property name="hibernate.show_sql">true</property>-->
+    <mapping class="edu.internet2.consent.arpsi.model.OrgReturnedPolicy"/>
+    <mapping class="edu.internet2.consent.arpsi.model.OrgDirectiveOnValues"/>
+    <mapping class="edu.internet2.consent.arpsi.model.OrgInfoReleaseStatement"/>
+    <mapping class="edu.internet2.consent.arpsi.model.RelyingPartyProperty"/>
+    <mapping class="edu.internet2.consent.arpsi.model.UserProperty"/>
+    <mapping class="edu.internet2.consent.arpsi.model.ValueObject"/>
+    
+  </session-factory>
+</hibernate-configuration>

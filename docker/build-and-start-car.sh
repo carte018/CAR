@@ -255,26 +255,32 @@ echo "carma_password=$carma_password" >> config.prev
 
 #
 # Configure the conf files in arpsinode
+cp arpsinode/Dockerfile.sw arpsinode/Dockerfile
 (cd arpsinode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user /bin/bash ./bake-config $*)
 
 #
 # Configure the conf files in the copsunode
+cp copsunode/Dockerfile.sw copsunode/Dockerfile
 (cd copsunode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user /bin/bash ./bake-config $*)
 
 #
 # Configure the icm conf files
+cp icmnode/Dockerfile.sw icmnode/Dockerfile
 (cd icmnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 # 
 # Configure the informed conf files
+cp informednode/Dockerfile.sw informednode/Dockerfile
 (cd informednode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
 # Configure the car conf files
+cp carnode/Dockerfile.sw carnode/Dockerfile
 (cd carnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
 # Configure the caradmin conf files
+cp caradminnode/Dockerfile/sw caradminnode/Dockerfile
 (cd caradminnode; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS CARMA_USER=$carma_user CARMA_PASSWORD=$carma_password /bin/bash ./bake-config $*)
 
 #
@@ -287,6 +293,7 @@ echo "carma_password=$carma_password" >> config.prev
 #
 # We rely on docker-compose "up" (without the -d flag) terminating with the container
 
+cp buildnode/Dockerfile.sw buildnode/Dockerfile
 (cd buildnode;APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` ./bake-config; APACHE_FQDN=$apache_fqdn SKUNKWORKS=$SKUNKWORKS thisdir=`pwd` docker-compose up)
 
 #
