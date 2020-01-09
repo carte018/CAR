@@ -36,7 +36,7 @@
 
 		<div class="content-section">
 			<h2>$overview_heading</h2>
-			<table class="stats">
+			<table class="stats" role="presentation">
 				<tr>
 					<td class="stat-label">$info_items_heading</td>
 					<td class="stat-value">$ihash.size()</td>
@@ -74,7 +74,7 @@
 			#foreach ($x in $injectedrhlist)
 				<div class="content-section">
 					<h2 class="header-edit">
-						<a id="rh_edit_icon"><i class="fa fa-edit"></i></a>
+						<a id="rh_edit_icon"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a>
 					</h2>
 					<h2>$rh_metainfo_label</h2>
   					#set($formnumber=$formnumber+1)
@@ -106,19 +106,19 @@
 									<h3><a href="#" class="langtoggle" id="h3_$dlang">$dlang</a></h3>
 									<div class="hidden" id="div_rh_h3_$dlang">
 										<div class="form-set">
-											<label for="displayname">$displayname_label</label>
+											<label for="displayname_$dlang">$displayname_label</label>
 											#if($displayhash.get($dlang))
-												<input type="text" name="displayname" value="$displayhash.get($dlang)">
+												<input id="displayname_$dlang" type="text" name="displayname" value="$displayhash.get($dlang)">
 											#else
-												<input type="text" name="displayname" value="">
+												<input id="displayname_$dlang" type="text" name="displayname" value="">
 											#end
 										</div>
 										<div class="form-set">
-											<label for="description">$description_label</label>
+											<label for="description_$dlang">$description_label</label>
 											#if($descrhash.get($dlang))
-												<input type="text" name="description" value="$descrhash.get($dlang)">
+												<input id="description_$dlang" type="text" name="description" value="$descrhash.get($dlang)">
 											#else
-												<input type="text" name="description" value="">
+												<input id="description_$dlang" type="text" name="description" value="">
 											#end
 										</div>
 										<button class="active">$update_label<i class="button-icon-right fa fa-arrow-right"></i></button>
@@ -143,20 +143,20 @@
                 				<input type="hidden" name="csrftoken" value="$csrftoken">
 								<h3>Add a Language</h3>
 								<div class="form-set">
-									<label for="lang">Language</label>
-									<select name="lang">
+									<label for="lang_add">Language</label>
+									<select id="lang_add" name="lang">
 										#foreach($u in $ulangs)
 											<option value="$u">$u</option>
 										#end
 									</select>
 								</div>
 								<div class="form-set">
-									<label for="displayname">$displayname_label</label>
-									<input type="text" name="displayname" value="">
+									<label for="displayname_add">$displayname_label</label>
+									<input id="displayname_add" type="text" name="displayname" value="">
 								</div>
 								<div class="form-set">
-									<label for="description">$description_label</label>
-									<input type="text" name="description" value="">
+									<label for="description_add">$description_label</label>
+									<input id="description_add" type="text" name="description" value="">
 								</div>
 								<br>
 								<button class="active">$update_label<i class="button-icon-right fa fa-arrow-right"></i></button>
@@ -193,7 +193,7 @@
 						</div>
 						<div id="ii_heading_minus_div_$itype" class="hidden" style="display:inline;">
 							<h2 class="header-edit" id="ii_heading_edit_icon_$itype">
-								<a id="rh_edit_icon_$itype" href="#" class="ii_edit_toggle"><i class="fa fa-edit"></i></a>
+								<a id="rh_edit_icon_$itype" href="#" class="ii_edit_toggle"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a>
 							</h2>
 							<h2 class="header-edit hidden" id="ii_heading_save_icon_$itype">
 								<a id="rh_save_icon_$itype" href="#" class="ii_edit_save">$save_changes_label</a>
@@ -282,7 +282,8 @@
 										<td class="wrappingtd">#if($ihash.get($vi) && $ihash.get($vi).getDisplayname() && $CarAdminUtils.localize($ihash.get($vi).getDisplayname(),$lang))$CarAdminUtils.localize($ihash.get($vi).getDisplayname(),$lang)#end</td>
 										
 										<td class="wrappingtd">
-											<select name="iipresentationtype_$vinumber">
+											<label for="iipresentationtype_${itype}_$vinumber" class="offscreen">Presentation Type</label>
+											<select id="iipresentationtype_${itype}_$vinumber" name="iipresentationtype_$vinumber">
 												<option value="TRANSPARENT"></option>
 												<option value="TRANSPARENT" #if($ihash.get($vi).getPresentationtype() && $ihash.get($vi).getPresentationtype().equals("TRANSPARENT"))selected#end>TRANSPARENT</option>
 												<option value="OPAQUE" #if($ihash.get($vi).getPresentationtype() && $ihash.get($vi).getPresentationtype().equals("OPAQUE"))selected#end>OPAQUE</option>
@@ -290,19 +291,20 @@
 											</select>
 										</td>
 										<td class="wrappingtd">
-											<select name="iipolicytype_$vinumber">
+										    <label for="iipolicytype_${itype}_$vinumber" class="offscreen">Policy Type</label>
+											<select id="iipolicytype_${itype}_$vinumber" name="iipolicytype_$vinumber">
 												<option value="PEV"></option>
 												<option value="PEV" #if($ihash.get($vi).getPolicytype() && $ihash.get($vi).getPolicytype().equals("PEV"))selected#end>by value</option>
 												<option value="PAO" #if($ihash.get($vi).getPolicytype() && $ihash.get($vi).getPolicytype().equals("PAO"))selected#end>by item</option>
 											</select>
 										</td>
 										<td class="wrappingtd">
-											<input type="checkbox" name="iiasnd_$vinumber" value="true" #if($ihash.get($vi).isAsnd())checked#end>
-											<label for="iiasnd_$vinumber" class="inline">ASND</label>
-											<input type="checkbox" name="iimultivalued_$vinumber" value="true" #if($ihash.get($vi).isMultivalued())checked#end>
-											<label for="iimultivalued_$vinumber" class="inline">Multi</label>
-											<input type="checkbox" name="iisensitive_$vinumber" value="true" #if($ihash.get($vi).isSensitivity())checked#end>
-											<label for="iisensitive_$vinumber" class="inline">Sensitive</label>
+											<input id="iiasnd_${itype}_$vinumber" type="checkbox" name="iiasnd_$vinumber" value="true" #if($ihash.get($vi).isAsnd())checked#end>
+											<label for="iiasnd_${itype}_$vinumber" class="inline">ASND</label>
+											<input id="iimultivalued_${itype}_$vinumber" type="checkbox" name="iimultivalued_$vinumber" value="true" #if($ihash.get($vi).isMultivalued())checked#end>
+											<label for="iimultivalued_${itype}_$vinumber" class="inline">Multi</label>
+											<input id="iisensitive_${itype}_$vinumber" type="checkbox" name="iisensitive_$vinumber" value="true" #if($ihash.get($vi).isSensitivity())checked#end>
+											<label for="iisensitive_${itype}_$vinumber" class="inline">Sensitive</label>
 										
 										</td>
 									</tr>
@@ -330,69 +332,73 @@
                 					<input type="hidden" name="csrftoken" value="$csrftoken">
 									<h3>Add $itype</h3>
 									<div class="form-set">
-										<label for="iiid">$id_heading</label>
-										<input type="text" name="iiid" placeholder="Item Identifier">
+										<label for="iiid_add_$itype">$id_heading</label>
+										<input id="iiid_add_$itype" type="text" name="iiid" placeholder="Item Identifier">
 									</div>
 									<div class="form-set">
-										<label for="displaynametable">$displayname_heading</label>
-										<table name="displaynametable">
+										<label for="displaynametable_add_$itype">$displayname_heading</label>
+										<table id="displaynametable_add_$itype" name="displaynametable">
 											<tr>
 												<td>
-													<select name="displaynamelang">
+													<label for="displaynamelang_add_$itype" class="offscreen">Language</label>
+													<select id="displaynamelang_add_$itype" name="displaynamelang">
 														#foreach($rl in $languages)
 															<option value="$rl">$rl</option>
 														#end
 													</select>
 												</td>
 												<td>
-													<input type="text" name="displaynamevalue" placeholder="Display Name">
+													<label for="displaynamevalue_add_$itype" class="offscreen">Display Name"</label>
+													<input id="displaynamevalue_add_$itype" type="text" name="displaynamevalue" placeholder="Display Name">
 												</td>
 											</tr>
 										</table>
 									</div>
 									<div class="form-set">
-										<label for="descriptiontable">$description_label</label>
-										<table name="descriptiontable">
+										<label for="descriptiontable_add_$itype">$description_label</label>
+										<table id="descriptiontable_add_$itype" name="descriptiontable">
 											<tr>
 												<td>
-													<select name="descriptionlang">
+													<label for="descriptionlang_add_$itype" class="offscreen">Language</label>
+													<select id="descriptionlang_add_$itype" name="descriptionlang">
 														#foreach($rl in $languages)
 															<option value="$rl">$rl</option>
 														#end
 													</select>
 												</td>
 												<td>
-													<input type="text" name="descriptionvalue" placeholder="Description">
+													<label for="descriptionvalue_add_$itype" class="offscreen">Description</label>
+													<input id="descriptionvalue_add_$itype" type="text" name="descriptionvalue" placeholder="Description">
 												</td>
 											</tr>
 										</table>
 									</div>
 									<div class="form-set">
-										<label for="prestype">$presentation_heading</label>
-										<select name="prestype">
+										<label for="prestype_add_$itype">$presentation_heading</label>
+										<select id="prestype_add_$itype" name="prestype">
 											<option value="TRANSPARENT">TRANSPARENT</option>
 											<option value="ENCODED">ENCODED</option>
 											<option value="OPAQUE">OPAQUE</option>
 										</select>
 									</div>
 									<div class="form-set">
-										<label for="policytype">$policy_heading</label>
-										<select name="policytype">
+										<label for="policytype_add_$itype">$policy_heading</label>
+										<select id="policytype_add_$itype" name="policytype">
 											<option value="PEV">On Every Value (PEV)</option>
 											<option value="PAO">On Attribute Only (PAO)</option>
 										</select>
 									</div>
 									<div class="form-set">
-										<input type="checkbox" name="asnd" value="true">
-										<label for="asnd" class="inline">Always Send / Never Display?</label>
+										<input id="asnd_add_$itype" type="checkbox" name="asnd" value="true">
+										<label for="asnd_add_$itype" class="inline">Always Send / Never Display?</label>
 									</div>
 									<div class="form-set">
-										<input type="checkbox" name="multivalued" value="true">
-										<label for="multivalued" class="inline">Multivalued?</label>
+										<input id="multivalued_add_$itype" type="checkbox" name="multivalued" value="true">
+										<label for="multivalued_add_$itype" class="inline">Multivalued?</label>
 									</div>
 									<div class=form-set">
-										<input type="checkbox" name="sensitivity" value="true">
-										<label for="sensitivity" class="inline">Sensitive?</label>
+										<input id="sensitivity_add_$itype" type="checkbox" name="sensitivity" value="true">
+										<label for="sensitivity_add_$itype" class="inline">Sensitive?</label>
 									</div>
 									<button class="active submitaddii">$add_item_label<i class="fa button-icon-right fa-sync-alt"></i></button>
 								</form>
@@ -413,70 +419,70 @@
 		<input type="hidden" name="rhid" value="$x.getRhidentifier()">
 		<input type="hidden" name="conversation" value="$sconvo">
         <input type="hidden" name="csrftoken" value="$csrftoken">
-		<table style="width:100%, vertical-align: top;">
+		<table style="width:100%, vertical-align: top;" role="presentation">
 			<tbody>
 				<tr>
 					<td>
 						<div class="form-set">
-							<label for="iitype">$type_heading</label>
-							<select name="iitype"style="width:100%">
+							<label for="iitype_ag">$type_heading</label>
+							<select id="iitype_ag" name="iitype"style="width:100%">
 								#foreach($itype in $iitypes)
 									<option value="$itype">$itype</option>
 								#end
 							</select>
 						</div>
 						<div class="form-set">
-							<label for="iiid">$id_heading</label>
-							<input type="text" name="iiid" placeholder="Item Identifier" style="width: 100%;">
+							<label for="iiid_ag">$id_heading</label>
+							<input id="iiid_ag" type="text" name="iiid" placeholder="Item Identifier" style="width: 100%;">
 						</div>
 						<div class="form-set">
-							<label for="displaynamelang" class="visually-hidden">Display Name Language</label>
-							<label for="displaynamevalue">$displayname_heading</label>
-							<select name="displaynamelang" class="iblock">
+							<label for="displaynamelang_ag" class="visually-hidden">Display Name Language</label>
+							<label for="displaynamevalue_ag">$displayname_heading</label>
+							<select id="displaynamelang_ag" name="displaynamelang" class="iblock">
 								#foreach($l in $languages)
 									<option value="$l">$l</option>
 								#end
 							</select>
-							<input type="text" class="iblock" name="displaynamevalue" placeholder="Display Name">
+							<input id="displaynamevalue_ag" type="text" class="iblock" name="displaynamevalue" placeholder="Display Name">
 						</div>
 						<div class="form-set">
-							<label for="descriptionlang" class="visually-hidden">Description Language</label>
-							<label for="descriptionvalue">$description_label</label>
-							<select name="descriptionlang" class="iblock">
+							<label for="descriptionlang_ag" class="visually-hidden">Description Language</label>
+							<label for="descriptionvalue_ag">$description_label</label>
+							<select id="descriptionlang_ag" name="descriptionlang" class="iblock">
 								#foreach($l in $languages)
 									<option value="$l">$l</option>
 								#end
 							</select>
-							<input type="text" class="iblock" name="descriptionvalue" placeholder="Description">
+							<input id="descriptionvalue_ag" type="text" class="iblock" name="descriptionvalue" placeholder="Description">
 						</div
 					</td>
 					<td style="padding-left: 2em; vertical-align: top;">
 						<div class="form-set">
-							<label for="prestype">$presentation_heading</label>
-							<select name="prestype" class="iblock" style="width: 90%;">
+							<label for="prestype_ag">$presentation_heading</label>
+							<select id="prestype_ag" name="prestype" class="iblock" style="width: 90%;">
 								<option value="TRANSPARENT">Transparent (display raw value)</option>
 								<option value="ENCODED">Encoded (use display value)</option>
 								<option value="OPAQUE">Opaque (display representative value)</option>
 							</select>
 						</div>
 						<div class="form-set">
-							<label for="policytype">$policy_heading</label>
-							<select name="policytype" class="iblock" style="width: 90%">
+							<label for="policytype_ag">$policy_heading</label>
+							<select id="policytype_ag" name="policytype" class="iblock" style="width: 90%">
 								<option value="PAO">Policy by item (PAO)</option>
 								<option value="PEV">Policy by value (PEV)</option>
 							</select>
 						</div>
 						<div class="form-set">
-							<input type="checkbox" name="asnd" id="asnd" value="true">
-							<label for="asnd" class="inline">Always Send/Never Display</label>
+							<input type="checkbox" name="asnd" id="asnd_ag" value="true">
+							<label for="asnd_ag" class="inline">Always Send/Never Display</label>
 						</div>
 						<div class="form-set">
-							<input type="checkbox" name="multivalued" id="multivalued" value="true">
-							<label for="multivalued" class="inline">Multi-valued</label>
+							<input type="checkbox" name="multivalued" id="multivalued_ag" value="true">
+							<label for="multivalued_ag" class="inline">Multi-valued</label>
 						</div>
 						<div class="form-set">
-							<input type="checkbox" name="sensitivity" id="sensitivity" value="true">
-							<label for="sensitivity" class="inline">Sensitive</label>
+							<input type="checkbox" name="sensitivity" id="sensitivity_ag" value="true">
+							<label for="sensitivity_ag" class="inline">Sensitive</label>
 						</div>
 					</td>
 				</tr>

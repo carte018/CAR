@@ -46,13 +46,19 @@
 	<table class="display full-width smaller-text">
 		<thead>
 		<tr>
-			<th>&nbsp;</th>
+			<th><span class="offscreen">Item/Value</span></th>
 			<th>Permit<div style="font-weight: normal;"><i>$permit_description</i></div></th>
 			<th>Deny<div style="font-weight: normal;"><i>$deny_description</i></div></th>
 			<th>Ask Me<div style="font-weight: normal;"><i>$askme_description</i></div></th>
 			<th>Use Recommendation<div style="font-weight: normal;"><i>$userec_prefix ${institution_name}'s $userec_suffix</i></div></th>
 		</tr>
 		</thead>
+		
+		<label class="offscreen" id="permitlabel">provide the information</label>
+		<label class="offscreen" id="denylabel">do not provide the information</label>
+		<label class="offscreen" id="asklabel">ask me what to do</label>
+		<label class="offscreen" id="uselabel">do whatever the system recommends</label>
+		
 		#set ($attrnum = 0)
 		#foreach ($dec in $decisions) 
 			<tbody>
@@ -83,40 +89,40 @@
 							<td class="policy-option" style="word-break: keep-all;">
 							permit
 							#if ($dec.getDecisions().get($val).equalsIgnoreCase("permit"))
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="permit" checked="checked">
+								<label class="offscreen" for="nrpd_permit_$attrnum">permit</label><input id="nrpd_permit_$attrnum" aria-labeledby="permitlabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="permit" checked="checked">
 							#else
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="permit">
+								<label class="offscreen" for="nrpd_permit_$attrnum">permit</label><input id="nrpd_permit_$attrnum" aria-labeledby="permitlabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="permit">
 							#end
 							</td>
 							<td class="policy-option" style="word-break: keep-all;">
 							deny
 							#if ($dec.getDecisions().get($val).equalsIgnoreCase("deny"))
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="deny" checked="checked">
+								<label class="offscreen" for="nrpd_deny_$attrnum">deny</label><input id="nrpd_deny_$attrnum" aria-labeledby="denylabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="deny" checked="checked">
 							#else
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="deny">
+								<label class="offscreen" for="nrpd_deny_$attrnum">deny</label><input id="nrpd_deny_$attrnum" aria-labeledby="denylabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="deny">
 							#end
 							</td>
 							<td class="policy-option" style="word-break: keep-all;">
 							ask me
 							#if ($dec.getDecisions().get($val).equalsIgnoreCase("askme"))
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe" checked="checked">
+								<label class="offscreen" for="nrpd_ask_$attrnum">ask me</label><input id="nrpd_ask_$attrnum" aria-labeledby="asklabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe" checked="checked">
 							#else
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe">
+								<label class="offscreen" for="nrpd_ask_$attrnum">ask me</label><input id="nrpd_ask_$attrnum" aria-labeledby="asklabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="askMe">
 							#end
 							</td>
 							<td class="policy-option" style="word-break: keep-all;">
 							use recommendation
 							#if ($dec.getDecisions().get($val).equalsIgnoreCase("useadvice"))
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice" checked="checked">
+								<label class="offscreen" for="nrpd_use_$attrnum">use advice</label><input id="nrpd_use_$attrnum" aria-labeledby="uselabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice" checked="checked">
 							#else
-								<input type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice">
+								<label class="offscreen" for="nrpd_use_$attrnum">use advice</label><input id="nrpd_use_$attrnum" aria-labeledby="uselabel" type="radio" name="newRPDecisions['$attrnum'].decision" value="useAdvice">
 							#end
 							</td>
 					</tr>
 					#set ($first = $first + 1)
 					#set ($attrnum = $attrnum + 1)
 				#end
-				<tr class="spacer"><th colspan="5" style="padding: .1em;"></th></tr>
+				<tr class="spacer"><th colspan="5" style="padding: .1em;"><span class="offscreen">Item/Value</span></th></tr>
 			</tbody>
 		#end
 		<tbody>
@@ -126,33 +132,33 @@
 		<td class="policy-option">
 			permit
 			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("permit"))
-				<input type="radio" name="OtherAttributesDecision" value="permit" checked="checked">
+				<label class="offscreen" for="nrpd_permit_other">permit</label><input id="nrpd_permit_other" aria-labeledby="permitlabel" type="radio" name="OtherAttributesDecision" value="permit" checked="checked">
 			#else
-				<input type="radio" name="OtherAttributesDecision" value="permit">
+				<label class="offscreen" for="nrpd_permit_other">permit</label><input id="nrpd_permit_other" aria-labeledby="permitlabel" type="radio" name="OtherAttributesDecision" value="permit">
 			#end
 		</td>
 		<td class="policy-option">
 			deny
 			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("deny"))
-				<input type="radio" name="OtherAttributesDecision" value="deny" checked="checked">
+				<label class="offscreen" for="nrpd_deny_other">deny</label><input id="nrpd_deny_other" aria-labeledby="denylabel" type="radio" name="OtherAttributesDecision" value="deny" checked="checked">
 			#else
-				<input type="radio" name="OtherAttributesDecision" value="deny">
+				<label class="offscreen" for="nrpd_deny_other">deny</label><input id="nrpd_deny_other" aria-labeledby="denylabel" type="radio" name="OtherAttributesDecision" value="deny">
 			#end	
 		</td>
 		<td class="policy-option">
 			ask me
 			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("askme"))
-				<input type="radio" name="OtherAttributesDecision" value="askMe" checked="checked">
+				<label class="offscreen" for="nrpd_ask_other">ask me</label><input id="nrpd_ask_other" aria-labeledby="asklabel" type="radio" name="OtherAttributesDecision" value="askMe" checked="checked">
 			#else
-				<input type="radio" name="OtherAttributesDecision" value="askMe">
+				<label class="offscreen" for="nrpd_ask_other">ask me</label><input id="nrpd_ask_other" aria-labeledby="asklabel" type="radio" name="OtherAttributesDecision" value="askMe">
 			#end
 		</td>
 		<td class="policy-option">
 			use recommendation
 			#if ($others.getDecisions().get("Information not listed above").equalsIgnoreCase("useadvice"))
-				<input type="radio" name="OtherAttributesDecision" value="useAdvice" checked="checked">
+				<label class="offscreen" for="nrpd_use_other">use advice</label><input id="nrpd_use_other" aria-labeledby="uselabel" type="radio" name="OtherAttributesDecision" value="useAdvice" checked="checked">
 			#else
-				<input type="radio" name="OtherAttributesDecision" value="useAdvice">
+				<label class="offscreen" for="nrpd_use_other">use advice</label><input id="nrpd_use_other" aria-labeledby="uselabel" type="radio" name="OtherAttributesDecision" value="useAdvice">
 			#end
 		</td>
 		</tr>
@@ -165,19 +171,19 @@
 		
 		<ul class="simple-list">
 			#if ($whileImAwayDecision.equals("permit"))
-			<li><input type="radio" name="WhileImAwayDecision" value="permit" checked="checked">&nbsp;<b>Permit</b> - $permit_longdescr</li>
+			<li><label class="offscreen" for="nrpd_permit_while">permit</label><input id="nrpd_permit_while" aria-labeledby="permitlabel" type="radio" name="WhileImAwayDecision" value="permit" checked="checked">&nbsp;<b>Permit</b> - $permit_longdescr</li>
 			#else
-			<li><input type="radio" name="WhileImAwayDecision" value="permit">&nbsp;<b>Permit</b> - $permit_longdescr</li>
+			<li><label class="offscreen" for="nrpd_permit_while">permit</label><input id="nrpd_permit_while" aria-labeledby="permitlabel" type="radio" name="WhileImAwayDecision" value="permit">&nbsp;<b>Permit</b> - $permit_longdescr</li>
 			#end
 			#if ($whileImAwayDecision.equals("deny"))
-			<li><input type="radio" name="WhileImAwayDecision" value="deny" checked="checked">&nbsp;<b>Deny</b> - $deny_longdescr</li>
+			<li><label class="offscreen" for="nrpd_deny_while">deny</label><input id="nrpd_deny_while" aria-labeledby="denylabel" type="radio" name="WhileImAwayDecision" value="deny" checked="checked">&nbsp;<b>Deny</b> - $deny_longdescr</li>
 			#else
-			<li><input type="radio" name="WhileImAwayDecision" value="deny">&nbsp;<b>Deny</b> - $deny_longdescr</li>
+			<li><label class="offscreen" for="nrpd_deny_while">deny</label><input id="nrpd_deny_while" aria-labeledby="denylabel" type="radio" name="WhileImAwayDecision" value="deny">&nbsp;<b>Deny</b> - $deny_longdescr</li>
 			#end
 			#if ($whileImAwayDecision.equals("useAdvice"))
-			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice" checked="checked">&nbsp;<b>Use Recommendation</b> - $userec_longprefix ${institution_name}'s $userec_longsuffix</li>
+			<li><label class="offscreen" for="nrpd_use_while">use advice</label><input id="nrpd_use_while" aria-labeledby="uselabel" type="radio" name="WhileImAwayDecision" value="useAdvice" checked="checked">&nbsp;<b>Use Recommendation</b> - $userec_longprefix ${institution_name}'s $userec_longsuffix</li>
 			#else
-			<li><input type="radio" name="WhileImAwayDecision" value="useAdvice">&nbsp;<b>Use Recommendation</b> - $userec_longprefix ${institution_name}'s $userec_longsuffix</li>
+			<li><label class="offscreen" for="nrpd_use_while">use advice</label><input id="nrpd_use_while" aria-labeledby="uselabel" type="radio" name="WhileImAwayDecision" value="useAdvice">&nbsp;<b>Use Recommendation</b> - $userec_longprefix ${institution_name}'s $userec_longsuffix</li>
 			#end
 		</ul>
 	</div>

@@ -58,3 +58,15 @@ button.inactive:hover{
   border: 2px solid #d8d8d8;
   background: #d8d8d8;
 }
+
+.hideframe{
+	height: 1px;
+	border: none;
+}
+.offscreen{
+	height: 1px;
+	width: 1px;
+	position: absolute;
+	overflow: hidden;
+	top: -10px;
+}

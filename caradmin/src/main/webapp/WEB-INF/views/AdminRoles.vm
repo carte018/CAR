@@ -115,7 +115,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="super_subject_add"></td>
+				<td><label for="super_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="super_subject_add" type="text" name="super_subject_add"></td>
 				<td>superadmin</td><input type="hidden" name="super_role_add" value="superadmin">
 				<td><a href="#" id="super_add" class="addlink">Add</a></td><input type="hidden" name="super_is_add" id="super_is_add" value="0">
 			</tr>
@@ -149,7 +149,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="rhr_subject_add"></td>
+				<td><label for="rhr_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="rhr_subject_add" type="text" name="rhr_subject_add"></td>
 				<td>RHRegistrar</td><input type="hidden" name=rhr_role_add" value="RHRegistrar">
 				<td><a href="#" id="rhr_add" class="addlink">Add</a></td><input type="hidden" name="rhr_is_add" id="rhr_is_add" value="0">
 			</tr>
@@ -185,9 +185,9 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="drhr_subject_add"></td>
+				<td><label for="drhr_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="drhr_subject_add" type="text" name="drhr_subject_add"></td>
 				<td>DelegatedRHRegistrar</td><input type="hidden" name="drhr_role_add" value="DelegatedRHRegistrar">
-				<td><input type="text" name="drhr_target_add"></td>
+				<td><label for="drhr_target_add" class="offscreen">Target</label><input id="drhr_target_add" type="text" name="drhr_target_add"></td>
 				<td><a href="#" id="drhr_add" class="addlink">Add</a></td><input type="hidden" name="drhr_is_add" id="drhr_is_add" value="0">
 			</tr>
 		</table>
@@ -220,7 +220,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="rpr_subject_add"></td>
+				<td><label for="rpr_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="rpr_subject_add" type="text" name="rpr_subject_add"></td>
 				<td>RPRegistrar</td><input type="hidden" name="rpr_role_add" value="RPRegistrar">
 				<td><a href="#" id="rpr_add" class="addlink">Add</a></td><input type="hidden" name="rpr_is_add" id="rpr_is_add" value="0">
 			</tr>
@@ -256,9 +256,9 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="drpr_subject_add"></td>
+				<td><label for="drpr_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="drpr_subject_add" type="text" name="drpr_subject_add"></td>
 				<td>RPRegistrar</td><input type="hidden" name="drpr_role_add" value="DelegatedRPRegistrar">
-				<td><input type="text" name="drpr_target_add"></td>
+				<td><label for="drpr_target_add" class="offscreen">Target</label><input id="drpr_target_add" type="text" name="drpr_target_add"></td>
 				<td><a href="#" id="drpr_add" class="addlink">Add</a></td><input type="hidden" name="drpr_is_add" id="drpr_is_add" value="0">
 			</tr>
 		</table>
@@ -291,7 +291,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="pa_subject_add"></td>
+				<td><label for="pa_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="pa_subject_add" type="text" name="pa_subject_add"></td>
 				<td>PolicyAdmin</td>
 				<td><a href="#" id="pa_add" class="addlink">Add</a></td><input type="hidden" name="pa_is_add" id="pa_is_add" value="0">
 			</tr>
@@ -327,9 +327,9 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="dpa_subject_add"></td>
+				<td><label for="dpa_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="dpa_subject_add" type="text" name="dpa_subject_add"></td>
 				<td>DelegatedPolicyAdmin</td>
-				<td><input type="text" name="dpa_target_add"></td>
+				<td><label for="dpa_target_add" class="offscreen">Target</label><input id="dpa_target_add" type="text" name="dpa_target_add"></td>
 				<td><a href="#" id="dpa_add" class="addlink">Add</a></td><input type="hidden" name="dpa_is_add" id="dpa_is_add" value="0">
 			</tr>
 		</table>
@@ -362,7 +362,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="trans_subject_add"></td>
+				<td><label for="trans_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="trans_subject_add" type="text" name="trans_subject_add"></td>
 				<td>Translator</td>
 				<td><a href="#" id="trans_add" class="addlink">Add</a></td><input type="hidden" name="trans_is_add" id="trans_is_add" value="0">
 			</tr>
@@ -396,7 +396,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="rha_subject_add"></td>
+				<td><label for="rha_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="rha_subject_add" type="text" name="rha_subject_add"></td>
 				<td>RHAuditor</td><input type="hidden" name=rha_role_add" value="RHAuditor">
 				<td><a href="#" id="rha_add" class="addlink">Add</a></td><input type="hidden" name="rha_is_add" id="rha_is_add" value="0">
 			</tr>
@@ -432,9 +432,9 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="drha_subject_add"></td>
+				<td><label for="drha_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="drha_subject_add" type="text" name="drha_subject_add"></td>
 				<td>DelegatedRHAuditor</td><input type="hidden" name="drha_role_add" value="DelegatedRHAuditor">
-				<td><input type="text" name="drha_target_add"></td>
+				<td><label for="drha_target_add" class="offscreen">Target</label><input id="drha_target_add" type="text" name="drha_target_add"></td>
 				<td><a href="#" id="drha_add" class="addlink">Add</a></td><input type="hidden" name="drha_is_add" id="drha_is_add" value="0">
 			</tr>
 		</table>
@@ -467,7 +467,7 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="rpa_subject_add"></td>
+				<td><label for="rpa_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="rpa_subject_add" type="text" name="rpa_subject_add"></td>
 				<td>RPAuditor</td><input type="hidden" name="rpa_role_add" value="RPAuditor">
 				<td><a href="#" id="rpa_add" class="addlink">Add</a></td><input type="hidden" name="rpa_is_add" id="rpa_is_add" value="0">
 			</tr>
@@ -503,9 +503,9 @@
 			</tr>
 			#end
 			<tr>
-				<td><input type="text" name="drpa_subject_add"></td>
+				<td><label for="drpa_subject_add" class="offscreen">User, Group, or Entitlement</label><input id="drpa_subject_add" type="text" name="drpa_subject_add"></td>
 				<td>DelegatedRPAuditor</td><input type="hidden" name="drpa_role_add" value="DelegatedRPAuditor">
-				<td><input type="text" name="drpa_target_add"></td>
+				<td><label for="drpa_target_add" class="offscreen">Target</label><input id="drpa_target_add" type="text" name="drpa_target_add"></td>
 				<td><a href="#" id="drpa_add" class="addlink">Add</a></td><input type="hidden" name="drpa_is_add" id="drpa_is_add" value="0">
 			</tr>
 		</table>

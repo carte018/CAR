@@ -1540,7 +1540,9 @@ public class MainController {
 				debugReturn.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
 				debugReturn.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 				debugReturn.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
-
+				debugReturn.addObject("short_institution",CarUtility.getLocalComponent("short_institution"));
+				debugReturn.addObject("preflang",preflang);
+				
 				debugReturn.addObject("areason",areason);
 				
 				// And pass in the sconvo value, just in case

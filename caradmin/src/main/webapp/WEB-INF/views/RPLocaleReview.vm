@@ -27,7 +27,7 @@
 #end
 
 <div class="content-section">
-	<h2 class="header-edit"><a href="#" id="rpmlangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2 class="header-edit"><a href="#" id="rpmlangedit"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 	<h2>$rp_metainfo_label</h2>
 	<table id="rpmviewtable" class="display full-width">
 		<thead>
@@ -98,12 +98,12 @@
 				#foreach($l in $languages)
 					#if ($rrpmi.gtDisplayname())
 						#if($CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false))
-							<td><input type="text" name="rpdisplayname_$l" value="$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)"></td>
+							<td><label for="rpdisplayname_$l" class="offscreen">Display Name</label><input id="rpdisplayname_$l" type="text" name="rpdisplayname_$l" value="$CarAdminUtils.localize($rrpmi.getDisplayname(),$l,false)"></td>
 						#else
-							<td><input type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
+							<td><label for="rpdisplayname_$l" class="offscreen">Display Name</label><input id="rpdisplayname_$l" type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
 						#end
 					#else
-						<td><input type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
+						<td><label for="rpdisplayname_$l" class="offscreen">Display Name</label><input id="rpdisplayname_$l" type="text" name="rpdisplayname_$l" placeholder="Add translation"></td>
 					#end
 				#end
 			</tr>
@@ -112,12 +112,12 @@
 				#foreach($l in $languages)
 					#if ($rrpmi.getDescription())
 						#if($CarAdminUtils.localize($rrpmi.getDescription(),$l,false))
-							<td><input type="text" name="rpdescription_$l" value="$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)"></td>
+							<td><label for="rpdescription_$l" class="offscreen">Description</label><input id="rpdescription_$l" type="text" name="rpdescription_$l" value="$CarAdminUtils.localize($rrpmi.getDescription(),$l,false)"></td>
 						#else
-							<td><input type="text" name="rpdescription_$l" placeholder="Add translation"></td>
+							<td><label for="rpdescription_$l" class="offscreen">Description</label><input id="rpdescription_$l" type="text" name="rpdescription_$l" placeholder="Add translation"></td>
 						#end
 					#else
-						<td><input type="text" name="rpdescription_$l" placeholder="Add translation"></td>
+						<td><label for="rpdescription_$l" class="offscreen">Description</label><input id="rpdescription_$l" type="text" name="rpdescription_$l" placeholder="Add translation"></td>
 					#end
 				#end
 			</tr>
@@ -130,7 +130,7 @@
 
 <div class="content-section">
 
-	<h2 class="header-edit"><a href="#" id="rprilangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2 class="header-edit"><a href="#" id="rprilangedit"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 	<h2>$required_metainfo_label</h2>
 	#if(! $rpriil || $rpriil.isEmpty())
 		<p>$no_required_label.</p>
@@ -191,10 +191,11 @@
 						<input type="hidden" name="iiid_$icount" value="$rpi.getInfoitemidentifier().getIiid()">
 						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() $reason_label</td>
 						#foreach($l in $languages)
+							<label for="ii_reason_${icount}_$l" class="offscreen">Reason</label>
 							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
-								<td><input type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
+								<td><input id="ii_reason_${icount}_$l" type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
 							#else
-								<td><input type="text" name="ii_reason_${icount}_$l" placeholder="Add Translation"></td>
+								<td><input id="ii_reason_${icount}_$l" type="text" name="ii_reason_${icount}_$l" placeholder="Add Translation"></td>
 							#end
 						#end
 					</tr>
@@ -211,7 +212,7 @@
 
 <div class="content-section">
 
-	<h2 class="header-edit"><a href="#" id="rpoilangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2 class="header-edit"><a href="#" id="rpoilangedit"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 	<h2>$optional_metainfo_label</h2>
 	#if(! $rpoiil || $rpoiil.isEmpty())
 		<p>$no_optional_label.</p>
@@ -272,10 +273,11 @@
 						<input type="hidden" name="iiid_$icount" value="$rpi.getInfoitemidentifier().getIiid()">
 						<td class="wrappingtd">$rpi.getInfoitemidentifier().getIiid() $reason_label</td>
 						#foreach($l in $languages)
+							<label for="ii_reason_opt_${icount}_$l" class="offscreen">Reason</label>
 							#if($rpi.getReason() && $CarAdminUtils.localize($rpi.getReason(),$l,false))
-								<td><input type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
+								<td><input id="ii_reason_opt_${icount}_$l" type="text" name="ii_reason_${icount}_$l" value="$CarAdminUtils.localize($rpi.getReason(),$l,false)"></td>
 							#else
-								<td><input type="text" name="ii_reason_${icount}_$l" placeholder="Add Translation"></td>
+								<td><input id="ii_reason_opt_${icount}_$l" type="text" name="ii_reason_${icount}_$l" placeholder="Add Translation"></td>
 							#end
 						#end
 					</tr>

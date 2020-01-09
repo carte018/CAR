@@ -28,7 +28,7 @@
 #end
 <div class="content-section">
 
-<h2 class="header-edit"><a href="#" id="rhmlangedit"><i class="fa fa-edit"></i></a></h2>
+<h2 class="header-edit"><a href="#" id="rhmlangedit"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 <h2>$rh_metainfo_label</h2>
 	<table id="rhmviewtable" class="display full-width">
 		<thead>
@@ -86,20 +86,22 @@
 			<tr>
 				<td class="wrappingtd">$displayname_label</td>
 				#foreach($l in $languages)
+					<label for="rhdisplayname_$l" class="offscreen">RH Display Name</label>
 					#if($CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false))
-						<td><input type="text" name="rhdisplayname_$l" value="$CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false)"></td>
+						<td><input id="rhdisplayname_$l" type="text" name="rhdisplayname_$l" value="$CarAdminUtils.localize($rhmetainfo.getDisplayname(),$l,false)"></td>
 					#else
-						<td><input type="text" name="rhdisplayname_$l" placeholder="Add translation"></td>
+						<td><input id="rhdisplayname_$l" type="text" name="rhdisplayname_$l" placeholder="Add translation"></td>
 					#end
 				#end
 			</tr>
 			<tr>
 				<td class="wrappingtd">$description_label</td>
 				#foreach($l in $languages)
+					<label for="rhdescription_$l" class="offscreen">RH Description</label>
 					#if($CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false))
-						<td><input type="text" name="rhdescription_$l" value="$CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false)"></td>
+						<td><input id="rhdescription_$l" type="text" name="rhdescription_$l" value="$CarAdminUtils.localize($rhmetainfo.getDescription(),$l,false)"></td>
 					#else
-						<td><input type="text" name="rhdescription_$l" placeholder="Add translation"></td>
+						<td><input id="rhdescription_$l" type="text" name="rhdescription_$l" placeholder="Add translation"></td>
 					#end
 				#end
 			</tr>
@@ -111,7 +113,7 @@
 </div>
 
 <div class="content-section">
-	<h2 class="header-edit"><a href="#" id="rhilangedit"><i class="fa fa-edit"></i></a></h2>
+	<h2 class="header-edit"><a href="#" id="rhilangedit"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 	<h2>$ii_metainfo_label</h2>
 	#if(! $arimi || $arimi.isEmpty())
 		<p>${no_info_msg}.</p>
@@ -190,20 +192,22 @@
 					<tr>
 						<td class="wrappingtd">$displayname_label: $i.getIiidentifier().getIiid()</label></td>
 						#foreach($l in $languages)
+							<label for="iidisplayname_${icount}_$l" class="offscreen">Item Display Name</label>
 							#if($i.getDisplayname() && $CarAdminUtils.localize($i.getDisplayname(),$l,false))
-								<td><input type="text" name="iidisplayname_${icount}_$l" value="$CarAdminUtils.localize($i.getDisplayname(),$l,false)"></td>
+								<td><input id="iidisplayname_${icount}_$l" type="text" name="iidisplayname_${icount}_$l" value="$CarAdminUtils.localize($i.getDisplayname(),$l,false)"></td>
 							#else
-								<td><input type="text" name="iidisplayname_${icount}_$l" placeholder="Add translation"></td>
+								<td><input id="iidisplayname_${icount}_$l" type="text" name="iidisplayname_${icount}_$l" placeholder="Add translation"></td>
 							#end
 						#end
 					</tr>
 					<tr>
 						<td class="wrappingtd">$description_label: $i.getIiidentifier().getIiid()</td>
 						#foreach($l in $languages)
+							<label for="iidescription_${icount}_$l" class="offscreen">Item Description</label>
 							#if($i.getDescription() && $CarAdminUtils.localize($i.getDescription(),$l,false))
-								<td><input type="text" name="iidescription_${icount}_$l" value="$CarAdminUtils.localize($i.getDescription(),$l,false)"></td>
+								<td><input id="iidescription_${icount}_$l" type="text" name="iidescription_${icount}_$l" value="$CarAdminUtils.localize($i.getDescription(),$l,false)"></td>
 							#else
-								<td><input type="text" name="iidescription_${icount}_$l" placeholder="Add translation"></td>
+								<td><input id="iidescription_${icount}_$l" type="text" name="iidescription_${icount}_$l" placeholder="Add translation"></td>
 							#end
 						#end
 					</tr>

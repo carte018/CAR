@@ -461,3 +461,15 @@ h2.header-edit a{
     transition-delay: 1.2s;
     
 }
+
+.hideframe{
+	height: 1px;
+	border: none;
+}
+.offscreen{
+	height: 1px;
+	width: 1px;
+	position: absolute;
+	overflow: hidden;
+	top: -10px;
+}

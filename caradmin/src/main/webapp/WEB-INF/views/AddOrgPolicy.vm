@@ -45,8 +45,8 @@
 	
 		<div class="content-section">
 			<div class="form-set">
-				<h2>$policy_descr_label</h2>
-				<input type="text" name="policydescription" placeholder="Policy Description">
+				<label for="policydescription"><h2>$policy_descr_label</h2></label>
+				<input id="policydescription" type="text" name="policydescription" placeholder="Policy Description">
 			</div>
 		</div>
 		<div class="content-section">
@@ -55,7 +55,7 @@
 			<div class="form-set">
 				<input type="radio" name="rpstrategy" value="allRPs" id="rpstrategy1" class="rpstrategy">
 				<span id="selectedrpstrategy1" class="hidden inline">
-				<label class="inline" for="rpstrategy1">$all_rps_label <select name="specrptype1">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
+				<span class="inline">$all_rps_label</span><label for="specrptype1" class="offscreen">RP Type</label><select id="specrptype1" name="specrptype1">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
 				</span>
 				<span id="unselectedrpstrategy1" class="inline">
 					<label class="inline" for="rpstrategy1">$all_rps2_label</label>
@@ -64,8 +64,8 @@
 			<div class="form-set">
 				<input type="radio" name="rpstrategy" value="matchedRPs" id="rpstrategy2" class="rpstrategy">
 				<span id="selectedrpstrategy2" class="hidden inline">
-				<label class="inline" for="rpstrategy2">$rps_with_label <input type="text" name="rpproperty" placeholder="RP Property Name"></label>
-				<label class="inline">$matching_label <input type="text" name="rpmatch" placeholder="Regular Expression"></label>
+				<label class="inline">$rps_with_label</label><label for="rpproperty2" class="offscreen">Property Name</label><input type="text" id="rpproperty2" name="rpproperty" placeholder="RP Property Name">
+				<label class="inline" for="rpmatch2">$matching_label</label> <input id="rpmatch2" type="text" name="rpmatch2" placeholder="Regular Expression">
 				</span>
 				<span id="unselectedrpstrategy2" class="inline">
 				<label class="inline" for="rpstrategy2">$some_rps_label</label>
@@ -74,8 +74,8 @@
 			<div class="form-set">
 				<input type="radio" name="rpstrategy" value="oneRP" id="rpstrategy3" class="rpstrategy">
 				<span id="selectedrpstrategy3" class="hidden inline">
-				<label class="inline" for="rpstrategy3">$specific_rp_label <select name="specrptype">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select></label>
-				<label class="inline"><select name="specrpid" style="width:100%;word-wrap:break-word;display:inline;">#foreach($i in $rpids)<option value="$i">$i</option>#end</select></label>
+				<label class="inline">$specific_rp_label</label> <label class="offscreen" for="specrptype3">RP Type</label><select id="specrptype3" name="specrptype">#foreach($t in $supportedrptypes)<option value="$t">$t</option>#end</select>
+				<label class="inline" for="specrpid3" class="offscreen">RP ID</label><select id="specrpid3" name="specrpid" style="width:100%;word-wrap:break-word;display:inline;">#foreach($i in $rpids)<option value="$i">$i</option>#end</select>
 				</span>
 				<span id="unselectedrpstrategy3" class="inline">
 				<label class="inline" for="rpstrategy3">$one_rp_label</label>
@@ -89,7 +89,7 @@
 			<div class="form-set">
 				<input type="radio" name="userstrategy" value="allUsers" id="userstrategy1" class="userstrategy">
 				<span id="selecteduserstrategy1" class="hidden inline">
-					<label class="inline" for="userstrategy1">$users_any_label <input type="text" name="userproperty1" placeholder="User Property Name"></label>
+					<label class="inline" for="userprop1">$users_any_label</label> <input id="userprop1" type="text" name="userproperty1" placeholder="User Property Name">
 				</span>
 				<span id="unselecteduserstrategy1" class="inline">
 					<label class="inline" for="userstrategy1">$all_users_label</label>
@@ -98,8 +98,8 @@
 			<div class="form-set">
 				<input type="radio" name="userstrategy" value="matchedUsers" id="userstrategy2" class="userstrategy">
 				<span id="selecteduserstrategy2" class="hidden inline">
-				<label class="inline" for="userstrategy2">$users_with_label <input type="text" name="userproperty" placeholder="User Property Name"></label>
-				<label class="inline">$matching_label <input type="text" name="usermatch" placeholder="Regular Expression"></label>
+				<label class="inline">$users_with_label</label> <label for="userproperty2" class="offscreen">User Property Name</label><input id="userproperty2" type="text" name="userproperty" placeholder="User Property Name">
+				<label class="inline" for="usermatch2">$matching_label</label> <input type="text" id="usermatch2" name="usermatch" placeholder="Regular Expression"></label>
 				</span>
 				<span id="unselecteduserstrategy2" class="inline">
 				<label class="inline" for="userstrategy2">$some_users_label</label>
@@ -120,7 +120,7 @@
 						<th class="wrappingtd">$directive_heading</th>
 						<th class="wrappingtd">$values_heading</th>
 						<th class="wrappingtd">$basis_heading</th>
-						<th class="wrappingtd" style="width: 10%;"></th>
+						<th class="wrappingtd" style="width: 10%;"><span class="offscreen">Delete</span></th>
 					</tr>
 				</thead>
 				<tbody id="dirtablebody">
@@ -148,6 +148,7 @@
 				<tbody>
 					<tr>
 						<td>
+							<label for="all-other-items-directive" class="offscreen">Directive</label>
 							<select name="all-other-items-directive" id="all-other-items-directive">
 								<option value="continue">Continue applying lower-priority policies</option>
 								<option value="DENY">Deny</option>
@@ -155,6 +156,7 @@
 							</select>
 						</td>
 						<td>
+							<label for="all-other-items-basis" calss="offscreen">Lawful Basis</label>
 							<select name="all-other-items-basis" id="all-other-items-basis">
 								<option value="none">None</option>
 								<option value="Consent">Consent</option>

@@ -15,10 +15,11 @@
 
  *#
 
-<html>
+<html lang="$preflang">
 #if(! $intercept_view)
   <head>
          <link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">
+      <link rel="stylesheet" href="resources/css/duke.css">
   
     	<!--<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->
     	<script rel="stylesheet" src="/car/resources/js/bundle.js"></script>
@@ -28,7 +29,7 @@
 
   <body>
     <div id="header">
-      <div id="logo"><img src="$institutional_logo_url"></div>
+      <div id="logo"><img src="$institutional_logo_url" alt=""></div>
       <h1>$top_heading</h1>
 
       <div id="login-details">
@@ -89,7 +90,7 @@
    </head>
     <body>
     <div id="header">
-      <div id="logo"><img src="$institutional_logo_url"></div>
+      <div id="logo"><img src="$institutional_logo_url" alt=""></div>
       <h1>$top_heading</h1>
 
 

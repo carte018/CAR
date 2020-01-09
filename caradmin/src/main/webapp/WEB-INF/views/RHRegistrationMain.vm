@@ -37,12 +37,12 @@
 			<div class="form-set">
 				<label for="rhid">$id_heading <span class="required">*</span></label>
 				<label for="rhtype" class="visually-hidden">$rh_type_label</label>
-				<select name="rhtype">
+				<select id="rhtype" name="rhtype">
 					#foreach($vtype in $rhidtypes)
 						<option value="$vtype">$vtype</option>
 					#end
 				</select>
-				<input type="text" name="rhid" placeholder="RH Identifier">
+				<input type="text" id="rhid" name="rhid" placeholder="RH Identifier">
 			</div>
 				
 				<input type="hidden" id="displaynamecount" name="displaynamecount" value="1">
@@ -51,22 +51,22 @@
 			<div class="form-set">
 				<label for="displaynamevalue1">$displayname_label <span class="required">*</span></label>
 				<label for="displaynamelanguage1" class="visually-hidden">$dn_lang_label</label>
-				<select name="displaynamelanguage1">
+				<select id="displaynamelanguage1" name="displaynamelanguage1">
 					#foreach($vlang in $languages)
 						<option value="$vlang">$vlang</option>
 					#end
 				</select>
-				<input type="text" name="displaynamevalue1" placeholder="Display Name">
+				<input type="text" id="displaynamevalue1" name="displaynamevalue1" placeholder="Display Name">
 			</div>
 			<div class="form-set">
 				<label for="descriptionvalue1">$description_label</label>
 				<label for="descriptionlanguage1" class="visually-hidden">$descr_lang_label</label>
-				<select name="descriptionlanguage1">
+				<select id="descriptionlanguage1" name="descriptionlanguage1">
 					#foreach($vdesclang in $languages)
 						<option value="$vdesclang">$vdesclang</option>
 					#end
 				</select>
-				<input type="text" name="descriptionvalue1" placeholder="Description">
+				<input id="descriptionvalue1" type="text" name="descriptionvalue1" placeholder="Description">
 			</div>
 			<button class="active" type="submit">$create_rh_label<i class="button-icon-right fa fa-arrow-right"></i></button>
 

@@ -59,7 +59,7 @@
 									<input type="hidden" id="rhid_$ctr" value="$item.getRhid()">
 									<input type="hidden" id="rptype_$ctr" value="$item.getRptype()">
 									<input type="hidden" id="rpid_$ctr" value="$item.getRpid()">
-									<input type="hidden" id="usertype_$ctr" value=$item.getUsertype()">
+									<input type="hidden" id="usertype_$ctr" value="$item.getUsertype()">
 									<td>$item.getRpdisp()</td>
 									<td>$item.getRhdisp()</td>
 									<td><a class="adder" id="adder_$ctr" href="#">$add</a></td>

@@ -62,7 +62,7 @@
     						#end
     							<thead>
     							<tr>
-    							<th>$name_heading</th><th>$url_heading</th><th>$updated_heading</th><th></th>
+    							<th>$name_heading</th><th>$url_heading</th><th>$updated_heading</th><th><span class="offscreen">$manage_link</span></th>
     							</tr>
     							</thead>
     							<tbody>

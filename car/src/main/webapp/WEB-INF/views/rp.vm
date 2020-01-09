@@ -40,7 +40,7 @@
           #set($icou=$rpMetaInformation.getIconurl())
           
           #if ($icou && ! $icou.equals(""))
-          <img src="$rpMetaInformation.getIconurl()" style="width: 80px; float: right; margin: 1em;">
+          <img src="$rpMetaInformation.getIconurl()" style="width: 80px; float: right; margin: 1em;" alt="">
           #end
           #if($privu)
           <p><a href="$rpMetaInformation.getPrivacyurl()" target="_blank">$privacy_policy_label</a></p>
@@ -168,7 +168,7 @@
         <input type="hidden" name="csrftoken" value="$csrftoken">
         <table id="settings-table" class="display full-width smaller-text">
           <tr>
-            <th>&nbsp;</th>
+            <th><span class="offscreen">Item/Value</span></th>
             <th>Permit <div style="font-weight: normal"><i>$permit_description</i></div></th>
             <th>Deny <div style="font-weight: normal"><i>$deny_description</i></div></th>
             <th>Ask Me <div style="font-weight: normal"><i>$askme_description</i></div></th>
@@ -204,38 +204,38 @@
             <td class="policy-option no-wrap">
             	permit
             	#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("permit") || (!$injectedDecisions.get($attr).getPolicyDirective() && $injectedDecisions.get($attr).getRecommendedDirective().equalsIgnoreCase("permit"))) 
-            		<input type="radio" name="$attr.toString()" value="permit" checked>
+            		<label for="permit_$attr.toString()" class="offscreen">permit</label><input id="permit_$attr.toString()" type="radio" name="$attr.toString()" value="permit" checked>
         		#else
-        			<input type="radio" name="$attr.toString()" value="permit">
+        			<label for="permit_$attr.toString()" class="offscreen">permit</label><input id="permit_$attr.toString()" type="radio" name="$attr.toString()" value="permit">
     			#end
 			</td>
             <td class="policy-option no-wrap">
             	deny
             	#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("deny"))
-            		<input type="radio" name="$attr.toString()" value="deny" checked>
+            		<label for="deny_$attr.toString()" class="offscreen">deny</label><input id="deny_$attr.toString()" type="radio" name="$attr.toString()" value="deny" checked>
         		#else
-        			<input type="radio" name="$attr.toString()" value="deny">
+        			<label for="deny_$attr.toString()" class="offscreen">deny</label><input id="deny_$attr.toString()" type="radio" name="$attr.toString()" value="deny">
     			#end
 			</td>
 			<td class="policy-option no-wrap">
 				ask me
 				#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("askMe"))
-					<input type="radio" name="$attr.toString()" value="askMe" checked>
+					<label for="ask_$attr.toString()" class="offscreen">ask me</label><input id="ask_$attr.toString()" type="radio" name="$attr.toString()" value="askMe" checked>
 				#else
-					<input type="radio" name="$attr.toString()" value="askMe">
+					<label for="ask_$attr.toString()" class="offscreen">ask me</label><input id="ask_$attr.toString()" type="radio" name="$attr.toString()" value="askMe">
 				#end
 			</td>
 			<td class="policy-option no-wrap">
 				use recommendation
 				#if ($injectedDecisions.get($attr).getPolicyDirective().equalsIgnoreCase("useAdvice"))
-					<input type="radio" name="$attr.toString()" value="useAdvice" checked>
+					<label for="use_$attr.toString()" class="offscreen">use advice</label><input id="use_$attr.toString()" type="radio" name="$attr.toString()" value="useAdvice" checked>
 				#else
-					<input type="radio" name="$attr.toString()" value="useAdvice">
+					<label for="use_$attr.toString()" class="offscreen">use advice</label><input id="use_$attr.toString()" type="radio" name="$attr.toString()" value="useAdvice">
 				#end
             </td>
           </tr>
            		 		                   <tr class="spacer">
-          	<th colspan="5" style="padding: .1em;"></th>
+          	<th colspan="5" style="padding: .1em;"><span class="offscreen">Current Choice</span></th>
           </tr>
         </tbody>
   		#end
@@ -247,38 +247,38 @@
   		    <td class="policy-option no-wrap">
   		    permit
   		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("permit"))
-  		    	<input type="radio" name="allOtherInfo" value="permit" checked>
+  		    	<label for="permit_other" class="offscreen">permit</label><input id="permit_other" type="radio" name="allOtherInfo" value="permit" checked>
   		    #else
-  		    	<input type="radio" name="allOtherInfo" value="permit">
+  		    	<label for="permit_other" class="offscreen">permit</label><input id="permit_other" type="radio" name="allOtherInfo" value="permit">
   		    #end
   		    </td>
   		    <td class="policy-option no-wrap">
   		    deny
   		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("deny"))
-  		    	<input type="radio" name="allOtherInfo" value="deny" checked>
+  		    	<label for="deny_other" class="offscreen">deny</label><input id="deny_other" type="radio" name="allOtherInfo" value="deny" checked>
   		    #else
-  		    	<input type="radio" name="allOtherInfo" value="deny">
+  		    	<label for="deny_other" class="offscreen">deny</label><input id="deny_other" type="radio" name="allOtherInfo" value="deny">
   		    #end
   		    </td>
   		    <td class="policy-option no-wrap">
   		    ask me
   		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("askMe"))
-  		    	<input type="radio" name="allOtherInfo" value="askMe" checked>
+  		    	<label for="ask_other" class="offscreen">ask me</label><input id="ask_other" type="radio" name="allOtherInfo" value="askMe" checked>
   		    #else
-  		    	<input type="radio" name="allOtherInfo" value="askMe">
+  		    	<label for="ask_other" class="offscreen">ask me</label><input id="ask_other" type="radio" name="allOtherInfo" value="askMe">
   		    #end
   		    </td>
   		    <td class="policy-option no-wrap">
   		    use recommendation
   		    #if ($userPolicy.getUserInfoReleasePolicy().getUserAllOtherInfoReleaseStatement().getUserDirectiveAllOtherValues().getUserReleaseDirective().toString().equalsIgnoreCase("useAdvice"))
-  		    	<input type="radio" name="allOtherInfo" value="useAdvice" checked>
+  		    	<label for="use_other" class="offscreen">use advice</label><input id="use_other" type="radio" name="allOtherInfo" value="useAdvice" checked>
   		    #else
-  		    	<input type="radio" name="allOtherInfo" value="useAdvice">
+  		    	<label for="use_other" class="offscreen">use advice</label><input id="use_other" type="radio" name="allOtherInfo" value="useAdvice">
   		    #end
   		    </td>
   		</tr>
   		          <tr class="spacer">
-          	<th colspan="5" style="padding: .1em;"></th>
+          	<th colspan="5" style="padding: .1em;"><span class="offscreen">Current Choice</span></th>
           </tr>
   		</tbody>
   		<tbody>
@@ -288,17 +288,17 @@
   		    <td class="policy-option no-wrap">
   		    permit
   		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("permit"))
-  		    	<input type="radio" name="whileImAway" value="permit" checked>
+  		    	<label for="permit_away" class="offscreen">permit</label><input id="permit_away" type="radio" name="whileImAway" value="permit" checked>
   		    #else
-  		    	<input type="radio" name="whileImAway" value="permit">
+  		    	<label for="permit_away" class="offscreen">permit</label><input id="permit_away" type="radio" name="whileImAway" value="permit">
   		    #end
   		    </td>
   		    <td class="policy-option no-wrap">
   		    deny
   		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("deny"))
-  		    	<input type="radio" name="whileImAway" value="deny" checked>
+  		    	<label for="deny_away" class="offscreen">deny</label><input id="deny_away" type="radio" name="whileImAway" value="deny" checked>
   		    #else
-  		    	<input type="radio" name="whileImAway" value="deny">
+  		    	<label for="deny_away" class="offscreen">deny</label><input id="deny_away" type="radio" name="whileImAway" value="deny">
   		    #end
   		    </td>
   		    <td class="policy-option no-wrap">
@@ -307,9 +307,9 @@
   		    <td class="policy-option no-wrap">
   		    use recommendation
   		    #if ($userPolicy.getUserInfoReleasePolicy().getWhileImAwayDirective().toString().equalsIgnoreCase("useAdvice"))
-  		    	<input type="radio" name="whileImAway" value="useAdvice" checked>
+  		    	<label for="use_away" class="offscreen">use advice</label><input id="use_away" type="radio" name="whileImAway" value="useAdvice" checked>
   		    #else
-  		    	<input type="radio" name="whileImAway" value="useAdvice">
+  		    	<label for="use_away" class="offscreen">use advice</label><input id="use_away" type="radio" name="whileImAway" value="useAdvice">
   		    #end
   		    </td>
   		</tr>

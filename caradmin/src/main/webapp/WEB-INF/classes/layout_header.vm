@@ -15,7 +15,7 @@
 
  *#
 
-<html>
+<html lang="$lang">
   <head>
   		<meta charset="utf-8">
           <link rel="stylesheet" type="text/css" href="/caradmin/resources/css/main.css">
@@ -38,7 +38,7 @@
 
   <body>
     <div id="header">
-      <div id="logo"><img src="$top_logo_url"></div>
+      <div id="logo"><img src="$top_logo_url" alt=""></div>
       <h1>$top_heading</h1>
 
       <div id="login-details">

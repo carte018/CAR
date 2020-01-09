@@ -26,7 +26,7 @@
 			</div>
 			<div style="text-align: center; color: #001a57; font-size: 2em; margin: 0.75em 0;">&#8681;</div>
 			#if($rpiconurl)
-				<div id="rp-img" class="rp-icon" style="margin-top: -0.75em;"><img src="$rpiconurl"/></div>
+				<div id="rp-img" class="rp-icon" style="margin-top: -0.75em;"><img src="$rpiconurl" alt=""/></div>
 			#end
 			<h3>$rpdisplayname</h3>
 			#if($rpdescription && ! $rpdescription.equals(""))
@@ -55,7 +55,7 @@
 							<tr>
 								<th class="Permit">Permit</th>
 								<th class="Deny">Deny</th>
-								<th>&nbsp;</th>
+								<th class="hideframe"><span class="offscreen">Item</span></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -70,7 +70,7 @@
 							<tr>
 								<th class="Permit">Permit</th>
 								<th class="Deny">Deny</th>
-								<th>&nbsp;</th>
+								<th class="hideframe"><span class="offscreen">Item</span></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -95,6 +95,9 @@
 					<input id="remember-show" name="remember" value="saveandshow" type="checkbox" #if($userShowAgain && $userShowAgain.equals("true"))checked#end style="display: none;"></input>
 					<input id="remember-hide" name="remember" value="saveandhide" type="checkbox" #if(! $userShowAgain || $userShowAgain.equals("false"))checked#end></input>
 					<label	for="remember" class="inline">${dont-show} $rpdisplayname</label>
+					<label	for="remember-show" class="offscreen">${dont-show} $rpdisplayname</label>
+					<label	for="remember-hide" class="offscreen">${dont-show} $rpdisplayname</label>
+					
 					<!-- RGC - remove for pilot <p style="margin-top: -0.15em; margin-bottom: -0.5em"><small><em>${self-service-description} <a href="#" id="selfservicelink">privacy.duke.edu</a></small></p> -->
 				</div>
 				<button class="active" id="button_accept_and_continue">${save-continue}<i class="button-icon-right fa fa-arrow-right"></i></button>
@@ -121,17 +124,17 @@
 		#end
 
   		<div class="decision must" id="valuemap_$mustDecision.getAttrName()_$counter">
-  			<input type="text" class="attr_value" name="valuemap_$mustDecision.getAttrName()_$counter" value="$mustDecision.getAttrValue()">
+  			<input aria-label="target value" type="text" class="attr_value" name="valuemap_$mustDecision.getAttrName()_$counter" value="$mustDecision.getAttrValue()">
   			<span class="attr_name">$mustDecision.getAttrName()</span>
   			<span class="attr_displayname">$mustDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$mustDecision.getAttrDisplayValue()</span>
   			<span class="attr_reason">$areason.get($mustDecision.getAttrName())</span>
   			#if ($mustDecision.getRecommendedDirective()=="permit")
-  			 	<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit" checked>
-  				<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny">
+  			 	<label for="permit-valuemap_$mustDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit" checked>
+  				<label for="deny-valuemap_$mustDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny">
   			#else
-  				<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit">
-  				<input class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny" checked>
+  				<label for="permit-valuemap_$mustDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit">
+  				<label for="deny-valuemap_$mustDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny" checked>
   			#end
   		</div>
   	#end
@@ -150,17 +153,17 @@
 			#set($counter=0)
 		#end
   		<div class="decision may" id="valuemap_$mayDecision.getAttrName()_$counter">
-  			<input type="text" class="attr_value" name="valuemap_$mayDecision.getAttrName()_$counter" value="$mayDecision.getAttrValue()">
+  			<input aria-label="target value" type="text" class="attr_value" name="valuemap_$mayDecision.getAttrName()_$counter" value="$mayDecision.getAttrValue()">
   			<span class="attr_name">$mayDecision.getAttrName()</span>
   			<span class="attr_displayname">$mayDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$mayDecision.getAttrDisplayValue()</span>
   			<span class="attr_reason">$areason.get($mayDecision.getAttrName())</span>
   			#if ($mayDecision.getChosenDirective()=="permit")
-  				<input class="may_decision_pair" id="radio_$mayDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="permit" checked>
-  				<input class="may_decision_pair" id="radio_$mayDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="deny">
+  				<label for="permit-valuemap_$mayDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="may_decision_pair" id="radio_$mayDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="permit" checked>
+  				<label for="deny-valuemap_$mayDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="may_decision_pair" id="radio_$mayDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="deny">
   			#else
-  			 	<input class="may_decision_pair" id="radio_$mayDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="permit">
-  				<input class="may_decision_pair" id="radio_$mayDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="deny" checked>
+  			 	<label for="permit-valuemap_$mayDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="may_decision_pair" id="radio_$mayDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="permit">
+  				<label for="deny-valuemap_$mayDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="may_decision_pair" id="radio_$mayDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="deny" checked>
   			#end
   		</div>
   	#end
@@ -180,24 +183,24 @@
 		#end
 		
   		<div class="nochoice" id="valuemap_$nochoiceDecision.getAttrName()_$counter">
-  			<input type="text" class="attr_value" name="valuemap_$nochoiceDecision.getAttrName()_$counter" value="$nochoiceDecision.getAttrValue()">
+  			<input aria-label="target-value" type="text" class="attr_value" name="valuemap_$nochoiceDecision.getAttrName()_$counter" value="$nochoiceDecision.getAttrValue()">
   			<span class="attr_name">$nochoiceDecision.getAttrName()</span>
   			<span class="attr_displayname">$nochoiceDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$nochoiceDecision.getAttrDisplayValue()</span>
   			<!-- no reason for nochoice values -->
   			#if ($nochoiceDecision.getChosenDirective()=="permit")
-  				<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="permit" checked readonly>
-  				<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_deny_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="deny" readonly>
+  				<label for="permit-valuemap_$nochoiceDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="permit" checked readonly>
+  				<label for="deny-valuemap_$nochoiceDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_deny_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="deny" readonly>
 	  		#else
-	  			<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="permit" readonly>
-  				<input class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_deny_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="deny" checked readonly>
+	  			<label for="permit-valuemap_$nochoiceDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="permit" readonly>
+  				<label for="deny-valuemap_$nochoiceDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_deny_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="deny" checked readonly>
   			#end
   		</div>
   	#end
-  	<input type="checkbox" name="saveandhide" value="1">save and dont show</input>
-  	<input type="checkbox" name="saveandshow" value="2">save and show again</input>
-  	<input type="checkbox" name="dontsave" value="3">dont save</input>
-  	<input type="checkbox" name="alltheway" value="1">pushToIdp</input>
+  	<input aria-label="save and do not show again" type="checkbox" name="saveandhide" value="1">save and dont show</input>
+  	<input aria-label="save and show again" type="checkbox" name="saveandshow" value="2">save and show again</input>
+  	<input aria-label="do not save" type="checkbox" name="dontsave" value="3">dont save</input>
+  	<input aria-label="completed" type="checkbox" name="alltheway" value="1">pushToIdp</input>
   	<input type="submit" value="submit" name="submit_button">
   </form>
   </body>

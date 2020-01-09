@@ -38,7 +38,7 @@
                 	<input type="hidden" name="csrftoken" value="$csrftoken">
 					<div class="form-set">
 						<label for="rhidentification">$rh_heading<span class="required">*</span></label>
-						<select name="rhidentification" style="max-width: 95%">
+						<select id="rhidentification" name="rhidentification" style="max-width: 95%">
 							#foreach($vtype in $rhlist)
 								<option value="$vtype">$vtype</option>
 							#end
@@ -47,34 +47,34 @@
 					<div class="form-set">
 						<label for="rpid">$id_heading<span class="required">*</span></label>
 						<label for="rptype" class="visually-hidden">$rp_type_label</label>
-						<select name="rptype">
+						<select id="rptype" name="rptype">
 							#foreach ($vtype in $rpidtypes)
 								<option value="$vtype">$vtype</option>
 							#end
 						</select>
-						<input type="text" name="rpid" placeholder="Enter RP ID">
+						<input id="rpid" type="text" name="rpid" placeholder="Enter RP ID">
 					</div>
 					
 					<div class="form-set">
 						<label for="displaynamevalue_1">$displayname_label<span class="required">*</span></label>
 						<label for="displaynamelang_1" class="visually-hidden">$dn_lang_label</label>
-						<select name="displaynamelang_1">
+						<select id="displaynamelang_1" name="displaynamelang_1">
 							#foreach($vlang in $languages)
 								<option value="$vlang">$vlang</option>
 							#end
 						</select>
-						<input type="text" name="displaynamevalue_1" placeholder="Display name">
+						<input id="displaynamevalue_1" type="text" name="displaynamevalue_1" placeholder="Display name">
 					</div>
 					
 					<div class="form-set">
 						<label for="descriptionvalue_1">$description_label</label>
 						<label for="descriptionlang_1" class="visually-hidden">Description Language</label>
-						<select name="descriptionlang_1">
+						<select id="descriptionlang_1" name="descriptionlang_1">
 							#foreach($vdesclang in $languages)
 								<option value="$vdesclang">$vdesclang</lption>
 							#end
 						</select>
-						<input type="text" name="descriptionvalue_1" placeholder="Description">
+						<input id="descriptionvalue_1" type="text" name="descriptionvalue_1" placeholder="Description">
 					</div>
 
 					<button id="createrpbutton" class="active">$create_rp_label<i class="fa button-icon-right fa-arrow-right"></i></button>

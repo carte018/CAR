@@ -39,7 +39,8 @@
 								</select>
 							</td>
 							<td>
-								<input type="text" name="rpid" placeholder="Enter RP ID">
+								<label for="rpidfield" class="offscreen">RP ID</label>
+								<input id="rpidfield" type="text" name="rpid" placeholder="Enter RP ID">
 							</td>
 						</tr>
 					</table>
@@ -47,14 +48,16 @@
 					<table id="displaynametable" name="displaynametable">
 						<tr>
 							<td>
-								<select name="displaynamelang_1">
+								<label for="displaynamelang_1" class="offscreen">Language</label>
+								<select id="displaynamelang_1" name="displaynamelang_1">
 									#foreach($vlang in $languages)
 										<option value=$vlang>$vlang</option>
 									#end
 								</select>
 							</td>
 							<td>
-								<input type="text" name="displaynamevalue_1" placeholder="Display name">
+								<label for="displaynamevalue_1" class="offscreen">Display name</label>
+								<input id="displaynamevalue_1" type="text" name="displaynamevalue_1" placeholder="Display name">
 							</td>
 						</tr>
 					</table>				
@@ -62,14 +65,16 @@
 					<table id="descriptiontable" name="descriptiontable">
 						<tr>
 							<td>
-								<select name="descriptionlang_1">
+								<label for="descriptionlang_1" class="offscreen">Language</label>
+								<select id="descriptionlang_1" name="descriptionlang_1">
 									#foreach($vdesclang in $languages)
 										<option value=$vdesclang>$vdesclang</option>
 									#end
 								</select>
 							</td>
 							<td>
-								<input type="text" name="descriptionvalue_1" placeholder="Description">
+								<label for="descriptionvalue_1" class="offscreen">Description</label>
+								<input id="descriptionvalue_1" type="text" name="descriptionvalue_1" placeholder="Description">
 							</td>
 						</tr>
 					</table>
@@ -84,7 +89,7 @@
 			<div class="content-section">
 				<h2>$rps_for_label $rhdisplayname</h2>
 				<div class="form-set">
-					<label for="searchstring">$search_label</label>
+					<label for="searchinput">$search_label</label>
 					<input type="text" name="searchstring" id="searchinput" placeholder="Search string">
 					<button id="filterbutton" class="visually-hidden">$filter_label</button>
 				</div>

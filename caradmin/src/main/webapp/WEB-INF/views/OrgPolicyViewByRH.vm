@@ -49,7 +49,7 @@
 				<div class="hiddendetail content-section" id="$did">
 					#set($pi=$pol.getPolicyMetaData().getPolicyId())
 					<!--$pol.getPolicyMetaData().getPolicyId().getBaseId()-->
-					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editorgpolicy/$pi.getBaseId()"><i class="fa fa-edit"></i></a></h2>
+					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editorgpolicy/$pi.getBaseId()"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 					<h3>$metainfo_heading</h3>
 					<div name="meta_$pi" class="indent1div">
 						<div name="cdiv_$pi">
@@ -208,7 +208,7 @@
 				
 				<div class="hiddendetail content-section" id="$did">
 					#set($pi=$pol.getPolicyMetaData().getPolicyId())
-					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editmetapolicy/$pi.getBaseId()"><i class="fa fa-edit"></i></a></h2>
+					<h2 class="header-edit"><a id="edit_icon_$pi" href="/caradmin/editmetapolicy/$pi.getBaseId()"><i class="fa fa-edit"></i><span class="offscreen">Edit</span></a></h2>
 					<h3>$metainfo_heading</h3>
 					<div name="meta_$pi" class="indent1div">
 						<div name="cdiv_$pi">
