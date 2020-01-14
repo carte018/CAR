@@ -19,6 +19,7 @@ package edu.internet2.consent.caradmin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -1198,7 +1199,7 @@ public class CarAdminUtils {
 		String retval = null;
 		BufferedReader br = null;
 		try {
-			br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+			br = new BufferedReader(new InputStreamReader((response.getEntity().getContent()),StandardCharsets.UTF_8));
 			StringBuilder rsb = new StringBuilder();
 			String body = null;
 			while((body = br.readLine()) != null) {
