@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Your Official Relationships with Amber"
+            },
+            {
+            	"locale": "es",
+            	"value": "Tus relaciones oficiales con Ámbar"
+            },
+            {
+            	"locale": "de",
+            	"value": "Ihre offiziellen Beziehungen zu Amber"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Federated Affiliations"
+            },
+            {
+            	"locale": "de",
+            	"value": "Föderierte Mitgliedschaften"
+            },
+            {
+            	"locale": "es",
+            	"value": "Afiliaciones federadas"
             }
         ]
     },

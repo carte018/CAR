@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "A Unique, Targeted ID Specific to the Service You Are Accessing"
+            },
+            {
+            	"locale": "es",
+            	"value": "Una identificación específica despersonalizada específica para el servicio al que está accediendo"
+            },
+            {
+            	"locale": "de",
+            	"value": "Eine anonymisierte Ziel-ID für den Dienst, auf den Sie zugreifen"
             }
         ]
     },

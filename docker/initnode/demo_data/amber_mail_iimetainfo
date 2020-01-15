@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Email Address(es)"
+            },
+            {
+            	"locale": "de",
+            	"value": "E-mailadressen"
+            },
+            {
+            	"locale": "es",
+            	"value": "Correos electrónicos"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Email Address"
+            },
+            {
+            	"locale": "es",
+            	"value": "Dirección de correo electrónico"
+            },
+            {
+            	"locale": "de",
+            	"value": "E-mailaddress"
             }
         ]
     },

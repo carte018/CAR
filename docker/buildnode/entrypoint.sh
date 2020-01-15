@@ -14,9 +14,16 @@ cd /var/build/icm
 mvn install
 cd /var/build/caradmin
 cat src/main/resources/i18n/components_en.properties.tmpl | sed 's^%ilogo_url%^'${ILOGO_URL}'^g' > src/main/resources/i18n/components_en.properties
+cat src/main/resources/i18n/components_es.properties.tmpl | sed 's^%ilogo_url%^'${ILOGO_URL}'^g' > src/main/resources/i18n/components_es.properties
+cat src/main/resources/i18n/components_de.properties.tmpl | sed 's^%ilogo_url%^'${ILOGO_URL}'^g' > src/main/resources/i18n/components_de.properties
+
 mvn install
 cd /var/build/car
 cat src/main/resources/i18n/components_en.properties.tmpl | sed 's^%inst_long%^'"${INST_LONG}"'^g' | sed 's^%inst_short%^'"${INST_SHORT}"'^g' | sed 's^%ilogo_url%^'${ILOGO_URL}'^g' > src/main/resources/i18n/components_en.properties
+cat src/main/resources/i18n/components_es.properties.tmpl | sed 's^%inst_long%^'"${INST_LONG}"'^g' | sed 's^%inst_short%^'"${INST_SHORT}"'^g' | sed 's^%ilogo_url%^'${ILOGO_URL}'^g' > src/main/resources/i18n/components_es.properties
+cat src/main/resources/i18n/components_de.properties.tmpl | sed 's^%inst_long%^'"${INST_LONG}"'^g' | sed 's^%inst_short%^'"${INST_SHORT}"'^g' | sed 's^%ilogo_url%^'${ILOGO_URL}'^g' > src/main/resources/i18n/components_de.properties
+
+
 mvn install
 cd /var/build/regloader
 mvn install

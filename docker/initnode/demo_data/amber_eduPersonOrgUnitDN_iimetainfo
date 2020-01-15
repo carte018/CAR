@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Unique Identifier for Department"
+            },
+            {
+            	"locale": "es",
+            	"value": "Identificador único para departamento"
+            },
+            {
+            	"locale": "de",
+            	"value": "Eindeutiger Bezeichner für die Abteilung"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Organizational Unit"
+            },
+            {
+            	"locale": "de",
+            	"value": "Organisationseinheit"
+            },
+            {
+            	"locale": "es",
+            	"value": "Unidad organizacional"
             }
         ]
     },

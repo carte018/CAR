@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Departmental Fund code"
+            },
+            {
+            	"locale": "de",
+            	"value": "Abteilungsfondscode"
+            },
+            {
+            	"locale": "es",
+            	"value": "Código de fondo departamental"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Local Fund Code for Department (scoped for federated use)"
+            },
+            {
+            	"locale": "de",
+            	"value": "Abteilungsfondscode"
+            },
+            {
+            	"locale": "es",
+            	"value": "Código de fondo departmental"
             }
         ]
     },

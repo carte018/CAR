@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Official Name"
+            },
+            {
+            	"locale": "de",
+            	"value": "Offizieller Name"
+            },
+            {
+            	"locale": "es",
+            	"value": "Nobmre Oficial"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Official Name"
+            },
+            {
+            	"locale": "de",
+            	"value": "Ofizieller Name"
+            },
+            {
+            	"locale": "es",
+            	"value": "Nombre Oficial"
             }
         ]
     },

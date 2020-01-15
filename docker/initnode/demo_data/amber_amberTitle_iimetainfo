@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Your Official Title in the Court of Amber"
+            },
+            {
+            	"locale": "es",
+            	"value": "Tu título oficial en el Tribunal de Ámbar"
+            },
+            {
+            	"locale": "de",
+            	"value": "Ihr offizieller Titel im Court of Amber"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Amber Royal Title"
+            },
+            {
+            	"locale": "es",
+            	"value": "Título real de Ámbar"
+            },
+            {
+            	"locale": "de",
+            	"value": "Königlicher Bernsteintitel"
             }
         ]
     },

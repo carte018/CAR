@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Opaque Scholarly Identifier from the ORCID Organization"
+            },
+            {
+            	"locale": "de",
+            	"value": "Undurchsichtiger wissenschaftlicher Identifikator der ORCID-Organisation"
+            },
+            {
+            	"locale": "es",
+            	"value": "Identificador Académico Opaco de la Organización ORCID"
             }
         ]
     },

@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Unique Federation Identifier (not related to your name or login)"
+            },
+            {
+            	"locale": "de",
+            	"value": "Eindeutige Verbundkennung (nicht mit Ihrem Namen oder Ihrer Benutzer-ID verknüpft)"
+            },
+            {
+            	"locale": "es",
+            	"value": "Identificador único de federación (no relacionado con su nombre o ID de usuario)"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Federated Unique Identifier"
+            },
+            {
+            	"locale": "es",
+            	"value": "ID único federado"
+            },
+            {
+            	"locale": "de",
+            	"value": "Föderiert, einzigartig Kennung"
             }
         ]
     },

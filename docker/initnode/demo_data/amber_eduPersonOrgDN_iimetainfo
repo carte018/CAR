@@ -5,6 +5,14 @@
             {
                 "locale": "en",
                 "value": "Unique Identifier for Amber"
+            },
+            {
+            	"locale": "es",
+            	"value": "Identificador único para Ámbar"
+            },
+            {
+            	"locale": "de",
+            	"value": "Eindeutiger Bezeichner für Amber"
             }
         ]
     },
@@ -13,6 +21,14 @@
             {
                 "locale": "en",
                 "value": "Organization"
+            },
+            {
+            	"locale": "de",
+            	"value": "Organisation"
+            },
+            {
+            	"locale": "es",
+            	"value": "Organización"
             }
         ]
     },
