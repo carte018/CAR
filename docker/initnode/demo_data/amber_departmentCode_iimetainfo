@@ -20,7 +20,7 @@
         "locales": [
             {
                 "locale": "en",
-                "value": "Local Fund Code for Department (scoped for federated use)"
+                "value": "Departmental Fund code"
             },
             {
             	"locale": "de",

@@ -250,10 +250,10 @@ curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;cha
 # Load value metainformation for the departmentCode values
 #
 echo "Adding value metainfo for departmentCode raw values"
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/amber_departmnetCode_12130100_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/12130100'
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/amber_departmentCode_12180000_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/12180000'
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/amber_departmentCode_12171555_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/12171555'
-curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X POST -d @/tmp/demo_data/amber_departmentCode_10010011_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/10010011'
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_departmentCode_12130100_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/12130100'
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_departmentCode_12180000_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/12180000'
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_departmentCode_12171555_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/12171555'
+curl -u "${CARMA_USER}:${CARMA_PASSWORD}" -H 'Content-type: application/json;charset=UTF-8' --insecure -X PUT -d @/tmp/demo_data/amber_departmentCode_10010011_valuemetainfo 'https://apache-sp/consent/v1/informed/iiic/valuemetainformation/departmentCode/10010011'
 
 # 
 # Replace the entrypoint routine with one that only forces deployments
