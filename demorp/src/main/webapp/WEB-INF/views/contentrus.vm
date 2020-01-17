@@ -24,15 +24,15 @@
 				Welcome, $eduPersonOrgDN user!  You appear to have no accessible licensed content at this time.  Check with your local content manager(s) for further information or consider allowing your isntitution to provide us with information about your departmental affiliations in order to access content licensed exclusively for your department when you next log in.
 			#else
 				#if($departmentCode.contains("12130100"))
-					Your <b>Law School<b> affiliation gives you access to <a href="https://www.lexisnexis.com/en-us/home.page">LexisNexis</a>
+					Your <b>Law School<b> affiliation gives you access to <a target="_blank" href="https://www.lexisnexis.com/en-us/home.page">LexisNexis</a>
 					<hr>
 				#end
 				#if($departmentCode.contains("12180000"))
-					The <b>Department of Civil Engineering</b> has licensed <a href="https://www.asce.org/routing-page/technical-areas/">ASCE Content</a> for your use.
+					The <b>Department of Civil Engineering</b> has licensed <a target="_blank" href="https://www.asce.org/routing-page/technical-areas/">ASCE Content</a> for your use.
 					<hr>
 				#end
 				#if($departmentCode.contains("12171555"))
-					The <b>Department of Sociology</b> has negotiated licensed access to <a href="https://www.icpsr.umich.edu/icpsrweb/ICPSR/support/students">ICPSR content</a> for students and researchers in the department.
+					The <b>Department of Sociology</b> has negotiated licensed access to <a target="_blank" href="https://www.icpsr.umich.edu/icpsrweb/ICPSR/support/students">ICPSR content</a> for students and researchers in the department.
 				#end
 				#if($departmentCode.contains("10010011"))
 					Welcome, administrator!  Licensed content is currently available as follows:<br>
