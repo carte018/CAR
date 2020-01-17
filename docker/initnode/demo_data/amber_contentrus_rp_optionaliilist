@@ -61,6 +61,32 @@
             ]
         },
         {
+        	"infoitemidentifier": {
+        		"iiid": "departmentCode",
+        		"iitype": "attribute"
+        	},
+        	"reason": {
+        		"locales": [
+        			{
+        				"locale": "en",
+        				"value": "To authorize departmentally licensed content"
+        			},
+        			{
+        				"locale": "es",
+        				"value": "Para autorizar contenido con licencia departamental"
+        			},
+        			{
+        				"locale": "de",
+        				"value": "abteilungslizenzierten Inhalt zu autorisieren"
+        			}
+        		]
+        	},
+        	"sourceitemname": "departmentCode",
+        	"valuelist": [
+        		".*"
+        	]
+       	},
+        {
             "infoitemidentifier": {
                 "iiid": "isMemberOf",
                 "iitype": "attribute"

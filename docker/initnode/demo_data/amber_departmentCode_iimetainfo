@@ -38,9 +38,9 @@
         "iitype": "attribute"
     },
     "iimode": null,
-    "multivalued": false,
-    "policytype": "PAO",
-    "presentationtype": "TRANSPARENT",
+    "multivalued": true,
+    "policytype": "PEV",
+    "presentationtype": "ENCODED",
     "rhidentifier": {
         "rhid": "urn:mace:multiverse:amber",
         "rhtype": "entityId"

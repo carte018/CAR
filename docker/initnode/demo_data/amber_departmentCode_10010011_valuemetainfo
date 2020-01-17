@@ -1,0 +1,11 @@
+{
+        "asnd": false,
+        "displayname": "10010011 (Information Technology)",
+        "infoitemname": "departmentCode",
+        "infoitemtype": "attribute",
+        "infoitemvalue": "10010011",
+        "rhidentifier": {
+            "rhid": "urn:mace:multiverse:amber",
+            "rhtype": "entityId"
+        }
+}

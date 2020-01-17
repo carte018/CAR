@@ -1,0 +1,11 @@
+{
+        "asnd": false,
+        "displayname": "12180000 (Civil Engineering)",
+        "infoitemname": "departmentCode",
+        "infoitemtype": "attribute",
+        "infoitemvalue": "12180000",
+        "rhidentifier": {
+            "rhid": "urn:mace:multiverse:amber",
+            "rhtype": "entityId"
+        }
+}

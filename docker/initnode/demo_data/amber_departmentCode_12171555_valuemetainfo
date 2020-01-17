@@ -1,0 +1,11 @@
+{
+        "asnd": false,
+        "displayname": "12171555 (Sociology)",
+        "infoitemname": "departmentCode",
+        "infoitemtype": "attribute",
+        "infoitemvalue": "12171555",
+        "rhidentifier": {
+            "rhid": "urn:mace:multiverse:amber",
+            "rhtype": "entityId"
+        }
+}

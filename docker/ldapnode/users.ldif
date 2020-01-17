@@ -347,8 +347,8 @@ isMemberOf: urn:mace:amber.org:groups:research:firearms_project
 localUniqueId: 9990135
 userPassword: kjk-ugrad
 mail: ugrad@mail.amber.org
-eduPersonOrgUnitDN: cn=mechanical_engineering,dc=amber,dc=org
-localDepartmentCode: 12171555
+eduPersonOrgUnitDN: cn=civil_engineering,dc=amber,dc=org
+localDepartmentCode: 12180000
 
 dn: uid=kjk-grad,ou=people,dc=amber,dc=org
 objectclass: top
@@ -385,10 +385,10 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 objectclass: eduPerson
 uid: kjk-faculty
-cn: Kurt Godel
+cn: Kurt Gödel
 givenName: Kurt
-sn: Godel
-displayName: Professor Godel
+sn: Gödel
+displayName: Professor Gödel
 eduPersonPrincipalName: kjk-faculty@amber.org
 eduPersonAffiliation: faculty
 eduPersonPrimaryAffiliation: faculty
@@ -405,6 +405,7 @@ mail: iamfaculty@avalonmail.com
 eduPersonOrcid: 9999-9999-9999-2518
 eduPersonOrgUnitDN: cn=mathematics,dc=amber,dc=org
 localDepartmentCode: 12130100
+localDepartmentCode: 12171555
 
 dn: uid=kjk-fgrad,ou=people,dc=amber,dc=org
 objectClass: top
@@ -434,6 +435,6 @@ localUniqueId: 0935
 mail: kjk-fgrad@mail.amber.org
 eduPersonOrcid: 9999-9999-9999-1939
 eduPersonOrgUnitDN: cn=graduate_school,dc=amber,dc=org
-localDepartmentCode: 12180000
+localDepartmentCode: 12171555
 ferpaFlag: 1
 
