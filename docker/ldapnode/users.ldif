@@ -385,10 +385,10 @@ objectclass: organizationalPerson
 objectclass: inetOrgPerson
 objectclass: eduPerson
 uid: kjk-faculty
-cn: Kurt Gödel
+cn: Kurt Godel
 givenName: Kurt
-sn: Gödel
-displayName: Professor Gödel
+sn: Godel
+displayName: Professor Godel
 eduPersonPrincipalName: kjk-faculty@amber.org
 eduPersonAffiliation: faculty
 eduPersonPrimaryAffiliation: faculty
