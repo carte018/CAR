@@ -3,7 +3,7 @@
         "displayname": "12180000 (Civil Engineering)",
         "infoitemname": "departmentCode",
         "infoitemtype": "attribute",
-        "infoitemvalue": "12180000",
+        "infoitemvalue": "12180000@amber.org",
         "rhidentifier": {
             "rhid": "urn:mace:multiverse:amber",
             "rhtype": "entityId"

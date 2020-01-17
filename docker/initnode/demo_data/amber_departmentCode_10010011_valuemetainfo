@@ -3,7 +3,7 @@
         "displayname": "10010011 (Information Technology)",
         "infoitemname": "departmentCode",
         "infoitemtype": "attribute",
-        "infoitemvalue": "10010011",
+        "infoitemvalue": "10010011@amber.org",
         "rhidentifier": {
             "rhid": "urn:mace:multiverse:amber",
             "rhtype": "entityId"

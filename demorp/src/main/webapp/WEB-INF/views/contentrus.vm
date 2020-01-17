@@ -16,7 +16,34 @@
  *#
 <div id="sidebar">
 	<div class="content-section">
-		This is a sidebar
+		<h3>Licensed Content</h3>
+		#if(! $odn)
+			No content available
+		#else
+			#if(! $localDepartmentCode)
+				Welcome, $eduPersonOrgDN user!  You appear to have no accessible licensed content at this time.  Check with your local content manager(s) for further information or consider allowing your isntitution to provide us with information about your departmental affiliations in order to access content licensed exclusively for your department when you next log in.
+			#else
+				#if($localDepartmentCode.contains("12130100"))
+					Your <b>Law School<b> affiliation gives you access to <a href="https://www.lexisnexis.com/en-us/home.page">LexisNexis</a>
+					<hr>
+				#end
+				#if($localDepartmentCode.contains("12180000"))
+					The <b>Department of Civil Engineering</b> has licensed <a href="https://www.asce.org/routing-page/technical-areas/">ASCE Content</a> for your use.
+					<hr>
+				#end
+				#if($localDepartmentCode.contains("12171555"))
+					The <b>Department of Sociology</b> has negotiated licensed access to <a href="https://www.icpsr.umich.edu/icpsrweb/ICPSR/support/students">ICPSR content</a> for students and researchers in the department.
+				#end
+				#if($localDepartmentCode.contains("10010011"))
+					Welcome, administrator!  Licensed content is currently available as follows:<br>
+					<ul>
+					<li><b>School of Law</b> licenses limited LexisNexis access for its constituents</li>
+					<li><b>Civil Engineering</b> licenses part of the ASCE technical content for use by departmental faculty and graduate students</li>
+					<li><b>Sociology</b> has licensed certain student-oriented ICPSR resources</li>
+					</ul>
+				#end
+			#end
+		#end
 	</div>
 </div>
 

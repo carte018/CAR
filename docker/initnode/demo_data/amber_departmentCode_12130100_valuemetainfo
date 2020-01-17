@@ -3,7 +3,7 @@
         "displayname": "12130100 (School of Law)",
         "infoitemname": "departmentCode",
         "infoitemtype": "attribute",
-        "infoitemvalue": "12130100",
+        "infoitemvalue": "12130100@amber.org",
         "rhidentifier": {
             "rhid": "urn:mace:multiverse:amber",
             "rhtype": "entityId"
