@@ -728,7 +728,7 @@ public class CarAdminUtils {
 				//ObjectMapper om = new ObjectMapper();
 				ObjectMapper om = OMSingleton.getInstance().getOm();
 				
-				asl = om.readValue(rbody, new TypeReference<List<SupportedLanguage>>(){});
+				asl = (ArrayList<SupportedLanguage>) om.readValue(rbody, new TypeReference<List<SupportedLanguage>>(){});
 				
 				if (asl == null || asl.isEmpty()) {
 					// No returned values
@@ -797,7 +797,7 @@ public class CarAdminUtils {
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
 			
-			asr = om.readValue(rbody, new TypeReference<List<SupportedRHType>>(){});
+			asr = (ArrayList<SupportedRHType>) om.readValue(rbody, new TypeReference<List<SupportedRHType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
 				// No returned values
@@ -867,7 +867,7 @@ public class CarAdminUtils {
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
 			
-			asr = om.readValue(rbody, new TypeReference<List<SupportedRPType>>(){});
+			asr = (ArrayList<SupportedRPType>) om.readValue(rbody, new TypeReference<List<SupportedRPType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
 				// No returned values
@@ -936,7 +936,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			asr = om.readValue(rbody, new TypeReference<List<SupportedIIType>>(){});
+			asr = (ArrayList<SupportedIIType>) om.readValue(rbody, new TypeReference<List<SupportedIIType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
 				// No returned values
@@ -1005,7 +1005,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			asr = om.readValue(rbody, new TypeReference<List<SupportedUserType>>(){});
+			asr = (ArrayList<SupportedUserType>) om.readValue(rbody, new TypeReference<List<SupportedUserType>>(){});
 			
 			if (asr == null || asr.isEmpty()) {
 				// No returned values
@@ -1411,7 +1411,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			ArrayList<ActivityStreamEntry> aase = om.readValue(rbody, new TypeReference<List<ActivityStreamEntry>>(){});
+			ArrayList<ActivityStreamEntry> aase = (ArrayList<ActivityStreamEntry>) om.readValue(rbody, new TypeReference<List<ActivityStreamEntry>>(){});
 			return aase;
 		} catch (Exception e) {
 			return null;  // on error, just fail
@@ -1795,7 +1795,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			ArrayList<ReturnedPrecedenceObject> arpo = om.readValue(rbody,  new TypeReference<List<ReturnedPrecedenceObject>>(){});
+			ArrayList<ReturnedPrecedenceObject> arpo = (ArrayList<ReturnedPrecedenceObject>) om.readValue(rbody,  new TypeReference<List<ReturnedPrecedenceObject>>(){});
 			edu.internet2.consent.arpsi.model.ListOfReturnedPrecedenceObject lrpo = new edu.internet2.consent.arpsi.model.ListOfReturnedPrecedenceObject();
 			lrpo.setContained(arpo);
 			return lrpo;
@@ -1954,7 +1954,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			ArrayList<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>arpo = om.readValue(rbody, new TypeReference<List<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>>(){});
+			ArrayList<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>arpo = (ArrayList<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>) om.readValue(rbody, new TypeReference<List<edu.internet2.consent.icm.model.ReturnedPrecedenceObject>>(){});
 			ListOfReturnedPrecedenceObject lrpo = new ListOfReturnedPrecedenceObject();
 			lrpo.setContained(arpo);
 			return lrpo;
@@ -3152,7 +3152,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			retval = om.readValue(rbody, new TypeReference<List<IcmReturnedPolicy>>() {});
+			retval = (ArrayList<IcmReturnedPolicy>) om.readValue(rbody, new TypeReference<List<IcmReturnedPolicy>>() {});
 			return retval;
 		} catch (Exception e) {
 			locError("ERR0036",LogCriticality.error,"Exception message " + e.getMessage());
@@ -3204,7 +3204,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			ArrayList<IcmReturnedPolicy> alr = om.readValue(rbody,  new TypeReference<List<IcmReturnedPolicy>>() {});
+			ArrayList<IcmReturnedPolicy> alr = (ArrayList<IcmReturnedPolicy>) om.readValue(rbody,  new TypeReference<List<IcmReturnedPolicy>>() {});
 			if (alr == null || alr.isEmpty()) {
 				return null;
 			} else {
@@ -3264,7 +3264,7 @@ public class CarAdminUtils {
 			}
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
-			ArrayList<OrgReturnedPolicy>alr = om.readValue(rbody, new TypeReference<List<OrgReturnedPolicy>>() {});
+			ArrayList<OrgReturnedPolicy>alr = (ArrayList<OrgReturnedPolicy>) om.readValue(rbody, new TypeReference<List<OrgReturnedPolicy>>() {});
 			if (alr == null || alr.isEmpty()) {
 				return null;
 			} else {
@@ -3326,7 +3326,7 @@ public class CarAdminUtils {
 				}
 				//ObjectMapper om = new ObjectMapper();
 				ObjectMapper om = OMSingleton.getInstance().getOm();
-				retval = om.readValue(rbody,  new TypeReference<List<OrgReturnedPolicy>>() {});
+				retval = (ArrayList<OrgReturnedPolicy>) om.readValue(rbody,  new TypeReference<List<OrgReturnedPolicy>>() {});
 				return retval;
 			} catch (Exception e) {
 				locError("ERR0036",LogCriticality.error,"Exception message " + e.getMessage());

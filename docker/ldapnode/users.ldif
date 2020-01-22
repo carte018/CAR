@@ -436,5 +436,6 @@ mail: kjk-fgrad@mail.amber.org
 eduPersonOrcid: 9999-9999-9999-1939
 eduPersonOrgUnitDN: cn=graduate_school,dc=amber,dc=org
 localDepartmentCode: 12171555
+userPassword: kjk-fgrad
 ferpaFlag: 1
 

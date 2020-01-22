@@ -1667,7 +1667,7 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		try {
 			//ObjectMapper mapper = new ObjectMapper();
 			ObjectMapper mapper = OMSingleton.getInstance().getOm();
-			responseList = mapper.readValue(rbody, new TypeReference<List<UserReturnedPolicy>>() {});
+			responseList = (ArrayList<UserReturnedPolicy>) mapper.readValue(rbody, new TypeReference<List<UserReturnedPolicy>>() {});
 		} catch (Exception e) {
 			return null;
 		}
