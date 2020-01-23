@@ -72,6 +72,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
+import com.nimbusds.jose.util.StandardCharset;
 
 import edu.internet2.consent.arpsi.model.DecisionOnValues;
 import edu.internet2.consent.arpsi.model.DecisionsForInfoStatement;
@@ -823,7 +824,8 @@ public class MainController {
 			try {
 				//ObjectMapper m = new ObjectMapper();
 				ObjectMapper m = OMSingleton.getInstance().getOm();
-				CarUtility.locError("ERR0078",LogCriticality.debug, m.writeValueAsString(desiredAttributes));
+				//CarUtility.locError("ERR0078",LogCriticality.debug, m.writeValueAsString(desiredAttributes));
+				CarUtility.locError("ERR0078", LogCriticality.debug, new String(m.writeValueAsBytes(desiredAttributes),StandardCharset.UTF_8));
 			} catch (Exception ign) {
 				// ignore
 			}
