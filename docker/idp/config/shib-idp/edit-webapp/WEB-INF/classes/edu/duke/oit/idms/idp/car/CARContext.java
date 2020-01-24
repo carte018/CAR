@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
+import java.nio.charset.StandardCharsets;
 /**
  * @author shilen
  */
@@ -136,9 +137,9 @@ public class CARContext extends BaseContext {
     String jsonRequest = request.toString();
     String base64Request = null;
     try {
-    	base64Request = Base64Support.encode(jsonRequest.getBytes("UTF-8"), false);
+    	base64Request = Base64Support.encode(jsonRequest.getBytes(StandardCharsets.UTF_8), false);
     } catch (Exception exc) {
-    	// ignore for now
+    	throw new RuntimeException("Failed encoding ",exc);
     }
     return JWTUtils.signAndEncrypt(base64Request, idpRelyingPartyId);
   }
