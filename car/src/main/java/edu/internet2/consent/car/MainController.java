@@ -232,7 +232,7 @@ public class MainController {
 		// Retrieve the base64 encoded encrypted, signed input object
 		
 		String b64input = request.getParameter("json");
-		
+				
 		// Turn it into a JWE
 		JWEObject jwe = null;
 		try {
@@ -295,6 +295,7 @@ public class MainController {
                             	}
                             	String b64 = jcs.getStringClaim("request");
                             	String json = new String(Base64.decodeBase64(b64.getBytes()));
+                            	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
                             	
                         		//ObjectMapper mapper = new ObjectMapper();
                             	ObjectMapper mapper = OMSingleton.getInstance().getOm();
