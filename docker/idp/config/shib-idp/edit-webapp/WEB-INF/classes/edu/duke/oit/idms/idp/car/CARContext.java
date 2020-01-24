@@ -134,7 +134,7 @@ public class CARContext extends BaseContext {
       .build();
 
     String jsonRequest = request.toString();
-    String base64Request = Base64Support.encode(jsonRequest.getBytes(), false);
+    String base64Request = Base64Support.encode(jsonRequest.getBytes("UTF-8"), false);
     return JWTUtils.signAndEncrypt(base64Request, idpRelyingPartyId);
   }
 
