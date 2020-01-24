@@ -134,7 +134,12 @@ public class CARContext extends BaseContext {
       .build();
 
     String jsonRequest = request.toString();
-    String base64Request = Base64Support.encode(jsonRequest.getBytes("UTF-8"), false);
+    String base64Request = null;
+    try {
+    	base64Request = Base64Support.encode(jsonRequest.getBytes("UTF-8"), false);
+    } catch (Exception exc) {
+    	throw new RuntimeException("Unsupported conversion",exc);
+    }
     return JWTUtils.signAndEncrypt(base64Request, idpRelyingPartyId);
   }
 
