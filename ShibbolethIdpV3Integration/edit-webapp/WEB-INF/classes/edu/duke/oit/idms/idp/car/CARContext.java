@@ -93,7 +93,6 @@ public class CARContext extends BaseContext {
           valuesJson.add(((ScopedStringAttributeValue)idpAttributeValue).getValue() + "@" + ((ScopedStringAttributeValue)idpAttributeValue).getScope());
         } else if (idpAttributeValue instanceof StringAttributeValue) {
           valuesJson.add(((StringAttributeValue)idpAttributeValue).getValue());
-          log.error("Adding requested value " + ((StringAttributeValue)idpAttributeValue).getValue());
         } else if (idpAttributeValue instanceof ByteAttributeValue) {
           valuesJson.add(((ByteAttributeValue)idpAttributeValue).toBase64());
         } else if (idpAttributeValue instanceof XMLObjectAttributeValue) {          

@@ -300,7 +300,7 @@ public class MainController {
                             	ObjectMapper mapper = OMSingleton.getInstance().getOm();
                         		InputRequest retval = null;
                         		try {
-                        			WrappedInputRequest w = mapper.readValue(json, WrappedInputRequest.class);
+                        			WrappedInputRequest w = mapper.readValue(json.getBytes("UTF-8"), WrappedInputRequest.class);
                         			retval = w.getRequest();
                         			return retval;
                         		} catch (Exception e) {
