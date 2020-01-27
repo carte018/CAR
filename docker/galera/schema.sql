@@ -1077,7 +1077,7 @@ CREATE TABLE `ReturnedRHRPList_RPIdentifier` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ReturnedRPMetaInformation` (
   `rpmiid` bigint(20) NOT NULL AUTO_INCREMENT,
-  `iconurl` varchar(40000) DEFAULT NULL,
+  `iconurl` varchar(21000) DEFAULT NULL,
   `privacyurl` varchar(4000) DEFAULT NULL,
   `rhid` varchar(255) DEFAULT NULL,
   `rhtype` varchar(255) DEFAULT NULL,
