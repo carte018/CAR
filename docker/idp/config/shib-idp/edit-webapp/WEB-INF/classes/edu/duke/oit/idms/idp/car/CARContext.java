@@ -74,7 +74,7 @@ public class CARContext extends BaseContext {
    */
   public String getRequest(HttpServletRequest httpServletRequest, Environment environment, String flowExecutionUrl) {
 
-    String urlPrefix = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName();
+	String urlPrefix = httpServletRequest.getScheme() + "://" + httpServletRequest.getServerName();
     if (!StringUtils.isEmpty(environment.getProperty("car.urlPrefix"))) {
       urlPrefix = environment.getProperty("car.urlPrefix");
     }
