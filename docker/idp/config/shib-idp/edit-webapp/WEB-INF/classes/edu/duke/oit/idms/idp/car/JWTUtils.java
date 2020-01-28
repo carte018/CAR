@@ -170,6 +170,8 @@ public class JWTUtils {
     
 	  // force BouncyCastle implementation 
 	  Security.insertProviderAt(BouncyCastleProviderSingleton.getInstance(),1);
+	  
+	  log.error("In signAndEncrypt before ClaimsSet request is: " + request);
 	  	
     JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
       .expirationTime(new Date(new Date().getTime() + 300 * 1000))
@@ -178,7 +180,12 @@ public class JWTUtils {
       .claim("request", request)
       .build();
     
+      log.error("After ClaimsSet request is: " + request);
+      log.error("Retrieved request is: " + (String) claimsSet.getClaim("request"));
+    
     SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
+    
+      log.error("After inserting into signed JWT request is: " + (String) signedJWT.getJWTClaimsSet().getClaim("request"));
 
     try {
       signedJWT.sign(signer);
@@ -186,6 +193,7 @@ public class JWTUtils {
       throw new RuntimeException(e);
     }
     
+    log.error("After affixing signature request is: " + (String) signedJWT.getJWTClaimsSet().getClaim("request"));
     
     JWEObject jweObject = new JWEObject(
         new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
