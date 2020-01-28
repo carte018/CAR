@@ -184,16 +184,22 @@ public class JWTUtils {
       log.error("Retrieved request is: " + (String) claimsSet.getClaim("request"));
     
     SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
-    
+    try {
       log.error("After inserting into signed JWT request is: " + (String) signedJWT.getJWTClaimsSet().getClaim("request"));
+    } catch (Exception x) {
+    	throw new RuntimeException(x);
+    }
 
     try {
       signedJWT.sign(signer);
     } catch (JOSEException e) {
       throw new RuntimeException(e);
     }
-    
-    log.error("After affixing signature request is: " + (String) signedJWT.getJWTClaimsSet().getClaim("request"));
+    try {
+    	log.error("After affixing signature request is: " + (String) signedJWT.getJWTClaimsSet().getClaim("request"));
+    } catch (Exception x) {
+    	throw new RuntimeException(x);
+    }
     
     JWEObject jweObject = new JWEObject(
         new JWEHeader.Builder(JWEAlgorithm.RSA_OAEP_256, EncryptionMethod.A256GCM)
