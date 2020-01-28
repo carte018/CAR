@@ -18,6 +18,7 @@ package edu.internet2.consent.car;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.cert.Certificate;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
@@ -295,7 +296,7 @@ public class MainController {
                             	}
                             	String b64 = jcs.getStringClaim("request");
                             	CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 request = " + b64);
-                            	String json = new String(Base64.decodeBase64(b64),"UTF-8");
+                            	String json = new String(Base64.decodeBase64(b64.getBytes(StandardCharsets.UTF_16)),"UTF-8");
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
                             	
                         		//ObjectMapper mapper = new ObjectMapper();
