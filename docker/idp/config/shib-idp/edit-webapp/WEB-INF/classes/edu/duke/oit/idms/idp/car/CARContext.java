@@ -94,7 +94,6 @@ public class CARContext extends BaseContext {
           valuesJson.add(((ScopedStringAttributeValue)idpAttributeValue).getValue() + "@" + ((ScopedStringAttributeValue)idpAttributeValue).getScope());
         } else if (idpAttributeValue instanceof StringAttributeValue) {
           valuesJson.add(((StringAttributeValue)idpAttributeValue).getValue());
-          log.error("Added Json value: " + ((StringAttributeValue)idpAttributeValue).getValue());
         } else if (idpAttributeValue instanceof ByteAttributeValue) {
           valuesJson.add(((ByteAttributeValue)idpAttributeValue).toBase64());
         } else if (idpAttributeValue instanceof XMLObjectAttributeValue) {          
@@ -142,7 +141,6 @@ public class CARContext extends BaseContext {
     } catch (Exception exc) {
     	throw new RuntimeException("Failed encoding ",exc);
     }
-    log.error("Base64 request outgoing is: " + base64Request);
     return JWTUtils.signAndEncrypt(base64Request, idpRelyingPartyId);
   }
 
