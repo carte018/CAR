@@ -296,7 +296,8 @@ public class MainController {
                             	}
                             	String b64 = jcs.getStringClaim("request");
                             	CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 request = " + b64);
-                            	String json = new String(Base64.decodeBase64(b64.getBytes()),StandardCharsets.UTF_8);
+                            	//String json = new String(Base64.decodeBase64(b64),StandardCharsets.UTF_8);
+                            	String json = new String(WrappedBase64Decoder.DecodeBase64(b64.getBytes()),StandardCharsets.UTF_8);
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
                             	
                         		//ObjectMapper mapper = new ObjectMapper();
