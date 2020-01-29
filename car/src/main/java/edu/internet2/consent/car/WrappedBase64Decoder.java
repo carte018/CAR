@@ -9,4 +9,8 @@ public class WrappedBase64Decoder {
 	public static byte[] DecodeBase64(byte [] input) {
 		return Base64.getDecoder().decode(input);
 	}
+	
+	public static byte[] DecodeBase64(String input) {
+		return Base64.getDecoder().decode(input);
+	}
 }
