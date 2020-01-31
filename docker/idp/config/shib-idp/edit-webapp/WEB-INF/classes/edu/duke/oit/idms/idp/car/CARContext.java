@@ -139,7 +139,7 @@ public class CARContext extends BaseContext {
     try {
     	base64Request = Base64Support.encode(jsonRequest.getBytes(StandardCharsets.UTF_8), false);
     	log.error("Encoded presign request: " + base64Request);
-    	log.error("Decoded presign request in UTF8: " + new String(Base64Support.decode(base64Request),"UTF-8"));
+    	log.error("Decoded presign request in UTF8: " + new String(Base64Support.decode(base64Request.getBytes()),"UTF-8"));
     } catch (Exception exc) {
     	throw new RuntimeException("Failed encoding ",exc);
     }
