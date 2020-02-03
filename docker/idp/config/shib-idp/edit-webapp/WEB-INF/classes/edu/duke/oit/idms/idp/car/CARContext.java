@@ -136,6 +136,12 @@ public class CARContext extends BaseContext {
 
     String jsonRequest = request.toString();
     String base64Request = null;
+    byte[] bu = jsonRequest.getBytes(StandardCharsets.UTF_8);
+    String bux = "";
+    for (int ii = 0; ii < bu.length; ii++) {
+    	bux += (int) bu[ii] + " ";
+    }
+    log.error("Byte sequence before encoding is: " + bux);
     try {
     	base64Request = Base64Support.encode(jsonRequest.getBytes(StandardCharsets.UTF_8), false);
     	log.error("Encoded presign request: " + base64Request);

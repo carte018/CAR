@@ -298,6 +298,18 @@ public class MainController {
                             	CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 request = " + b64);
                             	//String json = new String(Base64.decodeBase64(b64),StandardCharsets.UTF_8);
                             	byte[] ba = b64.getBytes(StandardCharsets.US_ASCII);
+                            	byte[] bu = WrappedBase64Decoder.DecodeBase64(ba);
+                            	String bux = "";
+                            	for (int ii = 0; ii < bu.length; ii++) {
+                            		bux += (int) bu[ii] + " ";
+                            	}
+                            	CarUtility.locError("ERR1134",LogCriticality.error,"Byte sequence decoded:  " + bux);
+                            	String re = Base64.encodeBase64String(bu);
+                            	if (re.contentEquals(b64)) {
+                            		CarUtility.locError("ERR1134", LogCriticality.error,"Base64 values are the same");
+                            	} else {
+                            		CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 values differ:  Original is: " + b64 + " nwe is " + re);
+                            	}
                             	String json = new String(WrappedBase64Decoder.DecodeBase64(ba),"UTF-8");
                             	//String json = new String(WrappedBase64Decoder.DecodeBase64(b64.getBytes()),"UTF-8");
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
