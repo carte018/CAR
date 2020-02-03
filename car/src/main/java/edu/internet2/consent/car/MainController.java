@@ -310,7 +310,7 @@ public class MainController {
                             	} else {
                             		CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 values differ:  Original is: " + b64 + " nwe is " + re);
                             	}
-                            	String json = new String(WrappedBase64Decoder.DecodeBase64(ba),StandardCharsets.UTF_8);
+                            	String json = new String(WrappedBase64Decoder.DecodeBase64(ba));
                             	//String json = new String(WrappedBase64Decoder.DecodeBase64(b64.getBytes()),"UTF-8");
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
                             	
