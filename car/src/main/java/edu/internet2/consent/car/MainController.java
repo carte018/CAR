@@ -318,6 +318,7 @@ public class MainController {
                             	ObjectMapper mapper = OMSingleton.getInstance().getOm();
                         		InputRequest retval = null;
                         		try {
+                        			//WrappedInputRequest w = mapper.readValue(json.getBytes("UTF-8"), WrappedInputRequest.class);
                         			WrappedInputRequest w = mapper.readValue(json.getBytes("UTF-8"), WrappedInputRequest.class);
                         			retval = w.getRequest();
                         			return retval;
@@ -604,6 +605,14 @@ public class MainController {
 				r.addObject("message",CarUtility.getLocalError("ERR0068"));
 				r.addObject("intercept_view","1");
 				return r;
+			} else {
+				// RGC debug
+				try {
+					CarUtility.locError("ERR1134", LogCriticality.error, "Parsed request attributes[1].values[0] is: " + new String(inputRequest.getAttributes().get(1).getValues().get(0).getBytes("UTF-16"),"ISO-8859-1"));
+					CarUtility.locError("ERR1134", LogCriticality.error,"Parsed Input Request: " + inputRequest.toJson());
+				} catch (Exception x) {
+					CarUtility.locError("ERR1134",  LogCriticality.error,"Unable to serialize parsed input request!");
+				}
 			}
 			// We have input -- early-bind some things to the session so we can track our future state
 			// Callback Url

@@ -439,3 +439,31 @@ localDepartmentCode: 12171555
 userPassword: kjk-fgrad
 ferpaFlag: 1
 
+dn: uid=rob-faculty,ou=people,dc=amber,dc=org
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+objectclass: eduPerson
+uid: rob-faculty
+cn: Kurt Gödel
+givenName: Kurt
+sn: Gödel
+displayName: Professor Gödel
+eduPersonPrincipalName: rob-faculty@amber.org
+eduPersonAffiliation: faculty
+eduPersonPrimaryAffiliation: faculty
+eduPersonOrgDn: dc=amber,dc=org
+isMemberOf: urn:mace:amber.org:groups:research:covert_project
+isMemberOf: urn:mace:amber.org:groups:research:public_project
+isMemberOf: urn:mace:amber.org:groups:faculty:tenured
+isMemberOf: urn:mace:amber.org:groups:instructors
+isMemberOf: urn:mace:amber.org:groups:payroll:employers
+isMemberOf: urn:mace:amber.org:groups:payroll:employees
+localUniqueId: 4991011
+userPassword: rob-faculty
+mail: iamfaculty@avalonmail.com
+eduPersonOrcid: 9999-9999-9999-2518
+eduPersonOrgUnitDN: cn=mathematics,dc=amber,dc=org
+localDepartmentCode: 12130100
+localDepartmentCode: 12171555

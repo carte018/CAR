@@ -18,6 +18,7 @@
 <html lang="$preflang">
 #if(! $intercept_view)
   <head>
+  		<meta charset="UTF-8">
          <link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">
       <link rel="stylesheet" href="resources/css/duke.css">
   
@@ -53,7 +54,7 @@
 #else
 
   <head>
-  		  <meta charset="utf-8">
+  		  <meta charset="UTF-8">
           <link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">
   
    		<!--<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->

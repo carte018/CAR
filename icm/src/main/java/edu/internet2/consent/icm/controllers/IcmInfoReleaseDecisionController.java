@@ -114,8 +114,8 @@ public class IcmInfoReleaseDecisionController {
 	
 	@POST
 	@Path("/")
-	@Consumes({"application/json"})
-	@Produces({"application/json"})
+	@Consumes({"application/json; charset=UTF-8"})
+	@Produces({"application/json; charset=UTF-8"})
 	public Response postRootDecisionRequest(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity) {
 		
 		// Parse the input into a request object

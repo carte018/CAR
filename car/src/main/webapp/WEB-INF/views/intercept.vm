@@ -105,7 +105,7 @@
 			</div> 
     </div>
     
-    <form name="master_return_form" id="master_return_form" method="POST" action="$actionUrl" style="display: none;">
+    <form accept-charset="UTF-8" name="master_return_form" id="master_return_form" method="POST" action="$actionUrl" style="display: none;">
 
 	<input type="hidden" name="csrftoken" value="$csrftoken">
 	

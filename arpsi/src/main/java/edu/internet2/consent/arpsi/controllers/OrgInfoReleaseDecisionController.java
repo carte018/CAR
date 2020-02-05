@@ -100,8 +100,8 @@ public class OrgInfoReleaseDecisionController {
 	
 	@POST
 	@Path("/")
-	@Consumes({"application/json"})
-	@Produces({"application/json"})
+	@Consumes({"application/json; charset=UTF-8"})
+	@Produces({"application/json; charset=UTF-8"})
 	public Response postRootDecisionRequest(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity) {
 		
 		// First, parse out the input -- must be a well-formed DecisionRequestObject or we cannot proceed
