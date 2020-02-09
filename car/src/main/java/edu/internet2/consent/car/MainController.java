@@ -546,6 +546,18 @@ public class MainController {
 		int convo = 0;
 		String sconvo = null;
 		boolean askUserForDecisions = false;
+		
+		//
+		// Start by forcing the input into UTF-8
+		// Should not matter, but...
+		//
+		
+		try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (Exception e) {
+			CarUtility.locError("ERR1134",LogCriticality.error,"Failed to set UTF-8 character encoding on input");
+		}
+		
 		// Perform the necessary initialization
 		
 		CarConfig config = CarUtility.init(request);
