@@ -1,5 +1,5 @@
 SET foreign_key_checks=0;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `arpsi` default character set utf8mb4 default collate utf8mb4_0900_ai_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `arpsi` default character set utf8mb4 default collate utf8mb4_general_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `arpsi`;
 
@@ -200,7 +200,7 @@ INSERT INTO `hibernate_sequence` VALUES(1000);
 -- Current Database: `copsu`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `copsu` default character set utf8mb4 default collate utf8mb4_0900_ai_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `copsu` default character set utf8mb4 default collate utf8mb4_general_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `copsu`;
 
@@ -475,7 +475,7 @@ INSERT INTO hibernate_sequence VALUES(1000);
 -- Current Database: `icm`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `icm` default character set utf8mb4 default collate utf8mb4_0900_ai_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `icm` default character set utf8mb4 default collate utf8mb4_general_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `icm`;
 
@@ -782,7 +782,7 @@ INSERT INTO hibernate_sequence VALUES(1000);
 -- Current Database: `informed`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `informed` default character set utf8mb4 default collate utf8mb4_0900_ai_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `informed` default character set utf8mb4 default collate utf8mb4_general_ci /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
 USE `informed`;
 
