@@ -294,24 +294,16 @@ public class MainController {
                             		CarUtility.locError("ERR1108",LogCriticality.info, String.valueOf(iat), String.valueOf(new Date(System.currentTimeMillis())));;
                             		return null;
                             	}
-                            	String b64 = jcs.getStringClaim("request");
+                            	//String b64 = jcs.getStringClaim("request");
+                            	String b64 = new String(jcs.getStringClaim("request").getBytes("UTF-8"),"UTF-8");
+                            	Base64 decoder = new Base64(0,new byte [] { '\n'} );
+                            	
                             	CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 request = " + b64);
-                            	//String json = new String(Base64.decodeBase64(b64),StandardCharsets.UTF_8);
-                            	byte[] ba = b64.getBytes(StandardCharsets.US_ASCII);
-                            	byte[] bu = WrappedBase64Decoder.DecodeBase64(ba);
-                            	String bux = "";
-                            	for (int ii = 0; ii < bu.length; ii++) {
-                            		bux += (int) bu[ii] + " ";
-                            	}
-                            	CarUtility.locError("ERR1134",LogCriticality.error,"Byte sequence decoded:  " + bux);
-                            	String re = Base64.encodeBase64String(bu);
-                            	if (re.contentEquals(b64)) {
-                            		CarUtility.locError("ERR1134", LogCriticality.error,"Base64 values are the same");
-                            	} else {
-                            		CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 values differ:  Original is: " + b64 + " nwe is " + re);
-                            	}
-                            	String json = new String(WrappedBase64Decoder.DecodeBase64(ba),"ISO-8859-1");
+                            	
+                            	//String json = new String(WrappedBase64Decoder.DecodeBase64(ba),"ISO-8859-1");
+                            	String json = new String(decoder.decode(b64.getBytes("UTF-8")),"UTF-8");
                             	//String json = new String(WrappedBase64Decoder.DecodeBase64(b64.getBytes()),"UTF-8");
+                            	CarUtility.locError("ERR1134", LogCriticality.error,"Validate: Möibius");
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
                             	
                         		//ObjectMapper mapper = new ObjectMapper();
