@@ -20,7 +20,7 @@ TOMCAT8_GROUP=tomcat8
 # the "-XX:+CMSIncrementalMode" option.
 #JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC"
 #JAVA_OPTS="-Djava.awt.headless=true -Xms512m -Xmx2048m -XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8"
-JAVA_OPTS="-Djava.awt.headless=true -XX:+UseG1GC -Xms512m -Xmx2g -XX:+UseStringDeduplication -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 -XX:G1ReservePercent=3 -XX:InitiatingHeapOccupancyPercent=15 -Dfile.endcoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
+JAVA_OPTS="-Djava.awt.headless=true -XX:+UseG1GC -Xms512m -Xmx2g -XX:+UseStringDeduplication -XX:ParallelGCThreads=4 -XX:ConcGCThreads=2 -XX:G1ReservePercent=3 -XX:InitiatingHeapOccupancyPercent=15 -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom"
 
 
 # To enable remote debugging uncomment the following line.
