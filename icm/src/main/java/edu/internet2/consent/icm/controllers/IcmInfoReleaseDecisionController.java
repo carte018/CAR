@@ -114,8 +114,8 @@ public class IcmInfoReleaseDecisionController {
 	
 	@POST
 	@Path("/")
-	@Consumes({"application/json; charset=UTF-8"})
-	@Produces({"application/json; charset=UTF-8"})
+	@Consumes({"application/json;charset=UTF-8"})
+	@Produces({"application/json;charset=UTF-8"})
 	public Response postRootDecisionRequest(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity) {
 		
 		// Parse the input into a request object
@@ -174,8 +174,10 @@ public class IcmInfoReleaseDecisionController {
 		// We take advantage of the presence of both COPSU and ARPSI models in our context
 		//
 		
+		// DEBUGGING
 		
-		
+		IcmUtility.locLog("ERR1137", LogCriticality.error,"Incoming ICM decision request: " + entity);
+		IcmUtility.locLog("ERR1137", LogCriticality.error,"Incoming ICM decision request content-type header was: " + headers.getHeaderString("Content-Type"));
 		// Hibernate
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {

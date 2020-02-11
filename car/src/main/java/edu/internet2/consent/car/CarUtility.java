@@ -385,7 +385,7 @@ public class CarUtility {
 			httpRequest = new HttpPut(sb.toString());
 			try {
 				sendEntity = new StringEntity(payload);
-				sendEntity.setContentType("application/json");
+				sendEntity.setContentType("application/json;charset=UTF-8");
 				((HttpPut)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -394,7 +394,7 @@ public class CarUtility {
 			httpRequest = new HttpPost(sb.toString());
 			try {
 				sendEntity = new StringEntity(payload);
-				sendEntity.setContentType("application/json");
+				sendEntity.setContentType("application/json;charset=UTF-8");
 				((HttpPost)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -405,7 +405,7 @@ public class CarUtility {
 			httpRequest = new HttpPatch(sb.toString());
 			try {
 				sendEntity = new StringEntity(payload);
-				sendEntity.setContentType("application/json");
+				sendEntity.setContentType("application/json;charset=UTF-8");
 				((HttpPatch)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -1468,6 +1468,9 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 	String icmhost = config.getProperty("car.icm.hostname", true);
 	String icmport = config.getProperty("car.icm.port", true);
 
+	// DEBUG
+	CarUtility.locError("ERR1134", LogCriticality.error,"SendDecisionRequest received jsonRequest: " + jsonRequest);
+	
 	StringBuilder sb = new StringBuilder();
 	
 	sb.append("/consent/v1/icm/info-release-decision");

@@ -294,14 +294,14 @@ public class MainController {
                             		CarUtility.locError("ERR1108",LogCriticality.info, String.valueOf(iat), String.valueOf(new Date(System.currentTimeMillis())));;
                             		return null;
                             	}
-                            	//String b64 = jcs.getStringClaim("request");
-                            	String b64 = new String(jcs.getStringClaim("request").getBytes("UTF-8"),"UTF-8");
+                            	String b64 = jcs.getStringClaim("request");
+                            	//String b64 = new String(jcs.getStringClaim("request").getBytes("UTF-8"),"UTF-8");
                             	Base64 decoder = new Base64(0,new byte [] { '\n'} );
                             	
                             	CarUtility.locError("ERR1134",  LogCriticality.error,"Base64 request = " + b64);
                             	
                             	//String json = new String(WrappedBase64Decoder.DecodeBase64(ba),"ISO-8859-1");
-                            	String json = new String(decoder.decode(b64.getBytes("UTF-8")),"UTF-8");
+                            	String json = new String(decoder.decode(b64.getBytes()),"UTF-8");
                             	//String json = new String(WrappedBase64Decoder.DecodeBase64(b64.getBytes()),"UTF-8");
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Validate: Möibius");
                             	CarUtility.locError("ERR1134", LogCriticality.error,"Decrypted request = " + json);
