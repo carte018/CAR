@@ -94,8 +94,14 @@ public class CarAdminUtils {
 		//
 		// For now, we assume we receive group memberships in the "isMemberOf" attribute
 		//
-		
-		String groups = (String) request.getAttribute("isMemberOf");
+		// Some UTF8 group names may exist, so...
+		String groups = null;
+		try {
+			groups = new String(((String) request.getAttribute("isMemberOf")).getBytes("ISO-8859-1"),"UTF-8");
+		} catch (Exception e) {
+			// Fallback to default encoding
+			groups = (String) request.getAttribute("isMemberOf");
+		}
 		
 		ArrayList<String> retval= new ArrayList<String>();
 		
@@ -114,8 +120,14 @@ public class CarAdminUtils {
 		//
 		// For now we assume we receive entitlements in an "eduPersonEntitlement" attribute
 		//
+		// UTF8 possible in Entitlements, so...
+		String entitlements = null;
+		try {
+			entitlements = new String(((String)request.getAttribute("eduPersonEntitlement")).getBytes("ISO-8859-1"),"UTF-8");
+		} catch (Exception e) {
+			entitlements = (String) request.getAttribute("eduPersonEntitlement");
+		}
 		
-		String entitlements = (String) request.getAttribute("eduPersonEntitlement");
 		ArrayList<String> retval = new ArrayList<String>();
 		
 		if (entitlements == null || entitlements.contentEquals("")) 
@@ -293,10 +305,19 @@ public class CarAdminUtils {
 			subs += ";" + request.getAttribute("eppn");
 		}
 		if (request.getAttribute("isMemberOf") != null && ! request.getAttribute("isMemberOf").equals("")) {
-			subs += ";" + request.getAttribute("isMemberOf");
+			// UTF-8 cleanliness
+			try {
+				subs += ";" + new String(((String)request.getAttribute("isMemberOf")).getBytes("ISO-8859-1"),"UTF-8");
+			} catch (Exception e) {
+				subs += ";" + request.getAttribute("isMemberOf");
+			}
 		}
 		if (request.getAttribute("eduPersonEntitlement") != null && ! request.getAttribute("eduPersonEntitlement").equals("")) {
-			subs += ";" + request.getAttribute("eduPersonEntitlement");
+			try {
+				subs += ";" + new String(((String)request.getAttribute("eduPersonEntitlement")).getBytes("ISO-8859-1"),"UTF-8");
+			} catch (Exception e) {
+				subs += ";" + request.getAttribute("eduPersonEntitlement");
+			}
 		}		
 		
 		// And retrieve the role maps
@@ -375,10 +396,18 @@ public class CarAdminUtils {
 			subs += ";" + request.getAttribute("eppn");
 		}
 		if (request.getAttribute("isMemberOf") != null && ! request.getAttribute("isMemberOf").equals("")) {
-			subs += ";" + request.getAttribute("isMemberOf");
+			try {
+				subs += ";" + new String(((String) request.getAttribute("isMemberOf")).getBytes("ISO-8859-1"),"UTF-8");
+			} catch (Exception e) {
+				subs += ";" + request.getAttribute("isMemberOf");
+			}
 		}
 		if (request.getAttribute("eduPersonEntitlement") != null && ! request.getAttribute("eduPersonEntitlement").equals("")) {
-			subs += ";" + request.getAttribute("eduPersonEntitlement");
+			try {
+				subs += ";" + new String(((String) request.getAttribute("isMemberOf")).getBytes("ISO-8859-1"),"UTF-8");
+			} catch (Exception e) {
+				subs += ";" + request.getAttribute("eduPersonEntitlement");
+			}
 		}		
 		
 		// And retrieve the role maps

@@ -288,7 +288,7 @@ public class IcmUtility {
 		} else if (targetMethod.equalsIgnoreCase("PUT")) {
 			httpRequest = new HttpPut(sb.toString());
 			try {
-				sendEntity = new StringEntity(payload);
+				sendEntity = new StringEntity(payload,"UTF-8");
 				sendEntity.setContentType("application/json");
 				((HttpPut)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
@@ -298,7 +298,7 @@ public class IcmUtility {
 		} else if (targetMethod.equalsIgnoreCase("POST")) {
 			httpRequest = new HttpPost(sb.toString());
 			try {
-				sendEntity = new StringEntity(payload);
+				sendEntity = new StringEntity(payload,"UTF-8");
 				sendEntity.setContentType("application/json");
 				((HttpPost)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {
@@ -310,7 +310,7 @@ public class IcmUtility {
 		} else if (targetMethod.equalsIgnoreCase("PATCH")) {
 			httpRequest = new HttpPatch(sb.toString());
 			try {
-				sendEntity = new StringEntity(payload);
+				sendEntity = new StringEntity(payload,"UTF-8");
 				sendEntity.setContentType("application/json");
 				((HttpPatch)httpRequest).setEntity(sendEntity);
 			} catch (Exception e) {

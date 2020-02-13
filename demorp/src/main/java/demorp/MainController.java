@@ -17,6 +17,8 @@ import javax.naming.directory.InitialDirContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,8 @@ import javax.naming.directory.BasicAttributes;
 @Controller
 public class MainController {
 	
+	private static Log LOG = LogFactory.getLog(MainController.class);
+
 	@RequestMapping(value="/ldap",method=RequestMethod.GET)
 	public ModelAndView manageLDAP(HttpServletRequest req) {
 		// Simply present the LDAP page
@@ -467,6 +471,11 @@ public class MainController {
 		// template after that.
 		//
 		ModelAndView retval = null;
+		try {
+			req.setCharacterEncoding("UTF-8");
+		} catch (Exception e) {
+			// ignore -- if we can't encode to UTF-8, just proceed without doing so
+		}
 		
 		// In the event we are on sliced bread, we may have the Amber IDP at port 9443
 		// and the Chaos IDP at port 9493.  We need to detect which IDP we're authenticated
@@ -505,7 +514,14 @@ public class MainController {
 		retval.addObject("top_logo_url","/Pattern_In_Rebma.png");
 		
 		if (req.getAttribute("displayName") != null) {
-			retval.addObject("authuser",req.getAttribute("displayName"));
+			String udn = null;
+			try {
+				udn = new String(((String)req.getAttribute("displayName")).getBytes("ISO-8859-1"),"UTF-8");
+			} catch (Exception e) {
+				udn = "conversion-failed: " + req.getAttribute("displayName");
+			}
+			//retval.addObject("authuser",req.getAttribute("displayName"));
+			retval.addObject("authuser",udn);
 		} else {
 			retval.addObject("authuser",req.getRemoteUser());
 		}
@@ -535,7 +551,12 @@ public class MainController {
 		
 		for (String n : anames) {
 			if (req.getAttribute(n) != null) {
-				map.put(n,req.getAttribute(n));
+				try {
+					map.put(n,new String(((String)req.getAttribute(n)).getBytes("ISO-8859-1"),"UTF-8"));
+				} catch (Exception e) {
+					// fall back to raw data value
+					map.put(n, req.getAttribute(n));
+				}
 			}
 		}
 		

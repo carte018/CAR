@@ -16,6 +16,7 @@
  *#
 
 <html>
+  <meta charset="UTF-8">
   <head>
   		<meta charset="utf-8">
           <link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">

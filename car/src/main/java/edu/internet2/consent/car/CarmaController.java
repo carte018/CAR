@@ -116,8 +116,18 @@ public class CarmaController {
 		// Determine the user identifier from the config
 		String uid = config.getProperty("car.userIdentifier", true);
 		retval.setUserType(uid);
-		retval.setUserId((String) req.getAttribute(uid));
-		retval.addValue(uid, (String) req.getAttribute(uid));
+		try {
+			retval.setUserId(new String(((String)req.getAttribute(uid)).getBytes("ISO-8859-1"),"UTF-8"));
+		} catch(Exception e) {
+			// If null or unable to reencode, go with the original value (which may be null)
+			retval.setUserId((String) req.getAttribute(uid));
+		}
+		try {
+			retval.addValue(uid, new String(((String)req.getAttribute(uid)).getBytes("ISO-8859-1"),"UTF-8"));
+		} catch (Exception e) {
+			// If null or unable to reencode, go with the original value (which may be null)
+			retval.addValue(uid, (String) req.getAttribute(uid));
+		}
 		
 		// TODO:  Determine whether to include other attributes based on informed content attribute list
 		return retval;
@@ -439,8 +449,14 @@ public class CarmaController {
 		
 		retval.addObject("userid",user);  // inject the user's identifier
 		if (req.getAttribute("displayName") != null) {
-			retval.addObject("authuser",req.getAttribute("displayName"));
-			retval.addObject("username",req.getAttribute("displayName"));  // inject username as ePPN if it exists
+			try {
+				retval.addObject("authuser",new String(((String)req.getAttribute("displayName")).getBytes("ISO-8859-1"),"UTF-8"));
+				retval.addObject("username",new String(((String)req.getAttribute("displayName")).getBytes("ISO-8859-1"),"UTF-8"));
+			} catch (Exception e) {
+				// fall back to default encoding
+				retval.addObject("authuser",req.getAttribute("displayName"));
+				retval.addObject("username",req.getAttribute("displayName"));  // inject username as displayname if it exists
+			}
 		} else if (req.getAttribute("eduPersonPrincipalName") != null) {
 			retval.addObject("authuser",req.getAttribute("eduPersonPrincipalName"));
 			retval.addObject("username",req.getAttribute("eduPersonPrincipalName"));
@@ -669,7 +685,13 @@ public class CarmaController {
 		for (String iiname : iiset.keySet()) {
 			// for every attribute this RP cares about
 			ArrayList<String> l = new ArrayList<String>();
-			String listofivals = (String) req.getAttribute(iiname);
+			String listofivals = null;
+			try {
+				listofivals = new String(((String)req.getAttribute(iiname)).getBytes("ISO-8859-1"),"UTF-8");
+			} catch (Exception e) {
+				// fallback to default encoding
+				listofivals = (String) req.getAttribute(iiname);
+			}
 			if (listofivals != null) {
 				for (String val : listofivals.split(";")) {
 					l.add(val);
@@ -677,7 +699,13 @@ public class CarmaController {
 				ivalmap.put(iiname, l);
 			} else {
 				if (httpMap.containsKey(iiname)) {
-					String listofivals2 = (String) req.getAttribute(httpMap.get(iiname));
+					String listofivals2 = null;
+					try {
+						listofivals2 = new String(((String) req.getAttribute(httpMap.get(iiname))).getBytes("ISO-8859-1"),"UTF-8");
+					} catch (Exception e) {
+						//fallback to default encoding
+						listofivals2 = (String) req.getAttribute(httpMap.get(iiname));
+					}
 					if (listofivals2 != null) {
 						for (String val : listofivals2.split(";")) {
 							l.add(val);
@@ -713,10 +741,21 @@ public class CarmaController {
 				if (! aupadded.contains(ii)) {
 					// Not already in the aup -- see if we can add it
 					ArrayList<String> l = new ArrayList<String>();
-					String listofivals = (String) req.getAttribute(ii);
+					String listofivals = null;
+					try {
+						listofivals = new String(((String)req.getAttribute(ii)).getBytes("ISO-8859-1"),"UTF-8");
+					} catch (Exception e) {
+						// fallback to default encoding
+						listofivals = (String) req.getAttribute(ii);
+					}
 					if (listofivals == null) {
 						if (httpMap.get(ii) != null) {
-							listofivals = (String) req.getAttribute(httpMap.get(ii));
+							try {
+								listofivals = new String(((String)req.getAttribute(httpMap.get(ii))).getBytes("ISO-8859-1"),"UTF-8");
+							} catch (Exception e) {
+								// fallback
+								listofivals = (String) req.getAttribute(httpMap.get(ii));
+							}
 						}
 					}
 					if (listofivals != null) {
@@ -1542,7 +1581,12 @@ public class CarmaController {
 					nrdo.setInfoValue(i.getIiidentifier().getIiid());
 					String [] vals = {"value unavailable"};
 					if (request.getAttribute(nrdo.getInfoValue()) != null) {
-						vals = ((String)(request.getAttribute(nrdo.getInfoValue()))).split(";");
+						try {
+							vals = new String(((String)request.getAttribute(nrdo.getInfoValue())).getBytes("ISO-8859-1"),"UTF-8").split(";");
+						} catch (Exception e) {
+							// fallback to default encoding
+							vals = ((String)(request.getAttribute(nrdo.getInfoValue()))).split(";");
+						}
 					} 
 					if (vals[0].equalsIgnoreCase("value unavilable")) {
 						continue;
@@ -1601,7 +1645,12 @@ public class CarmaController {
 				nrdo.setAttribute(attrName);
 				String [] vals = {"value unavailable"};
 				if (request.getAttribute(nrdo.getInfoValue()) != null) {
-					vals = ((String)(request.getAttribute(nrdo.getInfoValue()))).split(";");
+					try {
+						vals = new String(((String) request.getAttribute(nrdo.getInfoValue())).getBytes("ISO-8859-1"),"UTF-8").split(";");
+					} catch (Exception e) {
+						// fallback to default encoding
+						vals = ((String)(request.getAttribute(nrdo.getInfoValue()))).split(";");
+					}
 				} 
 				if (vals[0].equalsIgnoreCase("value unavilable")) {
 					continue;
