@@ -42,6 +42,7 @@ RUN apt-get -y install netcat
 ADD utf8.cnf /etc/mysql/conf.d/utf8.cnf
 ADD galera.cnf /etc/mysql/conf.d/galera.cnf
 ADD schema.sql /tmp/schema.sql
+ADD my.cnf /etc/mysql/my.cnf
 
 # Change ownership of /var/lib/mysql mount point
 
