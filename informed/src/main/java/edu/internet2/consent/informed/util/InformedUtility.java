@@ -34,6 +34,7 @@ import org.hibernate.cfg.Configuration;
 
 import edu.internet2.consent.informed.cfg.InformedConfig;
 import edu.internet2.consent.informed.model.LogCriticality;
+import edu.internet2.consent.informed.util.FactoryFactory;
 import edu.internet2.consent.informed.auth.AuthenticationDriver;
 import edu.internet2.consent.informed.model.ErrorModel;
 
@@ -43,6 +44,15 @@ public class InformedUtility {
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static boolean registered = false;
+	
+	//
+	// Mechanisms for keeping Session instances threadlocal to avoid race conditions in 
+	// c3p0 cache (collections returned while background threads are maintaining the cache
+	//
+	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+    private static org.hibernate.SessionFactory sessionFactory = null;
+	
+	private static Configuration config = new Configuration();
 	
 	public static boolean isAuthorized(HttpServletRequest request, HttpHeaders headers, String entity, InformedConfig config) {
 		// For the moment, COPSU authorization is always granted
@@ -183,6 +193,38 @@ public class InformedUtility {
 	}
 	
 	public static Session getHibernateSession() {
+		Session session = (Session) threadLocal.get(); 
+		
+		if (!registered) {
+			try {
+				File cfile = new File("/etc/car/informed/hibernate.cfg.xml");
+				if (cfile.exists())
+					Class.forName(config.configure(cfile).getProperty("hibernate.connection.driver.class"));
+				else
+					Class.forName(config.configure().getProperty("hibernate.connection.driver.class"));
+				registered = true;
+			} catch (Exception e) {
+				return null;   // Return null if we cannot register configuration
+			}
+		}
+		// Otherwise, we have hibernate config'd
+		
+		if (session == null || ! session.isOpen()) {
+			// Create the static sessionFactory if needed
+			if (sessionFactory == null)
+				sessionFactory = FactoryFactory.getSessionFactory();
+		
+			session = (sessionFactory != null) ? sessionFactory.openSession()
+					: null;
+			threadLocal.set(session);
+		}
+		
+		return session;
+	}
+	
+	/* Replaced with threadlocal pattern session generator
+	 * 
+	public static Session getHibernateSession() {
 		if (! registered) {
 			try {
 				File cfile = new File("/etc/car/informed/hibernate.cfg.xml");
@@ -199,6 +241,7 @@ public class InformedUtility {
 		Session sess = sf.openSession();
 		return sess;
 	}
+	*/
 		
 	public static String idEscape(String value) {
 		// Convert all embedded slashes to !s 

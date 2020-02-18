@@ -278,13 +278,28 @@ public class OrgInfoReleaseDecisionController {
 			matchQuery.setParameterList("rpvaluelist", rpvalues);
 		}
 		
-		List<OrgReturnedPolicy> retList = (List<OrgReturnedPolicy>)matchQuery.list();
+		// We must be careful to force initialization of the retrieved data 
+		// before adding to the end of the list, so here we do a bit of double-entry
+		// collection processing
+		List<OrgReturnedPolicy> fList = (List<OrgReturnedPolicy>)matchQuery.list();
+		List<OrgReturnedPolicy> retList = new ArrayList<OrgReturnedPolicy>();
+		retList.addAll(fList);
+		// List<OrgReturnedPolicy> retList = (List<OrgReturnedPolicy>)matchQuery.list();
 		
 		// Add the last resort policy to the end of the whole thing for good measure
 		// It is always a possible matching policy if it exists
-		Query<OrgReturnedPolicy> lastResortQuery = sess.createQuery("from OrgReturnedPolicy where policyMetaData.policyId.baseId = :lastresort and policyMetaData.state = 0",OrgReturnedPolicy.class);
-		lastResortQuery.setParameter("lastresort", "LastResort");
-		retList.addAll(lastResortQuery.list());
+		// This is best-effort -- if we fail to add, we simply continue on without
+		try {
+			Query<OrgReturnedPolicy> lastResortQuery = sess.createQuery("from OrgReturnedPolicy where policyMetaData.policyId.baseId = :lastresort and policyMetaData.state = 0",OrgReturnedPolicy.class);
+			lastResortQuery.setParameter("lastresort", "LastResort");
+			// Must be careful again about initialization of query results here
+			List<OrgReturnedPolicy> lrList = lastResortQuery.list();
+			retList.addAll(lrList);
+			//retList.addAll(lastResortQuery.list());
+		} catch (Exception lre) {
+			// log and ignore
+			ArpsiUtility.locLog("LOG0021", LogCriticality.error, "LastResortQuery returned: " + lre.getMessage());
+		}
 		
 		// retList now contains our list of potentially matching policies. 
 		// The list should be ordered in increasing order of priority (most important first)

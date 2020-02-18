@@ -12,7 +12,6 @@
 	<property name="hibernate.c3p0.min_size">20</property>
 	<property name="hibernate.c3p0.max_size">900</property>
 	<property name="hibernate.c3p0.timeout">28800</property>
-	<property name="hibernate.c3p0.maxStatementsPerConnection">5</property>
 	<property name="hibernate.c3p0.idle_test_period">90</property>
 	<property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
 	<property name="hibernate.c3p0.TestConnectionOnCheckout">false</property>

@@ -47,6 +47,7 @@ import org.hibernate.cfg.Configuration;
 
 import edu.internet2.consent.icm.cfg.IcmConfig;
 import edu.internet2.consent.icm.model.LogCriticality;
+import edu.internet2.consent.icm.util.FactoryFactory;
 import edu.internet2.consent.icm.auth.AuthenticationDriver;
 import edu.internet2.consent.icm.model.ErrorModel;
 
@@ -56,6 +57,15 @@ public class IcmUtility {
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static boolean registered = false;
+	
+	//
+	// Mechanisms for keeping Session instances threadlocal to avoid race conditions in 
+	// c3p0 cache (collections returned while background threads are maintaining the cache
+	//
+	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+    private static org.hibernate.SessionFactory sessionFactory = null;
+	
+	private static Configuration config = new Configuration();
 	
 	public static boolean isAuthorized(HttpServletRequest request, HttpHeaders headers, String entity, IcmConfig config) {
 		// Base authorization on membership in one of two lists explicitly expressed in 
@@ -198,6 +208,37 @@ public class IcmUtility {
 	}
 	
 	public static Session getHibernateSession() {
+		Session session = (Session) threadLocal.get(); 
+		
+		if (!registered) {
+			try {
+				File cfile = new File("/etc/car/icm/hibernate.cfg.xml");
+				if (cfile.exists())
+					Class.forName(config.configure(cfile).getProperty("hibernate.connection.driver.class"));
+				else
+					Class.forName(config.configure().getProperty("hibernate.connection.driver.class"));
+				registered = true;
+			} catch (Exception e) {
+				return null;   // Return null if we cannot register configuration
+			}
+		}
+		// Otherwise, we have hibernate config'd
+		
+		if (session == null || ! session.isOpen()) {
+			// Create the static sessionFactory if needed
+			if (sessionFactory == null)
+				sessionFactory = FactoryFactory.getSessionFactory();
+		
+			session = (sessionFactory != null) ? sessionFactory.openSession()
+					: null;
+			threadLocal.set(session);
+		}
+		
+		return session;
+	}
+	
+	/* Replaced with a threadlocal pattern session manager
+	public static Session getHibernateSession() {
 		if (! registered) {
 			try {
 				File cfile = new File("/etc/car/icm/hibernate.cfg.xml");
@@ -214,7 +255,7 @@ public class IcmUtility {
 		Session sess = sf.openSession();
 		return sess;
 	}
-	
+	*/
 	public static String buildAuthorizationHeader(IcmConfig config) {
 		String basicUser = config.getProperty("icmUser", true);
 		String basicCred = config.getProperty("icmCred", true);

@@ -29,9 +29,7 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
 import edu.internet2.consent.copsu.auth.AuthenticationDriver;
 import edu.internet2.consent.copsu.cfg.CopsuConfig;
 import edu.internet2.consent.copsu.model.ErrorModel;
@@ -46,7 +44,16 @@ public class CopsuUtility {
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static boolean registered = false;
 	
-	public static boolean isAuthorized(HttpServletRequest request, HttpHeaders headers, String entity, CopsuConfig config) {
+	//
+	// Mechanisms for keeping Session instances threadlocal to avoid race conditions in 
+	// c3p0 cache (collections returned while background threads are maintaining the cache
+	//
+	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+    private static org.hibernate.SessionFactory sessionFactory = null;
+	
+	private static Configuration config = new Configuration();
+	
+    public static boolean isAuthorized(HttpServletRequest request, HttpHeaders headers, String entity, CopsuConfig config) {
 		// For the moment, COPSU authorization is always granted
 		// Base authorization on membership in one of two lists explicitly expressed in 
 		// the config file.  Members of either list are valid users of the app.
@@ -195,7 +202,39 @@ public class CopsuUtility {
 		LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " " + ret);
 	}
 
+	public static Session getHibernateSession() {
+		Session session = (Session) threadLocal.get(); 
+		
+		if (!registered) {
+			try {
+				File cfile = new File("/etc/car/copsu/hibernate.cfg.xml");
+				if (cfile.exists())
+					Class.forName(config.configure(cfile).getProperty("hibernate.connection.driver.class"));
+				else
+					Class.forName(config.configure().getProperty("hibernate.connection.driver.class"));
+				registered = true;
+			} catch (Exception e) {
+				return null;   // Return null if we cannot register configuration
+			}
+		}
+		// Otherwise, we have hibernate config'd
+		
+		if (session == null || ! session.isOpen()) {
+			// Create the static sessionFactory if needed
+			if (sessionFactory == null)
+				sessionFactory = FactoryFactory.getSessionFactory();
+		
+			session = (sessionFactory != null) ? sessionFactory.openSession()
+					: null;
+			threadLocal.set(session);
+		}
+		
+		return session;
+	}
 	
+/*
+ * 	Deprecated in favor of establishing threadlocal Sessions ala the threadlocal session pattern
+ *
 	public static Session getHibernateSession() {
 		if (! registered) {
 			try {
@@ -214,5 +253,5 @@ public class CopsuUtility {
 		Session sess = sf.openSession();
 		return sess;
 	}
-		
+*/		
 }

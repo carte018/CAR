@@ -442,12 +442,27 @@ public class IcmInfoReleaseDecisionController {
 			matchQuery.setParameterList("rpvaluelist", rpvalues);
 		}
 		
-		List<IcmReturnedPolicy> retList = (List<IcmReturnedPolicy>)matchQuery.list();
+		// We need to be careful about initialization of the result set in this case since
+		// we are going to combine two result sets and Hibernate tends to be lazy.
+		//
+		List<IcmReturnedPolicy> fList = (List<IcmReturnedPolicy>)matchQuery.list();
+		List<IcmReturnedPolicy> retList = new ArrayList<IcmReturnedPolicy>();
+		retList.addAll(fList);
+		//List<IcmReturnedPolicy> retList = (List<IcmReturnedPolicy>)matchQuery.list();
 		
 		// Look for policy with baseId "LastResort" and add to the end of the list for reference
-		Query<IcmReturnedPolicy> lastResortQuery = sess.createQuery("from IcmReturnedPolicy where policyMetaData.policyId.baseId = :lastresort and policyMetaData.state = 0",IcmReturnedPolicy.class);
-		lastResortQuery.setParameter("lastresort", "LastResort");
-		retList.addAll(lastResortQuery.list());
+		// This is best-effort -- if we fail retrieving a LastResort policy, we continue without
+		try {
+			Query<IcmReturnedPolicy> lastResortQuery = sess.createQuery("from IcmReturnedPolicy where policyMetaData.policyId.baseId = :lastresort and policyMetaData.state = 0",IcmReturnedPolicy.class);
+			lastResortQuery.setParameter("lastresort", "LastResort");
+			// Likewise about initialization here...
+			List<IcmReturnedPolicy> lrList = lastResortQuery.list();
+			retList.addAll(lrList);
+			//retList.addAll(lastResortQuery.list());
+		} catch (Exception lre) {
+			// Ignore and log
+			IcmUtility.locLog("ERR1137", LogCriticality.error, "LastResortQuery threw: " + lre.getMessage());
+		}
 		
 		String inUser = inputRequest.getUserId().getUserValue();
 		String inUserType = inputRequest.getUserId().getUserType();

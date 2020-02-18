@@ -29,7 +29,6 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import edu.internet2.consent.arpsi.auth.AuthenticationDriver;
@@ -43,6 +42,17 @@ public class ArpsiUtility {
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static boolean registered = false;
+	
+	//
+	// Mechanisms for keeping Session instances threadlocal to avoid race conditions in 
+	// c3p0 cache (collections returned while background threads are maintaining the cache
+	//
+	private static final ThreadLocal<Session> threadLocal = new ThreadLocal<Session>();
+    private static org.hibernate.SessionFactory sessionFactory = null;
+	
+	private static Configuration config = new Configuration();
+
+	
 	
 	// Determine if the header-authenticated user is authorized to use the ARPSI service at 
 	// all.
@@ -190,7 +200,41 @@ public class ArpsiUtility {
 		LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " " + ret);
 	}
 
+	public static Session getHibernateSession() {
+		
+		Session session = (Session) threadLocal.get(); 
+		
+		if (!registered) {
+			try {
+				File cfile = new File("/etc/car/arpsi/hibernate.cfg.xml");
+				if (cfile.exists())
+					Class.forName(config.configure(cfile).getProperty("hibernate.connection.driver.class"));
+				else
+					Class.forName(config.configure().getProperty("hibernate.connection.driver.class"));
+				registered = true;
+			} catch (Exception e) {
+				return null;   // Return null if we cannot register configuration
+			}
+		}
+		// Otherwise, we have hibernate config'd
+		
+		if (session == null || ! session.isOpen()) {
+			// Create the static sessionFactory if needed
+			if (sessionFactory == null)
+				sessionFactory = FactoryFactory.getSessionFactory();
+		
+			session = (sessionFactory != null) ? sessionFactory.openSession()
+					: null;
+			threadLocal.set(session);
+		}
+		
+		return session;
+	}
 	
+	/*
+	 * Refactored to make all Sessions threadlocal
+	 *
+	 *
 	public static Session getHibernateSession() {
 		if (!registered) {
 			try {
@@ -208,5 +252,5 @@ public class ArpsiUtility {
 		Session sess = sf.openSession();
 		return sess;
 	}
-		
+	*/	
 }

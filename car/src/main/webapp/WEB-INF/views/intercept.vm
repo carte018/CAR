@@ -277,7 +277,7 @@ $( document ).ready(function() {
     $("button#button_cancel").click(function(e){
     	e.preventDefault();
     	setMemory();
-    	window.location.href = "/car/carma/cancel";
+    	window.location.href = "/car/cancel";
     });
     
     updateAll();
