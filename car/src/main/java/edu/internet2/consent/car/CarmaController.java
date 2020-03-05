@@ -67,13 +67,16 @@ import edu.internet2.consent.icm.model.ValueObject;
 import edu.internet2.consent.icm.model.WhileImAwayDirective;
 import edu.internet2.consent.informed.model.InfoItemIdentifier;
 import edu.internet2.consent.informed.model.InfoItemValueList;
+import edu.internet2.consent.informed.model.RPIdentifier;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRPProperty;
 import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
+import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
+import edu.internet2.consent.informed.model.UserIdentifier;
 
 @Controller
 public class CarmaController {
@@ -356,6 +359,39 @@ public class CarmaController {
 				succ = true;
 		}
 		
+		// And record the showagain state again 
+		boolean ssucc = false;
+		ReturnedUserRPMetaInformation urpmi = null;
+		String rpid = newPolicy.getRelyingPartyId().getRPvalue();
+		String userType = newPolicy.getUserId().getUserType();
+		String userValue = newPolicy.getUserId().getUserValue();
+		
+		CarUtility.setShowAgain(userType, userValue, rpid, "true".contentEquals(req.getParameter("showagain"))?true:false, config);
+		/*
+		// Try the retrieval approach
+		urpmi = CarUtility.getUserRPMetaInformation(rpid, userType, userValue, config);
+		if (urpmi == null) {
+			urpmi = new ReturnedUserRPMetaInformation();
+			urpmi.setLastinteracted(System.currentTimeMillis());
+			RPIdentifier r = new RPIdentifier();
+			r.setRptype(newPolicy.getRelyingPartyId().getRPtype());
+			r.setRpid(newPolicy.getRelyingPartyId().getRPvalue());
+			urpmi.setRpidentifier(r);
+			UserIdentifier u = new UserIdentifier();
+			u.setUsertype(newPolicy.getUserId().getUserType());
+			u.setUserid(newPolicy.getUserId().getUserValue());
+			urpmi.setUseridentifier(u);
+		}
+		String showagain = req.getParameter("showagain");
+		if (showagain != null) {
+			urpmi.setShowagain(showagain.equals("true")?true:false);
+		} else {
+			urpmi.setShowagain(false);
+		}
+		for (int i=0; i< 5 && !ssucc; i++) {
+				if (CarUtility.putUserRPMetaInformation(rpid, userType, userValue, config, urpmi));
+		}
+		*/
 		// and return the browser to the original URL, already in progress
 		return new ModelAndView("redirect:/carma/selfservice/sites?updated=true");
 	}
@@ -1113,6 +1149,16 @@ public class CarmaController {
 		retval.addObject("page-title","Manage policies");
 		retval.addObject("baseId",baseId);
 		
+		// Inject the current state of the showagain for this user in this RP
+		
+		ReturnedUserRPMetaInformation rurpmi = CarUtility.getUserRPMetaInformation(rpid, userType, user, config);
+		String sag = "never"; // default to not offering show again
+		if (rurpmi != null && rpmi != null && ! "never".equals(rpmi.getDefaultshowagain())) {
+			sag = rurpmi.isShowagain()?"true":"false";  // true or false if set and we're not a "never" site
+		}
+		
+		retval.addObject("showagain",sag);
+		
 		// Bulk component injections
 		
 		retval.addObject("manage_heading",CarUtility.getLocalComponent("manage_heading"));
@@ -1152,6 +1198,12 @@ public class CarmaController {
 		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
 		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
+		
+		retval.addObject("showagaindescr",CarUtility.getLocalComponent("showagaindescr"));
+		retval.addObject("showagaintrue",CarUtility.getLocalComponent("showagaintrue"));
+		retval.addObject("showagainfalse",CarUtility.getLocalComponent("showagainfalse"));
+		retval.addObject("showagainsettrue",CarUtility.getLocalComponent("showagainsettrue"));
+		retval.addObject("showagainsetfalse",CarUtility.getLocalComponent("showagainsetfalse"));
 		
 		return retval;
 

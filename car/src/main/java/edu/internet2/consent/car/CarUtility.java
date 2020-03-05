@@ -760,6 +760,58 @@ public class CarUtility {
 			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
+	
+	public static boolean putUserRPMetaInformation(String rpid, String usertype, String uservalue, CarConfig config, ReturnedUserRPMetaInformation urpmi) {
+		String informedhost = config.getProperty("car.informed.hostname",  true);
+		String informedport = config.getProperty("car.informed.port",  true);
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("/consent/v1/informed/uric/urmetainformation/");
+		sb.append("entityId/");
+		sb.append(CarUtility.idEscape(rpid) + "/");
+		sb.append(usertype + "/");
+		sb.append(uservalue);
+		
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			httpClient = HttpClientBuilder.create().build();
+		}
+		HttpResponse response = null;
+		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		
+		try {
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+
+			String urpmijson = null;
+			try {
+				urpmijson = om.writeValueAsString(urpmi);
+			} catch (Exception e) {
+				return false;
+			}
+			try {
+				response = CarUtility.sendRequest(httpClient, "PUT", informedhost, informedport, sb.toString(),urpmijson, authzheader);
+				int status = CarUtility.extractStatusCode(response);
+				if (status >= 300) 
+					return false;
+				else
+					return true;
+			} catch (Exception e) {
+				return false;
+			} 
+		} catch (Exception e) {
+			return false;
+		} finally {
+			try {
+				EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+					// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+		}
+	}
 
 	public static ReturnedUserRPMetaInformation getUserRPMetaInformation(String rpid, String usertype, String uservalue, CarConfig config) {
 		String informedhost = config.getProperty("car.informed.hostname", true);

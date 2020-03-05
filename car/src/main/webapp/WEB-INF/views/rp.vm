@@ -315,6 +315,16 @@
   		</tr>
   		</tbody>
         </table>
+        #if($showagain && ! $showagain.equals("never"))
+        	<br>
+        	<div class="content-section">
+        		$showagaindescr #if($showagain.equals("true"))$showagaintrue#else$showagainfalse#end
+        		<br>
+        		<label for="showagaintrue" class="offscreen">prompt</label><input type="radio" name="showagain" id="showagaintrue" value="true" #if($showagain.equals("true"))checked#end>$showagainsettrue
+        		<br>
+        		<label for="showagainfalse" class="offscreen">do not prompt</label><input type="radio" name="showagain" id="showagainfalse" value="false" #if($showagain.equals("false"))checked#end>$showagainsetfalse
+        	</div>
+        #end
         </form>
          <div>
         <button id="saveButton" class="active">$save_label<i class="button-icon-right fa fa-arrow-right"></i></button>
