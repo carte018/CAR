@@ -700,6 +700,18 @@ public class CarUtility {
 			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
+	public static boolean isIIVAsnd(String rhid,String iiid, String value, CarConfig config) {
+
+		ReturnedInfoItemMetaInformation im = CarUtility.getInfoItemMetaInformation(rhid, iiid, config);
+		ReturnedValueMetaInformation vm = CarUtility.getValueMetaInformation(iiid, value, config);
+		
+		if ((im != null && im.isAsnd()) || (vm != null && vm.getAsnd())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static void setShowAgain(String utype,String uname,String rpid,boolean value,CarConfig config) {
 		String escaped = CarUtility.idEscape(rpid);
 		String informedhost = config.getProperty("car.informed.hostname", true);

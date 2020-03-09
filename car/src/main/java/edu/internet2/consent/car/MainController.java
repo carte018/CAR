@@ -969,6 +969,7 @@ public class MainController {
 					CarUtility.locError("ERR0803",LogCriticality.error,"unable to parse ICM response for log");
 				}
 			}
+
 			// We now have an IcmDecisionResponse object.  Save it in the session.
 			session.setAttribute(sconvo + ":" + "icmdecision", response);   // save the current decision response as is.
 			try {
@@ -1028,9 +1029,11 @@ public class MainController {
 			}
 			// RGC - 11-21-2018
 			if (askUserForDecisions && ! todisplay) {
+				CarUtility.locError("ERR1134",LogCriticality.error,"Setting askUserForDecisions to false because todisplay is false");
 				askUserForDecisions = false;
 			}
 			
+			CarUtility.locError("ERR1134", LogCriticality.error,"askUserForDecisions is " + askUserForDecisions + " and todisplay is " + todisplay);
 			session.setAttribute(sconvo + ":" + "askUserForDecisions", askUserForDecisions);
 			
 			
@@ -1603,9 +1606,12 @@ public class MainController {
 				}
 				
 				if (hasMay || hasMustDecisions || hasNoChoice) {  // pass thru if everything turns out to be missing or ASND
+					CarUtility.locError("ERR1134", LogCriticality.error,"Displaying intercept");
 					return debugReturn;
 				} 
+				CarUtility.locError("ERR1134",  LogCriticality.error,"Not Displaying intercept, in AskUser mode");
 			}
+			CarUtility.locError("ERR1134",  LogCriticality.error,"Not displaying intercept, no user questions either");
 		}
 		// if we get here, we're on a return trip by definition.
 		
@@ -1773,13 +1779,14 @@ public class MainController {
 						} else {
 							CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),"nocounter",v,idov.getReleaseDecision().toString());
 						}
-
+						
 						// At this point, if usectr is false, we didn't get a value, and if it is true, 
 						// we use ctr as the counter for the value
 						if (!usectr) {
 							// this is an odd case that shouldn't happen, but if it does somehow, we simply
 							// use the value that was present to begin with.
 							CarUtility.locError("ERR0801",LogCriticality.error);
+							CarUtility.locError("ERR1134", LogCriticality.error,"Handling " + iids.getInfoId().getInfoValue());
 							AttributeValuePair avp = new AttributeValuePair();
 							avp.setAttrname(iids.getInfoId().getInfoValue());
 							avp.setAttrvalue(v);
@@ -1788,6 +1795,7 @@ public class MainController {
 							finalDecisions.add(avp);
 						} else {
 							// this case is the common one -- we have a response value to use here
+							CarUtility.locError("ERR1134",  LogCriticality.error,"Handling " + iids.getInfoId().getInfoValue());
 							String radioName = "radio_"+iids.getInfoId().getInfoValue()+"_"+ctr;
 							String dec = (String) request.getParameter(radioName);  // should be permit or deny
 							AttributeValuePair avp = new AttributeValuePair();
@@ -1839,6 +1847,20 @@ public class MainController {
 					nvd.setValue(ap.getAttrvalue());
 					nvd.setDecision("permit");
 					alnvd.add(nvd);
+				} else {
+					// In the event that we're asnd, we have to override to permit 
+					// despite everything else we've done. 
+					//
+					// ASND overrides it all
+					//
+					if (CarUtility.isIIVAsnd(rhid, ap.getAttrname(), ap.getAttrvalue(), config)) {
+						NameValueDecision nvd = new NameValueDecision();
+						nvd.setName(ap.getAttrname());
+						nvd.setValue(ap.getAttrvalue());
+						nvd.setDecision("permit");
+						alnvd.add(nvd);
+						CarUtility.locError("ERR1134", LogCriticality.error,"ASND override of ap.getAttrname() = ap.getAttrvalue() applied");
+					}
 				}
 			}
 			DecisionResponse unwrapped = new DecisionResponse();
