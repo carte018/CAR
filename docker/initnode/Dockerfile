@@ -9,7 +9,7 @@ MAINTAINER Rob Carter "rob@duke.edu"
 #
 # Misc Prep
 #
-ADD sources.list /etc/apt/sources.list
+#ADD sources.list /etc/apt/sources.list
 RUN apt-get -y update
 RUN apt-get -y install apt-utils
 RUN apt-get -y update
