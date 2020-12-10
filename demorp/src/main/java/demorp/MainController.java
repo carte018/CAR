@@ -484,22 +484,23 @@ public class MainController {
 			retval.addObject("sitename","Content-R-Us");
 			retval.addObject("top_heading","Content-R-Us");
 			// hack for sliced bread demo -- parameterize later
-			retval.addObject("logouturl","/contentrus/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
+			// parameterized now
+			retval.addObject("logouturl","/contentrus/Shibboleth.sso/Logout?return=https://" + req.getServerName()+":"+idpport+"/idp/profile/Logout");
 		} else if (appname.equalsIgnoreCase("randsrus")) {
 			retval = new ModelAndView("randsrus");
 			retval.addObject("sitename","Research-R-Us");
 			retval.addObject("top_heading","Research-R-Us");
-			retval.addObject("logouturl","/randsrus/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
+			retval.addObject("logouturl","/randsrus/Shibboleth.sso/Logout?return=https://" + req.getServerName()+":"+idpport+"/idp/profile/Logout");
 		} else if (appname.equalsIgnoreCase("scholars")) {
 			retval = new ModelAndView("scholars");
 			retval.addObject("sitename","Scholarly Garage");
 			retval.addObject("top_heading","Scholarly Garage");
-			retval.addObject("logouturl","/scholars/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
+			retval.addObject("logouturl","/scholars/Shibboleth.sso/Logout?return=https://" + req.getServerName()+":"+idpport+"/idp/profile/Logout");
 		} else if (appname.equalsIgnoreCase("payroll")) {
 			retval = new ModelAndView("payroll");
 			retval.addObject("sitename","Peanuts:  Your Payroll Site");
 			retval.addObject("top_heading","Peanuts");
-			retval.addObject("logouturl","/payroll/Shibboleth.sso/Logout?return=https://idms-carsb-dev-01.oit.duke.edu:"+idpport+"/idp/profile/Logout");
+			retval.addObject("logouturl","/payroll/Shibboleth.sso/Logout?return=https://" + req.getServerName()+":"+idpport+"/idp/profile/Logout");
 		}
 		
 		retval.addObject("top_logo_url","/Pattern_In_Rebma.png");
