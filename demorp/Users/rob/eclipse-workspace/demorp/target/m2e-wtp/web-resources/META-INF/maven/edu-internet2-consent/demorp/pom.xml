@@ -277,7 +277,7 @@
     <hikaricp-version>3.2.0</hikaricp-version>
     <mysql-version>8.0.13</mysql-version>
     <validator-version>6.0.13.Final</validator-version>
-    <jackson-core-version>2.9.9</jackson-core-version>
+    <jackson-core-version>2.12.1</jackson-core-version>
 		<java-version>11</java-version>
 		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
