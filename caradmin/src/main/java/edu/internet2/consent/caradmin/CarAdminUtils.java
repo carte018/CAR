@@ -921,11 +921,15 @@ public class CarAdminUtils {
 		}
 	}
 	
+	//TODO:  parameterize IITypes through a DB table for easier extension
+	
+	
 	public static ArrayList<String> getSupportedIITypes() {
 		ArrayList<String> defval = new ArrayList<String>();
 		defval.add("attribute");
 		defval.add("operation");
 		defval.add("database_field");
+		defval.add("oauth_scope");
 		
 		ArrayList<String> retval = new ArrayList<String>();
 		ArrayList<SupportedIIType> asr = new ArrayList<SupportedIIType>();
@@ -990,6 +994,8 @@ public class CarAdminUtils {
 		}
 	}
 	
+	//TODO:  parameterize this through a database entry to 
+	// facilitate extension elsewhere.
 	
 	public static ArrayList<String> getSupportedUserTypes() {
 		ArrayList<String> defval = new ArrayList<String>();
