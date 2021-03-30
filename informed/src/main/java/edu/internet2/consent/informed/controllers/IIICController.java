@@ -44,6 +44,7 @@ import edu.internet2.consent.informed.cfg.InformedConfig;
 import edu.internet2.consent.informed.model.LogCriticality;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
+import edu.internet2.consent.informed.model.ScopeMapping;
 import edu.internet2.consent.informed.util.InformedUtility;
 import edu.internet2.consent.informed.util.OMSingleton;
 
@@ -81,6 +82,14 @@ public class IIICController {
 	{
 			return buildResponse(Status.OK,"");
 	}
+	
+	@OPTIONS
+	@Path("/scopemapping/{rhtype}/{rhvalue}/{scopename}")
+	public Response optionsSM(@Context HttpServletRequest request, @Context HttpHeaders headers)
+	{
+		return buildResponse(Status.OK,"");
+	}
+	
 	@DELETE
 	@Path("/iimetainformation/{rhtype}/{rhvalue}/{iitype}/{iivalue}")
 	public Response deleteIIMetaInformation(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("rhtype") String rhtype, @PathParam("rhvalue") String rhvaluein, @PathParam("iitype") String iitype, @PathParam("iivalue") String iivalue) {
@@ -303,6 +312,147 @@ public class IIICController {
 			}
 		}
 	}
+	@GET
+	@Path("/scopemapping/{rhtype}/{rhvalue}/{scopename}")
+	public Response getScopeMapping(@Context HttpServletRequest request, @Context HttpHeaders headers, @PathParam("rhtype") String rhtype, @PathParam("rhvalue") String rhvaluein, @PathParam("scopename") String scopename) {
+		// Retrieve a ScopeMapping object by scopename
+		
+		@SuppressWarnings("unused")
+		InformedConfig config = null;
+		try {
+			config = InformedUtility.init("getScopeMapping", request, headers, null);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0004", LogCriticality.error);
+		}
+		
+		// Unescape
+		String rhvalue = InformedUtility.idUnEscape(rhvaluein);
+		
+		// Get a Hibernate session
+		Session sess = InformedUtility.getHibernateSession();
+		if (sess == null) {
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+		}
+
+		Query<ScopeMapping> scopequery = sess.createQuery("from ScopeMapping where state = :state and scopename = :scopename and rhtype = :rhtype and rhvalue = :rhvalue",ScopeMapping.class);
+		
+		if (request.getParameter("state") != null) {
+			scopequery.setParameter("state", request.getParameter("state"));
+		} else {
+			scopequery.setParameter("state","active");
+		}
+		scopequery.setParameter("rhtype", rhtype);
+		scopequery.setParameter("rhvalue", rhvalue);
+		scopequery.setParameter("scopename", scopename);
+		
+		List<ScopeMapping> sml = scopequery.list();
+		
+		if (sml.isEmpty()) {
+			sess.close();
+			return InformedUtility.locError(404, "ERR0065",LogCriticality.info);
+		} else {
+			try {
+				return buildResponse(Status.OK,sml.get(0).toJSON());
+			} catch (Exception e) {
+				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+			} finally {
+				sess.close();
+			}
+		}
+	}
+	
+	@PUT
+	@Path("/scopemapping/{rhtype}/{rhvalue}/{scopename}")
+	public Response putScopeMapping(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("rhtype") String rhtype, @PathParam("rhvalue") String rhvaluein, @PathParam("scopename") String scopename) {
+		
+		// Init
+		@SuppressWarnings("unused")
+		InformedConfig config = null;
+		try {
+			config = InformedUtility.init("putScopeMapping",request,headers,entity);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0004", LogCriticality.error);
+		}
+		
+		// Unescape
+		String rhvalue = InformedUtility.idUnEscape(rhvaluein);
+		
+		// Deserialize
+		
+		ObjectMapper mapper = OMSingleton.getInstance().getOm();
+		
+		ScopeMapping smin = null;
+		
+		try {
+			smin = mapper.readValue(entity, ScopeMapping.class);
+		} catch (JsonParseException e) {
+			return InformedUtility.locError(400, "ERR0005",LogCriticality.info);
+		} catch (JsonMappingException e) {
+			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+		}
+		
+		// now we are authorized and we have a valid object
+		
+		// Get a Hibernate session
+		Session sess = InformedUtility.getHibernateSession();
+		if (sess == null) {
+			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+		}
+		
+		// Start a transaction
+		Transaction tx = sess.beginTransaction();
+		
+		// Check to see if we can retrieve the entry
+		Query<ScopeMapping> retQuery = sess.createQuery("from ScopeMapping where rhtype = :rhtype and rhvalue = :rhvalue and scopename = :scopename and state = 'active'",ScopeMapping.class);
+		
+		retQuery.setParameter("rhtype", rhtype);
+		retQuery.setParameter("rhvalue", rhvalue);
+		retQuery.setParameter("scopename", scopename);  // we want the active version if there are multiple in the database
+		
+		List<ScopeMapping> retList = retQuery.list();
+		
+		ScopeMapping tosave = null;
+		try {
+		if (retList.isEmpty()) {
+			// just store the object we have
+			// First, though, make sure we have values for the state parameters
+			smin.setVersion(1);  // This becomes version one if there's not one already in place
+			smin.setState("active");  // This becomes active regardless
+			smin.setUpdated(System.currentTimeMillis()); // creation time set to now
+			sess.save(smin);
+			tx.commit();
+			sess.close();
+			tosave = smin;
+		} else {
+			// update retList[0] with smin data and save it
+			retList.get(0).setState("inactive"); // make the current one inactive
+			smin.setVersion(retList.get(0).getVersion() + 1);
+			smin.setState("active");;
+			smin.setUpdated(System.currentTimeMillis());
+			sess.save(smin);
+			tosave = smin;
+			tx.commit();
+			sess.close();
+		}
+		} catch (Exception e) {
+			tx.rollback();
+			throw new RuntimeException("Transaction rollback",e);
+		} finally {
+			if (sess.isOpen())
+				sess.close();
+		}
+
+		
+		// And return what we stored
+		try {
+			return buildResponse(Status.OK,tosave.toJSON());
+		} catch (Exception e) {
+			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+		}
+	}
+	
 	@PUT
 	@Path("/valuemetainformation/{iiname}/{iivalue}")
 	public Response putValueMetaInformation(@Context HttpServletRequest request, @Context HttpHeaders headers, String entity, @PathParam("iiname") String iiname, @PathParam("iivalue") String iivaluein) {

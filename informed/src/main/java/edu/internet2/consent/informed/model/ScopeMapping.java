@@ -39,6 +39,25 @@ public class ScopeMapping {
 	@JsonProperty("scopename")
 	private String scopename;   
 	
+	// Displayname for user visibility
+	@JsonProperty("displayName")
+	private String displayName;
+	
+	// Description for user visibility
+	@JsonProperty("description")
+	private String description;
+	
+	// Version, state, and update date for meta-meta tracking
+	
+	@JsonProperty("version")
+	private int version;
+	
+	@JsonProperty("state")
+	private String state;
+	
+	@JsonProperty("updated")
+	private long updated;
+	
 	// This is the most natural way to store the mapping - 
 	// scope maps to info items by name.  The reality may 
 	// be that this eventually needs to be flipped to 
@@ -104,6 +123,76 @@ public class ScopeMapping {
 	 */
 	public void setScopename(String scopename) {
 		this.scopename = scopename;
+	}
+
+	/**
+	 * @return the displayName
+	 */
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	/**
+	 * @param displayName the displayName to set
+	 */
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	/**
+	 * @return the version
+	 */
+	public int getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	/**
+	 * @return the state
+	 */
+	public String getState() {
+		return state;
+	}
+
+	/**
+	 * @param state the state to set
+	 */
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	/**
+	 * @return the updated
+	 */
+	public long getUpdated() {
+		return updated;
+	}
+
+	/**
+	 * @param updated the updated to set
+	 */
+	public void setUpdated(long updated) {
+		this.updated = updated;
 	}
 
 	/**
