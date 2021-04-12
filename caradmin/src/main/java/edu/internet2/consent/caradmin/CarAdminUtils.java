@@ -71,6 +71,7 @@ import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
+import edu.internet2.consent.informed.model.ScopeMapping;
 import edu.internet2.consent.informed.model.SupportedIIType;
 import edu.internet2.consent.informed.model.SupportedLanguage;
 import edu.internet2.consent.informed.model.SupportedRHType;
@@ -2472,6 +2473,113 @@ public class CarAdminUtils {
 			HttpClientUtils.closeQuietly(response);
 			//HttpClientUtils.closeQuietly(httpClient);
 		}	
+	}
+	
+	public static void putScopeMapping(RHIdentifier rhi, InfoItemIdentifier iii, ScopeMapping replace) {
+		
+		AdminConfig config = AdminConfig.getInstance();
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("/consent/v1/informed/iiic/scopemapping/"+rhi.getRhtype()+"/"+idEscape(rhi.getRhid()) + "/");
+		sb.append(iii.getIiid());
+		
+		HttpClient httpClient = null;
+		
+		try {
+			httpClient = CarAdminHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			CarAdminUtils.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient due to failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+		
+		HttpResponse response = null;
+		
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		
+		// Try to serialize the SM we receive
+		
+		ObjectMapper om = edu.internet2.consent.copsu.util.OMSingleton.getInstance().getOm();
+		
+		try {
+			rbody = om.writeValueAsString(replace);
+		} catch (Exception e) {
+			CarAdminUtils.locError("ERR0046",LogCriticality.error);
+			return;  // ignore failures - best effort here
+		}
+		
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "PUT", informedhost, informedport, sb.toString(), rbody, authzheader);
+		} catch(Exception e) {
+			locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
+			return;  // on error, just return
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception i) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			//HttpClientUtils.closeQuietly(httpClient);
+		}
+		return;
+	}
+	
+	public static ScopeMapping getScopeMapping(RHIdentifier rhi, InfoItemIdentifier iii) {
+		
+		AdminConfig config = AdminConfig.getInstance();
+		String informedhost = config.getProperty("caradmin.informed.hostname", true);
+		String informedport = config.getProperty("caradmin.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("/consent/v1/informed/iiic/scopemapping/" + rhi.getRhtype() + "/" + idEscape(rhi.getRhid()) + "/");
+		
+		sb.append(iii.getIiid());
+		
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarAdminHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			CarAdminUtils.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient due to failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+		
+		HttpResponse response = null;
+		
+		String authzheader = CarAdminUtils.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		try {
+			response = CarAdminUtils.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
+			rbody = CarAdminUtils.extractBody(response);
+			int status = CarAdminUtils.extractStatusCode(response);
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// 	ignore
+				}
+				return null;
+			}
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			ScopeMapping ri = om.readValue(rbody, ScopeMapping.class);
+			return ri;
+		} catch (Exception e) {
+			locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
+			return null;  // on error, just fail
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception i) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			//HttpClientUtils.closeQuietly(httpClient);
+		}
 	}
 
 	public static ReturnedInfoItemMetaInformation getIIMetaInformation(RHIdentifier rhi, InfoItemIdentifier iii) {

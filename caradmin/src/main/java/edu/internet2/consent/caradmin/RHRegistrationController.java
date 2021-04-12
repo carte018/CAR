@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
+import edu.internet2.consent.informed.model.ScopeMapping;
 import edu.internet2.consent.informed.model.ReturnedRHInfoItemList;
 import edu.internet2.consent.arpsi.model.OrgReturnedPolicy;
 import edu.internet2.consent.icm.model.IcmReturnedPolicy;
@@ -620,7 +621,46 @@ public class RHRegistrationController {
 				if (needsupdate) {
 					CarAdminUtils.putIIMetaInformation(riimi);
 				}
-			}
+				
+				// In the event that this is an oauth_scope, determine if there
+				// has been a change to the list of contained iis in it and re-put it 
+				// if there has.
+				
+				if (riimi.getIiidentifier().getIitype().equals("oauth_scope")) {
+					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Dealing with oauth_scope: " + riimi.getIiidentifier().getIiid());
+					boolean scopechg = false;
+					ScopeMapping csm = CarAdminUtils.getScopeMapping(riimi.getRhidentifier(), riimi.getIiidentifier());
+					if (csm != null)
+						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Found a ScopeMapping");
+					ArrayList<String> iniis = new ArrayList<String>();
+					if (req.getParameter("scopecont_"+i) != null) {
+						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"scopecont_"+i+" populated");
+						Collections.addAll(iniis, req.getParameterValues("scopecont_"+i));
+					}
+					if (csm == null && req.getParameter("scopecont_"+i) != null && ! req.getParameter("scopecont_"+i).equals("")) {
+						scopechg = true;
+					} else if (csm != null) {
+						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Comparing " + iniis.toString() + " and " + csm.getInfoitems().toString());
+						if (! iniis.containsAll(csm.getInfoitems()) || ! csm.getInfoitems().containsAll(iniis)) {
+							scopechg = true;
+						}
+					}
+					if (scopechg) {
+						// put a new version out
+						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Scope definition changed -- updating");
+						if (csm == null) {
+							csm = new ScopeMapping();
+							csm.setScopename(riimi.getIiidentifier().getIiid());
+							csm.setRhtype(riimi.getRhidentifier().getRhtype());
+							csm.setRhvalue(riimi.getRhidentifier().getRhid());
+						}
+						csm.setInfoitems(iniis);
+						CarAdminUtils.putScopeMapping(riimi.getRhidentifier(), riimi.getIiidentifier(), csm);
+					}
+				} else {
+					CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Not a scope: " + riimi.getIiidentifier().getIiid());
+				}
+			} 
 			state = 1;
 			component = "updateii";
 			
@@ -801,8 +841,10 @@ public class RHRegistrationController {
 		ArrayList<InjectedRHMetainformation> irhma = new ArrayList<InjectedRHMetainformation>();
 		HashMap<InfoItemIdentifier,ReturnedInfoItemMetaInformation> ihash = new HashMap<InfoItemIdentifier,ReturnedInfoItemMetaInformation>();
 		HashMap<String,HashMap<InfoItemIdentifier,ReturnedInfoItemMetaInformation>> phash = new HashMap<String,HashMap<InfoItemIdentifier,ReturnedInfoItemMetaInformation>>();
+		HashMap<String,ScopeMapping> scopedefs = new HashMap<String,ScopeMapping>();
 		ArrayList<ReturnedRPMetaInformation> armi = new ArrayList<ReturnedRPMetaInformation>(); 
 		ArrayList<UserReturnedPolicy> rup = new ArrayList<UserReturnedPolicy>();
+		ArrayList<String> iinamelist = new ArrayList<String>();
 		int activerpct=0, userct=0;
 		
 		ReturnedRHMetaInformation rmi = CarAdminUtils.getResourceHolderMetaInformation(rhtype, rhv);
@@ -823,6 +865,15 @@ public class RHRegistrationController {
 					// for each of the iis get the metainfo and add it to the map
 					ReturnedInfoItemMetaInformation riimi = CarAdminUtils.getIIMetaInformation(r.getRhidentifier(),iii);
 					ihash.put(iii, riimi);
+					if (iii.getIitype().equals("oauth_scope")) {
+						// for oauth_scope cases, we add to the scopedefs hash
+						ScopeMapping sm = CarAdminUtils.getScopeMapping(r.getRhidentifier(), iii);
+						if (sm != null) {
+							scopedefs.put(iii.getIiid(), sm);
+						}
+					} else {
+						iinamelist.add(iii.getIiid());
+					}
 					// And into the phash partitioned map as well
 					if (phash.containsKey(iii.getIitype())) {
 						phash.get(iii.getIitype()).put(iii, riimi);
@@ -905,9 +956,12 @@ public class RHRegistrationController {
 		retval.addObject("injectedrhlist",irhma);
 		retval.addObject("availablerhs",rhmil);
 		retval.addObject("ihash",ihash);
+		retval.addObject("scopedefs",scopedefs);
+		retval.addObject("iinamelist",iinamelist);
 		retval.addObject("phash",phash);
 		retval.addObject("InfoItemMode",InfoItemMode.class);
 		retval.addObject("Collections",Collections.class);
+		retval.addObject("String",String.class);
 		retval.addObject("iicomparator",new InfoItemIdentifierComparator());
 		//retval.addObject("authuser",req.getRemoteUser());
 		retval.addObject("authuser",((String) req.getAttribute("eppn")).replaceAll(";.*$",""));
