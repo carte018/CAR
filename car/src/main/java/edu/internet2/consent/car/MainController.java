@@ -97,6 +97,7 @@ import edu.internet2.consent.icm.model.UserReleaseDirective;
 import edu.internet2.consent.icm.model.UserReturnedPolicy;
 import edu.internet2.consent.informed.model.InfoItemIdentifier;
 import edu.internet2.consent.informed.model.InfoItemValueList;
+import edu.internet2.consent.informed.model.RHIdentifier;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
@@ -105,6 +106,7 @@ import edu.internet2.consent.informed.model.ReturnedRPProperty;
 import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
+import edu.internet2.consent.informed.model.ScopeMapping;
 
 @Controller
 public class MainController {
@@ -557,6 +559,9 @@ public class MainController {
 		// Marshal the preferred language for interpolating internationalized strings
 		String preflang = CarUtility.prefLang(request);
 		
+		// prepare a typemap for later use
+		HashMap<String,String> typemap = new HashMap<String,String>();
+
 		// We have two cases, determined by the presence or absence of data in the Session.
 		// Get a session (creating a new one if needed)
 		
@@ -625,6 +630,7 @@ public class MainController {
 			// RH identifier
 			String rhid = inputRequest.getHeader().getRhId();
 			session.setAttribute(sconvo + ":" + "rhid",rhid);
+			
 			// RP identifier
 			String rpid = inputRequest.getHeader().getRelyingPartyId();
 			session.setAttribute(sconvo + ":" + "rpid",rpid);
@@ -722,6 +728,7 @@ public class MainController {
 			ArrayList<AttributeValuelist> desiredAttributes = new ArrayList<AttributeValuelist>();
 			ArrayList<String> hasvalues = new ArrayList<String>();
 			
+			
 			for (InfoItemValueList iivl : rprequirediilist.getRequiredlist()) {
 				InfoItemIdentifier iii = iivl.getInfoitemidentifier();  // release identifier
 				String sourceAttribute = iivl.getSourceitemname();
@@ -759,20 +766,61 @@ public class MainController {
 							break;
 						}
 					}
+					if (mappedValues.isEmpty() && iii.getIitype().equals("oauth_scope")) {
+						// mappedValues.add(iii.getIiid() + "_scope");  // placeholder (RGC)
+						//
+						// Now we make the value map contain the names of the attributes in the scope
+						//
+						// TODO:  We need to refactor InputRequestHeader to support passing in rhtype as well as rhid and rptype as well as rpid
+						// For now we hard-code "entityId"
+						RHIdentifier rhi = new RHIdentifier();
+						rhi.setRhid(rhid);
+						rhi.setRhtype("entityId");
+						ScopeMapping sm = CarUtility.getScopeMapping(rhi, iii, config);
+						//
+						// We use the list of attributes contained as the value *unless*
+						// this is a scope without contained attributes, in which case we use 
+						// the placeholder value.
+						if (sm != null && sm.getInfoitems() != null && ! sm.getInfoitems().isEmpty()) {
+							mappedValues.addAll(sm.getInfoitems());
+						} else {
+							mappedValues.add(iii.getIiid() + "_scope");
+						}
+					}
 				} else {
 					// The simple case
 					// List<String> subset = CarUtility.subsetValueList(iivl.getValuelist(), inputAttrMap.get(iivl.getInfoitemidentifier().getIiid()));
+					
 					List<String> subset = CarUtility.subsetValueList(inputAttrMap.get(iivl.getInfoitemidentifier().getIiid()),iivl.getValuelist());
 					if (subset != null && ! subset.isEmpty()) {
 						mappedValues.addAll(subset);
+					} else if (iii.getIitype().equals("oauth_scope")) {
+						// mappedValues.add(iii.getIiid()+"_scope"); // placeholder (RGC)
+						// Value map contains the list of attributes contained
+						// TODO:  Same:  Need InputRequestHeader to contain types as well as IDs
+						// for now, entityId hard-coded
+						
+						RHIdentifier rhi = new RHIdentifier();
+						rhi.setRhid(rhid);
+						rhi.setRhtype("entityId");
+						ScopeMapping sm = CarUtility.getScopeMapping(rhi, iii,config);
+						
+						if (sm != null && sm.getInfoitems() != null && ! sm.getInfoitems().isEmpty()) {
+							mappedValues.addAll(sm.getInfoitems());
+						} else {
+							mappedValues.add(iii.getIiid() + "_scope");
+						}
 					}
 				}
 				
 				AttributeValuelist al = new AttributeValuelist();
 				al.setAttrname(iii.getIiid());
 				al.setValues(mappedValues);
-				if (al.getValues() != null && ! al.getValues().isEmpty())
+				if ((al.getValues() != null && ! al.getValues().isEmpty()) || iii.getIitype().equals("oauth_scope")) {
 					desiredAttributes.add(al);			// only if we have values to release
+					typemap.put(iii.getIiid(),iii.getIitype());
+					CarUtility.locError("ERR1134", LogCriticality.error,"Adding: " + iii.getIiid() + " = " + mappedValues + " to desired list with type " + iii.getIitype());
+				}
 				hasvalues.add(iii.getIiid()); // for tracking
 			}
 			
@@ -847,8 +895,11 @@ public class MainController {
 					AttributeValuelist al = new AttributeValuelist();
 					al.setAttrname(iii.getIiid());
 					al.setValues(mappedValues);
-					if (al.getValues() != null && ! al.getValues().isEmpty())
+					if ((al.getValues() != null && ! al.getValues().isEmpty()) || iii.getIitype().equals("oauth_scope")) {
 						desiredAttributes.add(al);   // only if values
+						typemap.put(iii.getIiid(),iii.getIitype());
+						CarUtility.locError("ERR1134", LogCriticality.error,"Simple adding " + iii.getIiid() + " to desired");
+					}
 				}
 			}
 			
@@ -897,7 +948,15 @@ public class MainController {
 				InfoIdPlusValues iipv = new InfoIdPlusValues();
 				InfoId ii = new InfoId();
 				// TODO:  hard-coding type as "attribute" now, but this needs to change later
-				ii.setInfoType("attribute");
+				// TODO: somewhat better using input typemap to glean original type...
+				//ii.setInfoType("attribute");
+				if (typemap.containsKey(av.getAttrname())) {
+					ii.setInfoType(typemap.get(av.getAttrname()));
+					CarUtility.locError("ERR1134", LogCriticality.error,"(1) " + av.getAttrname() + " is " + typemap.get(av.getAttrname()));
+				} else {
+					ii.setInfoType("attribute");
+					CarUtility.locError("ERR1134", LogCriticality.error,"(1a) " + av.getAttrname() + " defaulted to attribute");
+				}
 				ii.setInfoValue(av.getAttrname());
 				iipv.setInfoId(ii);
 				iipv.setInfoItemValues(av.getValues());
@@ -909,13 +968,26 @@ public class MainController {
 			// Add the user properties for the icm request (which is basically the full set we have)
 			//
 			ArrayList<UserProperty> aup = new ArrayList<UserProperty>();
+			
+			// And a hashmap for dereferencing via oauth_scopes
+			
+			HashMap<String,ArrayList<String>> ohash = new HashMap<String,ArrayList<String>>();
+			
 			for (String key : inputAttrMap.keySet()) {
+				ArrayList<String> ohinter = new ArrayList<String>();
 				for (String values : inputAttrMap.get(key)) {
 					UserProperty addu = new UserProperty();
 					addu.setUserPropName(key);
 					addu.setUserPropValue(values);
 					aup.add(addu);
+					ReturnedValueMetaInformation rvmi = CarUtility.getValueMetaInformation(key, values, config);
+					if (rvmi != null && rvmi.getDisplayname() != null && ! rvmi.getDisplayname().equals("")) {
+						ohinter.add(rvmi.getDisplayname());
+					} else {
+						ohinter.add(values);
+					}
 				}
+				ohash.put(key, ohinter);
 			}
 			
 			dro.setArrayofUserProperty(aup);
@@ -946,12 +1018,13 @@ public class MainController {
 				r.addObject("intercept_view","1");
 				return r;
 			}
-			
-			CarUtility.locError("ERR0082",LogCriticality.info, decisionRequestJson);
+			//TODO: change back to info instead of error
+			CarUtility.locError("ERR0082",LogCriticality.error, decisionRequestJson);
 			// And send it out to get back a response
 			
 			IcmDecisionResponseObject response = CarUtility.sendDecisionRequest(decisionRequestJson,config);
-			CarUtility.locError("ERR0077",LogCriticality.info, decisionRequestJson);
+			//TODO: change back to info instead of error
+			CarUtility.locError("ERR0077",LogCriticality.error, decisionRequestJson);
 			
 			// Check for bad ICM response
 			if (response == null) {
@@ -964,7 +1037,8 @@ public class MainController {
 					//ObjectMapper tmapper = new ObjectMapper();
 					ObjectMapper tmapper = OMSingleton.getInstance().getOm();
 					String m = tmapper.writeValueAsString(response);
-					CarUtility.locError("ERR0803",LogCriticality.debug, m);
+					//TODO: log this at debug not error
+					CarUtility.locError("ERR0803",LogCriticality.error, m);
 				} catch (Exception e) {
 					CarUtility.locError("ERR0803",LogCriticality.error,"unable to parse ICM response for log");
 				}
@@ -1007,7 +1081,12 @@ public class MainController {
 				for (IcmDecisionsForInfoStatement idfis : response.getArrayOfInfoDecisionStatement()) {
 					for (IcmDecisionOnValues idov : idfis.getArrayOfDecisionOnValues()) {
 						if (idov.getReleaseDecision().equals(UserReleaseDirective.askMe)) {
-							ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config);
+							ReturnedInfoItemMetaInformation riimi = null;
+							if (idfis.getInfoId().getInfoType() != null) {
+								riimi = CarUtility.getInfoItemMetaInformation(rhid, idfis.getInfoId().getInfoType(), idfis.getInfoId().getInfoValue(), config);
+							} else {
+								riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config);
+							}
 							if (riimi != null && ! riimi.isAsnd()) {
 								CarUtility.locError("ERR1117",LogCriticality.debug,"askMe decision for " + idfis.getInfoId().getInfoValue());
 								askUserForDecisions = true;
@@ -1016,7 +1095,12 @@ public class MainController {
 								break;
 							}
 						} else { // RGC - 11-21-2018
-							ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(),config);
+							ReturnedInfoItemMetaInformation riimi = null;
+							if (idfis.getInfoId().getInfoType() != null) {
+								riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoType(), idfis.getInfoId().getInfoValue(), config);
+							} else {
+								riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(),config);
+							}
 							if (riimi != null && ! riimi.isAsnd()) {
 								todisplay = true;  
 							}
@@ -1117,7 +1201,17 @@ public class MainController {
 					InfoIdPlusValues iipv = new InfoIdPlusValues();
 					InfoId ii = new InfoId();
 					// TODO:  hard-coding type as "attribute" now, but this needs to change later
-					ii.setInfoType("attribute");
+					// TODO: somewhat better now...
+					// ii.setInfoType("attribute");
+					if (typemap.containsKey(av.getAttrname())) {
+						ii.setInfoType(typemap.get(av.getAttrname()));
+						CarUtility.locError("ERR1134", LogCriticality.error,"(2) " + av.getAttrname() + " is " + typemap.get(av.getAttrname()));
+
+					} else {
+						ii.setInfoType("attribute");  // still default
+						CarUtility.locError("ERR1134", LogCriticality.error,"(2a) " + av.getAttrname() + " defaulted to attribute");
+
+					}
 					ii.setInfoValue(av.getAttrname());
 					iipv.setInfoId(ii);
 					iipv.setInfoItemValues(av.getValues());
@@ -1169,7 +1263,12 @@ public class MainController {
 				// -rgc- for (String aid : significant) {
 				for (String aid : significant.keySet()) {
 					// get info item metainformation
-					ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,  aid, config);
+					ReturnedInfoItemMetaInformation riimi = null;
+					if (typemap.get(aid) != null) {
+						riimi = CarUtility.getInfoItemMetaInformation(rhid, typemap.get(aid), aid, config);
+					} else {
+						riimi =	CarUtility.getInfoItemMetaInformation(rhid,  aid, config);
+					}
 					String attrDisplayName = null;
 					
 					if (riimi != null && riimi.getDisplayname() != null) {
@@ -1203,7 +1302,12 @@ public class MainController {
 									id.setAttrDisplayName(attrDisplayName);
 									id.setAttrValue(v);
 									ReturnedValueMetaInformation rvmi = CarUtility.getValueMetaInformation(id.getAttrName(),id.getAttrValue(),config);
-									if (riimi.getPresentationtype() != null && riimi.getPresentationtype().equals("ENCODED")) {
+									
+									// debug
+									if (riimi == null) {
+										CarUtility.locError("ERR1134", LogCriticality.error, "RIIMI null trap - type is " + aid + " of type " + typemap.get(aid));
+									}
+									if (riimi != null && riimi.getPresentationtype() != null && riimi.getPresentationtype().equals("ENCODED")) {
 										//ReturnedValueMetaInformation rvmi = CarUtility.getValueMetaInformation(id.getAttrName(),id.getAttrValue(),config);
 										if (rvmi != null && rvmi.getDisplayname() != null) {
 											id.setAttrDisplayValue(rvmi.getDisplayname());
@@ -1215,14 +1319,16 @@ public class MainController {
 									}
 									id.setRecommendedDirective(dov.getReleaseDecision().toString());
 									id.setChosenDirective(dov.getReleaseDecision().toString());
-									id.setSensitivity(riimi.isSensitivity());
-									if (riimi.isAsnd() || (rvmi != null && rvmi.getAsnd())) {
+									if (riimi != null)
+										id.setSensitivity(riimi.isSensitivity());
+									if ((riimi != null && riimi.isAsnd()) || (rvmi != null && rvmi.getAsnd())) {
 										id.setAsnd(true);
 									} else {
 										id.setAsnd(false);
 									}
-									id.setPolicytype(riimi.getPolicytype());
-									if (riimi.isAsnd() || (rvmi != null && rvmi.getAsnd())) {
+									if (riimi != null)
+										id.setPolicytype(riimi.getPolicytype());
+									if ((riimi != null && riimi.isAsnd()) || (rvmi != null && rvmi.getAsnd())) {
 										// override to PERMIT for Asnd
 										id.setChosenDirective("permit");
 										id.setRecommendedDirective("permit");
@@ -1231,7 +1337,7 @@ public class MainController {
 										injectedDecisions.add(id);
 									}
 									// if this is Asnd, it doesn't create the need for hasMust
-									if (! riimi.isAsnd() && (rvmi == null || ! rvmi.getAsnd()))
+									if ((riimi == null || ! riimi.isAsnd()) && (rvmi == null || ! rvmi.getAsnd()))
 										hasMustDecisions = true;
 									}
 								}
@@ -1255,7 +1361,12 @@ public class MainController {
 					for (IcmDecisionsForInfoStatement idfis : response.getArrayOfInfoDecisionStatement()) {
 						for (IcmDecisionOnValues idov : idfis.getArrayOfDecisionOnValues()) {
 							String attrDisplayName=null;
-							ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config);
+							ReturnedInfoItemMetaInformation riimi = null;
+							if (idfis.getInfoId().getInfoType() != null) {
+								riimi = CarUtility.getInfoItemMetaInformation(rhid, idfis.getInfoId().getInfoType(),idfis.getInfoId().getInfoValue(), config);
+							} else {
+								riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config);
+							}
 							if (riimi != null && riimi.getDisplayname() != null) {
 								String localized = CarUtility.localize(riimi.getDisplayname(),preflang);
 								CarUtility.locError("ERR0085", LogCriticality.debug,idfis.getInfoId().getInfoValue(),localized);
@@ -1439,7 +1550,7 @@ public class MainController {
 					}
 				}
 
-				
+
 				// Marshal the RH info for display purposes
 				ArrayList<ReturnedRHMetaInformation> arhmi = CarUtility.getRHMetaInformation(config);
 				String rhdisplayname="";
@@ -1450,6 +1561,8 @@ public class MainController {
 				}
 				
 				ModelAndView debugReturn = new ModelAndView("intercept");
+
+				
 				if (! useCrypto) {
 					debugReturn.addObject("actionUrl",CarUtility.interceptUrl(config)+"?conversation="+sconvo);
 				} else {
@@ -1517,6 +1630,11 @@ public class MainController {
 					debugReturn.addObject("permitNo",omapper.writeValueAsString(permitNo));
 				} catch (Exception ign) {
 					debugReturn.addObject("permitNo","");
+				}
+				try {
+					debugReturn.addObject("ohashjs",omapper.writeValueAsString(ohash));
+				} catch (Exception ign) {
+					debugReturn.addObject("ohashjs","");
 				}
 				
 				// Optimize for reuse
@@ -1604,6 +1722,10 @@ public class MainController {
 				} else {
 					debugReturn.addObject("userShowAgain",urpmi.isShowagain()?"true":"false"); // ternary operators are the devil
 				}
+				
+				// Include the typemap for selection against oauth_scope items
+				
+				debugReturn.addObject("typemap",typemap);
 				
 				if (hasMay || hasMustDecisions || hasNoChoice) {  // pass thru if everything turns out to be missing or ASND
 					CarUtility.locError("ERR1134", LogCriticality.error,"Displaying intercept");
@@ -1942,13 +2064,33 @@ public class MainController {
 					HashMap<edu.internet2.consent.icm.model.InfoId,UserInfoReleaseStatement> built = new HashMap<edu.internet2.consent.icm.model.InfoId,UserInfoReleaseStatement>();
 					
 					for (AttributeValuePair avp : finalDecisions) {
+						
+						// Special casing for types -- oauth_scope for now
+						// carried in os_$name
+						// TODO:  Make this less hacky -- this is carried through by 
+						// TODO:  insertions in the post-back form for now, but should be 
+						// TODO:  refactored to be more intrinsic to the model going forward.
+						
+						if (request.getParameter("os_"+avp.getAttrname()) != null && request.getParameter("os_"+avp.getAttrname()).equals(avp.getAttrname())) {
+							typemap.put(avp.getAttrname(),"oauth_scope");
+						}
+						
 						if (avp.getPolicySource().equals("COPSU")) {
 							// this is one we need to mint a decision for
 							// check if we already have one
 							edu.internet2.consent.icm.model.InfoId ii = new edu.internet2.consent.icm.model.InfoId();
 							// TODO:  for now, all info items in this interface are attributes, but... maybe not forever
 							// TODO:  figure out how to handle alternative types -- possibly informed content? (yucch)
-							ii.setInfoType("attribute");
+							// TODO:  possibly prefereble...
+							if (typemap.containsKey(avp.getAttrname())) {
+								ii.setInfoType(typemap.get(avp.getAttrname()));
+								CarUtility.locError("ERR1134", LogCriticality.error,"(3) " + avp.getAttrname() + " is " + typemap.get(avp.getAttrname()));
+							} else {
+								ii.setInfoType("attribute");
+								CarUtility.locError("ERR1134", LogCriticality.error,"(3a) " + avp.getAttrname() + " defaulted to attribute");
+
+							}
+							
 							ii.setInfoValue(avp.getAttrname());
 							if (built.containsKey(ii)) {
 								// there's already one started -- add to it
@@ -1981,7 +2123,12 @@ public class MainController {
 								newirs.setInfoId(ii);
 								UserDirectiveAllOtherValues daov = new UserDirectiveAllOtherValues();
 								daov.setAllOtherValues(edu.internet2.consent.icm.model.AllOtherValuesConst.allOtherValues);
-								ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid, ii.getInfoValue(), config); 
+								ReturnedInfoItemMetaInformation riimi = null;
+								if (ii.getInfoType() != null) {
+									riimi = CarUtility.getInfoItemMetaInformation(rhid, ii.getInfoType(),ii.getInfoValue(), config);
+								} else {
+									riimi = CarUtility.getInfoItemMetaInformation(rhid, ii.getInfoValue(), config);
+								}
 								
 								// For PEV, always set the directive on all other values to "askMe"; for PAO, set it to the current setting
 								

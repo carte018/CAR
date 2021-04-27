@@ -178,8 +178,16 @@ public class CacheScrubber extends TimerTask {
 				iimic.evictCachedInfoItemMetaInformation(rhid,iiid);
 				//iimic.storeCachedInfoItemMetaInformation(rhid, iiid,CarUtility.getInfoItemMetaInformation(rhid, iiid, config));
 				if (CarUtility.getInfoItemMetaInformation(rhid, iiid, config, httpClient) == null) {
-					n += 1;
-					CarUtility.locDebugErr("ERR1128",rhid,iiid);
+					// TODO: Model evolution requires that we extend a bunch of things to support
+					// TODO: tracking iitypes where previously they could be defaulted to "attribute"
+					// TODO:  For the moment, we special-case the "oauth_scope" type explicitly here 
+					// TODO: to resolve a cache corruption caused by conflating oauth_scope iis
+					// TODO: with attribute iis.
+					iimic.evictCachedInfoItemMetaInformation(rhid,iiid);
+					if (CarUtility.getInfoItemMetaInformation(rhid, "oauth_scope", iiid,config,httpClient) == null) {
+						n += 1;
+						CarUtility.locDebugErr("ERR1128",rhid,iiid);
+					}
 				}
 			}
 		}

@@ -260,6 +260,9 @@ public class IcmInfoReleaseDecisionController {
 			}
 			copsuRequest.setArrayOfInfoIdsPlusValues(iipv);
 			copsuEntity = convert.writeValueAsString(copsuRequest);
+			
+			// debug
+			IcmUtility.locError(200,"ERR0056", LogCriticality.error,"CopsuRequest = " + copsuEntity);
 		} catch (Exception e) {
 			// Fail if we cannot create the copsu request
 			return IcmUtility.locError(500, "ERR0054",LogCriticality.error);
@@ -272,6 +275,8 @@ public class IcmInfoReleaseDecisionController {
 			if (status >= 300)
 				return IcmUtility.locError(status,"ERR0055",LogCriticality.error);
 			
+			// debug
+			IcmUtility.locError(200, "ERR0056", LogCriticality.error,"CopsuResponse = " + rbody);
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
 			copsuDecision = om.readValue(rbody,edu.internet2.consent.copsu.model.DecisionResponseObject.class);

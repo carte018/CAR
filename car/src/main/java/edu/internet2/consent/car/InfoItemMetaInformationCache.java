@@ -65,14 +65,16 @@ public class InfoItemMetaInformationCache {
 	
 	public boolean hasCachedInfoItemMetaInformation(String iiid, String iivalue) {
 		// return cache.containsKey(iiid+":"+iivalue);
-		if (! cache.containsKey(iiid+"|"+iivalue))
+		if (! cache.containsKey(iiid+"|"+iivalue)) {
 			CarUtility.locDebugErr("ERR1121",iiid+"|"+iivalue);
-	else
+		} else {
 			CarUtility.locDebugErr("ERR1122",iiid+"|"+iivalue);
-	return cache.containsKey(iiid+"|"+iivalue);
+		}
+		return cache.containsKey(iiid+"|"+iivalue);
 	}
 	
 	public CachedInfoItemMetaInformation getCachedInfoItemMetaInformation(String iiid, String iivalue) {
+		
 		return cache.get(iiid+"|"+iivalue);
 	}
 	

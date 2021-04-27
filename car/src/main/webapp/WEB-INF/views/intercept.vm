@@ -109,6 +109,12 @@
 
 	<input type="hidden" name="csrftoken" value="$csrftoken">
 	
+	#foreach ($tk in $typemap.keySet())
+		#if($typemap.get($tk).equals("oauth_scope"))
+			<input type="hidden" name="os_$tk" value="$tk">
+		#end
+	#end
+		
   	#foreach ($mustDecision in $injectedDecisions)
   		#if($counters) {
   			#if($counters.containsKey($mustDecision.getAttrName()))
@@ -129,6 +135,7 @@
   			<span class="attr_displayname">$mustDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$mustDecision.getAttrDisplayValue()</span>
   			<span class="attr_reason">$areason.get($mustDecision.getAttrName())</span>
+  			<span class="attr_type">$typemap.get($mustDecision.getAttrName())</span>
   			#if ($mustDecision.getRecommendedDirective()=="permit")
   			 	<label for="permit-valuemap_$mustDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="must_decision_pair" id="radio_$mustDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="permit" checked>
   				<label for="deny-valuemap_$mustDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="must_decision_pair" id="radio_$mustDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mustDecision.getAttrName()_$counter" value="deny">
@@ -158,6 +165,7 @@
   			<span class="attr_displayname">$mayDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$mayDecision.getAttrDisplayValue()</span>
   			<span class="attr_reason">$areason.get($mayDecision.getAttrName())</span>
+  			<span class="attr_type">$typemap.get($mayDecision.getAttrName())</span>
   			#if ($mayDecision.getChosenDirective()=="permit")
   				<label for="permit-valuemap_$mayDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="may_decision_pair" id="radio_$mayDecision.getAttrName()_permit_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="permit" checked>
   				<label for="deny-valuemap_$mayDecision.getAttrName()_$counter" class="offscreen">deny</label><input title="deny" aria-label="deny" class="may_decision_pair" id="radio_$mayDecision.getAttrName()_deny_$counter" type="radio" name="radio_$mayDecision.getAttrName()_$counter" value="deny">
@@ -187,6 +195,8 @@
   			<span class="attr_name">$nochoiceDecision.getAttrName()</span>
   			<span class="attr_displayname">$nochoiceDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$nochoiceDecision.getAttrDisplayValue()</span>
+  			<span class="attr_type">$typemap.get($nochoiceDecision.getAttrName())</span>
+  			
   			<!-- no reason for nochoice values -->
   			#if ($nochoiceDecision.getChosenDirective()=="permit")
   				<label for="permit-valuemap_$nochoiceDecision.getAttrName()_$counter" class="offscreen">permit</label><input title="permit" aria-label="permit" class="nochoice_decision_pair" id="radio_$nochoiceDecision.getAttrName()_permit_$counter" type="radio" name="radio_$nochoiceDecision.getAttrName()_$counter" value="permit" checked readonly>
@@ -304,6 +314,7 @@ $( document ).ready(function() {
     drawNewChoiceTable();
   }
   function drawNewNoChoiceDisplayTable(list,li_collection){
+    console.log("drawNewNoChoiceDisplayTable starts");
   	$("#nochoicelist").html("");
      var $permit = [];
      var $nccount = 0;
@@ -313,6 +324,8 @@ $( document ).ready(function() {
      	$display_name = $(this).find("span.attr_displayname").html();
      	$value = $(this).find("input.attr_value").val();
      	$display_value=$(this).find("span.attr_displayvalue").html();
+        $atype = $(this).find("span.attr_type").html();
+     	
      	
      	$reason = $(this).find("span.attr_reason").html();
      	if ($permit[$display_name] == undefined) {
@@ -320,16 +333,36 @@ $( document ).ready(function() {
      	  var row = "";
      	  if (asndJS[$display_name] ==  undefined || asndJS[$display_name] != 'true') {
      	  	if ($decision == "permit") {
-     	  		$display_values = permitNoJS[$display_name].sort().join(", ");
+     	  		if ($atype == "oauth_scope") {
+     	  			$avals = permitNoJS[$display_name].sort();
+     	  			$dstrs = [];
+     	  			for (let $i = 0; $i < $avals.length; $i++) {
+     	  				$ai = $avals[$i];
+     	  				$dvals = [];
+     	  				for (let $j=0; $j < ohashJS[$ai].length; $j++) {
+     	  					$oj = ohashJS[$ai];
+     	  					$dvals.push($oj[$j]);
+     	  				}
+     	  				$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+     	  				$dstrs.push($dadd);
+     	  			}
+     	  			// $display_values = $display_name + " (current values: " + $dstrs.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + '</div>';
+     	  		} else {
+     	  			$display_values = permitNoJS[$display_name].sort().join(", ");
+     	  		}
      	  		row += "<li>" + $display_name + ": <strong>" + $display_values + "</strong></li>";
      	  	} 
      	  	$("#nochoicelist").append(row);
      	  }
      	 }
      });
+         console.log("drawNewNoChoiceDisplayTable ends");
+     
   }
 
   function drawNoChoiceDisplayTable(table, row_collection){
+    console.log("drawNoChoiceDisplayTable starts");
   	table.html("");
   	var $permit = [];
   	var $nccount = 0;
@@ -340,6 +373,8 @@ $( document ).ready(function() {
   		$display_name = $(this).find("span.attr_displayname").html();
   		$value = $(this).find("input.attr_value").val();
   		$display_value=$(this).find("span.attr_displayvalue").html();
+  		$atype = $(this).find("span.attr_type").html();
+  		
 					
   		$reason = $(this).find("span.attr_reason").html();
 		if ($permit[$display_name] == undefined) {
@@ -347,7 +382,24 @@ $( document ).ready(function() {
   			var row = "";
   			if (asndJS[$display_name] == undefined || asndJS[$display_name] != 'true') {
   			if ($decision == "permit"){
-  		  		$display_values = permitNoJS[$display_name].sort().join(", ");	
+  				if ($atype == "oauth_scope") {
+  					$avals = permitNoJS[$display_name].sort();
+  					$dstrs = [];
+  					for (let $i = 0; $i < $avals.length; $i++) {
+  						$ai = $avals[$i];
+  						$dvals = [];
+  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+  							$oj = ohashJS[$ai];
+  							$dvals.push($oj[$j]);
+  						}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);
+  					}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+  				} else {
+  		  			$display_values = permitNoJS[$display_name].sort().join(", ");
+  		  		}	
 	  			row += "<tr><td class='necessary' nowrap><img src='resources/img/necessary.png'>&nbsp;</td>";
 	  			if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
   					row += "<td><div class='label'>" + $display_name + " (" + $display_values + ")</div>";
@@ -366,9 +418,12 @@ $( document ).ready(function() {
   			}
   		}
   	});
+  	    console.log("drawNoChoiceDisplayTable ends");
+  	
   }
 
   function drawDisplayTable(table, row_collection){
+    console.log("drawDisplayTable starts");
     table.html("");
     var $type = "must";
     var $permit = [];
@@ -391,6 +446,7 @@ $( document ).ready(function() {
       $value = $(this).find("input.attr_value").val(); 
       $display_value = $(this).find("span.attr_displayvalue").html();
       $reason = $(this).find("span.attr_reason").html();
+      $atype = $(this).find("span.attr_type").html();
       
       if (asndJS[$display_name] == undefined || asndJS[$display_name] != 'true') {
       
@@ -407,15 +463,87 @@ $( document ).ready(function() {
       
       	if ($decision == "permit") {
       		if ($type == "must") {
-      			$display_values = permitInjectedJS[$display_name].sort().join(", ");
+      			if ($atype == "oauth_scope") {
+      				// special case for oauth_scope display
+      				$avals = permitInjectedJS[$display_name].sort();
+      				$dstrs = [];
+      				for (let $i = 0; $i < $avals.length; $i++) {
+      					$ai = $avals[$i];
+      					$dvals = [];
+      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+      						$oj = ohashJS[$ai];
+      						$dvals.push($oj[$j]);
+      					}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);      					
+      				}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+      			} else {
+      				$display_values = permitInjectedJS[$display_name].sort().join(", ");
+      			}
       		} else if ($type == "may") {
-      			$display_values = permitMayJS[$display_name].sort().join(", ");
+      			if ($atype == "oauth_scope") {
+      				// Same special case again
+      				$avals = permitMayJS[$display_name].sort();
+      				$dstrs = [];
+      				for (let $i = 0; $i < $avals.length; $i++) {
+      					$ai = $avals[$i];
+      					$dvals = [];
+      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+      						$oj = ohashJS[$ai];
+      						$dvals.push($oj[$j]);
+      					}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);      					
+      				}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = $datrs.sort().join(",<br>");
+      			} else {
+      				$display_values = permitMayJS[$display_name].sort().join(", ");
+      			}
       		} 
       	} else {
       		if ($type == "must") {
-      			$display_values = denyInjectedJS[$display_name].sort().join(", ");
+      			// And again
+      			if ($atype == "oauth_scope") {
+      				$avals = denyInjectedJS[$display_name].sort();
+      				$dstrs = [];
+      				for (let $i = 0; $i<$avals.length; $i++) {
+      					$ai = $avals[$i];
+      					$dvals = [];
+      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+      						$oj = ohashJS[$ai];
+      						$dvals.push($oj[$j]);
+      					}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);      					
+      				}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+      			} else {
+      				$display_values = denyInjectedJS[$display_name].sort().join(", ");
+      			}
       		} else if ($type == "may") {
-      			$display_values = denyMayJS[$display_name].sort().join(", ");
+      			// And again
+      			if ($atype == "oauth_scope") {
+      				$avals = denyMayJS[$display_name].sort();
+      				$dstrs = [];
+      				for (let $i = 0; $i<$avals.length; $i++) {
+      					$ai = $avals[$i];
+      					$dvals = [];
+      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+      						$oj = ohashJS[$ai];
+      						$dvals.push($oj[$j]);
+      					}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);      					
+      				}
+     	  			//$display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+      			} else { 
+      				$display_values = denyMayJS[$display_name].sort().join(", ");
+      			}
       		}
       	}
       	if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
@@ -429,6 +557,8 @@ $( document ).ready(function() {
       }
       }
     });
+        console.log("drawDisplayTable ends");
+    
   }
   
   function sensflip(targ,val) {
@@ -445,6 +575,7 @@ $( document ).ready(function() {
   }
   
   function drawNewChoiceTable() {
+  	console.log("drawNewChoiceTable starts");
   	var displayedPAOs = [];
   	musttable = $("table#must-decision-table tbody");
   	musttable.html("");
@@ -469,18 +600,87 @@ $( document ).ready(function() {
   		$display_name = $(this).find("span.attr_displayname").html();
   		$reason = $(this).find("span.attr_reason").html();
   		$display_value = $(this).find("span.attr_displayvalue").html();
+  		$atype = $(this).find("span.attr_type").html();
   	
   		if ($decision == "permit") {
   			if ($type == "must") {
-  				$display_values = permitInjectedJS[$display_name].sort().join(", ");
+  				if ($atype == "oauth_scope") {
+  					$avals = permitInjectedJS[$display_name].sort();
+  					$dstrs = [];
+  					for (let $i = 0; $i < $avals.length; $i++) {
+  						$ai = $avals[$i];
+  						$dvals = [];
+  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+  							$oj = ohashJS[$ai];
+  							$dvals.push($oj[$j]);
+  						}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);  						
+  					}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+  				} else {
+  					$display_values = permitInjectedJS[$display_name].sort().join(", ");
+  				}
   			} else if ($type == "may") {
-  				$display_values = permitMayJS[$display_name].sort().join(", ");
+  				if ($atype == "oauth_scope") {
+  					$avals = permitMayJS[$display_name].sort();
+  					$dstrs = [];
+  					for (let $i = 0; $i < $avals.length; $i++) {
+  						$ai = $avals[$i];
+  						$dvals = [];
+  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+  							$oj = ohashJS[$ai];
+  							$dvals.push($oj[$j]);
+  						}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);  						
+  					}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+  				} else {
+  					$display_values = permitMayJS[$display_name].sort().join(", ");
+  				}
   			}
   		} else {
   			if ($type == "must") {
-  				$display_values = denyInjectedJS[$display_name].sort().join(", ");
+  				if ($atype == "oauth_scope") {
+  					$avals = denyInjectedJS[$display_name].sort();
+  					$dstrs = [];
+  					for (let $i = 0; $i < $avals.length; $i++) {
+  						$ai = $avals[$i];
+  						$dvals = [];
+  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+  							$oj = ohashJS[$ai];
+  							$dvals.push($oj[$j]);
+  						}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);  						
+  					}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+  				} else {
+  					$display_values = denyInjectedJS[$display_name].sort().join(", ");
+  				}
   			} else if ($type == "may") {
-  				$display_values = denyMayJS[$display_name].sort().join(", ");
+  				if ($atype == "oauth_scope") {
+  					$avals = denyMayJS[$display_name].sort();
+  					$dstrs = [];
+  					for (let $i = 0; $i < $avals.length; $i++) {
+  						$ai = $avals[$i];
+  						$dvals = [];
+  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+  							$oj = ohashJS[$ai];
+  							$dvals.push($oj[$j]);
+  						}
+  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dstrs.push($dadd);  						
+  					}
+     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+  				} else {
+  					$display_values = denyMayJS[$display_name].sort().join(", ");
+  				}
   			}
   		}
 		if (policytypeJS[$display_name] != 'PAO') { 
@@ -676,10 +876,12 @@ $( document ).ready(function() {
       }
       updateAll();
     });
+      	console.log("drawNewChoiceTable ends");
     
   }
 
   function drawChoiceTable(){
+    console.log("drawChoiceTable starts");
     var displayedPAOs = [];
     table = $("table#choice-table");
     table.html("");
@@ -699,18 +901,87 @@ $( document ).ready(function() {
       $display_name = $(this).find("span.attr_displayname").html();
       $reason = $(this).find("span.attr_reason").html();
       $display_value = $(this).find("span.attr_displayvalue").html();
+      $atype = $(this).find("span.attr_type").html();
       
    	  if ($decision == "permit") {
      	if ($type == "must") {
-     		$display_values = permitInjectedJS[$display_name].sort().join(", ");
+     		if ($atype == "oauth_scope") {
+     			$avals = permitInjectedJS[$display_name].sort();
+     			$dstrs = [];
+     			for (let $i = 0; $i < $avals.length; $i++) {
+     				$ai = $avals[$i];
+     				$dvals = [];
+     				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+     					$oj = ohashJS[$ai];
+     					$dvals.push($oj[$j]);
+     				}
+  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dstrs.push($dadd);     				
+     			}
+   	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     		} else {
+     			$display_values = permitInjectedJS[$display_name].sort().join(", ");
+     		}
      	} else if ($type == "may") {
-     		$display_values = permitMayJS[$display_name].sort().join(", ");
+     		if ($atype == "oauth_scope") {
+     			$avals = permitMayJS[$display_name].sort();
+     			$dstrs = [];
+     			for (let $i = 0; $i < $avals.length; $i++) {
+     				$ai = $avals[$i];
+     				$dvals = [];
+     				for (let $j = 0 ; $j < ohashJS[$ai].length; $j++) {
+     					$oj = ohashJS[$ai];
+     					$dvals.push($oj[$j]);
+     				}
+  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dstrs.push($dadd);     				
+     			}
+   	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     		} else {
+     			$display_values = permitMayJS[$display_name].sort().join(", ");
+     		}
      	} 
      } else {
      	if ($type == "must") {
-     		$display_values = denyInjectedJS[$display_name].sort().join(", ");
+     		if ($atype == "oauth_scope") {
+     			$avals = denyInjectedJS[$display_name].sort();
+     			$dstrs = [];
+     			for (let $i = 0; $i < $avals.length; $i++) {
+     				$ai = $avals[$i];
+     				$dvals = [];
+     				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+     					$oj = ohashJS[$ai];
+     					$dvals.push($oj[$j]);
+     				}
+  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dstrs.push($dadd);     				
+     			}
+   	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     		} else {
+     			$display_values = denyInjectedJS[$display_name].sort().join(", ");
+     		}
      	} else if ($type == "may") {
-     		$display_values = denyMayJS[$display_name].sort().join(", ");
+     		if ($atype == "oauth_scope") {
+     			$avals = denyInjectedJS[$display_name].sort();
+     			$dstrs = [];
+     			for (let $i = 0; $i < $avals.length; $i++) {
+     				$ai = $avals[$i];
+     				$dvals = [];
+     				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+     					$oj = ohashJS[$ai];
+     					$dvals.push($oj[$j]);
+     				}
+  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dstrs.push($dadd);     				
+     			}
+   	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
+   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";     			
+     		} else {
+     			$display_values = denyMayJS[$display_name].sort().join(", ");
+     		}
      	}
      }
       if (policytypeJS[$display_name] != 'PAO') {
@@ -744,6 +1015,8 @@ $( document ).ready(function() {
       	table.append(row);
       }
     }
+        console.log("drawChoiceTable ends");
+    
   })
     
     //bind events to newly created buttons

@@ -62,6 +62,7 @@ import edu.internet2.consent.informed.model.ReturnedRPOptionalInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedRPRequiredInfoItemList;
 import edu.internet2.consent.informed.model.ReturnedUserRPMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
+import edu.internet2.consent.informed.model.ScopeMapping;
 import edu.internet2.consent.informed.model.UserIdentifier;
 import edu.internet2.consent.car.CarConfig;
 import edu.internet2.consent.car.auth.AuthenticationDriver;
@@ -633,6 +634,9 @@ public class CarUtility {
 	
 	public static ReturnedInfoItemMetaInformation getInfoItemMetaInformation(String rhid, String iiid, CarConfig config, HttpClient httpClient) {
 		
+		// debug
+		CarUtility.locError("ERR1134", LogCriticality.error,"Calling untyped getIIM");
+		
 		// Start by checking the cacher
 		InfoItemMetaInformationCache icache = InfoItemMetaInformationCache.getInstance();
 		CachedInfoItemMetaInformation ci = null;
@@ -674,6 +678,112 @@ public class CarUtility {
 					EntityUtils.consumeQuietly(response.getEntity());
 				} catch (Exception x) {
 					// ignore
+				}
+				return null;
+			}
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			ReturnedInfoItemMetaInformation lr = om.readValue(rbody, ReturnedInfoItemMetaInformation.class);
+		
+			if (lr != null) {
+				icache.storeCachedInfoItemMetaInformation(rhid, iiid, lr);
+				return lr;
+			} else {
+				return null;  // on error, just fail
+			}
+		} catch (Exception e) {
+			return null;  // on error, just fail
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			// Pooling - leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
+		}
+	}
+	public static ReturnedInfoItemMetaInformation getInfoItemMetaInformation(String rhid, String iitype, String iivalue, CarConfig config) {
+		//HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = null;
+		try {
+			httpClient = CarHttpClientFactory.getHttpsClient();
+		} catch (Exception e) {
+			// Log and create a raw client instead
+			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			httpClient = HttpClientBuilder.create().build();
+		}
+		ReturnedInfoItemMetaInformation retval = getInfoItemMetaInformation(rhid, iitype, iivalue, config, httpClient);
+		// Pooling -- leave open for reuse
+		//HttpClientUtils.closeQuietly(httpClient);
+		
+		// debug
+		if (retval == null) {
+			CarUtility.locError("ERR1136", LogCriticality.error,"About to retun null looking for II metainfo for (" + rhid + "," + iitype + "," + iivalue);
+		}
+		return retval;
+	}
+	
+	public static ReturnedInfoItemMetaInformation getInfoItemMetaInformation(String rhid, String iitype, String iiid, CarConfig config, HttpClient httpClient) {
+		
+		// debug
+		CarUtility.locError("ERR1134",LogCriticality.error, "Called getIIMeta with itype - " + iitype + " , " + iiid);
+		
+		// Start by checking the cacher
+		InfoItemMetaInformationCache icache = InfoItemMetaInformationCache.getInstance();
+		CachedInfoItemMetaInformation ci = null;
+		// debug
+		CarUtility.locError("ERR1134",LogCriticality.error,"Cache check for " + rhid + "," + iiid);
+		
+		
+		if (icache.hasCachedInfoItemMetaInformation(rhid,  iiid)) {
+			ci = icache.getCachedInfoItemMetaInformation(rhid, iiid);
+			Random rand = new Random();
+			int n = rand.nextInt(10);
+			if (System.currentTimeMillis() <= ci.getCacheTime() + (50+n) * 60 * 1000) {
+				CarUtility.locDebugErr("ERR0811","infoItemMetaData");
+				// debug
+				CarUtility.locError("ERR1134", LogCriticality.error,"Returning cached " + ci.getData());
+				return ci.getData();
+			}
+		}
+		// otherwise, we do what we always did...
+		String informedhost = config.getProperty("car.informed.hostname", true);
+		String informedport = config.getProperty("car.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		
+		sb.append("/consent/v1/informed/iiic/iimetainformation/");
+		sb.append("entityId/");
+		sb.append(CarUtility.idEscape(rhid) + "/");
+		sb.append(iitype);
+		sb.append("/");
+		sb.append(iiid);
+				
+		HttpResponse response = null;
+		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		try {
+			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+			rbody = CarUtility.extractBody(response);
+			int status = CarUtility.extractStatusCode(response);
+			
+			// debug
+			CarUtility.locError("ERR1134", LogCriticality.error,"iimetadata is " + rbody + " for " + iitype + "," + iiid);
+			if (status >= 300) {
+				// debug
+				CarUtility.locError("ERR1136", LogCriticality.error,"getIImetainformation response status was " + status + " and rbody was " + rbody);
+				if (status == 404) {
+					CarUtility.locError("ERR1136", LogCriticality.error,"Caching null for " + rhid + ", " + iiid);
+					icache.storeCachedInfoItemMetaInformation(rhid, iiid, null);
+				}
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+					CarUtility.locError("ERR1136", LogCriticality.error,"getInfoItemMetaInformation excepted getting ii metainfo: " + x.getMessage());
 				}
 				return null;
 			}
@@ -1564,6 +1674,11 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		ObjectMapper om = OMSingleton.getInstance().getOm();
 		IcmDecisionResponseObject retval = new IcmDecisionResponseObject();
 		retval = om.readValue(rbody, IcmDecisionResponseObject.class);
+		//
+		// debug
+		//
+		CarUtility.locError("ERR1134", LogCriticality.error,"decision request was: " + jsonRequest);
+		CarUtility.locError("ERR1134", LogCriticality.error,"decision response was: " + rbody);
 		return retval;		
 	} catch (Exception e) {
 		CarUtility.locError("ERR0081", LogCriticality.debug, "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
@@ -1577,6 +1692,58 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		HttpClientUtils.closeQuietly(response);
 		// Pooling - leave open for reuse
 		// HttpClientUtils.closeQuietly(httpClient);
+	}
+}
+public static ScopeMapping getScopeMapping(RHIdentifier rhi, InfoItemIdentifier iii, CarConfig config) {
+	
+	String informedhost = config.getProperty("car.informed.hostname", true);
+	String informedport = config.getProperty("car.informed.port", true);
+	
+	StringBuilder sb = new StringBuilder();
+	
+	sb.append("/consent/v1/informed/iiic/scopemapping/" + rhi.getRhtype() + "/" + idEscape(rhi.getRhid()) + "/");
+	
+	sb.append(iii.getIiid());
+	
+	HttpClient httpClient = null;
+	try {
+		httpClient = CarHttpClientFactory.getHttpsClient();
+	} catch (Exception e) {
+		CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient due to failed client initialization");
+		httpClient = HttpClientBuilder.create().build();
+	}
+	
+	HttpResponse response = null;
+	
+	String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+	String rbody = null;
+	try {
+		response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
+		rbody = CarUtility.extractBody(response);
+		int status = CarUtility.extractStatusCode(response);
+		if (status >= 300) {
+			try {
+				EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception x) {
+				// 	ignore
+			}
+			return null;
+		}
+		//ObjectMapper om = new ObjectMapper();
+		ObjectMapper om = OMSingleton.getInstance().getOm();
+		ScopeMapping ri = om.readValue(rbody, ScopeMapping.class);
+		return ri;
+	} catch (Exception e) {
+		locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
+		return null;  // on error, just fail
+	} finally {
+		try {
+		EntityUtils.consumeQuietly(response.getEntity());
+		} catch (Exception i) {
+			// ignore
+		}
+		HttpClientUtils.closeQuietly(response);
+		//HttpClientUtils.closeQuietly(httpClient);
 	}
 }
 public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,String rptype, String rpid,CarConfig config) {

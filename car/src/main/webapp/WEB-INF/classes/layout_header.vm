@@ -86,6 +86,8 @@
     	var valuesetsJS = $.parseJSON('$valuesets');
     	var displayvaluesetsJS = $.parseJSON('$displayvaluesets');
     	
+    	var ohashJS = $.parseJSON('$ohashjs');
+    	
     </script>
     <title>$page-title</title>
    </head>
