@@ -561,6 +561,9 @@ public class MainController {
 		
 		// prepare a typemap for later use
 		HashMap<String,String> typemap = new HashMap<String,String>();
+		
+		// prepare a map of display names for contained IIs (for use later in oauth_scope processing)
+		HashMap<String,String> oadn = new HashMap<String,String>();
 
 		// We have two cases, determined by the presence or absence of data in the Session.
 		// Get a session (creating a new one if needed)
@@ -988,6 +991,23 @@ public class MainController {
 					}
 				}
 				ohash.put(key, ohinter);
+				
+				// And populate the oadn hash for display use
+				if (typemap.get(key) != null) {
+					ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid, typemap.get(key), key, config);
+					if (riimi != null && riimi.getDisplayname() != null) {
+						oadn.put(key, CarUtility.localize(riimi.getDisplayname(),preflang));
+					} else {
+						oadn.put(key,key);
+					}
+				} else {
+					ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid, key, config);
+					if (riimi != null && riimi.getDisplayname() != null) {
+						oadn.put(key, CarUtility.localize(riimi.getDisplayname(),preflang));
+					} else {
+						oadn.put(key, key);
+					}
+				}
 			}
 			
 			dro.setArrayofUserProperty(aup);
@@ -1635,6 +1655,11 @@ public class MainController {
 					debugReturn.addObject("ohashjs",omapper.writeValueAsString(ohash));
 				} catch (Exception ign) {
 					debugReturn.addObject("ohashjs","");
+				}
+				try {
+					debugReturn.addObject("oadnjs",omapper.writeValueAsString(oadn));
+				} catch (Exception ign) {
+					debugReturn.addObject("oadnjs","");
 				}
 				
 				// Optimize for reuse

@@ -88,6 +88,8 @@
     	
     	var ohashJS = $.parseJSON('$ohashjs');
     	
+    	var oadnJS = $.parseJSON('$oadnjs');
+    	
     </script>
     <title>$page-title</title>
    </head>

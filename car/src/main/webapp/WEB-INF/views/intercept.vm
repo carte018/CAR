@@ -338,16 +338,17 @@ $( document ).ready(function() {
      	  			$dstrs = [];
      	  			for (let $i = 0; $i < $avals.length; $i++) {
      	  				$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
      	  				$dvals = [];
      	  				for (let $j=0; $j < ohashJS[$ai].length; $j++) {
      	  					$oj = ohashJS[$ai];
      	  					$dvals.push($oj[$j]);
      	  				}
-     	  				$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+     	  				$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
      	  				$dstrs.push($dadd);
      	  			}
      	  			// $display_values = $display_name + " (current values: " + $dstrs.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + '</div>';
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + '</div>';
      	  		} else {
      	  			$display_values = permitNoJS[$display_name].sort().join(", ");
      	  		}
@@ -387,16 +388,18 @@ $( document ).ready(function() {
   					$dstrs = [];
   					for (let $i = 0; $i < $avals.length; $i++) {
   						$ai = $avals[$i];
+  						$adv = oadnJS[$ai];
+  						
   						$dvals = [];
   						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
   							$oj = ohashJS[$ai];
   							$dvals.push($oj[$j]);
   						}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
   				} else {
   		  			$display_values = permitNoJS[$display_name].sort().join(", ");
   		  		}	
@@ -469,16 +472,18 @@ $( document ).ready(function() {
       				$dstrs = [];
       				for (let $i = 0; $i < $avals.length; $i++) {
       					$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+      					
       					$dvals = [];
       					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
       						$oj = ohashJS[$ai];
       						$dvals.push($oj[$j]);
       					}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);      					
       				}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
       			} else {
       				$display_values = permitInjectedJS[$display_name].sort().join(", ");
       			}
@@ -489,12 +494,14 @@ $( document ).ready(function() {
       				$dstrs = [];
       				for (let $i = 0; $i < $avals.length; $i++) {
       					$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+      					
       					$dvals = [];
       					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
       						$oj = ohashJS[$ai];
       						$dvals.push($oj[$j]);
       					}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);      					
       				}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -511,16 +518,18 @@ $( document ).ready(function() {
       				$dstrs = [];
       				for (let $i = 0; $i<$avals.length; $i++) {
       					$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+      					
       					$dvals = [];
       					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
       						$oj = ohashJS[$ai];
       						$dvals.push($oj[$j]);
       					}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);      					
       				}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
       			} else {
       				$display_values = denyInjectedJS[$display_name].sort().join(", ");
       			}
@@ -531,16 +540,18 @@ $( document ).ready(function() {
       				$dstrs = [];
       				for (let $i = 0; $i<$avals.length; $i++) {
       					$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+      					
       					$dvals = [];
       					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
       						$oj = ohashJS[$ai];
       						$dvals.push($oj[$j]);
       					}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);      					
       				}
      	  			//$display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
       			} else { 
       				$display_values = denyMayJS[$display_name].sort().join(", ");
       			}
@@ -551,7 +562,11 @@ $( document ).ready(function() {
       	} else {
       		row += "<td><div class='label'>" + $display_name + " (" + "<span class='showcl' id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;"+$display_values+"&apos;);'>Click to display sensitive information</span>)</div>";
       	}
-      	row += "<span class='subset'>" + $reason + "</span></td></tr>";
+      	if ($atype == "oauth_scope") {
+      		row += "</td></tr>";
+      	} else {
+      		row += "<span class='subset'>" + $reason + "</span></td></tr>";
+      	}
       	table.append(row);
       	
       }
@@ -609,16 +624,18 @@ $( document ).ready(function() {
   					$dstrs = [];
   					for (let $i = 0; $i < $avals.length; $i++) {
   						$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+  						
   						$dvals = [];
   						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
   							$oj = ohashJS[$ai];
   							$dvals.push($oj[$j]);
   						}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
   				} else {
   					$display_values = permitInjectedJS[$display_name].sort().join(", ");
   				}
@@ -628,16 +645,18 @@ $( document ).ready(function() {
   					$dstrs = [];
   					for (let $i = 0; $i < $avals.length; $i++) {
   						$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+  						
   						$dvals = [];
   						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
   							$oj = ohashJS[$ai];
   							$dvals.push($oj[$j]);
   						}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
   				} else {
   					$display_values = permitMayJS[$display_name].sort().join(", ");
   				}
@@ -649,16 +668,18 @@ $( document ).ready(function() {
   					$dstrs = [];
   					for (let $i = 0; $i < $avals.length; $i++) {
   						$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+  						
   						$dvals = [];
   						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
   							$oj = ohashJS[$ai];
   							$dvals.push($oj[$j]);
   						}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
   				} else {
   					$display_values = denyInjectedJS[$display_name].sort().join(", ");
   				}
@@ -668,16 +689,18 @@ $( document ).ready(function() {
   					$dstrs = [];
   					for (let $i = 0; $i < $avals.length; $i++) {
   						$ai = $avals[$i];
+     	  				$adv = oadnJS[$ai];
+  						
   						$dvals = [];
   						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
   							$oj = ohashJS[$ai];
   							$dvals.push($oj[$j]);
   						}
-  						$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
   				} else {
   					$display_values = denyMayJS[$display_name].sort().join(", ");
   				}
@@ -691,9 +714,17 @@ $( document ).ready(function() {
 					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
 				}
 				if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
-					row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+					if ($atype == "oauth_scope") {
+						row += "<td>"+$display_name+": <strong>"+$display_value+"</strong></td></tr>";
+					} else {
+						row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+					}
 				} else {
-					row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>"; 
+					if ($atype == "oauth_scope") {
+						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(%apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong>&apos;'>Click to display sensitive information</span></td></tr>";
+					} else {
+						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+					} 
 				}
 				// row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
 				if ($type == "must") {
@@ -713,9 +744,17 @@ $( document ).ready(function() {
 				}
 				//row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
 				if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
-					row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+					if ($atype == "oauth_scope") {
+						row += "<td>"+$display_name+": <strong>"+$display_values+"</strong></td></tr>";
+					} else {
+						row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+					}
 				} else {
-					row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+					if ($atype == "oauth_scope") {
+						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong>&apos;);'>Click to display sensitive information</span></td></tr>";
+					} else {
+						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+					}
 				} 
 			}
 			if ($type == "must") {
@@ -910,16 +949,18 @@ $( document ).ready(function() {
      			$dstrs = [];
      			for (let $i = 0; $i < $avals.length; $i++) {
      				$ai = $avals[$i];
+   	  				$adv = oadnJS[$ai];
+     				
      				$dvals = [];
      				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
      					$oj = ohashJS[$ai];
      					$dvals.push($oj[$j]);
      				}
-  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+   	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
      		} else {
      			$display_values = permitInjectedJS[$display_name].sort().join(", ");
      		}
@@ -929,16 +970,18 @@ $( document ).ready(function() {
      			$dstrs = [];
      			for (let $i = 0; $i < $avals.length; $i++) {
      				$ai = $avals[$i];
+   	  				$adv = oadnJS[$ai];
+     				
      				$dvals = [];
      				for (let $j = 0 ; $j < ohashJS[$ai].length; $j++) {
      					$oj = ohashJS[$ai];
      					$dvals.push($oj[$j]);
      				}
-  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+   	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
      		} else {
      			$display_values = permitMayJS[$display_name].sort().join(", ");
      		}
@@ -950,16 +993,18 @@ $( document ).ready(function() {
      			$dstrs = [];
      			for (let $i = 0; $i < $avals.length; $i++) {
      				$ai = $avals[$i];
+   	  				$adv = oadnJS[$ai];
+     				
      				$dvals = [];
      				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
      					$oj = ohashJS[$ai];
      					$dvals.push($oj[$j]);
      				}
-  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
+   	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
      		} else {
      			$display_values = denyInjectedJS[$display_name].sort().join(", ");
      		}
@@ -969,16 +1014,18 @@ $( document ).ready(function() {
      			$dstrs = [];
      			for (let $i = 0; $i < $avals.length; $i++) {
      				$ai = $avals[$i];
+   	  				$adv = oadnJS[$ai];
+     				
      				$dvals = [];
      				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
      					$oj = ohashJS[$ai];
      					$dvals.push($oj[$j]);
      				}
-  					$dadd = $ai + " (currently: " + $dvals.sort().join(",") + ")";
+  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-   	  			$display_values = '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";     			
+   	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";     			
      		} else {
      			$display_values = denyMayJS[$display_name].sort().join(", ");
      		}
@@ -996,7 +1043,11 @@ $( document ).ready(function() {
         		row += "<a href='#' class='choice-button deny active'>deny</a>";
       		}
       		row += "</td>"
-      		row += "<td><div class='label'>" + $display_name + "&nbsp;(" + $display_value + ")</div><span class='subset'>" + $reason + "</span></td></tr>";
+      		if ($atype == "oauth_scope") {
+      			row += "<td><div class='label'>" + $display_name + "&nbsp;(" + $display_value + ")</div></td></tr>";
+      		} else { 
+      			row += "<td><div class='label'>" + $display_name + "&nbsp;(" + $display_value + ")</div><span class='subset'>" + $reason + "</span></td></tr>";
+      		}
       		table.append(row);
       	}
       } else if ($.inArray($display_name,displayedPAOs) == -1) {
