@@ -196,6 +196,7 @@
   			<span class="attr_displayname">$nochoiceDecision.getAttrDisplayName()</span>
   			<span class="attr_displayvalue">$nochoiceDecision.getAttrDisplayValue()</span>
   			<span class="attr_type">$typemap.get($nochoiceDecision.getAttrName())</span>
+
   			
   			<!-- no reason for nochoice values -->
   			#if ($nochoiceDecision.getChosenDirective()=="permit")
@@ -325,6 +326,7 @@ $( document ).ready(function() {
      	$value = $(this).find("input.attr_value").val();
      	$display_value=$(this).find("span.attr_displayvalue").html();
         $atype = $(this).find("span.attr_type").html();
+        $aname = $(this).find("span.attr_name").html();
      	
      	
      	$reason = $(this).find("span.attr_reason").html();
@@ -340,11 +342,20 @@ $( document ).ready(function() {
      	  				$ai = $avals[$i];
      	  				$adv = oadnJS[$ai];
      	  				$dvals = [];
-     	  				for (let $j=0; $j < ohashJS[$ai].length; $j++) {
-     	  					$oj = ohashJS[$ai];
-     	  					$dvals.push($oj[$j]);
+     	  				if (typeof(ohashJS[$ai]) != "undefined") {
+     	  					for (let $j=0; $j < ohashJS[$ai].length; $j++) {
+	     	  					$oj = ohashJS[$ai];
+     	  						$dvals.push($oj[$j]);
+     	  					}
+     	  				} else {
+     	  					$descr = oadescrJS[$aname];
+     	  					$dvals.push($descr);
      	  				}
-     	  				$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+     	  				if (typeof($adv) != "undefined") {
+     	  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+     	  				} else {
+     	  					$dadd = $dvals.sort().join(",");
+     	  				}
      	  				$dstrs.push($dadd);
      	  			}
      	  			// $display_values = $display_name + " (current values: " + $dstrs.sort().join(", ") + ")<br>";
@@ -375,6 +386,7 @@ $( document ).ready(function() {
   		$value = $(this).find("input.attr_value").val();
   		$display_value=$(this).find("span.attr_displayvalue").html();
   		$atype = $(this).find("span.attr_type").html();
+  		$aname = $(this).find("span.attr_name").html();
   		
 					
   		$reason = $(this).find("span.attr_reason").html();
@@ -391,11 +403,20 @@ $( document ).ready(function() {
   						$adv = oadnJS[$ai];
   						
   						$dvals = [];
-  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-  							$oj = ohashJS[$ai];
-  							$dvals.push($oj[$j]);
+  						if (typeof(ohashJS[$ai]) != "undefined") {
+  							for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	  							$oj = ohashJS[$ai];
+  								$dvals.push($oj[$j]);
+  							}
+  						} else {
+  							$descr = oadescrJS[$aname];
+  							$dvals.push($descr);
   						}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -450,6 +471,7 @@ $( document ).ready(function() {
       $display_value = $(this).find("span.attr_displayvalue").html();
       $reason = $(this).find("span.attr_reason").html();
       $atype = $(this).find("span.attr_type").html();
+      $aname = $(this).find("span.attr_name").html();
       
       if (asndJS[$display_name] == undefined || asndJS[$display_name] != 'true') {
       
@@ -475,11 +497,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
       					
       					$dvals = [];
-      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-      						$oj = ohashJS[$ai];
-      						$dvals.push($oj[$j]);
+      					if (typeof(ohashJS[$ai]) != "undefined") {
+      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	      						$oj = ohashJS[$ai];
+      							$dvals.push($oj[$j]);
+      						}
+      					} else {
+      						$descr = oadescrJS[$aname];
+      						$dvals.push($descr);
       					}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+      					if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);      					
       				}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -497,11 +528,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
       					
       					$dvals = [];
-      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-      						$oj = ohashJS[$ai];
-      						$dvals.push($oj[$j]);
+      					if (typeof(ohashJS[$ai]) != "undefined") {
+      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	      						$oj = ohashJS[$ai];
+      							$dvals.push($oj[$j]);
+      						}
+      					} else {
+      						$descr = oadescrJS[$aname];
+      						$dvals.push($descr);
       					}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+      					if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);      					
       				}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -521,11 +561,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
       					
       					$dvals = [];
-      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-      						$oj = ohashJS[$ai];
-      						$dvals.push($oj[$j]);
+      					if (typeof(ohashJS[$ai]) != "undefined") {
+      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	      						$oj = ohashJS[$ai];
+      							$dvals.push($oj[$j]);
+      						}
+      					} else {
+      						$descr = oadescrJS[$aname];
+      						$dvals.push($descr);
       					}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+      					if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);      					
       				}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -543,11 +592,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
       					
       					$dvals = [];
-      					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-      						$oj = ohashJS[$ai];
-      						$dvals.push($oj[$j]);
+      					if (typeof(ohashJS[$ai]) != "undefined") {
+      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	      						$oj = ohashJS[$ai];
+      							$dvals.push($oj[$j]);
+      						}
+      					} else {
+      						$descr = oadescrJS[$aname];
+      						$dvals.push($descr);
       					}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+      					if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);      					
       				}
      	  			//$display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -616,6 +674,7 @@ $( document ).ready(function() {
   		$reason = $(this).find("span.attr_reason").html();
   		$display_value = $(this).find("span.attr_displayvalue").html();
   		$atype = $(this).find("span.attr_type").html();
+  		$aname = $(this).find("span.attr_name").html();
   	
   		if ($decision == "permit") {
   			if ($type == "must") {
@@ -627,11 +686,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
   						
   						$dvals = [];
-  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-  							$oj = ohashJS[$ai];
-  							$dvals.push($oj[$j]);
+  						if (typeof(ohashJS[$ai]) != "undefined") {
+  							for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	  							$oj = ohashJS[$ai];
+  								$dvals.push($oj[$j]);
+  							}
+  						} else {
+  							$descr = oadescrJS[$aname];
+  							$dvals.push($descr);
   						}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -648,11 +716,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
   						
   						$dvals = [];
-  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-  							$oj = ohashJS[$ai];
-  							$dvals.push($oj[$j]);
+  						if (typeof(ohashJS[$ai]) != "undefined") {
+  							for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	  							$oj = ohashJS[$ai];
+  								$dvals.push($oj[$j]);
+  							}
+  						} else {
+  							$descr = oadescrJS[$aname];
+  							$dvals.push($descr);
   						}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -671,11 +748,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
   						
   						$dvals = [];
-  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-  							$oj = ohashJS[$ai];
-  							$dvals.push($oj[$j]);
+  						if (typeof(ohashJS[$ai]) != "undefined") {
+  							for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	  							$oj = ohashJS[$ai];
+  								$dvals.push($oj[$j]);
+  							}
+  						} else {
+  							$descr = oadescrJS[$aname];
+  							$dvals.push($descr);
   						}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -692,11 +778,20 @@ $( document ).ready(function() {
      	  				$adv = oadnJS[$ai];
   						
   						$dvals = [];
-  						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-  							$oj = ohashJS[$ai];
-  							$dvals.push($oj[$j]);
+  						if (typeof(ohashJS[$ai]) != "undefined") {
+  							for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	  							$oj = ohashJS[$ai];
+  								$dvals.push($oj[$j]);
+  							}
+  						} else {
+  							$descr = oadescrJS[$aname];
+  							$dvals.push($descr);
   						}
-  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						if (typeof($adv) != "undefined") {
+  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  						} else {
+  							$dadd = $dvals.sort().join(",");
+  						}
   						$dstrs.push($dadd);  						
   					}
      	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -941,6 +1036,7 @@ $( document ).ready(function() {
       $reason = $(this).find("span.attr_reason").html();
       $display_value = $(this).find("span.attr_displayvalue").html();
       $atype = $(this).find("span.attr_type").html();
+      $aname = $(this).find("span.attr_name").html();
       
    	  if ($decision == "permit") {
      	if ($type == "must") {
@@ -952,11 +1048,20 @@ $( document ).ready(function() {
    	  				$adv = oadnJS[$ai];
      				
      				$dvals = [];
-     				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-     					$oj = ohashJS[$ai];
-     					$dvals.push($oj[$j]);
+     				if (typeof(ohashJS[$ai]) != "undefined") {
+     					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	     					$oj = ohashJS[$ai];
+     						$dvals.push($oj[$j]);
+     					}
+     				} else {
+     					$descr = oadescrJS[$aname];
+     					$dvals.push($descr);
      				}
-  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+     				if (typeof($adv) != "undefined") {
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  					} else {
+  						$dadd = $dvals.sort().join(",");
+  					}
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -973,11 +1078,20 @@ $( document ).ready(function() {
    	  				$adv = oadnJS[$ai];
      				
      				$dvals = [];
-     				for (let $j = 0 ; $j < ohashJS[$ai].length; $j++) {
-     					$oj = ohashJS[$ai];
-     					$dvals.push($oj[$j]);
+     				if (typeof(ohashJS[$ai]) != "undefined") {
+     					for (let $j = 0 ; $j < ohashJS[$ai].length; $j++) {
+	     					$oj = ohashJS[$ai];
+     						$dvals.push($oj[$j]);
+     					}
+     				} else {
+     					$descr = oadescrJS[$aname];
+     					$dvals.push($descr);
      				}
-  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+     				if (typeof($adv) != "undefined") {
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  					} else {
+  						$dadd = $dvals.sort().join(",");
+  					}
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -996,11 +1110,20 @@ $( document ).ready(function() {
    	  				$adv = oadnJS[$ai];
      				
      				$dvals = [];
-     				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-     					$oj = ohashJS[$ai];
-     					$dvals.push($oj[$j]);
+     				if (typeof(ohashJS[$ai]) != "undefined") {
+     					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	     					$oj = ohashJS[$ai];
+     						$dvals.push($oj[$j]);
+     					}
+     				} else {
+     					$descr = oadescrJS[$aname];
+     					$dvals.push($descr);
      				}
-  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+     				if (typeof($adv) != "undefined") {
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  					} else {
+  						$dadd = $dvals.sort().join(",");
+  					}
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
@@ -1017,11 +1140,20 @@ $( document ).ready(function() {
    	  				$adv = oadnJS[$ai];
      				
      				$dvals = [];
-     				for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-     					$oj = ohashJS[$ai];
-     					$dvals.push($oj[$j]);
+     				if (typeof(ohashJS[$ai]) != "undefined") {
+     					for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
+	     					$oj = ohashJS[$ai];
+     						$dvals.push($oj[$j]);
+     					}
+     				} else {
+     					$descr = oadescrJS[$aname];
+     					$dvals.push($descr);
      				}
-  					$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+     				if (typeof($adv) != "undefined") {
+  						$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
+  					} else {
+  						$dadd = $dvals.sort().join(",");
+  					}
   					$dstrs.push($dadd);     				
      			}
    	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";

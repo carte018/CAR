@@ -564,6 +564,8 @@ public class MainController {
 		
 		// prepare a map of display names for contained IIs (for use later in oauth_scope processing)
 		HashMap<String,String> oadn = new HashMap<String,String>();
+		// and a map of descriptions to use in case we need them
+		HashMap<String,String> oadescr = new HashMap<String,String>();
 
 		// We have two cases, determined by the presence or absence of data in the Session.
 		// Get a session (creating a new one if needed)
@@ -789,6 +791,13 @@ public class MainController {
 						} else {
 							mappedValues.add(iii.getIiid() + "_scope");
 						}
+						// And populate the oadescr hash
+						ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,"oauth_scope",iii.getIiid(),config);
+						if (riimi != null && riimi.getDescription() != null) {
+							oadescr.put(iii.getIiid(),CarUtility.localize(riimi.getDescription(), preflang));
+						} else {
+							oadescr.put(iii.getIiid(),iii.getIiid());
+						}
 					}
 				} else {
 					// The simple case
@@ -813,6 +822,14 @@ public class MainController {
 						} else {
 							mappedValues.add(iii.getIiid() + "_scope");
 						}
+						// And populate the oadescr hash
+						ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,"oauth_scope",iii.getIiid(),config);
+						if (riimi != null && riimi.getDescription() != null) {
+							oadescr.put(iii.getIiid(),CarUtility.localize(riimi.getDescription(), preflang));
+						} else {
+							oadescr.put(iii.getIiid(),iii.getIiid());
+						}
+
 					}
 				}
 				
@@ -862,6 +879,30 @@ public class MainController {
 							List<String> subset = CarUtility.subsetValueList(inputAttrMap.get(othervl.getInfoitemidentifier().getIiid()),othervl.getValuelist());
 							if (subset != null && ! subset.isEmpty()) {
 								mappedValues.addAll(subset);
+							} else if (iii.getIitype().equals("oauth_scope")) {
+								// mappedValues.add(iii.getIiid()+"_scope"); // placeholder (RGC)
+								// Value map contains the list of attributes contained
+								// TODO:  Same:  Need InputRequestHeader to contain types as well as IDs
+								// for now, entityId hard-coded
+								
+								RHIdentifier rhi = new RHIdentifier();
+								rhi.setRhid(rhid);
+								rhi.setRhtype("entityId");
+								ScopeMapping sm = CarUtility.getScopeMapping(rhi, iii,config);
+								
+								if (sm != null && sm.getInfoitems() != null && ! sm.getInfoitems().isEmpty()) {
+									mappedValues.addAll(sm.getInfoitems());
+								} else {
+									mappedValues.add(iii.getIiid() + "_scope");
+								}
+								// And populate the oadescr hash
+								ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,"oauth_scope",iii.getIiid(),config);
+								if (riimi != null && riimi.getDescription() != null) {
+									oadescr.put(iii.getIiid(),CarUtility.localize(riimi.getDescription(), preflang));
+								} else {
+									oadescr.put(iii.getIiid(),iii.getIiid());
+								}
+
 							}
 							break;
 						}
@@ -872,6 +913,30 @@ public class MainController {
 					List<String> subset = CarUtility.subsetValueList(inputAttrMap.get(iivl.getInfoitemidentifier().getIiid()),iivl.getValuelist());
 					if (subset != null && ! subset.isEmpty()) {
 						mappedValues.addAll(subset);
+					} else if (iii.getIitype().equals("oauth_scope")) {
+						// mappedValues.add(iii.getIiid()+"_scope"); // placeholder (RGC)
+						// Value map contains the list of attributes contained
+						// TODO:  Same:  Need InputRequestHeader to contain types as well as IDs
+						// for now, entityId hard-coded
+						
+						RHIdentifier rhi = new RHIdentifier();
+						rhi.setRhid(rhid);
+						rhi.setRhtype("entityId");
+						ScopeMapping sm = CarUtility.getScopeMapping(rhi, iii,config);
+						
+						if (sm != null && sm.getInfoitems() != null && ! sm.getInfoitems().isEmpty()) {
+							mappedValues.addAll(sm.getInfoitems());
+						} else {
+							mappedValues.add(iii.getIiid() + "_scope");
+						}
+						// And populate the oadescr hash
+						ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid,"oauth_scope",iii.getIiid(),config);
+						if (riimi != null && riimi.getDescription() != null) {
+							oadescr.put(iii.getIiid(),CarUtility.localize(riimi.getDescription(), preflang));
+						} else {
+							oadescr.put(iii.getIiid(),iii.getIiid());
+						}
+
 					}
 				}
 				
@@ -990,9 +1055,9 @@ public class MainController {
 						ohinter.add(values);
 					}
 				}
-				ohash.put(key, ohinter);
+				ohash.put(key, ohinter); 
 				
-				// And populate the oadn hash for display use
+				// And populate the oadn and oadescr hashes for display use
 				if (typemap.get(key) != null) {
 					ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid, typemap.get(key), key, config);
 					if (riimi != null && riimi.getDisplayname() != null) {
@@ -1000,12 +1065,22 @@ public class MainController {
 					} else {
 						oadn.put(key,key);
 					}
+					if (riimi != null && riimi.getDescription() != null) {
+						oadescr.put(key,  CarUtility.localize(riimi.getDescription(),preflang));
+					} else {
+						oadescr.put(key, key);
+					}
 				} else {
 					ReturnedInfoItemMetaInformation riimi = CarUtility.getInfoItemMetaInformation(rhid, key, config);
 					if (riimi != null && riimi.getDisplayname() != null) {
 						oadn.put(key, CarUtility.localize(riimi.getDisplayname(),preflang));
 					} else {
 						oadn.put(key, key);
+					}
+					if (riimi != null && riimi.getDescription() != null) {
+						oadescr.put(key,  CarUtility.localize(riimi.getDescription(),preflang));
+					} else {
+						oadescr.put(key,key);
 					}
 				}
 			}
@@ -1660,6 +1735,11 @@ public class MainController {
 					debugReturn.addObject("oadnjs",omapper.writeValueAsString(oadn));
 				} catch (Exception ign) {
 					debugReturn.addObject("oadnjs","");
+				}
+				try {
+					debugReturn.addObject("oadescrjs",omapper.writeValueAsString(oadescr));
+				} catch (Exception ign) {
+					debugReturn.addObject("oadescrjs","");
 				}
 				
 				// Optimize for reuse

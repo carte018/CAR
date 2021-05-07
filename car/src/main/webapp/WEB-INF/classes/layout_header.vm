@@ -90,6 +90,8 @@
     	
     	var oadnJS = $.parseJSON('$oadnjs');
     	
+    	var oadescrJS = $.parseJSON('$oadescrjs');
+    	
     </script>
     <title>$page-title</title>
    </head>
