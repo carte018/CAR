@@ -44,7 +44,8 @@ import edu.internet2.consent.copsu.util.OMSingleton;
 public class ReturnedChangeOrder {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long ChangeOrderIdentifier;
 

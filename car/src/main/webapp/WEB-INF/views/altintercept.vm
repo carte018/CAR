@@ -14,96 +14,63 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt>.
 
  *#
-<html>
-
-	<div id="main">
-		<h1>$intro</h1>
-		
-		<div id="sidebar" class="content-section">
-			<h3>${held-by}:</h3>
-			<div class="resource-holder-name" style="margin-top: -0.75em">
-				$rhdisplayname
-			</div>
-			<div style="text-align: center; color: #001a57; font-size: 2em; margin: 0.75em 0;">&#8681;</div>
-			#if($rpiconurl)
-				<div id="rp-img" class="rp-icon" style="margin-top: -0.75em;"><img src="$rpiconurl" alt=""/></div>
-			#end
-			<h3>$rpdisplayname</h3>
-			#if($rpdescription && ! $rpdescription.equals(""))
-				<div style="margin-top: -0.5em; color: #555">$rpdescription</div>
-			#end
-
-			#if($rpprivacyurl)
-				<div><a href="$rpprivacyurl" id="rp-privacy-link" target="_blank">${rpdisplayname}'s ${privacy-policy}</a></div>
-			#end <span style="clear: both;"></span>
-			
+ 
+ <div class="car-dashboard">
+ 	<div class="dashboard-heading car">
+ 		<h1 class="car-heading">$rpdisplayname ${isrequesting}</h1>
+ 	</div>
+ 	
+ 	#if($rpprivacyurl)
+ 	<a href="$rpprivacyurl" id="rp-privacy-link" target="_blank">${rpdisplayname}'s ${privacy-policy}</a>
+ 	#end
+ 	
+ 	<div id="dashboard-main">
+ 		<div>
+ 			<div class="mobile-section content-section info-box">
+ 				<h2>$transferdetails</h2>
+ 				<h3 class="text-blue">$rpdisplayname</h3>
+ 				#if($rpiconurl)
+ 				<img src="$rpiconurl" alt="$rpdisplayname logo">
+ 				#end
+ 				<p>$isreceiving</p>
+ 				<h4 class="text-blue">$rhdisplayname</h4>
+ 			</div>
+ 		</div>
+ 		<div class="car-form mobile-section content-section">
+ 		#if($hasNoChoice)
+ 			<h2>$inforequired $rpdisplayname</h2>
+ 			<ul class="simple-list" id="nochoicelist">
+ 			
+ 			</ul>
+		#end
+ 		
+ 		#if($hasMay || $hasMustDecisions)
+ 			<h2>$reviewedit</h2>
+ 			<div class="car-form-set">
+ 				<div class="row">
+ 					<h4 class="text-green">Permit</h4>
+ 					<h4 class="text-red">Deny</h4>
+ 				</div>
+ 				<form id="decisions-form">
+ 				
+ 				</form>
+ 			</div>
+ 		#end
+		<div class="car-form-set">
+			<input id="remember-show" name="remember" value="saveandshow" type="checkbox" #if($userShowAgain && $userShowAgain.equals("true"))checked#end style="display: none;"></input>
+			<input id="remember-hide" name="remember" value="saveandhide" type="checkbox" #if(! $userShowAgain || $userShowAgain.equals("false"))checked#end></input>
+			<label	for="remember" class="inline">${skip-screen} </label>
+			<label	for="remember-show" class="offscreen">${skip-screen} </label>
+			<label	for="remember-hide" class="offscreen">${skip-screen} </label>
 		</div>
-		
-		<div id="left">
-			#if($hasMustDecisions || $hasMay)
-			
-				<div class="content-section">
-					#if ($hasChoices)
-						<h3>$title-choice</h3>
-					#else
-						<h3>$title-nochoice</h3>
-					#end
-					#if($hasMustDecisions) 
-						<h5>${edit-presets}:</h5>
-						<table class="consent-table" id="must-decision-table">
-							<thead>
-							<tr>
-								<th class="Permit">Permit</th>
-								<th class="Deny">Deny</th>
-								<th class="hideframe"><span class="offscreen">Item</span></th>
-							</tr>
-							</thead>
-							<tbody>
-							
-							</tbody>
-						</table>
-					#end
-					#if($hasMay)
-						<h5>${update-settings}:</h5>
-						<table class="consent-table" id="may-decision-table">
-							<thead>
-							<tr>
-								<th class="Permit">Permit</th>
-								<th class="Deny">Deny</th>
-								<th class="hideframe"><span class="offscreen">Item</span></th>
-							</tr>
-							</thead>
-							<tbody>
-						
-							</tbody>
-						</table>
-					#end
-				</div>
-			#end
-			#if($hasNoChoice)
-				<div style="margin-bottom: 2em"><p><a href="#" id="required-toggle"><span id="required-expand">+</span> ${mandatory-header}</a></p>
-					<div class="content-section" id="required-info" style="display:none;">
-						<ul class="simple-list" id="nochoicelist">
-														
-						</ul>
-					</div>
-				</div>
-			#end
+		<div class="row mobile-column">
+			<button class="active" id="button_accept_and_continue">${save-continue}<i class="button-icon-right fa fa-arrow-right"></i></button>
+            <button class="passive" id="button_cancel">${cancel}<i class="button-icon-right fa fa-times"></i></button>
+        </div>
+	</div>
+</div>
+
 					
-			<div class="content-section">
-				<div class="form-set">
-					<input id="remember-show" name="remember" value="saveandshow" type="checkbox" #if($userShowAgain && $userShowAgain.equals("true"))checked#end style="display: none;"></input>
-					<input id="remember-hide" name="remember" value="saveandhide" type="checkbox" #if(! $userShowAgain || $userShowAgain.equals("false"))checked#end></input>
-					<label	for="remember" class="inline">${dont-show} $rpdisplayname</label>
-					<label	for="remember-show" class="offscreen">${dont-show} $rpdisplayname</label>
-					<label	for="remember-hide" class="offscreen">${dont-show} $rpdisplayname</label>
-					
-					<!-- RGC - remove for pilot <p style="margin-top: -0.15em; margin-bottom: -0.5em"><small><em>${self-service-description} <a href="#" id="selfservicelink">privacy.duke.edu</a></small></p> -->
-				</div>
-				<button class="active" id="button_accept_and_continue">${save-continue}<i class="button-icon-right fa fa-arrow-right"></i></button>
-				<button class="passive" id="button_cancel">${cancel}<i class="button-icon-right fa fa-times"></i></button>
-			</div> 
-    </div>
     
     <form accept-charset="UTF-8" name="master_return_form" id="master_return_form" method="POST" action="$actionUrl" style="display: none;">
 
@@ -309,8 +276,8 @@ $( document ).ready(function() {
     
   function updateAll(){
    
-    drawDisplayTable($("#must-table"), $.makeArray($(".decision.must")));
-    drawDisplayTable($("#may-table"), $.makeArray($(".decision.may")));
+   // drawDisplayTable($("#must-table"), $.makeArray($(".decision.must")));
+   // drawDisplayTable($("#may-table"), $.makeArray($(".decision.may")));
     drawNewNoChoiceDisplayTable($("#nochoicelist"),$.makeArray($(".nochoice")));
     drawNewChoiceTable();
   }
@@ -363,7 +330,7 @@ $( document ).ready(function() {
      	  		} else {
      	  			$display_values = permitNoJS[$display_name].sort().join(", ");
      	  		}
-     	  		row += "<li>" + $display_name + ": <strong>" + $display_values + "</strong></li>";
+     	  		row += "<li>" + $display_name + ": <strong class=\"text-blue\">" + $display_values + "</strong></li>";
      	  	} 
      	  	$("#nochoicelist").append(row);
      	  }
@@ -446,193 +413,7 @@ $( document ).ready(function() {
   	
   }
 
-  function drawDisplayTable(table, row_collection){
-    console.log("drawDisplayTable starts");
-    table.html("");
-    var $type = "must";
-    var $permit = [];
-    var $deny = [];
-    var $dispcount = 0;
-    return;
-    $.each(row_collection, function(){
-      $dispcount = $dispcount + 1;
-      $decision = $(this).find("input.must_decision_pair:checked").val();
-      if (! $decision) {
-      	$decision = $(this).find("input.may_decision_pair:checked").val();
-      	$type = "may";
-      	if (! $decision) {
-      		$decision = $(this).find("input.nochoice_decision_pair:checked").val();
-      		$type = "no";
-      	}
-      }
  
-      $display_name = $(this).find("span.attr_displayname").html();
-      $value = $(this).find("input.attr_value").val(); 
-      $display_value = $(this).find("span.attr_displayvalue").html();
-      $reason = $(this).find("span.attr_reason").html();
-      $atype = $(this).find("span.attr_type").html();
-      $aname = $(this).find("span.attr_name").html();
-      
-      if (asndJS[$display_name] == undefined || asndJS[$display_name] != 'true') {
-      
-      if (($permit[$display_name] == undefined && $decision == "permit") || ($deny[$display_name] == undefined && $decision == "deny")) {
-      	if ($decision == "permit") {
-      		$permit[$display_name] = "true";
-      	} else {
-      		$deny[$display_name] = "true";
-      	}
-	    var row = "";
-      	if($decision == "permit"){row += "<tr><td class='permit' nowrap><img src='resources/img/check-green.png'>PERMIT</td>"}
-      	else if($decision == "deny"){row += "<tr><td class='deny' nowrap><img src='resources/img/x-red.png'>DENY</td>"}
-      	else {row += "<tr><td class='necessary' nowrap><img src='resources/img/necessary.png'>&nbsp;</td>"}
-      
-      	if ($decision == "permit") {
-      		if ($type == "must") {
-      			if ($atype == "oauth_scope") {
-      				// special case for oauth_scope display
-      				$avals = permitInjectedJS[$display_name].sort();
-      				$dstrs = [];
-      				for (let $i = 0; $i < $avals.length; $i++) {
-      					$ai = $avals[$i];
-     	  				$adv = oadnJS[$ai];
-      					
-      					$dvals = [];
-      					if (typeof(ohashJS[$ai]) != "undefined") {
-      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-	      						$oj = ohashJS[$ai];
-      							$dvals.push($oj[$j]);
-      						}
-      					} else {
-      						$descr = oadescrJS[$aname];
-      						$dvals.push($descr);
-      					}
-      					if (typeof($adv) != "undefined") {
-  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
-  						} else {
-  							$dadd = $dvals.sort().join(",");
-  						}
-  						$dstrs.push($dadd);      					
-      				}
-     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
-      			} else {
-      				$display_values = permitInjectedJS[$display_name].sort().join(", ");
-      			}
-      		} else if ($type == "may") {
-      			if ($atype == "oauth_scope") {
-      				// Same special case again
-      				$avals = permitMayJS[$display_name].sort();
-      				$dstrs = [];
-      				for (let $i = 0; $i < $avals.length; $i++) {
-      					$ai = $avals[$i];
-     	  				$adv = oadnJS[$ai];
-      					
-      					$dvals = [];
-      					if (typeof(ohashJS[$ai]) != "undefined") {
-      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-	      						$oj = ohashJS[$ai];
-      							$dvals.push($oj[$j]);
-      						}
-      					} else {
-      						$descr = oadescrJS[$aname];
-      						$dvals.push($descr);
-      					}
-      					if (typeof($adv) != "undefined") {
-  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
-  						} else {
-  							$dadd = $dvals.sort().join(",");
-  						}
-  						$dstrs.push($dadd);      					
-      				}
-     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = $datrs.sort().join(",<br>");
-      			} else {
-      				$display_values = permitMayJS[$display_name].sort().join(", ");
-      			}
-      		} 
-      	} else {
-      		if ($type == "must") {
-      			// And again
-      			if ($atype == "oauth_scope") {
-      				$avals = denyInjectedJS[$display_name].sort();
-      				$dstrs = [];
-      				for (let $i = 0; $i<$avals.length; $i++) {
-      					$ai = $avals[$i];
-     	  				$adv = oadnJS[$ai];
-      					
-      					$dvals = [];
-      					if (typeof(ohashJS[$ai]) != "undefined") {
-      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-	      						$oj = ohashJS[$ai];
-      							$dvals.push($oj[$j]);
-      						}
-      					} else {
-      						$descr = oadescrJS[$aname];
-      						$dvals.push($descr);
-      					}
-      					if (typeof($adv) != "undefined") {
-  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
-  						} else {
-  							$dadd = $dvals.sort().join(",");
-  						}
-  						$dstrs.push($dadd);      					
-      				}
-     	  			// $display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
-      			} else {
-      				$display_values = denyInjectedJS[$display_name].sort().join(", ");
-      			}
-      		} else if ($type == "may") {
-      			// And again
-      			if ($atype == "oauth_scope") {
-      				$avals = denyMayJS[$display_name].sort();
-      				$dstrs = [];
-      				for (let $i = 0; $i<$avals.length; $i++) {
-      					$ai = $avals[$i];
-     	  				$adv = oadnJS[$ai];
-      					
-      					$dvals = [];
-      					if (typeof(ohashJS[$ai]) != "undefined") {
-      						for (let $j = 0; $j < ohashJS[$ai].length; $j++) {
-	      						$oj = ohashJS[$ai];
-      							$dvals.push($oj[$j]);
-      						}
-      					} else {
-      						$descr = oadescrJS[$aname];
-      						$dvals.push($descr);
-      					}
-      					if (typeof($adv) != "undefined") {
-  							$dadd = $adv + " (currently: " + $dvals.sort().join(",") + ")";
-  						} else {
-  							$dadd = $dvals.sort().join(",");
-  						}
-  						$dstrs.push($dadd);      					
-      				}
-     	  			//$display_values = $display_name + " (current values: " + $dvals.sort().join(", ") + ")<br>";
-     	  			$display_values = '<div class="subset">' + $reason + '</div>' + '<div class="content-section">' + $dstrs.sort().join(",<br>") + "</div>";
-      			} else { 
-      				$display_values = denyMayJS[$display_name].sort().join(", ");
-      			}
-      		}
-      	}
-      	if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
-      		row += "<td><div class='label'>" + $display_name + " (" + $display_values + ")</div>";
-      	} else {
-      		row += "<td><div class='label'>" + $display_name + " (" + "<span class='showcl' id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;"+$display_values+"&apos;);'>Click to display sensitive information</span>)</div>";
-      	}
-      	if ($atype == "oauth_scope") {
-      		row += "</td></tr>";
-      	} else {
-      		row += "<span class='subset'>" + $reason + "</span></td></tr>";
-      	}
-      	table.append(row);
-      	
-      }
-      }
-    });
-        console.log("drawDisplayTable ends");
-    
-  }
   
   function sensflip(targ,val) {
   	document.getElementById(targ).innerHTML=val;
@@ -654,6 +435,9 @@ $( document ).ready(function() {
   	musttable.html("");
   	maytable = $("table#may-decision-table tbody");
   	maytable.html("");
+  	
+  	$("#decisions-form").html("");
+  	
   	choices = $.makeArray($(".decision"));
   	var $dispcount=0;
   	$.each(choices, function() {
@@ -804,59 +588,75 @@ $( document ).ready(function() {
 		if (policytypeJS[$display_name] != 'PAO') { 
 			if (asndJS[$display_name] == undefined || asndJS[$display_name] != 'true') {
 				if ($decision == "permit") {
-					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1' checked></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0'></td>";
+					// row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1' checked></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0'></td>";
+					row = "<div class='form-row'><fieldset class='car-fieldset'><legend class='offscreen'>"+$display_name+": "+$display_value+" ("+$reason+")</legend><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1' checked><label for='permit-"+$(this).attr("id")+"'>Permit</label><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0'><label for='deny-"+$(this).attr("id")+"'>Deny</label></fieldset>";
 				} else {
-					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
+					// row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
+					row = "<div class='form-row'><fieldset class='car-fieldset'><legend class='offscreen'>"+$display_name+": "+$display_value+" ("+$reason+")</legend><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'><label for='permit-"+$(this).attr("id")+"'>Permit</label><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked><label for='deny-"+$(this).attr("id")+"'>Deny</label></fieldset>";
 				}
 				if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
 					if ($atype == "oauth_scope") {
-						row += "<td>"+$display_name+": <strong>"+$display_value+"</strong></td></tr>";
+						// row += "<td>"+$display_name+": <strong>"+$display_value+"</strong></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <strong class='text-blue'>"+$display_value+"</strong></p></div>";
 					} else {
-						row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+						// row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <strong class='text-blue'>"+$display_value+"</strong><br><em>"+$reason+"</p></div>";
 					}
 				} else {
 					if ($atype == "oauth_scope") {
-						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(%apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong>&apos;'>Click to display sensitive information</span></td></tr>";
+						// row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong>&apos;'>Click to display sensitive information</span></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong class=text-blue>"+$display_value+"</strong>&apos;);'>Click to display sensitive information</span></p></div>";
 					} else {
-						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+						// row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_value+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong class=text-blue>"+$display_value+"</strong><br><em>"+$reason+"</em>&apos;);'>Click to display sensitive information</span></p></div>";
 					} 
 				}
-				// row += "<td>"+$display_name+": <strong>"+$display_value+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
-				if ($type == "must") {
-					musttable.append(row);
-				} else if ($type == "may") {
-					maytable.append(row);
-				} 
-					
+				// if ($type == "must") {
+					// musttable.append(row);
+				// } else if ($type == "may") {
+					// maytable.append(row);
+				// }
+				$("#decisions-form").append(row); 
 			}
 		} else if ($.inArray($display_name,displayedPAOs) == -1) {
 			displayedPAOs.push($display_name);
 			if (asndJS[$display_name] == undefined || asndJS[$display_name] != 'true') {
 				if ($decision == "permit") {
-					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1' checked></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0'></td>";
+					// row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1' checked></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0'></td>";
+					row = "<div class='form-row'><fieldset class='car-fieldset'><legend class='offscreen'>"+$display_name+": "+$display_values+" ("+$reason+")</legend><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1' checked><label for='permit-"+$(this).attr("id")+"'>Permit</label><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0'><label for='deny-"+$(this).attr("id")+"'>Deny</label></fieldset>"; 
 				} else {
-					row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
+					// row = "<tr><td id='permit-radio-"+$(this).attr("id")+"' class='consent-radio-permit "+$(this).attr("id")+"'><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'></td><td id='deny-radio-"+$(this).attr("id")+"' class='consent-radio-deny "+$(this).attr("id")+"'><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked></td>";
+					row = "<div class='form-row'><fieldset class='car-fieldset'><legend class='offscreen'>"+$display_name+": "+$display_values+" ("+$reason+")</legend><input type='radio' class='choice-button permit-button' id='permit-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='1'><label for='permit-"+$(this).attr("id")+"'>Permit</label><input type='radio' class='choice-button deny-button' id='deny-"+$(this).attr("id")+"' name='consent-"+$(this).attr("id")+"' value='0' checked><label for='deny-"+$(this).attr("id")+"'>Deny</label></fieldset>"; 
+					
 				}
 				//row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
 				if (sensitivityJS[$display_name] == undefined || sensitivityJS[$display_name] != 'true') {
 					if ($atype == "oauth_scope") {
-						row += "<td>"+$display_name+": <strong>"+$display_values+"</strong></td></tr>";
+						// row += "<td>"+$display_name+": <strong>"+$display_values+"</strong></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <strong class='text-blue'>"+$display_values+"</strong></p></div>";
 					} else {
-						row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+						// row += "<td>"+$display_name+": <strong>"+$display_values+"</strong><div class='consent-reason'>"+$reason+"</div></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <strong class='text-blue'>"+$display_values+"</strong><br><em>"+$reason+"</em></p></div>";
 					}
 				} else {
 					if ($atype == "oauth_scope") {
-						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong>&apos;);'>Click to display sensitive information</span></td></tr>";
+						// row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong>&apos;);'>Click to display sensitive information</span></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong class=text-blue>"+$display_values+"</strong>&apos;);'>Click to display sensitive information</span></p></div>";
+						
 					} else {
-						row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+						// row += "<td>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong>"+$display_values+"</strong><div class=content-reason>"+$reason+"</div>&apos;);'>Click to display sensitive information</span></td></tr>";
+						row += "<p class='car-form-text'>"+$display_name+": <span id='disp"+$dispcount+"' onclick='sensflip(&apos;disp"+$dispcount+"&apos;,&apos;<strong class='text-blue'>"+$display_value+"</strong><br><em>"+$reason+"</em>&apos;);'>Click to display sensitive information</span></p></div>";
+						
 					}
 				} 
 			}
-			if ($type == "must") {
-				musttable.append(row);
-			} else if ($type == "may") {
-				maytable.append(row);
-			}
+		//	if ($type == "must") {
+		//		musttable.append(row);
+		//	} else if ($type == "may") {
+		//		maytable.append(row);
+		//	}
+			$("#decisions-form").append(row); 
+			
 		}
 
   	});

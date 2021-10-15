@@ -176,8 +176,8 @@ public class IcmInfoReleaseDecisionController {
 		
 		// DEBUGGING
 		
-		IcmUtility.locLog("ERR1137", LogCriticality.error,"Incoming ICM decision request: " + entity);
-		IcmUtility.locLog("ERR1137", LogCriticality.error,"Incoming ICM decision request content-type header was: " + headers.getHeaderString("Content-Type"));
+		//IcmUtility.locLog("ERR1137", LogCriticality.error,"Incoming ICM decision request: " + entity);
+		//IcmUtility.locLog("ERR1137", LogCriticality.error,"Incoming ICM decision request content-type header was: " + headers.getHeaderString("Content-Type"));
 		// Hibernate
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
@@ -262,7 +262,7 @@ public class IcmInfoReleaseDecisionController {
 			copsuEntity = convert.writeValueAsString(copsuRequest);
 			
 			// debug
-			IcmUtility.locError(200,"ERR0056", LogCriticality.error,"CopsuRequest = " + copsuEntity);
+			// IcmUtility.locError(200,"ERR0056", LogCriticality.error,"CopsuRequest = " + copsuEntity);
 		} catch (Exception e) {
 			// Fail if we cannot create the copsu request
 			return IcmUtility.locError(500, "ERR0054",LogCriticality.error);
@@ -276,7 +276,7 @@ public class IcmInfoReleaseDecisionController {
 				return IcmUtility.locError(status,"ERR0055",LogCriticality.error);
 			
 			// debug
-			IcmUtility.locError(200, "ERR0056", LogCriticality.error,"CopsuResponse = " + rbody);
+			// IcmUtility.locError(200, "ERR0056", LogCriticality.error,"CopsuResponse = " + rbody);
 			//ObjectMapper om = new ObjectMapper();
 			ObjectMapper om = OMSingleton.getInstance().getOm();
 			copsuDecision = om.readValue(rbody,edu.internet2.consent.copsu.model.DecisionResponseObject.class);
@@ -475,6 +475,8 @@ public class IcmInfoReleaseDecisionController {
 		String inRPType = inputRequest.getRelyingPartyId().getRPtype();
 		
 		ArrayList<PendingDecision> rv = new ArrayList<PendingDecision>();
+		// Debug
+		IcmUtility.locLog("ERR1137", LogCriticality.error, "ICM policy count is " + retList.size());
 		
 		for (IcmReturnedPolicy checkPolicy : retList) {
 			

@@ -1205,6 +1205,7 @@ public class CarmaController {
 		retval.addObject("showagainsettrue",CarUtility.getLocalComponent("showagainsettrue"));
 		retval.addObject("showagainsetfalse",CarUtility.getLocalComponent("showagainsetfalse"));
 		
+		retval.addObject("use_alternate_header","true");  // new UI
 		return retval;
 
 	}
@@ -1228,7 +1229,7 @@ public class CarmaController {
 		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
 		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
-
+		retval.addObject("use_alternate_header","true");  // new UI
 		return retval;
 		
 
@@ -1445,7 +1446,7 @@ public class CarmaController {
 		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 
-		
+		retval.addObject("use_alternate_header","true");  // new UI
 		return retval;
 	}
 	//
@@ -1570,6 +1571,7 @@ public class CarmaController {
 		retval.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 
+		retval.addObject("use_alternate_header","true");  // new UI
 		return retval;
 	}
 	
@@ -1787,6 +1789,7 @@ public class CarmaController {
 		model.addObject("sign_out",CarUtility.getLocalComponent("sign_out"));
 		model.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 
+		model.addObject("use_alternate_header","true"); // new UI
 		return model;
 	}
 	

@@ -10,10 +10,15 @@
 	<servlet>
 		<servlet-name>arpsi</servlet-name>
 		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
-		<init-param>
+		<!-- <init-param>
 			<param-name>jersey.config.server.provider.packages</param-name>
 			<param-value>edu.internet2.consent.arpsi</param-value>
+		</init-param> -->
+		<init-param>
+		    <param-name>javax.ws.rs.Application</param-name>
+		    <param-value>edu.internet2.consent.arpsi.util.AppConfig</param-value>
 		</init-param>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>arpsi</servlet-name>

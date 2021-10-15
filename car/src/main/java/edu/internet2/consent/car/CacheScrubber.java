@@ -16,6 +16,7 @@
  */
 package edu.internet2.consent.car;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TimerTask;
 
@@ -24,10 +25,12 @@ import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.ehcache.Cache.Entry;
 
+import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
+import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
 
 public class CacheScrubber extends TimerTask {
-
+	
 	static long runcount = 0;
 	static long lastrpsize = 0;
 	static long lastiisize = 0;
@@ -132,7 +135,7 @@ public class CacheScrubber extends TimerTask {
 					String rptype = p[1];
 					String rpid = p[2];
 					rpmic.evictCachedRPMetaInformation(rhid, rptype,rpid);
-					ReturnedRPMetaInformation foo = CarUtility.getRPMetaInformation(rhid, rptype, rpid,config);
+					ReturnedRPMetaInformation foo = CarUtility.getRPMetaInformation(rhid, rptype, rpid,config,httpClient);
 					if (foo == null) {
 						n += 1;
 						CarUtility.locDebugErr("ERR1128",rhid,rptype+"|"+rpid);
@@ -146,7 +149,7 @@ public class CacheScrubber extends TimerTask {
 					String rpid = p[1];
 					rpmic.evictCachedRPMetaInformation(rhid, rpid);
 				// 	rpmic.storeCachedRPMetaInformation(rhid, rpid, CarUtility.getRPMetaInformation(rhid, rpid, config)); 
-					ReturnedRPMetaInformation foo = CarUtility.getRPMetaInformation(rhid,rpid,config);
+					ReturnedRPMetaInformation foo = CarUtility.getRPMetaInformation(rhid,rpid,config,httpClient);
 					if (foo == null) {
 						n += 1;
 						CarUtility.locDebugErr("ERR1128",rhid,rpid);

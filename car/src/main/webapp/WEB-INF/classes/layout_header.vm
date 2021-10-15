@@ -17,6 +17,7 @@
 
 <html lang="$preflang">
 #if(! $intercept_view)
+#if(! $use_alternate_header)
   <head>
   		<meta charset="UTF-8">
          <link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">
@@ -50,7 +51,102 @@
 	</div>
 	
     <div id="main">
+#else
+  <head>
+  		<meta charset="UTF-8">
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" src="https://shib.oit.duke.edu/idms-assets-v2/dist/public/images/duke.png">
+        <link rel="stylesheet" type="text/css" href="resources/css/main.css">
+
+        <script src="https://shib.oit.duke.edu/idms-assets-v2/dist/bundle.js"></script>
+        <!--<link rel="stylesheet" href="resources/css/intercept-main.css">-->
+        <link rel="stylesheet" href="resources/css/altintercept-main.css">
+        <link rel="stylesheet" href="resources/css/duke.css">
+        <link rel="stylesheet" type="text/css" src="https://rob-dev-01.oit.duke.edu/mockup/car_latest.css">
+
+           <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <script type="text/javascript" src="resources/js/main.js"></script>
+ 
+        <title>$top_heading</title>
+  </head>
+
+  <body>
+    <header>
+      <div id="heading-block">
+        <img id="logo" src="https://shib.oit.duke.edu/idms-assets-v2/dist/public/images/duke-logo-white.svg" alt="Duke Logo">
+        <h1>$top_heading</h1>
+      
+    </header>
+      <div id="login-details">
+        $authuser&nbsp;&nbsp;<a href="$logouturl">$sign_out</a>
+      </div>
+    </div>
+
+	#if(! $activetab)
+		#set($activetab="mysites")
+	#end
+	<div id="menu">
+		<ul id="menu-options">
+			<li><a href="/car/carma/selfservice" #if($activetab=="homepage")class="active-tab"#end>Privacy Home</a></li>
+			<li><a href="/car/carma/new_rp" #if($activetab=="preference")class="active-tab"#end>Preferences</a></li>
+			<li><a href="/car/carma/selfservice/sites" #if($activetab=="mysites")class="active-tab"#end>Sites and Services</a></li>
+		</ul>			
+	</div>
+	
+    <div id="main">
+
+#end
+#elseif ($use_alternate_intercept)
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" src="https://shib.oit.duke.edu/idms-assets-v2/dist/public/images/duke.png">
+	<script src="https://rob-dev-01.oit.duke.edu/mockup/accordion.js"></script>
+	<link rel="stylesheet" type="text/css" href="/car/resources/css/main.css">
+	
+	<script src="https://shib.oit.duke.edu/idms-assets-v2/dist/bundle.js"></script>
+	<!--<link rel="stylesheet" href="resources/css/intercept-main.css">-->
+	<link rel="stylesheet" href="resources/css/altintercept-main.css">
+	<!--<link rel="stylesheet" href="resources/css/duke.css">-->
+	<link rel="stylesheet" type="text/css" src="https://rob-dev-01.oit.duke.edu/mockup/car_latest.css">
+	
+	   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="resources/js/jquery.leanModal.min.js"></script>
+    <script type="text/javascript" src="resources/js/main.js"></script>
     
+    <script type="text/javascript">
+    	var permitInjectedJS = $.parseJSON('$permitInjected');
+    	var denyInjectedJS = $.parseJSON('$denyInjected');
+    	var permitMayJS = $.parseJSON('$permitMay');
+    	var denyMayJS = $.parseJSON('$denyMay');
+    	var permitNoJS = $.parseJSON('$permitNo');
+    	
+    	var sensitivityJS = $.parseJSON('$sensitivity');
+    	var asndJS = $.parseJSON('$asnd');
+    	
+    	var policytypeJS = $.parseJSON('$policytype');
+    	
+    	var valuesetsJS = $.parseJSON('$valuesets');
+    	var displayvaluesetsJS = $.parseJSON('$displayvaluesets');
+    	
+    	var ohashJS = $.parseJSON('$ohashjs');
+    	
+    	var oadnJS = $.parseJSON('$oadnjs');
+    	
+    	var oadescrJS = $.parseJSON('$oadescrjs');
+    	
+    </script>
+    <title>$page-title</title>
+   </head>
+    <body>
+    <header>
+    	<div id="heading-block">
+    		<img id="logo" src="$alt_institutional_logo_url" alt="$short_institution logo">
+    		<h1 class="car">$top_heading</h1>
+    	</div>
+    </header>
+
 #else
 
   <head>
@@ -60,10 +156,9 @@
    		<!--<script rel="stylesheet" src="https://shib-test.oit.duke.edu/idms-assets/dist/bundle.js"></script>-->
 		<script rel="stylesheet" src="/car/resources/js/bundle.js"></script>
         <script type="text/javascript" src="/car/resources/js/main.js"></script>
-        
-        
   
-  	    <link rel="stylesheet" href="resources/css/intercept-main.css">
+  	
+  	<link rel="stylesheet" href="resources/css/intercept-main.css">
     <link rel="stylesheet" href="resources/css/duke.css">
     
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">

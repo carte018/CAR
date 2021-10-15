@@ -154,13 +154,17 @@ public class UserInfoReleaseDecisionController {
 		// user.  In that case, we'll have no policy to work with.  We use the idempotent newRPTemplate
 		// creator to ensure that a new RP template exists before we start anything else.
 		
-		try {
+		/* This has only side-effects that are handled in retrievePolicy in the 
+		 * event they're needed.  Elided until testing shows otherwise.  RGC
+		 */
+		
+		/*try {
 			NewEntityUtilities.createNewRPTemplateForUser(inputRequest.getUserId());
 		} catch (Exception e) {
 			CopsuUtility.locLog("LOG",LogCriticality.info,e.getMessage());
 			// ignore -- failure to create the new RP template is not an error if one happens to exist
 			// We handle failsafe later.
-		}
+		}*/
 		
 		// We are now ready to start building up a decision response for this decision request.
 		DecisionResponseObject dro = new DecisionResponseObject();

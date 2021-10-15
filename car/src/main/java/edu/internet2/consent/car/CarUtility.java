@@ -85,9 +85,16 @@ public class CarUtility {
 		// Throw a CopsuInitializationException if any of this fails.  Return the config if not.
 		
 		CarConfig config = null;
+		
+		long curtime = System.currentTimeMillis();
+		
 		// Get the default message catalog ResourceBundle.  We default to "en" since that's the most common language.
 		// This should be a cached singleton in the instance using the .getBundle() method
 		ResourceBundle defRB = ResourceBundle.getBundle("i18n.errors", new Locale("en"));
+		
+		CarUtility.locError("ERR1166", LogCriticality.error,"     init: Error Bundle load took " + (System.currentTimeMillis() - curtime) + "ms");
+		curtime = System.currentTimeMillis();
+		
 		try {
 			config = CarConfig.getInstance();
 		} catch (Exception c) {
@@ -95,12 +102,22 @@ public class CarUtility {
 			throw new RuntimeException(defRB.getString("ERR0001"));
 		}
 		
+		CarUtility.locError("ERR1166", LogCriticality.error,"     init: getInstance took " + (System.currentTimeMillis() - curtime) + "ms");
+		curtime = System.currentTimeMillis();
+		
 		String sl = null;
 		if ((sl = config.getProperty("car.defaultLocale", false)) != null) {
 				locRB = ResourceBundle.getBundle("i18n.errors",new Locale(sl));  // override if found
+				CarUtility.locError("ERR1166", LogCriticality.error,"     init: Reload default err bundle took " + (System.currentTimeMillis() - curtime) + "ms");
+				curtime = System.currentTimeMillis();
+				
 				locDB = ResourceBundle.getBundle("i18n.logs",new Locale(sl));
+				CarUtility.locError("ERR1166", LogCriticality.error,"     init: Load log messages took " + (System.currentTimeMillis() - curtime) + "ms");
+				curtime = System.currentTimeMillis();
 		}
 		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request)));
+		CarUtility.locError("ERR1166", LogCriticality.error,"     init: load preflang bundle for components took " + (System.currentTimeMillis() - curtime) + "ms");
+
 		return(config);
 		
 	}
@@ -512,6 +529,56 @@ public class CarUtility {
 		
 	}
 	
+	
+	public static ArrayList<ReturnedValueMetaInformation> getAllValueMetaInformation(CarConfig config, HttpClient httpClient) {
+		
+				
+		ArrayList<ReturnedValueMetaInformation> retval = new ArrayList<ReturnedValueMetaInformation>();
+		
+		String informedhost = config.getProperty("car.informed.hostname", true);
+		String informedport = config.getProperty("car.informed.port",true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/iiic/valueinformation/");
+		
+		CarUtility.locDebugErr("ERR0072",sb.toString());
+
+		HttpResponse response = null;
+		try {
+			String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
+			String rbody = CarUtility.extractBody(response);
+			int status = CarUtility.extractStatusCode(response);
+			
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity()); 
+				} catch (Exception x) {
+					// ignore
+				}
+				return retval;
+			}
+			
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			retval = (ArrayList<ReturnedValueMetaInformation>) om.readValue(rbody,  new TypeReference<List<ReturnedValueMetaInformation>>() {});
+			return retval;
+		} catch (Exception e) {
+			return retval;  // on error, just fail
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			// Pooling -- leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
+		}
+		
+	}
+	
 	public static ArrayList<InfoItemIdentifier> getRHIIList(RHIdentifier rhid, CarConfig config) {
 		
 		String informedhost = config.getProperty("car.informed.hostname", true);
@@ -635,7 +702,7 @@ public class CarUtility {
 	public static ReturnedInfoItemMetaInformation getInfoItemMetaInformation(String rhid, String iiid, CarConfig config, HttpClient httpClient) {
 		
 		// debug
-		CarUtility.locError("ERR1134", LogCriticality.error,"Calling untyped getIIM");
+		// CarUtility.locError("ERR1134", LogCriticality.error,"Calling untyped getIIM");
 		
 		// Start by checking the cacher
 		InfoItemMetaInformationCache icache = InfoItemMetaInformationCache.getInstance();
@@ -719,22 +786,22 @@ public class CarUtility {
 		//HttpClientUtils.closeQuietly(httpClient);
 		
 		// debug
-		if (retval == null) {
-			CarUtility.locError("ERR1136", LogCriticality.error,"About to retun null looking for II metainfo for (" + rhid + "," + iitype + "," + iivalue);
-		}
+		// if (retval == null) {
+		//	CarUtility.locError("ERR1136", LogCriticality.error,"About to retun null looking for II metainfo for (" + rhid + "," + iitype + "," + iivalue);
+		// }
 		return retval;
 	}
 	
 	public static ReturnedInfoItemMetaInformation getInfoItemMetaInformation(String rhid, String iitype, String iiid, CarConfig config, HttpClient httpClient) {
 		
 		// debug
-		CarUtility.locError("ERR1134",LogCriticality.error, "Called getIIMeta with itype - " + iitype + " , " + iiid);
+		// CarUtility.locError("ERR1134",LogCriticality.error, "Called getIIMeta with itype - " + iitype + " , " + iiid);
 		
 		// Start by checking the cacher
 		InfoItemMetaInformationCache icache = InfoItemMetaInformationCache.getInstance();
 		CachedInfoItemMetaInformation ci = null;
 		// debug
-		CarUtility.locError("ERR1134",LogCriticality.error,"Cache check for " + rhid + "," + iiid);
+		// CarUtility.locError("ERR1134",LogCriticality.error,"Cache check for " + rhid + "," + iiid);
 		
 		
 		if (icache.hasCachedInfoItemMetaInformation(rhid,  iiid)) {
@@ -744,7 +811,7 @@ public class CarUtility {
 			if (System.currentTimeMillis() <= ci.getCacheTime() + (50+n) * 60 * 1000) {
 				CarUtility.locDebugErr("ERR0811","infoItemMetaData");
 				// debug
-				CarUtility.locError("ERR1134", LogCriticality.error,"Returning cached " + ci.getData());
+				// CarUtility.locError("ERR1134", LogCriticality.error,"Returning cached " + ci.getData());
 				return ci.getData();
 			}
 		}
@@ -771,12 +838,12 @@ public class CarUtility {
 			int status = CarUtility.extractStatusCode(response);
 			
 			// debug
-			CarUtility.locError("ERR1134", LogCriticality.error,"iimetadata is " + rbody + " for " + iitype + "," + iiid);
+			// CarUtility.locError("ERR1134", LogCriticality.error,"iimetadata is " + rbody + " for " + iitype + "," + iiid);
 			if (status >= 300) {
 				// debug
-				CarUtility.locError("ERR1136", LogCriticality.error,"getIImetainformation response status was " + status + " and rbody was " + rbody);
+				// CarUtility.locError("ERR1136", LogCriticality.error,"getIImetainformation response status was " + status + " and rbody was " + rbody);
 				if (status == 404) {
-					CarUtility.locError("ERR1136", LogCriticality.error,"Caching null for " + rhid + ", " + iiid);
+					// CarUtility.locError("ERR1136", LogCriticality.error,"Caching null for " + rhid + ", " + iiid);
 					icache.storeCachedInfoItemMetaInformation(rhid, iiid, null);
 				}
 				try {
@@ -810,6 +877,52 @@ public class CarUtility {
 			//HttpClientUtils.closeQuietly(httpClient);
 		}
 	}
+	
+public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInformation(CarConfig config, HttpClient httpClient) {
+		
+		ArrayList<ReturnedInfoItemMetaInformation> retval = new ArrayList<ReturnedInfoItemMetaInformation>();
+		
+		String informedhost = config.getProperty("car.informed.hostname", true);
+		String informedport = config.getProperty("car.informed.port", true);
+		
+		StringBuilder sb = new StringBuilder();
+		
+		
+		sb.append("/consent/v1/informed/iiic/iimetainformation/");
+				
+		HttpResponse response = null;
+		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		try {
+			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(),null, authzheader);
+			rbody = CarUtility.extractBody(response);
+			int status = CarUtility.extractStatusCode(response);
+			
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+				}
+				return retval;
+			}
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			retval = (ArrayList<ReturnedInfoItemMetaInformation>) om.readValue(rbody, new TypeReference<List<ReturnedInfoItemMetaInformation>>() {});
+			return retval;
+		} catch (Exception e) {
+			return retval;  // on error, just fail
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			// Pooling - leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
+		}
+	}
+	
 	public static boolean isIIVAsnd(String rhid,String iiid, String value, CarConfig config) {
 
 		ReturnedInfoItemMetaInformation im = CarUtility.getInfoItemMetaInformation(rhid, iiid, config);
@@ -820,6 +933,14 @@ public class CarUtility {
 		} else {
 			return false;
 		}
+	}
+	
+	public static boolean isIIEncoded(String rhid, String iiid, CarConfig config) {
+		ReturnedInfoItemMetaInformation im = CarUtility.getInfoItemMetaInformation(rhid, iiid, config);
+		if (im != null && "ENCODED".equalsIgnoreCase(im.getPresentationtype()))
+			return true;
+		else
+			return false;
 	}
 	
 	public static void setShowAgain(String utype,String uname,String rpid,boolean value,CarConfig config) {
@@ -1184,15 +1305,15 @@ public class CarUtility {
 		String rbody = null;
 		
 		try {
-			CarUtility.locError("ERR1134", LogCriticality.error,"Request to " + informedhost + " URI " + sb.toString() + " authzheader: " + authzheader);
+			// CarUtility.locError("ERR1134", LogCriticality.error,"Request to " + informedhost + " URI " + sb.toString() + " authzheader: " + authzheader);
 			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
 			rbody = CarUtility.extractBody(response);
 			int status = CarUtility.extractStatusCode(response);
 			if (status >= 300) {
-				CarUtility.locError("ERR1134",  LogCriticality.error, "ResponseCode " + status);
+				// CarUtility.locError("ERR1134",  LogCriticality.error, "ResponseCode " + status);
 				if (status == 404)
 					icache.storeCachedRPMetaInformation(rhid, rpid, null);
-					CarUtility.locError("ERR1134",  LogCriticality.error, "404 cached");
+					// CarUtility.locError("ERR1134",  LogCriticality.error, "404 cached");
 				try {
 					EntityUtils.consumeQuietly(response.getEntity());
 				} catch (Exception x) {
@@ -1207,9 +1328,55 @@ public class CarUtility {
 				icache.storeCachedRPMetaInformation(rhid, rpid, lr);
 			return lr;
 		} catch (Exception e) {
-			CarUtility.locError("ERR1134", LogCriticality.error, "Returning null after failure getting RP MI: " + e.getMessage());
+			// CarUtility.locError("ERR1134", LogCriticality.error, "Returning null after failure getting RP MI: " + e.getMessage());
 			throw new RuntimeException(e);
 			// return null;  // on error, just fail
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			// Pooling - leave open for reuse
+			// HttpClientUtils.closeQuietly(httpClient);
+		}
+	}
+	
+public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarConfig config,HttpClient httpClient) {
+
+		ArrayList<ReturnedRPMetaInformation> retval = new ArrayList<ReturnedRPMetaInformation>();
+		
+		String informedhost = config.getProperty("car.informed.hostname", true);
+		String informedport = config.getProperty("car.informed.port", true);
+		
+
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("/consent/v1/informed/rpic/metainformation/");
+		
+		HttpResponse response = null;
+		String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+		String rbody = null;
+		
+		try {
+			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
+			rbody = CarUtility.extractBody(response);
+			int status = CarUtility.extractStatusCode(response);
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity());
+				} catch (Exception x) {
+					// ignore
+				}
+				return retval;
+			}
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			retval = (ArrayList<ReturnedRPMetaInformation>) om.readValue(rbody, new TypeReference<List<ReturnedRPMetaInformation>>() {});
+			return retval;
+		} catch (Exception e) {
+			// return null;  // on error, just fail
+			return retval;
 		} finally {
 			try {
 			EntityUtils.consumeQuietly(response.getEntity());
@@ -1643,7 +1810,7 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 	String icmport = config.getProperty("car.icm.port", true);
 
 	// DEBUG
-	CarUtility.locError("ERR1134", LogCriticality.error,"SendDecisionRequest received jsonRequest: " + jsonRequest);
+	// CarUtility.locError("ERR1134", LogCriticality.error,"SendDecisionRequest received jsonRequest: " + jsonRequest);
 	
 	StringBuilder sb = new StringBuilder();
 	
@@ -1667,7 +1834,7 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		rbody = CarUtility.extractBody(response);
 		int status = CarUtility.extractStatusCode(response);
 		if (status >= 300)  {
-			CarUtility.locError("ERR1134",LogCriticality.info, String.valueOf(status));
+			// CarUtility.locError("ERR1134",LogCriticality.info, String.valueOf(status));
 			return null;
 		}
 		//ObjectMapper om = new ObjectMapper();
@@ -1677,8 +1844,8 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		//
 		// debug
 		//
-		CarUtility.locError("ERR1134", LogCriticality.error,"decision request was: " + jsonRequest);
-		CarUtility.locError("ERR1134", LogCriticality.error,"decision response was: " + rbody);
+		//CarUtility.locError("ERR1134", LogCriticality.error,"decision request was: " + jsonRequest);
+		//CarUtility.locError("ERR1134", LogCriticality.error,"decision response was: " + rbody);
 		return retval;		
 	} catch (Exception e) {
 		CarUtility.locError("ERR0081", LogCriticality.debug, "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
