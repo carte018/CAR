@@ -102,6 +102,7 @@ import edu.internet2.consent.icm.model.UserReturnedPolicy;
 import edu.internet2.consent.informed.model.InfoItemIdentifier;
 import edu.internet2.consent.informed.model.InfoItemValueList;
 import edu.internet2.consent.informed.model.RHIdentifier;
+import edu.internet2.consent.informed.model.RPIdentifier;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRPMetaInformation;
@@ -905,12 +906,37 @@ public class MainController {
 			// Handle unrecognized RP
 			if (rpmetainformation == null || rpmetainformation.getRpproperties() == null) {
 				// unrecognized RP
-				CarUtility.locError("ERR0806",LogCriticality.error, rpid);
-				ModelAndView r = new ModelAndView("errorPage");
-				r.addObject("message",CarUtility.getLocalError("ERR0806",rpid));
-				r.addObject("page-title","Unrecognized RP");
-				r.addObject("intercept_view","1");
-				return r;
+				if ("true".equals(config.getProperty("car.accept_unregistered_rp", false))) {
+					rpmetainformation = new ReturnedRPMetaInformation();
+				
+					rpmetainformation.setDefaultshowagain("true");
+					rpmetainformation.setDescription(null);
+					rpmetainformation.setDisplayname(null);
+					rpmetainformation.setIconurl(null);
+					rpmetainformation.setPrivacyurl(null);
+					RHIdentifier rhi = new RHIdentifier();
+					rhi.setRhid(rhid);
+					rhi.setRhtype("entityId");
+					rpmetainformation.setRhidentifier(rhi);
+					RPIdentifier rpi = new RPIdentifier();
+					rpi.setRpid(rpid);
+					rpi.setRptype("entityId");
+					rpmetainformation.setRpidentifier(rpi);
+					ReturnedRPProperty rpp = new ReturnedRPProperty();
+					rpp.setRppropertyname("entityId");
+					rpp.setRppropertyvalue(rpid);
+					ArrayList<ReturnedRPProperty> arp = new ArrayList<ReturnedRPProperty>();
+					arp.add(rpp);
+					rpmetainformation.setRpproperties(arp);
+					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+				} else {
+					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+					ModelAndView r = new ModelAndView("errorPage");
+					r.addObject("message",CarUtility.getLocalError("ERR0806",rpid));
+					r.addObject("page-title","Unrecognized RP");
+					r.addObject("intercept_view","1");
+					return r;
+				}
 			}
 			ReturnedRPProperty rrrpp = new ReturnedRPProperty();
 			rrrpp.setRppropertyname("entityId");
@@ -2735,12 +2761,37 @@ public class MainController {
 			// Handle unrecognized RP
 			if (rpmetainformation == null || rpmetainformation.getRpproperties() == null) {
 				// unrecognized RP
-				CarUtility.locError("ERR0806",LogCriticality.error, rpid);
-				ModelAndView r = new ModelAndView("errorPage");
-				r.addObject("message",CarUtility.getLocalError("ERR0806",rpid));
-				r.addObject("page-title","Unrecognized RP");
-				r.addObject("intercept_view","1");
-				return r;
+				if ("true".equals(config.getProperty("car.accept_unregistered_rp", false))) {
+					rpmetainformation = new ReturnedRPMetaInformation();
+				
+					rpmetainformation.setDefaultshowagain("true");
+					rpmetainformation.setDescription(null);
+					rpmetainformation.setDisplayname(null);
+					rpmetainformation.setIconurl(null);
+					rpmetainformation.setPrivacyurl(null);
+					RHIdentifier rhi = new RHIdentifier();
+					rhi.setRhid(rhid);
+					rhi.setRhtype(rhtype);
+					rpmetainformation.setRhidentifier(rhi);
+					RPIdentifier rpi = new RPIdentifier();
+					rpi.setRpid(rpid);
+					rpi.setRptype(rptype);
+					rpmetainformation.setRpidentifier(rpi);
+					ReturnedRPProperty rpp = new ReturnedRPProperty();
+					rpp.setRppropertyname("entityId");
+					rpp.setRppropertyvalue(rpid);
+					ArrayList<ReturnedRPProperty> arp = new ArrayList<ReturnedRPProperty>();
+					arp.add(rpp);
+					rpmetainformation.setRpproperties(arp);
+					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+				} else {
+					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+					ModelAndView r = new ModelAndView("errorPage");
+					r.addObject("message",CarUtility.getLocalError("ERR0806",rpid));
+					r.addObject("page-title","Unrecognized RP");
+					r.addObject("intercept_view","1");
+					return r;
+				}
 			}
 			ReturnedRPProperty rrrpp = new ReturnedRPProperty();
 			String passedRPType = inputRequest.getHeader().getRelyingPartyType();

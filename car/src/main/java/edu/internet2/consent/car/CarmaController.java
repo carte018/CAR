@@ -297,7 +297,7 @@ public class CarmaController {
 			UserDirectiveAllOtherValues udaov = new UserDirectiveAllOtherValues();
 			
 			udaov.setAllOtherValues(AllOtherValuesConst.allOtherValues);
-			if (riimi.getPolicytype().equalsIgnoreCase("PAO")) {
+			if (riimi != null && riimi.getPolicytype().equalsIgnoreCase("PAO")) {
 				// TODO: ugh
 				String k = (String) inputSet.get(iiid).keySet().toArray()[0];
 				udaov.setUserReleaseDirective(UserReleaseDirective.valueOf(inputSet.get(iiid).get(k)));
@@ -309,7 +309,7 @@ public class CarmaController {
 			
 			// And only populate directives on values if the policy type is not PAO
 			
-			if (! riimi.getPolicytype().equalsIgnoreCase("PAO")) {
+			if (riimi == null || ! riimi.getPolicytype().equalsIgnoreCase("PAO")) {
 			ArrayList<UserDirectiveOnValues> audov = new ArrayList<UserDirectiveOnValues>();
 			
 			// Populate the audov with the data in the input stream for this iiid, aggregating by directive
@@ -366,7 +366,7 @@ public class CarmaController {
 		String userType = newPolicy.getUserId().getUserType();
 		String userValue = newPolicy.getUserId().getUserValue();
 		
-		CarUtility.setShowAgain(userType, userValue, rpid, "true".contentEquals(req.getParameter("showagain"))?true:false, config);
+		CarUtility.setShowAgain(userType, userValue, rpid, "true".equals(req.getParameter("showagain"))?true:false, config);
 		/*
 		// Try the retrieval approach
 		urpmi = CarUtility.getUserRPMetaInformation(rpid, userType, userValue, config);
