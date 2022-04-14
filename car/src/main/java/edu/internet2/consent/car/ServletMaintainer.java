@@ -21,8 +21,12 @@ import java.util.ArrayList;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -33,7 +37,7 @@ import edu.internet2.consent.informed.model.ReturnedValueMetaInformation;
 
 public class ServletMaintainer implements ServletContextListener {
 
-	private static final Log LOG = LogFactory.getLog(ServletContextListener.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ServletContextListener.class);
 
 	private static CacheIniter ci = null;
 	
@@ -86,7 +90,7 @@ class CacheIniter implements Runnable {
 				httpClient = CarHttpClientFactory.getHttpsClient();
 			} catch (Exception e) {
 				// Log and create a raw client instead
-				CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+				CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 				httpClient = HttpClientBuilder.create().build();
 			}
 			
@@ -94,7 +98,7 @@ class CacheIniter implements Runnable {
 			ArrayList<ReturnedValueMetaInformation> arvm = CarUtility.getAllValueMetaInformation(config, httpClient);
 			
 			if (arvm != null) {
-				CarUtility.locError("ERR1134", LogCriticality.error,"InitCaching " + arvm.size() + " value cache entries");
+				CarUtility.locDebug("ERR1134","InitCaching " + arvm.size() + " value cache entries");
 				
 				ValueMetaInformationCache vmc = ValueMetaInformationCache.getInstance();
 				for (ReturnedValueMetaInformation r : arvm) {
@@ -107,7 +111,7 @@ class CacheIniter implements Runnable {
 			ArrayList<ReturnedInfoItemMetaInformation> arim = CarUtility.getAllInfoItemMetaInformation(config, httpClient);
 			
 			if (arim != null) {
-				CarUtility.locError("ERR1134", LogCriticality.error,"InitCaching " + arim.size() + " infoitem cache entries");
+				CarUtility.locDebug("ERR1134","InitCaching " + arim.size() + " infoitem cache entries");
 
 				InfoItemMetaInformationCache imc = InfoItemMetaInformationCache.getInstance();
 				for (ReturnedInfoItemMetaInformation i : arim) {
@@ -120,7 +124,7 @@ class CacheIniter implements Runnable {
 			ArrayList<ReturnedRPMetaInformation> arpm = CarUtility.getAllRPMetaInformation(config,httpClient);
 			
 			if (arpm != null) {
-				CarUtility.locError("ERR1134", LogCriticality.error,"InitCaching " + arpm.size() + " rp cache entries");
+				CarUtility.locDebug("ERR1134","InitCaching " + arpm.size() + " rp cache entries");
 
 				RPMetaInformationCache rpc = RPMetaInformationCache.getInstance();
 				for (ReturnedRPMetaInformation m : arpm) {

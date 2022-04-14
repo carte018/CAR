@@ -231,11 +231,22 @@
     	<version>2.5</version>
     	<scope>provided</scope>
     </dependency>
-    <dependency>
+    <!-- Removing commons-logging in favor of SLF4J with logback -->
+    <!-- <dependency>
     	<groupId>commons-logging</groupId>
     	<artifactId>commons-logging</artifactId>
     	<version>1.2</version>
-    </dependency>
+    </dependency> -->
+    <dependency> 
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-classic</artifactId>
+  		<version>1.2.8</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>jcl-over-slf4j</artifactId>
+		<version>1.7.32</version>
+	</dependency>
     <dependency>
     	<groupId>commons-codec</groupId>
     	<artifactId>commons-codec</artifactId>

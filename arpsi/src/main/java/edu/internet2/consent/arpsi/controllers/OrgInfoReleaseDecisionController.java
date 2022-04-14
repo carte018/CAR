@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,8 +33,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.type.StringType;
 import org.hibernate.Session;
@@ -65,13 +66,15 @@ import edu.internet2.consent.arpsi.model.ValueObject;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
 import edu.internet2.consent.arpsi.util.OMSingleton;
 
+import java.math.BigInteger;
+
 @Path("/org-info-release-decision")
 public class OrgInfoReleaseDecisionController {
 
 	@SuppressWarnings("unused")
 	private static String caller = ""; // calling user/system
-	@SuppressWarnings("unused")
-	private static Log LOG = LogFactory.getLog(OrgInfoReleaseDecisionController.class);
+	//@SuppressWarnings("unused")
+	//private static Log LOG = LogFactory.getLog(OrgInfoReleaseDecisionController.class);
 	
 	// This WS comprises a single (POST) endpoint that accepts a JSON represented decisionRequestObject
 	// and returns a decisionResponseObject.
@@ -82,6 +85,46 @@ public class OrgInfoReleaseDecisionController {
 	// We assume that the caller is setting both status code and entity, so we don't differentiate
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "POST").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	// Healthcheck support for decision controller
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = ArpsiUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((BigInteger) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			ArpsiUtility.locDebug("LOG0021","Exception thrown during healthcheck: " + e.getMessage());
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	
@@ -298,7 +341,7 @@ public class OrgInfoReleaseDecisionController {
 			//retList.addAll(lastResortQuery.list());
 		} catch (Exception lre) {
 			// log and ignore
-			ArpsiUtility.locLog("LOG0021", LogCriticality.error, "LastResortQuery returned: " + lre.getMessage());
+			ArpsiUtility.locDebug("LOG0021", "LastResortQuery retrieval exception: " + lre.getMessage());
 		}
 		
 		// retList now contains our list of potentially matching policies. 
@@ -337,7 +380,7 @@ public class OrgInfoReleaseDecisionController {
 		
 		
 		ArrayList<PendingDecision> rv = new ArrayList<PendingDecision>();
-		ArpsiUtility.locLog("LOG0017",LogCriticality.debug,inUser,inRP);
+		ArpsiUtility.locDebug("LOG0017",inUser,inRP);
 		// For each of the possibly matching policies...
 		for (OrgReturnedPolicy checkPolicy : retList) {
 			// If the policy has a catch-all and we don't have one yet, record it
@@ -371,16 +414,16 @@ public class OrgInfoReleaseDecisionController {
 				}
 			}
 			if (userMatch) {
-				ArpsiUtility.locLog("LOG0018",LogCriticality.info,checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
+				ArpsiUtility.locDebug("LOG0018",checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
 				// We matched on user information -- see if we match on RP now
 				for (RelyingPartyProperty rp : checkPolicy.getPolicy().getRelyingPartyPropertyArray()) {
-					ArpsiUtility.locLog("LOG0020",LogCriticality.info,rp.getRpPropName(),rp.getRpPropValue(),"RP identity: " + inRPType + "/" + inRP);
+					ArpsiUtility.locDebug("LOG0020",rp.getRpPropName(),rp.getRpPropValue(),"RP identity: " + inRPType + "/" + inRP);
 					if (inRPType.matches(rp.getRpPropName()) && inRP.matches(rp.getRpPropValue())) {
 						rpMatch = true;
 						continue;
 					} else {
 						for (RelyingPartyProperty irp : inputRequest.getArrayOfRelyingPartyProperty()) {
-							ArpsiUtility.locLog("LOG0020",LogCriticality.info,irp.getRpPropName(),irp.getRpPropValue(),rp.getRpPropName()+","+rp.getRpPropValue());
+							ArpsiUtility.locDebug("LOG0020",irp.getRpPropName(),irp.getRpPropValue(),rp.getRpPropName()+","+rp.getRpPropValue());
 							if (irp.getRpPropName().matches(rp.getRpPropName()) && irp.getRpPropValue().matches(rp.getRpPropValue())) {
 								rpMatch = true;
 								continue;
@@ -391,11 +434,11 @@ public class OrgInfoReleaseDecisionController {
 						continue;
 				}
 			} else {
-				ArpsiUtility.locLog("LOG0019",LogCriticality.info,checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
+				ArpsiUtility.locDebug("LOG0019",checkPolicy.getPolicyMetaData().getPolicyId().getBaseId());
 			}
 			if (!userMatch || !rpMatch) {
 				// we failed to match on either user or RP
-				ArpsiUtility.locError(200, "ERR0907",LogCriticality.debug);
+				ArpsiUtility.locDebug("ERR0907",LogCriticality.debug);
 				continue;
 			}
 			// Otherwise, we have an applicable policy -- check to see if it fulfills any of the info requests
@@ -554,6 +597,17 @@ public class OrgInfoReleaseDecisionController {
 		}
 		// At this point, dro is ready to return as the response.
 		try {
+			try {
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false))) {
+					ArpsiUtility.locLog("LOG0021","DRO: " + dro.getDecisionId() + " for (" + dro.getResourceHolderId().getRHType() + "," + dro.getResourceHolderId().getRHValue() + "),(" + dro.getRelyingPartyId().getRPtype() + "," + dro.getRelyingPartyId().getRPvalue() + "),(" + dro.getUserId().getUserType() + "," + dro.getUserId().getUserValue() + ")");
+					ArpsiUtility.locDebug("LOG0021","Returned decision response: " + dro.toJSON());
+				} else {
+					ArpsiUtility.locLog("LOG0021","DRO: " + dro.getDecisionId() + " for (" + dro.getResourceHolderId().getRHType() + "," + dro.getResourceHolderId().getRHValue() + "),(" + dro.getRelyingPartyId().getRPtype() + "," + dro.getRelyingPartyId().getRPvalue() + ")");
+				}
+			} catch (Exception e) {
+				// ignore -- logging is best effort for DROs
+			}
+			
 			return buildResponse(Status.OK,dro.toJSON());
 		} catch (JsonProcessingException e) {
 			return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);

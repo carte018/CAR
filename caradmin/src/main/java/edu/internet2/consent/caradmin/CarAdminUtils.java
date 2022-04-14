@@ -27,10 +27,15 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -50,6 +55,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.internet2.consent.arpsi.model.LogCriticality;
 import edu.internet2.consent.arpsi.model.OrgInfoReleasePolicy;
 import edu.internet2.consent.arpsi.model.OrgReturnedPolicy;
 import edu.internet2.consent.arpsi.model.ReturnedPrecedenceObject;
@@ -82,7 +88,7 @@ import edu.internet2.consent.informed.model.AdminRoleMapping;
 
 public class CarAdminUtils {
 
-	private static final Log LOG=LogFactory.getLog(CarAdminUtils.class);
+	private static final Logger LOG=LoggerFactory.getLogger(CarAdminUtils.class);
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static ResourceBundle locCB = ResourceBundle.getBundle("i18n.components",new Locale("en")); // default locale
@@ -544,6 +550,12 @@ public class CarAdminUtils {
 		// Web components are in the preferred user language (or the default if that doesn't exist
 		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request))); 
 
+		// Adjust the logger's config'd log level if logLevel is specified in configuration
+		
+		if (config.getProperty("logLevel", false) != null) {
+			((ch.qos.logback.classic.Logger)LOG).setLevel(Level.toLevel(config.getProperty("logLevel", false)));
+		}
+		
 		return(config);
 		
 	}
@@ -623,11 +635,35 @@ public class CarAdminUtils {
 		}
 
 	}
+	
+	public static void locError(String errcode) {
+		 locError(errcode, LogCriticality.error);
+	}
+	public static void locError(String errcode, String... strings) {
+		 locError(errcode,LogCriticality.error,strings);
+	}
+	
+	public static void locLog(String errcode) {
+		locLog(errcode, LogCriticality.info);
+	}
+	public static void locLog(String errcode, String... strings) {
+		locLog(errcode, LogCriticality.info, strings);
+	}
+	
+	public static void locDebug(String errcode) {
+		locDebug(errcode, LogCriticality.debug);
+	}
+	public static void locDebug(String errcode, String... strings) {
+		locDebug(errcode, LogCriticality.debug, strings);
+	}
+	
+	
 	public static void locError(String message,LogCriticality crit) {
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.error(crit.toString().toUpperCase() + " ecode=" + message + ":" + locRB.getString(message));
+		// No longer needed
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.error(crit.toString().toUpperCase() + " ecode=" + message + ":" + locRB.getString(message));
 	}
 	public static void locError(String errcode, LogCriticality crit,String... args) {
 		// Return the Response object to use for an error return.  With substitution.
@@ -638,18 +674,20 @@ public class CarAdminUtils {
 					raw = raw.replace("{"+i+"}", args[i]);
 			}
 		}
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.error(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
+		// No longer needed
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.error(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
 		
 	}
 	
 	public static void locLog(String message,LogCriticality crit) {
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.info(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
+		// No longer needed
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.info(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
 	}
 	
 	public static void locLog(String errcode, LogCriticality crit, String... args) {
@@ -660,10 +698,26 @@ public class CarAdminUtils {
 					raw = raw.replace("{"+i+"}",  args[i]);
 			}
 		}
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
+		// No longer needed
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
+	}
+	
+	public static void locDebug(String message, LogCriticality crit) {
+		LOG.debug(crit.toString().toUpperCase() + "ecode=" + message + ":" + locDB.getString(message));
+	}
+	
+	public static void locDebug(String errcode, LogCriticality crit, String... args) {
+		String raw = locDB.getString(errcode);
+		if (raw != null && args != null && args.length > 0 && args[0] != null) {
+			for (int i=0; i<args.length; i++) {
+				if (args[i] != null)
+					raw = raw.replace("{"+i+"}", args[i]);
+			}
+		}
+		LOG.debug(crit.toString().toUpperCase() + "ecode=" + errcode + ": " + raw);
 	}
 	
 	public static String getLocalComponent(String key) {

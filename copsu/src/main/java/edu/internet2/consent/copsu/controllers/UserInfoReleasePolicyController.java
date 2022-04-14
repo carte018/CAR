@@ -36,6 +36,7 @@ import javax.ws.rs.DELETE;
 
 import javax.servlet.http.HttpServletRequest;
 
+//import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,8 +51,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -68,8 +69,8 @@ public class UserInfoReleasePolicyController {
 	//        input requests we can pass along the authenticated identity here.
 	@SuppressWarnings("unused")
 	private String caller = "";
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(UserInfoReleasePolicyController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG = LogFactory.getLog(UserInfoReleasePolicyController.class);
 	
 	// Utility method for internal use only for generating responses in proper format.
 	// We tack on the headers required for CORS with Swagger.io here automatically
@@ -78,7 +79,43 @@ public class UserInfoReleasePolicyController {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
 	}
 	
-	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = CopsuUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
+	}
 	
 	// No authentication support at the moment, although we call a stub authorization check in
 	// each endpoint.
@@ -116,7 +153,7 @@ public class UserInfoReleasePolicyController {
 		try {
 			config = CopsuUtility.init("postPolicy", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
+			return CopsuUtility.locError(500,"ERR0004");
 		}
 
 		//ObjectMapper mapper = new ObjectMapper();
@@ -174,7 +211,7 @@ public class UserInfoReleasePolicyController {
 		
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018", LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 		
 		// Query
@@ -189,7 +226,7 @@ public class UserInfoReleasePolicyController {
 			// We got back at least one response -- time to bail out
 			try {
 				ReturnedPolicy conflict = checkList.get(0);
-				return CopsuUtility.locError(409,"ERR0015",LogCriticality.error,"https://"+request.getServerName()+"/consent/v1/copsu/user-info-release-policies/"+conflict.getPolicyMetaData().getPolicyId().getBaseId());
+				return CopsuUtility.locError(409,"ERR0015",LogCriticality.info,"https://"+request.getServerName()+"/consent/v1/copsu/user-info-release-policies/"+conflict.getPolicyMetaData().getPolicyId().getBaseId());
 			} finally {
 				// leak protection
 				sess.close();
@@ -228,7 +265,7 @@ public class UserInfoReleasePolicyController {
 			// We failed in our mission to find an unused UUID
 			if (sess != null) 
 				sess.close();  // leak protection
-			return CopsuUtility.locError(500, "ERR0045", LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0045");
 		}
 		pid.setBaseId(unusedUUID); // we use uuids for policy ids for now
 		md.setPolicyId(pid);
@@ -257,9 +294,16 @@ public class UserInfoReleasePolicyController {
 		
 		// And return the rp object we saved
 		try {
+			try {
+				CopsuUtility.locLog("LOG0015","Created policy: " + rp.getPolicyMetaData().getPolicyId().getBaseId() + ", version: " + rp.getPolicyMetaData().getPolicyId().getVersion());
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false))) 
+					CopsuUtility.locDebug("LOG0015","New policy text: " + rp.toJSON());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.CREATED,rp.toJSON());
 		} catch (JsonProcessingException e) {
-			return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0016");
 		}
 		
 	}
@@ -287,22 +331,22 @@ public class UserInfoReleasePolicyController {
 		try {
 			config = CopsuUtility.init("deletePolicy", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004", LogCriticality.error);
+			return CopsuUtility.locError(500,"ERR0004");
 		}
 
 		// Authorization verified
 		
 		if (policy_id == null || policy_id.equals("")) {
 			// This should never happen, but if it does...
-			return CopsuUtility.locError(400, "ERR0017", LogCriticality.error);
+			return CopsuUtility.locError(400, "ERR0017", LogCriticality.info);
 		}
 		
-		CopsuUtility.locLog("LOG0001",LogCriticality.debug,policy_id);
+		CopsuUtility.locDebug("LOG0001",policy_id);
 		
 		// Verify driver for Hibernate
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018", LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 		Transaction tx = sess.beginTransaction();
 		// leak protection
@@ -323,30 +367,31 @@ public class UserInfoReleasePolicyController {
 		
 		List<ReturnedPolicy> resultList = (List<ReturnedPolicy>) policyQuery.list();
 		if (resultList == null || resultList.isEmpty()) {
-			CopsuUtility.locLog("LOG0002",LogCriticality.debug,policy_id);
+			CopsuUtility.locDebug("LOG0002",policy_id);
 			tx.rollback();
 			sess.close();
 			return CopsuUtility.locError(404, "ERR0019", LogCriticality.info);
 		} else if (resultList.size() > 1) {
 			// Should never happen, but...
-			CopsuUtility.locLog("LOG0003",LogCriticality.debug,policy_id);
+			CopsuUtility.locDebug("LOG0003",policy_id);
 			tx.rollback();
 			sess.close();
-			return CopsuUtility.locError(409, "ERR0020", LogCriticality.error);
+			return CopsuUtility.locError(409, "ERR0020", LogCriticality.info);
 		} else {
 			// Exactly one found -- delete it and move on
-			CopsuUtility.locLog("LOG0004", LogCriticality.debug,policy_id);
+			CopsuUtility.locLog("LOG0004",policy_id);
 			if (request.getParameter("expungeOnDelete") != null && request.getParameter("expungeOnDelete").equals("true")) {
-				CopsuUtility.locLog("LOG0005", LogCriticality.info, policy_id);
+				CopsuUtility.locLog("LOG0005", policy_id);
 				sess.delete(resultList.get(0));
 				tx.commit();  // expunge the components of the policy
 				sess.close();
 				return buildResponse(Status.NO_CONTENT,"");
+			} else {
+				resultList.get(0).getPolicyMetaData().setState(PolicyState.inactive);
+				tx.commit();
+				sess.close();
+				return buildResponse(Status.NO_CONTENT,"");
 			}
-			resultList.get(0).getPolicyMetaData().setState(PolicyState.inactive);
-			tx.commit();
-			sess.close();
-			return buildResponse(Status.NO_CONTENT,"");
 		}
 		} catch (Exception e) {
 			tx.rollback();
@@ -381,7 +426,7 @@ public class UserInfoReleasePolicyController {
 		try {
 			config = CopsuUtility.init("putPolicy", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004", LogCriticality.error);
+			return CopsuUtility.locError(500,"ERR0004");
 		}
 
 		//ObjectMapper mapper = new ObjectMapper();  // to handle input JSON
@@ -395,7 +440,7 @@ public class UserInfoReleasePolicyController {
 		} catch (JsonMappingException j) {
 			return CopsuUtility.locError(400, "ERR0006", LogCriticality.info);
 		} catch (Exception e) {
-			return CopsuUtility.locError(500, "ERR0007", LogCriticality.info);
+			return CopsuUtility.locError(500, "ERR0007");
 		}
 		
 		// Input policy is now parsed into inputPolicy
@@ -414,7 +459,7 @@ public class UserInfoReleasePolicyController {
 		//
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018", LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 
 		// We open a transaction since we'll need to make atomic changes here.
@@ -428,17 +473,17 @@ public class UserInfoReleasePolicyController {
 		
 		if (originals == null || originals.isEmpty()) {
 			// The specified policy ID was not found -- this is a fail
-			CopsuUtility.locLog("LOG0006", LogCriticality.debug);
+			CopsuUtility.locDebug("LOG0006");
 			tx.rollback();
 			sess.close();
 			return CopsuUtility.locError(404, "ERR0019", LogCriticality.info);
 		}
 		if (originals.size() > 1) {
 			// This should never happen, but...
-			CopsuUtility.locLog("LOG0007",LogCriticality.debug);
+			CopsuUtility.locDebug("LOG0007");
 			tx.rollback();
 			sess.close();
-			return CopsuUtility.locError(409, "ERR0020",LogCriticality.error);
+			return CopsuUtility.locError(409, "ERR0020",LogCriticality.info);
 		}
 		// we have a single match to move forward with
 		//
@@ -489,7 +534,7 @@ public class UserInfoReleasePolicyController {
 		} catch (Exception e) {
 			tx.rollback();
 			sess.close();
-			return CopsuUtility.locError(500, "ERR0022",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0022");
 		}
 		// Before actually performing the update, check to see that there was a 
 		// significant change in the policy.  Most PUTs of user policies in the wild
@@ -504,7 +549,7 @@ public class UserInfoReleasePolicyController {
 		// It turns out that we can reasonably detect equivalence by comparing JSON representations
 		
 		if (original.getInfoReleasePolicy().toString().contentEquals(inputPolicy.toString())) {
-			CopsuUtility.locLog("LOG0015", LogCriticality.debug, "Skipping update of duplicate user policy");
+			CopsuUtility.locLog("LOG0015", "Skipping update of duplicate user policy");
 			tx.rollback();
 			sess.close();
 			return buildResponse(Status.OK,original.toJSON());
@@ -559,12 +604,12 @@ public class UserInfoReleasePolicyController {
 		}
 		
 		// Close session and return success
-		CopsuUtility.locLog("LOG0008",LogCriticality.info,newPolicy.getPolicyMetaData().getPolicyId().getBaseId(),newPolicy.getPolicyMetaData().getPolicyId().getBaseId());
+		CopsuUtility.locLog("LOG0008",newPolicy.getPolicyMetaData().getPolicyId().getBaseId(),newPolicy.getPolicyMetaData().getPolicyId().getBaseId());
 		sess.close();
 		try {
 			return buildResponse(Status.OK,newPolicy.toJSON());
 		} catch (JsonProcessingException e) {
-			return CopsuUtility.locError(500, "ERR0016",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0016");
 		} 
 		} catch(Exception e) {
 			tx.rollback();
@@ -591,7 +636,7 @@ public class UserInfoReleasePolicyController {
 		try {
 			config = CopsuUtility.init("getPolicy", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500, "ERR0004",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0004");
 		}
 
 		
@@ -605,7 +650,7 @@ public class UserInfoReleasePolicyController {
 		requestedCreatorId = request.getParameter("createdBy");
 		requestedVersion = request.getParameter("policyVersion");
 		
-		CopsuUtility.locLog("LOG0009",LogCriticality.debug,policy_id,requestedVersion,requestedCreatorId);
+		CopsuUtility.locDebug("LOG0009",policy_id,requestedVersion,requestedCreatorId);
 
 		// Based on the request parameters, retrieve the relevant policy from the persistence store
 		// If the policy does not exist in the persistence store, or if no matching policy is found,
@@ -617,7 +662,7 @@ public class UserInfoReleasePolicyController {
 		// Verify that we have the proper driver available
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 
 		
@@ -694,11 +739,11 @@ public class UserInfoReleasePolicyController {
 			// Return a 409 and log search conflict
 			// Close the session...
 			sess.close();
-			return CopsuUtility.locError(409, "ERR0020",LogCriticality.error);
+			return CopsuUtility.locError(409, "ERR0020",LogCriticality.info);
 		} else {
 			// Properly found exactly one result or all versions results for the allPolicies value
 			// return it as JSON array
-			CopsuUtility.locLog("LOG0010",LogCriticality.debug,policy_id,requestedVersion,requestedCreatorId);
+			CopsuUtility.locDebug("LOG0010",policy_id,requestedVersion,requestedCreatorId);
 
 			ListOfReturnedPolicy lorp = new ListOfReturnedPolicy();
 			for (ReturnedPolicy l : resultList) {
@@ -707,7 +752,7 @@ public class UserInfoReleasePolicyController {
 			try {
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (JsonProcessingException j) {
-				return CopsuUtility.locError(500, "ERR0016",LogCriticality.error);
+				return CopsuUtility.locError(500, "ERR0016");
 			} finally {
 				if (sess != null && sess.isOpen()) 
 					sess.close();
@@ -750,7 +795,7 @@ public class UserInfoReleasePolicyController {
 		try {
 			config = CopsuUtility.init("getPolicy", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500, "ERR0004",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0004");
 		}
 
 		// Now we are authorized
@@ -792,7 +837,7 @@ public class UserInfoReleasePolicyController {
 		}
 		
 		// Now we have parsed out parameters -- log the situation
-		CopsuUtility.locLog("LOG0011",LogCriticality.debug,requestedUser,requestedRP,requestedRH);
+		CopsuUtility.locDebug("LOG0011",requestedUser,requestedRP,requestedRH);
 		
 		// And perform the search appropriate to the inputs
 		// We return an array of JSON objects
@@ -801,7 +846,7 @@ public class UserInfoReleasePolicyController {
 		// Verify the driver for the Hibernate sesssion is active
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 
 		
@@ -998,13 +1043,13 @@ public class UserInfoReleasePolicyController {
 							if (sess != null) {
 								sess.close();
 							}
-							return CopsuUtility.locError(500, "ERR0026", LogCriticality.error);
+							return CopsuUtility.locError(500, "ERR0026");
 						}
 					} catch (Exception e) {
 						if (sess != null) {
 							sess.close();
 						}
-						return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+						return CopsuUtility.locError(500, "ERR0016");
 					}
 				} else {
 					// The user has policies, just not one for this RP
@@ -1042,10 +1087,10 @@ public class UserInfoReleasePolicyController {
 							rpl.addPolicy(rpPolicy);
 							return buildResponse(Status.OK, rpl.toJSON());
 						} else {
-							return CopsuUtility.locError(500, "ERR0027", LogCriticality.error);
+							return CopsuUtility.locError(500, "ERR0027");
 						}
 					} catch (Exception e) {
-						return CopsuUtility.locError(500,"ERR0016", LogCriticality.error);
+						return CopsuUtility.locError(500,"ERR0016");
 					}
 				}
 			} else if (!isAllUsers) {
@@ -1068,13 +1113,13 @@ public class UserInfoReleasePolicyController {
 							rpl.addPolicy(createdTemplate);
 							return buildResponse(Status.OK,rpl.toJSON());
 						} else {
-							return CopsuUtility.locError(500, "ERR0028", LogCriticality.error);
+							return CopsuUtility.locError(500, "ERR0028");
 						}
 					} catch (Exception e) {
 						if (sess != null) {
 							sess.close();
 						}
-						return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+						return CopsuUtility.locError(500, "ERR0016");
 					}
 				} else {
 					// User has policies, just not this one -- this case should be impossible.
@@ -1104,7 +1149,7 @@ public class UserInfoReleasePolicyController {
 					try {
 						return buildResponse(Status.OK,list.toJSON());
 					} catch (Exception e) {
-						return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+						return CopsuUtility.locError(500, "ERR0016");
 					} finally {
 						sess.close();
 					}
@@ -1125,7 +1170,7 @@ public class UserInfoReleasePolicyController {
 			try {
 				return buildResponse(Status.OK,list.toJSON());
 			} catch (JsonProcessingException j) {
-				return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+				return CopsuUtility.locError(500, "ERR0016");
 			} finally {
 				sess.close();
 			}

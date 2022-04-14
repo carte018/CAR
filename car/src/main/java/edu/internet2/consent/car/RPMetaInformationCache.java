@@ -60,18 +60,18 @@ public class RPMetaInformationCache {
 	
 	public boolean hasCachedRPMetaInformation(String rhid, String rptype, String rpid) {
 		if (! cache.containsKey(rhid+"|"+rptype+"|"+rpid))
-			CarUtility.locDebugErr("ERR1121",rhid+"|"+rptype+"|"+rpid);
+			CarUtility.locDebug("ERR1121",rhid+"|"+rptype+"|"+rpid);
 		else
-			CarUtility.locDebugErr("ERR1122",rhid+"|"+rptype+"|"+rpid);
+			CarUtility.locDebug("ERR1122",rhid+"|"+rptype+"|"+rpid);
 		return cache.containsKey(rhid+"|"+rptype+"|"+rpid);
 	}
 	
 	public boolean hasCachedRPMetaInformation(String rhid, String rpid) {
 		// return cache.containsKey(rhid+":"+rpid);
 		if (! cache.containsKey(rhid+"|"+rpid))
-			CarUtility.locDebugErr("ERR1121",rhid+"|"+rpid);
+			CarUtility.locDebug("ERR1121",rhid+"|"+rpid);
 		else
-			CarUtility.locDebugErr("ERR1122",rhid+"|"+rpid);
+			CarUtility.locDebug("ERR1122",rhid+"|"+rpid);
 	return cache.containsKey(rhid+"|"+rpid);
 	}
 	

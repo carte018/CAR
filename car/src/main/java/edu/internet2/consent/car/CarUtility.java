@@ -23,6 +23,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -31,8 +32,12 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -74,10 +79,12 @@ import edu.internet2.consent.icm.model.UserReturnedPolicy;
 
 public class CarUtility {
 	
-	private static final Log LOG=LogFactory.getLog(CarUtility.class);
+	private static final Logger LOG=LoggerFactory.getLogger(CarUtility.class);
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static ResourceBundle locCB = ResourceBundle.getBundle("i18n.components",new Locale("en")); // default locale
+	
+	private static HashMap<String,HashMap<String,ReturnedValueMetaInformation>> vihm = new HashMap<String,HashMap<String,ReturnedValueMetaInformation>>();
 	
 	public static CarConfig init(HttpServletRequest request) {
 		
@@ -118,6 +125,12 @@ public class CarUtility {
 		locCB = ResourceBundle.getBundle("i18n.components",new Locale(prefLang(request)));
 		CarUtility.locError("ERR1166", LogCriticality.error,"     init: load preflang bundle for components took " + (System.currentTimeMillis() - curtime) + "ms");
 
+		// Adjust the logger's config'd log level if logLevel is specified in configuration
+		
+		if (config.getProperty("logLevel", false) != null) {
+			((ch.qos.logback.classic.Logger)LOG).setLevel(Level.toLevel(config.getProperty("logLevel", false)));
+		}
+		
 		return(config);
 		
 	}
@@ -183,13 +196,13 @@ public class CarUtility {
 	
 	public static void locDebugErr(String message) {
 		CarConfig config = CarConfig.getInstance();
-		if (config.getProperty("car.logging.debug", false) != null && (config.getProperty("car.logging.debug", false).contentEquals("true") || config.getProperty("logLevel", false).contentEquals("true")))
-			LOG.error("ERROR ecode=" + message + ":" + locRB.getString(message));
+		if (config.getProperty("car.logging.debug", false) != null && (config.getProperty("car.logging.debug", false).contentEquals("true") || config.getProperty("logLevel", false).contentEquals("DEBUG")))
+			LOG.debug("ERROR ecode=" + message + ":" + locRB.getString(message));
 	}
 	public static void locDebugErr(String errcode, String... args) {
 		// Return the Response object to use for na error return with substitution(s).
 		CarConfig config = CarConfig.getInstance();
-		if (config.getProperty("car.logging.debug", false) != null && (config.getProperty("car.logging.debug", false).contentEquals("true") || config.getProperty("logLevel", false).contentEquals("true"))) {
+		if (config.getProperty("car.logging.debug", false) != null && (config.getProperty("car.logging.debug", false).contentEquals("true") || config.getProperty("logLevel", false).contentEquals("DEBUG"))) {
 			String raw = locRB.getString(errcode);
 			if (raw != null && args != null && args.length > 0 && args[0] != null) {
 				for (int i=0; i<args.length; i++) {
@@ -197,7 +210,7 @@ public class CarUtility {
 						raw = raw.replace("{"+i+"}", args[i]);
 				}
 			}
-			LOG.error("ERROR ecode=" + errcode + ": " + raw);
+			LOG.debug("ERROR ecode=" + errcode + ": " + raw);
 		}
 	}
 	
@@ -229,11 +242,28 @@ public class CarUtility {
 	
 	// Normal error logging - now with criticality
 	
+	public static void locError(String message) {
+		locError(message, LogCriticality.error);
+	}
+	
+	public static void locError(String message, String... args) {
+		locError(message, LogCriticality.error, args);
+	}
+	
+	public static void locLog(String message) {
+		locLog(message, LogCriticality.info);
+	}
+	
+	public static void locLog(String message, String... args) {
+		locLog(message, LogCriticality.info, args);
+	}
+	
 	public static void locError(String message, LogCriticality crit) {
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.error(crit.toString().toUpperCase() + " ecode=" + message + ":" + locRB.getString(message));
+		// No longer necessary
+		//if (crit == null)
+		// crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.error(crit.toString().toUpperCase() + " ecode=" + message + ":" + locRB.getString(message));
 	}
 	public static void locError(String errcode, LogCriticality crit, String... args) {
 		// Return the Response object to use for an error return.  With substitution.
@@ -244,17 +274,19 @@ public class CarUtility {
 					raw = raw.replace("{"+i+"}", args[i]);
 			}
 		}
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.error(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
+		// No longer necessary
+		//if (crit == null)
+		// crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.error(crit.toString().toUpperCase() + " ecode=" + errcode + ": " + raw);
 	}
 	
 	public static void locLog(String message, LogCriticality crit) {
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.info(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
+		// No longer necessary
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.info(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
 	}
 	
 	public static void locLog(String errcode, LogCriticality crit, String... args) {
@@ -265,12 +297,43 @@ public class CarUtility {
 					raw = raw.replace("{"+i+"}",  args[i]);
 			}
 		}
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.info(crit.toString().toUpperCase() + " ecode=" +errcode + ":" + raw);
+		// No longer necessary
+		//if (crit == null)
+		// crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.info(crit.toString().toUpperCase() + " ecode=" +errcode + ":" + raw);
 	}
 	
+	public static void locDebug(String message) {
+		locDebug(message, LogCriticality.debug);
+	}
+	
+	public static void locDebug(String message, String... args) {
+		locDebug(message, LogCriticality.debug, args);
+	}
+	
+	public static void locDebug(String message, LogCriticality crit) {
+		// No longer necessary
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.debug(crit.toString().toUpperCase() + " ecode=" + message + ":" + locDB.getString(message));
+	}
+	
+	public static void locDebug(String errcode, LogCriticality crit, String... args) {
+		String raw = locDB.getString(errcode);
+		if (raw != null && args != null && args.length > 0 && args[0] != null) {
+			for (int i=0; i<args.length; i++) {
+				if (args[i] != null) 
+					raw = raw.replace("{"+i+"}",  args[i]);
+			}
+		}
+		// No longer necessary
+		//if (crit == null)
+		// crit = LogCriticality.error;
+		//if (isLog(crit))
+		LOG.debug(crit.toString().toUpperCase() + " ecode=" +errcode + ":" + raw);
+	}
 	public static String getLocalComponent(String key) {
 		return locCB.getString(key);
 	}
@@ -448,7 +511,7 @@ public class CarUtility {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		ReturnedValueMetaInformation retval = getValueMetaInformation(iiid, iivalue, config, httpClient);
@@ -472,7 +535,23 @@ public class CarUtility {
 				return cv.getData();
 			}
 		}
+		
+		// otherwise, we do a somewhat more complicated dance to 
+		// check the static hash table
+		//
+		if (vihm != null && ! vihm.containsKey(iiid)) {
+			// need to get a new one
+			vihm.put(iiid, getValueMetaInformationByII(config,iiid, httpClient));
+		}
+		
+		if (vihm != null && vihm.containsKey(iiid)) {
+			ReturnedValueMetaInformation r = vihm.get(iiid).get(iivalue);
+			vcache.storeCachedValueMetaInformation(iiid, iivalue, r); // cache either way
+			return r;
+		}
+		
 		// otherwise, we do what we always did...
+		// this should *probably* never be reached...
 		
 		String informedhost = config.getProperty("car.informed.hostname", true);
 		String informedport = config.getProperty("car.informed.port",true);
@@ -579,6 +658,62 @@ public class CarUtility {
 		
 	}
 	
+	public static HashMap<String,ReturnedValueMetaInformation> getValueMetaInformationByII(CarConfig config, String iiname, HttpClient httpClient) {
+		
+		HashMap<String,ReturnedValueMetaInformation> rret = new HashMap<String,ReturnedValueMetaInformation>();
+		
+		ArrayList<ReturnedValueMetaInformation> retval = new ArrayList<ReturnedValueMetaInformation>();
+		
+		String informedhost = config.getProperty("car.informed.hostname", true);
+		String informedport = config.getProperty("car.informed.port",true);
+		
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/consent/v1/informed/iiic/valueinformation/");
+		sb.append(iiname);
+		
+		CarUtility.locDebugErr("ERR0072",sb.toString());
+
+		HttpResponse response = null;
+		try {
+			String authzheader = CarUtility.buildAuthorizationHeader(config,"informed");
+			response = CarUtility.sendRequest(httpClient, "GET", informedhost, informedport, sb.toString(), null, authzheader);
+			String rbody = CarUtility.extractBody(response);
+			int status = CarUtility.extractStatusCode(response);
+			
+			if (status >= 300) {
+				try {
+					EntityUtils.consumeQuietly(response.getEntity()); 
+				} catch (Exception x) {
+					// ignore
+				}
+				return rret;
+			}
+			
+			//ObjectMapper om = new ObjectMapper();
+			ObjectMapper om = OMSingleton.getInstance().getOm();
+			retval = (ArrayList<ReturnedValueMetaInformation>) om.readValue(rbody,  new TypeReference<List<ReturnedValueMetaInformation>>() {});
+			
+			// Fold into the hash
+			
+			for (ReturnedValueMetaInformation rmi : retval) {
+				rret.put(rmi.getInfoitemvalue(),rmi);
+			}
+			return rret;
+		} catch (Exception e) {
+			return rret;  // on error, just fail
+		} finally {
+			try {
+			EntityUtils.consumeQuietly(response.getEntity());
+			} catch (Exception e) {
+				// ignore
+			}
+			HttpClientUtils.closeQuietly(response);
+			// Pooling -- leave open for reuse
+			//HttpClientUtils.closeQuietly(httpClient);
+		}
+		
+	}
 	public static ArrayList<InfoItemIdentifier> getRHIIList(RHIdentifier rhid, CarConfig config) {
 		
 		String informedhost = config.getProperty("car.informed.hostname", true);
@@ -597,7 +732,7 @@ public class CarUtility {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -618,11 +753,11 @@ public class CarUtility {
 			if (lr != null)
 				return (ArrayList<InfoItemIdentifier>) lr;
 			else {
-				CarUtility.locError("ERR1132", LogCriticality.info);
+				CarUtility.locLog("ERR1132", LogCriticality.info);
 				return null;
 			}			
 		} catch (Exception e) {
-			CarUtility.locError("ERR1133", LogCriticality.error, rbody);
+			CarUtility.locError("ERR1133", rbody);
 			return null;  // on error, just fail
 		} finally {
 			try {
@@ -650,7 +785,7 @@ public class CarUtility {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -690,7 +825,7 @@ public class CarUtility {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		ReturnedInfoItemMetaInformation retval = getInfoItemMetaInformation(rhid, iivalue, config, httpClient);
@@ -778,7 +913,7 @@ public class CarUtility {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		ReturnedInfoItemMetaInformation retval = getInfoItemMetaInformation(rhid, iitype, iivalue, config, httpClient);
@@ -850,7 +985,7 @@ public class CarUtility {
 					EntityUtils.consumeQuietly(response.getEntity());
 				} catch (Exception x) {
 					// ignore
-					CarUtility.locError("ERR1136", LogCriticality.error,"getInfoItemMetaInformation excepted getting ii metainfo: " + x.getMessage());
+					CarUtility.locDebug("ERR1136","getInfoItemMetaInformation excepted getting ii metainfo: " + x.getMessage());
 				}
 				return null;
 			}
@@ -973,7 +1108,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 		}
 		
 		// Note for posterity
-		CarUtility.locError("ERR1135",LogCriticality.info, value?"true":"false");
+		CarUtility.locLog("ERR1135", value?"true":"false");
 		// and perform the put
 		//HttpClient httpClient = HttpClientBuilder.create().build();
 		HttpClient httpClient = null;
@@ -981,7 +1116,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -991,7 +1126,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			response = CarUtility.sendRequest(httpClient, "PUT", informedhost, informedport, sb.toString(), ujson, authzheader);
 			rbody = CarUtility.extractBody(response);
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", LogCriticality.debug, "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locDebug("ERR0081", "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		} finally {
 			try {
 			EntityUtils.consumeQuietly(response.getEntity());
@@ -1075,7 +1210,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1092,10 +1227,10 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			ObjectMapper om = OMSingleton.getInstance().getOm();
 			ReturnedUserRPMetaInformation lr = om.readValue(rbody, ReturnedUserRPMetaInformation.class);
 			if (lr == null)
-				locError("ERR1116", LogCriticality.info, "serialization returned null ReturnedUserRPMetaInformation");
+				locLog("ERR1116", "serialization returned null ReturnedUserRPMetaInformation");
 			return lr;
 		} catch (Exception e) {
-			locError("ERR1116",LogCriticality.error, e.getMessage());
+			locError("ERR1116", e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			try {
@@ -1116,7 +1251,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		ReturnedRPMetaInformation retval = getRPMetaInformation(iiid, iivalue, config, httpClient);
@@ -1132,7 +1267,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		ReturnedRPMetaInformation retval = getRPMetaInformation(rhid,rptype,rpid,config,httpClient);
@@ -1148,7 +1283,7 @@ public static ArrayList<ReturnedInfoItemMetaInformation> getAllInfoItemMetaInfor
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		ArrayList<ReturnedRPMetaInformation> retval = getRPsForRH(rhtype,rhid,config,httpClient);
@@ -1413,7 +1548,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1431,7 +1566,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody, ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0074", LogCriticality.error, e.getMessage());
+			CarUtility.locError("ERR0074", e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			try {
@@ -1468,7 +1603,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1485,7 +1620,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			ReturnedRPRequiredInfoItemList lr = om.readValue(rbody, ReturnedRPRequiredInfoItemList.class);
 			return lr;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0074", LogCriticality.error, e.getMessage());
+			CarUtility.locError("ERR0074", e.getMessage());
 			return null;  // on error, just fail
 		} finally {
 			try {
@@ -1516,7 +1651,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1574,7 +1709,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1588,7 +1723,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			if (status < 300) 
 				retval = true;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", LogCriticality.debug,  "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locDebug("ERR0081",  "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		} finally {
 			try {
 			EntityUtils.consumeQuietly(response.getEntity());
@@ -1621,7 +1756,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1642,7 +1777,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			retval.addAll(retlist);
 			return retval;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locDebug("ERR0081", "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			try {
@@ -1671,7 +1806,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1691,7 +1826,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 				return null;
 			return retlist.get(0);			
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locDebug("ERR0081", "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			try {
@@ -1724,7 +1859,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1745,7 +1880,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			retval = retlist.get(0);
 			return retval;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", LogCriticality.debug, "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locDebug("ERR0081", "#4 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			try {
@@ -1772,7 +1907,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -1791,7 +1926,7 @@ public static ArrayList<ReturnedRPMetaInformation> getAllRPMetaInformation(CarCo
 			retval = om.readValue(rbody, edu.internet2.consent.arpsi.model.DecisionResponseObject.class);
 			return retval;
 		} catch (Exception e) {
-			CarUtility.locError("ERR0081", LogCriticality.debug, "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+			CarUtility.locDebug("ERR0081", "#3 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 			return null;  // null on any failure
 		} finally {
 			try {
@@ -1822,7 +1957,7 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		httpClient = CarHttpClientFactory.getHttpsClient();
 	} catch (Exception e) {
 		// Log and create a raw client instead
-		CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+		CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 		httpClient = HttpClientBuilder.create().build();
 	}
 	HttpResponse response = null;
@@ -1848,7 +1983,7 @@ public static IcmDecisionResponseObject sendDecisionRequest(String jsonRequest, 
 		//CarUtility.locError("ERR1134", LogCriticality.error,"decision response was: " + rbody);
 		return retval;		
 	} catch (Exception e) {
-		CarUtility.locError("ERR0081", LogCriticality.debug, "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
+		CarUtility.locDebug("ERR0081", "#2 - value was: " + rbody + "Exception strack trace: " + CarUtility.exceptionStacktraceToString(e));
 		return null;  // null on any failure
 	} finally {
 		try {
@@ -1876,7 +2011,7 @@ public static ScopeMapping getScopeMapping(RHIdentifier rhi, InfoItemIdentifier 
 	try {
 		httpClient = CarHttpClientFactory.getHttpsClient();
 	} catch (Exception e) {
-		CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient due to failed client initialization");
+		CarUtility.locDebug("ERR1136","Falling back to default HttpClient due to failed client initialization");
 		httpClient = HttpClientBuilder.create().build();
 	}
 	
@@ -1901,7 +2036,7 @@ public static ScopeMapping getScopeMapping(RHIdentifier rhi, InfoItemIdentifier 
 		ScopeMapping ri = om.readValue(rbody, ScopeMapping.class);
 		return ri;
 	} catch (Exception e) {
-		locError("ERR0006",LogCriticality.error,"Exception message " + e.getMessage());
+		locError("ERR0006","Exception message " + e.getMessage());
 		return null;  // on error, just fail
 	} finally {
 		try {
@@ -1936,7 +2071,7 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		httpClient = CarHttpClientFactory.getHttpsClient();
 	} catch (Exception e) {
 		// Log and create a raw client instead
-		CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+		CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 		httpClient = HttpClientBuilder.create().build();
 	}
 	HttpResponse response = null;
@@ -1989,7 +2124,7 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -2038,7 +2173,7 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		HttpResponse response = null;
@@ -2088,15 +2223,15 @@ public static ReturnedRPOptionalInfoItemList getRPOptionalIIList(String rhid,Str
 		ArrayList<String> retval = new ArrayList<String>();
 		if (source == null || source.isEmpty()) {
 			// no source data?
-			CarUtility.locError("ERR0080",LogCriticality.info);
+			CarUtility.locLog("ERR0080");
 			return retval;
 		}
 		if (target == null || target.isEmpty()) {
 			// If we have nothing to filter with, return the empty list
-			CarUtility.locError("ERR0076",LogCriticality.info);
+			CarUtility.locLog("ERR0076");
 			return(retval);
 		} else {
-			CarUtility.locError("ERR0079",LogCriticality.info,""+source.size(),""+target.size());
+			CarUtility.locLog("ERR0079",""+source.size(),""+target.size());
 		}
 		
 		for (String value : source) {

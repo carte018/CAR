@@ -25,8 +25,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +55,7 @@ public class RPRegistrationController {
 	
     private String sconvo;
     private int convo;
-	private static final Log LOG=LogFactory.getLog(CarAdminUtils.class);
+//	private static final Log LOG=LogFactory.getLog(CarAdminUtils.class);
 
 
     private String generateCSRFToken() {
@@ -1634,12 +1634,12 @@ public class RPRegistrationController {
 		
 		// Collect the RP list
 		//
-		CarAdminUtils.locError("ERR0014",LogCriticality.debug,rhid);
+		CarAdminUtils.locDebug("ERR0014",rhid);
 		ArrayList<ReturnedRPMetaInformation> arpmi = CarAdminUtils.getAllRPsForRH(rhtype, rhid);
 		if (arpmi != null) 
-			CarAdminUtils.locError("ERR0015",LogCriticality.debug,String.valueOf(arpmi.size()));
+			CarAdminUtils.locDebug("ERR0015",String.valueOf(arpmi.size()));
 		else {
-			CarAdminUtils.locError("ERR0015",LogCriticality.debug,"0");
+			CarAdminUtils.locDebug("ERR0015","0");
 			arpmi = new ArrayList<ReturnedRPMetaInformation>();
 		}
 		
@@ -1677,7 +1677,7 @@ public class RPRegistrationController {
 			ObjectMapper om = OMSingleton.getInstance().getOm();
 			retval.addObject("JSON",om.writeValueAsString(irpm));
 		} catch (Exception e) {
-			CarAdminUtils.locError("ERR0018",LogCriticality.error);
+			CarAdminUtils.locError("ERR0018");
 			// continue, but searches will fail
 		}
 		

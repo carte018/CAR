@@ -48,12 +48,14 @@ import edu.internet2.consent.arpsi.model.ReturnedPrecedenceObject;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
 import edu.internet2.consent.arpsi.util.OMSingleton;
 
+import java.math.BigInteger;
+
 @Path("/org-policy-precedence")
 public class OrgPolicyPrecedenceController {
 		@SuppressWarnings("unused")
 		private String caller = "";
-		@SuppressWarnings("unused")
-		private static final Log LOG = LogFactory.getLog(OrgPolicyPrecedenceController.class);
+		//@SuppressWarnings("unused")
+		//private static final Log LOG = LogFactory.getLog(OrgPolicyPrecedenceController.class);
 		
 		
 		// Utility method for internal use only for generating responses in proper format.
@@ -63,7 +65,45 @@ public class OrgPolicyPrecedenceController {
 			return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
 		}
 		
-		
+		// Healthcheck support for decision controller
+		@GET
+		@Path("/healthcheck")
+		public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+			// We do a simple check against the database to verify that we have 
+			// DB access, and then return based on that either 200 or 500.
+			
+			boolean healthy = false;  // unhealthy until proven otherwise
+			
+			Session sess = ArpsiUtility.getHibernateSession();
+			
+			if (sess == null) {
+				return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+			}
+			
+			long c = 0;
+			
+			try {
+				@SuppressWarnings("rawtypes")
+				Query q =  sess.createSQLQuery("select count(1) from dual");
+				c =  ((BigInteger) q.uniqueResult()).longValue();
+				if (c == 1) {
+					healthy = true;
+				}
+			} catch (Exception e) {
+				// ignore
+				return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+
+			} finally {
+				if (sess != null) 
+					sess.close();
+			}
+			
+			if (healthy) 
+				return buildResponse(Status.OK,"");
+			else
+				return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+			
+		}
 		
 		// OPTIONS responder for CORS compliance for the "/" pathed endpoints
 		@OPTIONS
@@ -83,7 +123,7 @@ public class OrgPolicyPrecedenceController {
 			try {
 				config = ArpsiUtility.init("getPolicy", request, headers, null);
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
+				return ArpsiUtility.locError(500,"ERR0004");
 			}
 		
 			// Now we are authorized
@@ -100,7 +140,7 @@ public class OrgPolicyPrecedenceController {
 			// Set up for hibernate request
 			Session sess = ArpsiUtility.getHibernateSession();
 			if (sess == null) {
-				return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
+				return ArpsiUtility.locError(500, "ERR0018");
 			}
 
 			ListOfReturnedPrecedenceObject lorp = new ListOfReturnedPrecedenceObject();
@@ -135,7 +175,7 @@ public class OrgPolicyPrecedenceController {
 					sess.close();
 					return buildResponse(Status.OK,lorp.toJSON());
 				} catch (Exception e) {
-					return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
+					return ArpsiUtility.locError(500, "ERR0016");
 				}
 			}
 			
@@ -159,12 +199,12 @@ public class OrgPolicyPrecedenceController {
 					List<OrgReturnedPolicy> retList = (List<OrgReturnedPolicy>) polQuery.list();
 					// Check for empty or > 1 response
 					if (retList == null || retList.isEmpty()) {
-						ArpsiUtility.locLog("LOG0015",LogCriticality.debug,policyId);
+						ArpsiUtility.locDebug("LOG0015",policyId);
 						// This is loggable but non-fatal
 						continue;
 					}
 					if (retList.size() > 1) {
-						ArpsiUtility.locLog("LOG0003",LogCriticality.debug,policyId);
+						ArpsiUtility.locDebug("LOG0003",policyId);
 						// Loggable but not fatal and we proceed
 					}
 				
@@ -186,7 +226,7 @@ public class OrgPolicyPrecedenceController {
 					sess.close();
 					return buildResponse(Status.OK,lorp.toJSON());
 				} catch (Exception e) {
-					return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
+					return ArpsiUtility.locError(500, "ERR0016");
 				}
 			}
 			
@@ -216,7 +256,7 @@ public class OrgPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
+				return ArpsiUtility.locError(500, "ERR0016");
 			}
 		}
 		
@@ -244,7 +284,7 @@ public class OrgPolicyPrecedenceController {
 			try {
 				config = ArpsiUtility.init("patchPolicy", request, headers, null);
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
+				return ArpsiUtility.locError(500,"ERR0004");
 			}
 
 			
@@ -263,13 +303,13 @@ public class OrgPolicyPrecedenceController {
 			} catch (JsonMappingException e) {
 				return ArpsiUtility.locError(400, "ERR006",LogCriticality.info);
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR007",LogCriticality.error);
+				return ArpsiUtility.locError(500, "ERR007");
 			}
 			
 			// Iterate over the list in a transaction
 			Session sess = ArpsiUtility.getHibernateSession();
 			if (sess == null) {
-				return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
+				return ArpsiUtility.locError(500, "ERR0018");
 			}
 
 			Transaction tx = sess.beginTransaction();
@@ -399,9 +439,14 @@ public class OrgPolicyPrecedenceController {
 			tx.commit();
 			try {
 				sess.close();
+				try {
+					ArpsiUtility.locLog("LOG0021","Policy Reordering Request Processed: " + lorp.toJSON());
+				} catch (Exception e) {
+					// ignore - log at best effort
+				}
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
+				return ArpsiUtility.locError(500, "ERR0016");
 			}
 		
 		}

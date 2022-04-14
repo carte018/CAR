@@ -31,8 +31,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -56,14 +56,51 @@ public class SupportedController {
 	
 	@SuppressWarnings("unused")
 	private String caller="";
-	@SuppressWarnings("unused")
-	private final Log LOG = LogFactory.getLog(RHICController.class);
+	//@SuppressWarnings("unused")
+	//private final Log LOG = LogFactory.getLog(RHICController.class);
 	
 	// Response builder
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST, PUT, DELETE").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
 	}
 	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = InformedUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
+	}
 	// CORS
 	@OPTIONS
 	@Path("/iitypes/")
@@ -156,14 +193,14 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedUtypes", request,  headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR004", LogCriticality.error);
+			return InformedUtility.locError(500, "ERR004");
 		}
 		
 		// Hibernate sesssion
 		
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500,  "ERR0018", LogCriticality.error);
+			return InformedUtility.locError(500,  "ERR0018");
 		}
 		
 		// Get the entire list
@@ -180,7 +217,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(utl));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -197,14 +234,14 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedUtypes", request,  headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR004", LogCriticality.error);
+			return InformedUtility.locError(500, "ERR004");
 		}
 		
 		// Hibernate sesssion
 		
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500,  "ERR0018", LogCriticality.error);
+			return InformedUtility.locError(500,  "ERR0018");
 		}
 		
 		// Get the entire list
@@ -223,7 +260,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(utl.get(0)));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -241,7 +278,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("postSupportedUserTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// parse out the input into an instance
@@ -255,13 +292,13 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.info);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Query<SupportedUserType> checkQuery = sess.createQuery("from SupportedUserType",SupportedUserType.class);
@@ -291,7 +328,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -306,7 +343,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("putSupportedUserTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// parse out the input into an instance
@@ -320,14 +357,14 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Create transaction
@@ -367,7 +404,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -382,13 +419,13 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedLanguages", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -406,7 +443,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -424,13 +461,13 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedLanguages", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -450,7 +487,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -469,7 +506,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedLanguages", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// parse out the input into an instance
@@ -483,13 +520,13 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.info);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Query<SupportedLanguage> checkQuery = sess.createQuery("from SupportedLanguage",SupportedLanguage.class);
@@ -519,7 +556,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -535,7 +572,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedLanguages", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// parse out the input into an instance
@@ -549,14 +586,14 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Create transaction
@@ -596,7 +633,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -614,13 +651,13 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedRPTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -646,7 +683,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retval));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -664,7 +701,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedRPTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Convert
@@ -673,7 +710,7 @@ public class SupportedController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -695,7 +732,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -713,7 +750,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("addSupportedRPType", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// parse out the input into an instance
@@ -727,13 +764,13 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.info);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Query<SupportedRPType> checkQuery = sess.createQuery("from SupportedRPType",SupportedRPType.class);
@@ -763,7 +800,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -778,7 +815,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedRPTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Convert
@@ -787,7 +824,7 @@ public class SupportedController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -810,7 +847,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -829,7 +866,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("putSupportedRPType", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Convert
@@ -846,14 +883,14 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Create transaction
@@ -896,7 +933,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -913,13 +950,13 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedIITypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -945,7 +982,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(retval));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -963,7 +1000,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedIITypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Convert
@@ -972,7 +1009,7 @@ public class SupportedController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018", LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -994,7 +1031,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016", LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -1012,7 +1049,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("addSupportedIIType", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 
@@ -1027,13 +1064,13 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.info);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Query<SupportedIIType> checkQuery = sess.createQuery("from SupportedIIType",SupportedIIType.class);
@@ -1063,7 +1100,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -1078,7 +1115,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedIITypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Convert
@@ -1087,7 +1124,7 @@ public class SupportedController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -1110,7 +1147,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -1129,7 +1166,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("putSupportedIIType", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Convert
@@ -1146,14 +1183,14 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Create transaction
@@ -1196,7 +1233,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -1211,13 +1248,13 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedRHTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004", LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -1235,7 +1272,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -1253,13 +1290,13 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("getSupportedRHTypes", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Query here is for all -- there is no "active" versus "inactive" here.
@@ -1279,7 +1316,7 @@ public class SupportedController {
 				ObjectMapper mapper = OMSingleton.getInstance().getOm();
 				return buildResponse(Status.OK,mapper.writeValueAsString(sll.get(0)));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -1298,7 +1335,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("addSupportedRHType", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// parse out the input into an instance
@@ -1312,13 +1349,13 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.info);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Query<SupportedRHType> checkQuery = sess.createQuery("from SupportedRHType",SupportedRHType.class);
@@ -1348,7 +1385,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016", LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -1364,7 +1401,7 @@ public class SupportedController {
 		try {
 			config = InformedUtility.init("putSupportedRHType", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// parse out the input into an instance
@@ -1378,14 +1415,14 @@ public class SupportedController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Create transaction
@@ -1425,7 +1462,7 @@ public class SupportedController {
 		try {
 			return buildResponse(Status.OK,sl.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 }

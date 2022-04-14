@@ -219,10 +219,10 @@ public class RHRegistrationController {
 					aiii.add(iii);
 					
 					// while we're at it, process those that have changed
-					CarAdminUtils.locError("ERR0033",LogCriticality.debug,formnumber,String.valueOf(i));
+					CarAdminUtils.locDebug("ERR0033",formnumber,String.valueOf(i));
 					if (req.getParameter("ii_modified_"+formnumber+"_"+i) != null && req.getParameter("ii_modified_"+formnumber+"_"+i).equals("true")) {
 						// This one was modified, so update its ii metainfo while we're here
-						CarAdminUtils.locError("ERR0034",LogCriticality.debug);
+						CarAdminUtils.locDebug("ERR0034");
 						ReturnedInfoItemMetaInformation riimi = new ReturnedInfoItemMetaInformation();
 						RHIdentifier rhi = new RHIdentifier();
 						rhi.setRhtype(rhtype);
@@ -564,7 +564,7 @@ public class RHRegistrationController {
 //			return retval;
 		} else if (req.getParameter("formname") != null && req.getParameter("formname").matches("^iiform_.*$")) {
 			// This is an edit form for IIs of some type
-			CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Called to update ii metainformation");
+			CarAdminUtils.locDebug("ERR0049","Called to update ii metainformation");
 			String iitype = req.getParameter("formname");
 			iitype = iitype.replaceAll("^iiform_", "");
 			
@@ -605,17 +605,17 @@ public class RHRegistrationController {
 				if ((req.getParameter("iiasnd_"+i) != null && req.getParameter("iiasnd_"+i).equals("true")) != riimi.getAsnd()) {
 					needsupdate=true;
 					riimi.setAsnd((req.getParameter("iiasnd_"+i) != null && req.getParameter("iiasnd_"+i).equals("true")));
-					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Setting asnd to "+riimi.getAsnd());
+					CarAdminUtils.locDebug("ERR0049","Setting asnd to "+riimi.getAsnd());
 				}
 				if ((req.getParameter("iimultivalued_"+i) != null && req.getParameter("iimultivalued_"+i).equals("true")) != riimi.getMultivalued()) {
 					needsupdate=true;
 					riimi.setMultivalued((req.getParameter("iimultivalued_"+i) != null && req.getParameter("iimultivalued_"+i).equals("true")));
-					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Setting multivalued to " + riimi.getMultivalued());
+					CarAdminUtils.locDebug("ERR0049","Setting multivalued to " + riimi.getMultivalued());
 				}
 				if ((req.getParameter("iisensitive_"+i) != null && req.getParameter("iisensitive_"+i).equals("true")) != riimi.getSensitivity()) {
 					needsupdate=true;
 					riimi.setSensitivity((req.getParameter("iisensitive_"+i) != null && req.getParameter("iisensitive_"+i).equals("true")));
-					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Setting sensitivitivy to " + riimi.getSensitivity());
+					CarAdminUtils.locDebug("ERR0049","Setting sensitivitivy to " + riimi.getSensitivity());
 				}
 				
 				if (needsupdate) {
@@ -627,27 +627,27 @@ public class RHRegistrationController {
 				// if there has.
 				
 				if (riimi.getIiidentifier().getIitype().equals("oauth_scope")) {
-					CarAdminUtils.locError("ERR0049",LogCriticality.debug,"Dealing with oauth_scope: " + riimi.getIiidentifier().getIiid());
+					CarAdminUtils.locDebug("ERR0049","Dealing with oauth_scope: " + riimi.getIiidentifier().getIiid());
 					boolean scopechg = false;
 					ScopeMapping csm = CarAdminUtils.getScopeMapping(riimi.getRhidentifier(), riimi.getIiidentifier());
 					if (csm != null)
-						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Found a ScopeMapping");
+						CarAdminUtils.locDebug("ERR0049","Found a ScopeMapping");
 					ArrayList<String> iniis = new ArrayList<String>();
 					if (req.getParameter("scopecont_"+i) != null) {
-						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"scopecont_"+i+" populated");
+						CarAdminUtils.locDebug("ERR0049","scopecont_"+i+" populated");
 						Collections.addAll(iniis, req.getParameterValues("scopecont_"+i));
 					}
 					if (csm == null && req.getParameter("scopecont_"+i) != null && ! req.getParameter("scopecont_"+i).equals("")) {
 						scopechg = true;
 					} else if (csm != null) {
-						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Comparing " + iniis.toString() + " and " + csm.getInfoitems().toString());
+						CarAdminUtils.locDebug("ERR0049","Comparing " + iniis.toString() + " and " + csm.getInfoitems().toString());
 						if (! iniis.containsAll(csm.getInfoitems()) || ! csm.getInfoitems().containsAll(iniis)) {
 							scopechg = true;
 						}
 					}
 					if (scopechg) {
 						// put a new version out
-						CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Scope definition changed -- updating");
+						CarAdminUtils.locDebug("ERR0049","Scope definition changed -- updating");
 						if (csm == null) {
 							csm = new ScopeMapping();
 							csm.setScopename(riimi.getIiidentifier().getIiid());
@@ -658,7 +658,7 @@ public class RHRegistrationController {
 						CarAdminUtils.putScopeMapping(riimi.getRhidentifier(), riimi.getIiidentifier(), csm);
 					}
 				} else {
-					CarAdminUtils.locError("ERR0049", LogCriticality.debug,"Not a scope: " + riimi.getIiidentifier().getIiid());
+					CarAdminUtils.locDebug("ERR0049","Not a scope: " + riimi.getIiidentifier().getIiid());
 				}
 			} 
 			state = 1;

@@ -34,8 +34,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
@@ -69,14 +69,52 @@ public class IcmInfoReleasePolicyController {
 	@SuppressWarnings("unused")
 	private String caller = "";
 	
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(IcmInfoReleasePolicyController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG = LogFactory.getLog(IcmInfoReleasePolicyController.class);
 	
 	// Utility method for internal use only for generating responses in proper format.
 	// We tack on the headers required for CORS with Swagger.io here automatically
 	// We assume that the caller is setting both status code and entity, so we don't differentiate
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = IcmUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	
@@ -115,7 +153,7 @@ public class IcmInfoReleasePolicyController {
 		try {
 			config = IcmUtility.init("postPolicy", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004", LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}
 
 		// Map the input object into an icm policy
@@ -167,7 +205,7 @@ public class IcmInfoReleasePolicyController {
 
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) { 
-			return IcmUtility.locError(500, "ERR0018", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 		
 		// No duplicate check necessary in the ICM ,since like the ARPSI, it is legal for the ICM to carry the 
@@ -232,9 +270,14 @@ public class IcmInfoReleasePolicyController {
 		sess.close();
 		
 		try {
+			try {
+				IcmUtility.locLog("ERR1137","Created ICM policy: " + irp.getPolicyMetaData().getPolicyId().getBaseId() + ", version " + irp.getPolicyMetaData().getPolicyId().getVersion());
+			} catch (Exception e) {
+				// ignore - best effort logging
+			}
 			return buildResponse(Status.CREATED,irp.toJSON());
 		} catch (JsonProcessingException e) {
-			return IcmUtility.locError(500,"ERR0016", LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0016");
 		}
 	}
 	
@@ -252,7 +295,7 @@ public class IcmInfoReleasePolicyController {
 		try {
 			config = IcmUtility.init("getPolicy", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004", LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}
 
 
@@ -263,7 +306,7 @@ public class IcmInfoReleasePolicyController {
 		
 		if (policy_id == null || policy_id.equals("")) {
 			// Fail
-			return IcmUtility.locError(500, "ERR0008", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0008");
 		}
 		
 		// Check for request parameters
@@ -275,7 +318,7 @@ public class IcmInfoReleasePolicyController {
 
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 		
 		// Determine the prior policy version number in case it's needed
@@ -341,9 +384,10 @@ public class IcmInfoReleasePolicyController {
 				for (IcmReturnedPolicy i : resultList) {
 					lirp.addPolicy(i);
 				}
+				IcmUtility.locLog("ERR1137","Returning ICM Policy: " + policy_id);
 				return buildResponse(Status.OK,lirp.toJSON());
 			} catch (JsonProcessingException j) {
-				return IcmUtility.locError(500, "ERR0016",LogCriticality.error);
+				return IcmUtility.locError(500, "ERR0016");
 			} finally {
 				if (sess != null) 
 					sess.close();
@@ -376,7 +420,7 @@ public class IcmInfoReleasePolicyController {
 		try {
 			config = IcmUtility.init("getPolicy", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004", LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}
 
 
@@ -388,7 +432,7 @@ public class IcmInfoReleasePolicyController {
 		
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 		
 		sess.setHibernateFlushMode(FlushMode.MANUAL);   // we are read only
@@ -435,7 +479,7 @@ public class IcmInfoReleasePolicyController {
 			resultList = (List<IcmReturnedPolicy>) searchQuery.list();
 		} catch (Exception e) {
 			sess.close();
-			return IcmUtility.locError(500, "ERR0052",LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0052");
 		} 
 		
 		
@@ -491,9 +535,14 @@ public class IcmInfoReleasePolicyController {
 		} else {
 			// 200 result
 			try {
+				try {
+					IcmUtility.locDebug("ERR1137","Returning " + retval.getContained().size() + " ICM policies from search request");
+				} catch (Exception e) {
+					// ignore - best effort logging
+				}
 				return buildResponse(Status.OK,retval.toJSON());
 			} catch (Exception e) {
-				return IcmUtility.locError(500,"ERR0016",LogCriticality.error);
+				return IcmUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -515,7 +564,7 @@ public class IcmInfoReleasePolicyController {
 		try {
 			config = IcmUtility.init("putPolicy", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004",LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}
 		
 		//ObjectMapper mapper = new ObjectMapper();
@@ -530,7 +579,7 @@ public class IcmInfoReleasePolicyController {
 		} catch (JsonMappingException j) {
 			return IcmUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0007",LogCriticality.info);
+			return IcmUtility.locError(500, "ERR0007");
 		}
 		
 		// Now we have the input policy
@@ -539,7 +588,7 @@ public class IcmInfoReleasePolicyController {
 
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018",LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 		
 		// Start a transaction
@@ -580,7 +629,7 @@ public class IcmInfoReleasePolicyController {
 		} catch (Exception e) {
 			tx.rollback();
 			sess.close();
-			return IcmUtility.locError(500,"ERR0022",LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0022");
 		}
 		
 		// Update createTime
@@ -616,9 +665,14 @@ public class IcmInfoReleasePolicyController {
 		tx.commit();
 				
 		try {
+			try {
+				IcmUtility.locLog("ERR1137","Updated ICM policy: " + policy_id);
+			} catch (Exception e) {
+				// ignore - best effort log
+			}
 			return buildResponse(Status.OK,newPolicy.toJSON());
 		} catch (JsonProcessingException e) {
-			return IcmUtility.locError(500,"ERR0016",LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0016");
 		} finally {
 			sess.close();
 		}
@@ -634,7 +688,7 @@ public class IcmInfoReleasePolicyController {
 		try {
 			config = IcmUtility.init("deletePolicy", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004",LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}
 		
 
@@ -645,7 +699,7 @@ public class IcmInfoReleasePolicyController {
 		
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018",LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 		Transaction tx = sess.beginTransaction();
 		
@@ -671,6 +725,7 @@ public class IcmInfoReleasePolicyController {
 			resultList.get(0).getPolicyMetaData().setState(PolicyState.inactive);
 			tx.commit();
 			sess.close();
+			IcmUtility.locLog("ERR1137","Deleted ICM policy: " + policy_id);
 			return buildResponse(Status.NO_CONTENT,"");
 		}
 	}

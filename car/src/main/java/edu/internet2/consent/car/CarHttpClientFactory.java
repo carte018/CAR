@@ -81,7 +81,7 @@ public class CarHttpClientFactory {
 			// watcher.join(100);  // or if you do , only wait 100ms for completion
 		} catch (Exception e) {
 			// On exception fall through and allow the failure to trigger a downstream exception
-			CarUtility.locError("ERR1136", LogCriticality.error,e.getMessage());
+			CarUtility.locError("ERR1136",e.getMessage());
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class CarHttpClientFactory {
 		if (client != null) {
 			return client;
 		}
-		CarUtility.locError("ERR1136", LogCriticality.error,"Failed retrieving client from factory");
+		CarUtility.locError("ERR1136","Failed retrieving client from factory");
 		throw new RuntimeException("Failed retrieving client from SSL connection factory");
 	}
 	

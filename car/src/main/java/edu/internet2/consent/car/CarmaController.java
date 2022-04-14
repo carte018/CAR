@@ -67,6 +67,9 @@ import edu.internet2.consent.icm.model.ValueObject;
 import edu.internet2.consent.icm.model.WhileImAwayDirective;
 import edu.internet2.consent.informed.model.InfoItemIdentifier;
 import edu.internet2.consent.informed.model.InfoItemValueList;
+import edu.internet2.consent.informed.model.InternationalizedString;
+import edu.internet2.consent.informed.model.LocaleString;
+import edu.internet2.consent.informed.model.RHIdentifier;
 import edu.internet2.consent.informed.model.RPIdentifier;
 import edu.internet2.consent.informed.model.ReturnedInfoItemMetaInformation;
 import edu.internet2.consent.informed.model.ReturnedRHMetaInformation;
@@ -139,6 +142,8 @@ public class CarmaController {
 	public ModelAndView dumpHeaders(HttpServletRequest req) {
 		ModelAndView retval = new ModelAndView("errorPage");
 		retval.addObject("message",getUserInfo(req).toString());
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		return retval;
 	}
 	
@@ -179,6 +184,8 @@ public class CarmaController {
 		if (baseId == null) {
 			ModelAndView e = new ModelAndView("errorPage");
 			e.addObject("message", CarUtility.getLocalComponent("missing_baseid"));
+			e.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			e.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return e;
 		}
 		
@@ -192,12 +199,17 @@ public class CarmaController {
 		} catch (Exception e) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("unable_user") + ": " + baseId);
+			err.addObject("transient","true");
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		
 		if (! policyUser.equalsIgnoreCase(req.getRemoteUser())) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("logged_user") + ": " + req.getRemoteUser() + " does not match owner of policy: " + policyUser);
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		
@@ -207,6 +219,8 @@ public class CarmaController {
 		if (sconvo == null) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("missing_convo"));
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		HttpSession sess = req.getSession(false);
@@ -214,6 +228,8 @@ public class CarmaController {
 			// CSRF failure
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("csrf_fail"));
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 
@@ -339,7 +355,7 @@ public class CarmaController {
 		
 		// Now we add the tourist information (whileImAway and allOtherInfo)
 		newPolicy.setWhileImAwayDirective(WhileImAwayDirective.valueOf(req.getParameter("whileImAway")));
-		CarUtility.locError("ERR1118",LogCriticality.debug,"whileImAway",req.getParameter("whileImAway"));
+		CarUtility.locDebug("ERR1118","whileImAway",req.getParameter("whileImAway"));
 		UserAllOtherInfoReleaseStatement uaoirs = new UserAllOtherInfoReleaseStatement();
 		edu.internet2.consent.icm.model.AllOtherInfoId aoii = new edu.internet2.consent.icm.model.AllOtherInfoId();
 		aoii.setAllOtherInfoType(AllOtherInfoTypeConst.allOtherInfoType);
@@ -348,7 +364,7 @@ public class CarmaController {
 		UserDirectiveAllOtherValues udaov = new UserDirectiveAllOtherValues();
 		udaov.setAllOtherValues(AllOtherValuesConst.allOtherValues);
 		udaov.setUserReleaseDirective(UserReleaseDirective.valueOf(req.getParameter("allOtherInfo")));
-		CarUtility.locError("ERR1118",LogCriticality.debug,"allOtherInfo",req.getParameter("allOtherInfo"));
+		CarUtility.locDebug("ERR1118","allOtherInfo",req.getParameter("allOtherInfo"));
 		uaoirs.setUserDirectiveAllOtherValues(udaov);
 		newPolicy.setUserAllOtherInfoReleaseStatement(uaoirs);
 				
@@ -357,6 +373,12 @@ public class CarmaController {
 		for (int i = 0; i < 5 && !succ; i++) {
 			if (CarUtility.putCOPSUPolicy(baseId, newPolicy, config))
 				succ = true;
+		}
+		if (succ) {
+			if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+				CarUtility.locLog("ERR1134", "Updated copsu policy " + baseId + " for " + newPolicy.getUserId().getUserValue() + "," + newPolicy.getRelyingPartyId().getRPvalue());
+			else
+				CarUtility.locLog("ERR1134", "Updated copsu policy " + baseId);
 		}
 		
 		// And record the showagain state again 
@@ -367,6 +389,9 @@ public class CarmaController {
 		String userValue = newPolicy.getUserId().getUserValue();
 		
 		CarUtility.setShowAgain(userType, userValue, rpid, "true".equals(req.getParameter("showagain"))?true:false, config);
+		if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+			CarUtility.locLog("ERR1134","Showagain set to " + req.getParameter("showagain") + " for " + userValue + "," + rpid);
+
 		/*
 		// Try the retrieval approach
 		urpmi = CarUtility.getUserRPMetaInformation(rpid, userType, userValue, config);
@@ -414,6 +439,8 @@ public class CarmaController {
 		if (baseId == null || baseId.equals("")) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("empty_policy_fail"));
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		
@@ -436,6 +463,9 @@ public class CarmaController {
 		if (urp == null) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message","Policy ID: " + baseId + CarUtility.getLocalComponent("not_found"));
+			err.addObject("transient","true");
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 
@@ -447,12 +477,16 @@ public class CarmaController {
 		} catch (Exception e) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("retrieve_user_fail") + ": " + baseId);
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		
 		if (! policyUser.equalsIgnoreCase(user)) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("logged_user") + " " + user + CarUtility.getLocalComponent("user_match_fail") + ": " + policyUser);
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		
@@ -583,6 +617,40 @@ public class CarmaController {
 		// Marshall rp metainformation
 		ReturnedRPMetaInformation rpmi = CarUtility.getRPMetaInformation(rhid, rptype, rpid, config);
 		
+		// Potential exists for there to be *no* rpmi at this point, since
+		// we now support viewing/editing user policies over RPs that 
+		// are not registered.  Construct the faux rpmi to support the 
+		// edit template.
+		boolean unregRP = false;
+		if (rpmi == null) {
+			unregRP = true;
+			rpmi = new ReturnedRPMetaInformation();
+			rpmi.setDefaultshowagain("true");  // for unrecognized RPs, default to showagain
+			RHIdentifier rh = new RHIdentifier();
+			rh.setRhid(rhid);
+			rh.setRhtype(rhtype);
+			rpmi.setRhidentifier(rh);
+			RPIdentifier ri = new RPIdentifier();
+			ri.setRpid(rpid);
+			ri.setRptype(rptype);
+			rpmi.setRpidentifier(ri);
+			ArrayList<ReturnedRPProperty> arp = new ArrayList<ReturnedRPProperty>();
+			ReturnedRPProperty rp = new ReturnedRPProperty();
+			rp.setRppropertyname("entityId");
+			rp.setRppropertyvalue(rpid);
+			arp.add(rp);
+			rpmi.setRpproperties(arp);
+			InternationalizedString di = new InternationalizedString();
+			String pl = CarUtility.prefLang(req);
+			ArrayList<LocaleString> als = new ArrayList<LocaleString>();
+			LocaleString ls = new LocaleString();
+			ls.setLocale(pl);
+			ls.setValue(rpid);
+			als.add(ls);
+			di.setLocales(als);
+			rpmi.setDisplayname(di);
+			rpmi.setDescription(di);
+		}
 		// And inject it
 		retval.addObject("rpMetaInformation",rpmi);
 		
@@ -683,6 +751,87 @@ public class CarmaController {
 				iiset.put(ipv.getInfoId().getInfoValue(),ipv);
 			}
 		}
+		
+		// Special casing for unregistered RPs (where both rpoii and rprii are null)
+		
+		if (unregRP) {
+			// construct II/valuelist list directly from user policy definition
+			// Make everything "required" in this context, and make rpoii empty
+			if (rpoii == null) {
+				rpoii = new ReturnedRPOptionalInfoItemList();
+				rpoii.setOptionallist(new ArrayList<InfoItemValueList>());
+			}
+			if (rprii == null) {
+				rprii = new ReturnedRPRequiredInfoItemList();
+			}
+				
+			ArrayList<UserInfoReleaseStatement> auir = (ArrayList<UserInfoReleaseStatement>)urp.getUserInfoReleasePolicy().getArrayOfInfoReleaseStatement();
+			for (UserInfoReleaseStatement us : auir) {
+				edu.internet2.consent.arpsi.model.InfoIdPlusValues ivec = new edu.internet2.consent.arpsi.model.InfoIdPlusValues();
+				InfoItemValueList il = new InfoItemValueList();
+				InfoItemIdentifier ni = new InfoItemIdentifier();
+				ni.setIiid(us.getInfoId().getInfoValue());
+				ni.setIitype(us.getInfoId().getInfoType());
+				il.setInfoitemidentifier(ni);
+				edu.internet2.consent.arpsi.model.InfoId aid = new edu.internet2.consent.arpsi.model.InfoId();
+				aid.setInfoType(us.getInfoId().getInfoType());
+				aid.setInfoValue(us.getInfoId().getInfoValue());
+				ivec.setInfoId(aid);
+				ArrayList<String> vs = new ArrayList<String>();
+				for (UserDirectiveOnValues ud : us.getArrayOfDirectiveOnValues()) {
+					for (ValueObject vo : ud.getValueObjectList()) {
+						vs.add(vo.getValue());
+						if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo",false)))
+							CarUtility.locDebug("ERR1134","Added value " + vo.getValue() + " to " + ni.getIiid() + " for " + user + "," + rpid + " in getEditPolicy");
+					}
+				}
+				ivec.setInfoItemValues(vs);
+				iiset.put(ni.getIiid(), ivec);
+			}
+			CarUtility.locDebug("ERR1134","Faux RP RH is " + urp.getUserInfoReleasePolicy().getResourceHolderId().getRHType() + ":" + urp.getUserInfoReleasePolicy().getResourceHolderId().getRHValue() + " in getEditPolicy");
+			if (rprii.getRequiredlist() == null) {
+				// faux the rprii info
+				RHIdentifier frhi = new RHIdentifier();
+				frhi.setRhid(urp.getUserInfoReleasePolicy().getResourceHolderId().getRHValue());
+				frhi.setRhtype(urp.getUserInfoReleasePolicy().getResourceHolderId().getRHType());
+				rprii.setRhidentifier(frhi);
+				RPIdentifier frpi = new RPIdentifier();
+				frpi.setRpid(urp.getUserInfoReleasePolicy().getRelyingPartyId().getRPvalue());
+				frpi.setRptype(urp.getUserInfoReleasePolicy().getRelyingPartyId().getRPtype());
+				rprii.setRpidentifier(frpi);
+				ArrayList<InfoItemValueList> aivl = new ArrayList<InfoItemValueList>();
+				for (String k : iiset.keySet()) {
+					edu.internet2.consent.arpsi.model.InfoIdPlusValues ivec = iiset.get(k);
+					InfoItemValueList il = new InfoItemValueList();
+					InfoItemIdentifier i = new InfoItemIdentifier();
+					i.setIiid(ivec.getInfoId().getInfoValue());
+					i.setIitype(ivec.getInfoId().getInfoType());
+					il.setInfoitemidentifier(i);
+					il.setSourceitemname(i.getIiid());
+					il.setValuelist(ivec.getInfoItemValues());
+					aivl.add(il);
+					
+					// And cons the DisplayName for the info item, since it 
+					// will not have been set above
+					ReturnedInfoItemMetaInformation iimi = CarUtility.getInfoItemMetaInformation(rhid,  ivec.getInfoId().getInfoValue(),  config);
+					if (iimi != null && iimi.getDisplayname() != null) {
+						adisp.put(ivec.getInfoId().getInfoValue(),CarUtility.localize(iimi.getDisplayname(),preflang));						
+					} else {
+						adisp.put(ivec.getInfoId().getInfoValue(),ivec.getInfoId().getInfoValue());
+					}
+					
+					// Similarly, policytype (defaulting to PEV)
+					if (iimi != null && iimi.getPolicytype() != null) {
+						policytype.put(ivec.getInfoId().getInfoValue(),iimi.getPolicytype());
+					} else {
+						policytype.put(ivec.getInfoId().getInfoValue(),"PEV");
+					}
+					
+				}
+				rprii.setRequiredlist(aivl);
+			}
+			
+		}
 
 		// Now we have the relevant attribute descriptions (with associated value specifications) on a per attribute basis
 		// for this relying party.  We need to construct the set of actual values in play that meet the release 
@@ -707,12 +856,12 @@ public class CarmaController {
 						httpMap.put(iiid.getIiid(), riimi.getHttpHeader());
 					}
 				} else {
-					CarUtility.locError("ERR1130",LogCriticality.info,iiid.getIiid() + " under " + rhidentifier.getRhid());
+					CarUtility.locDebug("ERR1130",iiid.getIiid() + " under " + rhidentifier.getRhid());
 				}
 				
 			}
 		} else {
-			CarUtility.locError("ERR1131",LogCriticality.info,rhidentifier.getRhtype() + "," + rhidentifier.getRhid());
+			CarUtility.locDebug("ERR1131",rhidentifier.getRhtype() + "," + rhidentifier.getRhid());
 		}
 		
 		// Then construct the set of values
@@ -753,6 +902,16 @@ public class CarmaController {
 					ivalmap.put(iiname,  l);
 				}
 			}
+			
+			// And now add any values for infoitems not present in 
+			// the user's login context for the self service app or
+			// that are recorded in the policy but not in the user's 
+			// login context.  This takes care of non-attribute cases
+			// such as capability-bound oauth tokens as well as cases 
+			// where the self-service interface does not use the same 
+			// identity base as one of its supported RH/RP pairs.
+			//
+			
 		}
 		
 		retval.addObject("ivalmap",ivalmap);
@@ -828,7 +987,8 @@ public class CarmaController {
 						for (String reg : subl.getValuelist()) {
 							if (v.matches(reg)) {
 								matters=true;
-								CarUtility.locError("ERR0810",LogCriticality.debug,v,i,reg,"optional");
+								if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+									CarUtility.locDebug("ERR0810",v,i,reg,"optional");
 								break outer3;
 							}
 						}
@@ -838,16 +998,17 @@ public class CarmaController {
 					outer4: for (InfoItemValueList subl : rprii.getRequiredlist()) {
 						if (subl.getInfoitemidentifier().getIiid().equals(i)) {
 							for (String reg : subl.getValuelist()) {
-								if (v.matches(reg)) {
+								if (v.matches(reg)) { 
 									matters=true;
-									CarUtility.locError("ERR0810",LogCriticality.debug,v,i,reg,"required");
+									if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+										CarUtility.locDebug("ERR0810",v,i,reg,"required");
 									break outer4;
 								}
 							}
 						}
 					}
 				}
-				if (matters) {
+				if (matters) {  
 					iipv.getInfoItemValues().add(v);
 				}
 			}
@@ -986,7 +1147,8 @@ public class CarmaController {
 			String ii = iipv.getInfoId().getInfoValue();
 			ArrayList<String> dispAdded = new ArrayList<String>();
 			for (String v : iipv.getInfoItemValues()) {
-				CarUtility.locError("ERR1134",LogCriticality.debug,"value processing: " + v + " for " + ii);
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR1134","value processing: " + v + " for " + ii);
 				// for every ii/value pair
 				InjectedInfoItem j = new InjectedInfoItem();
 				j.setDisplayName(adisp.get(ii));
@@ -1256,6 +1418,8 @@ public class CarmaController {
 		if (sconvo == null) {
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("missing_convo"));
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		HttpSession sess = req.getSession(false);
@@ -1263,6 +1427,8 @@ public class CarmaController {
 			// CSRF failure
 			ModelAndView err = new ModelAndView("errorPage");
 			err.addObject("message",CarUtility.getLocalComponent("csrf_fail"));
+			err.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			err.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return err;
 		}
 		
@@ -1314,11 +1480,19 @@ public class CarmaController {
 			
 			String baseid = CarUtility.postCOPSUPolicy(json, config);
 			if (baseid == null) {
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locLog("ERR1134","Failed attempt to add site " + u.getRelyingPartyId().getRPvalue() + " for " + userid);
 				return new ModelAndView("redirect:/carma/selfservice/addsite?error=Unable to add site policy");
 			} else {
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locLog("ERR1134","Added site " + u.getRelyingPartyId().getRPvalue() + " for " + userid);
 				return new ModelAndView("redirect:/carma/editpolicy?baseId="+baseid);
 			}
 		} catch (Exception e) {
+			if ("true".equalsIgnoreCase(config.getProperty("logSensitivity", false)))
+				CarUtility.locError("ERR1134","Exception adding site for " + userid + ": " + e.getMessage());
+			else
+				CarUtility.locError("ERR1134","Exception adding a site: " + e.getMessage());
 			return new ModelAndView("redirect:/carma/selfservice/addsite?error=Unable to add site policy");
 		}
 	}
@@ -1493,7 +1667,38 @@ public class CarmaController {
 				String rptype = urp.getUserInfoReleasePolicy().getRelyingPartyId().getRPtype();
 				ReturnedRPMetaInformation rpmi = CarUtility.getRPMetaInformation(rhid, rptype, rpid, config);
 				if (rpmi == null) {
-					continue;
+					// Now we construct a faux metainfo from the existing
+					// user policy information, just to permit users to 
+					// view and manipulate their policies for non-registered
+					// RPs.
+					// But not for the newRPTemplate
+					if (rpid.equalsIgnoreCase("newRPTemplateValue")) 
+						continue;  // ignore newRPTemplate here -- that's another view
+					rpmi = new ReturnedRPMetaInformation();
+					rpmi.setDefaultshowagain("true");  // for unrecognized RPs, default to showagain 
+					rpmi.setRhidentifier(rhi.getRhidentifier());
+					RPIdentifier ri = new RPIdentifier();
+					ri.setRpid(rpid);
+					ri.setRptype(rptype);
+					rpmi.setRpidentifier(ri);
+					ArrayList<ReturnedRPProperty> arp = new ArrayList<ReturnedRPProperty>();
+					ReturnedRPProperty rp = new ReturnedRPProperty();
+					rp.setRppropertyname("entityId");
+					rp.setRppropertyvalue(rpid);
+					arp.add(rp);
+					rpmi.setRpproperties(arp);
+					InternationalizedString di = new InternationalizedString();
+					String pl = CarUtility.prefLang(req);
+					ArrayList<LocaleString> als = new ArrayList<LocaleString>();
+					LocaleString ls = new LocaleString();
+					ls.setLocale(pl);
+					ls.setValue(rpid);
+					als.add(ls);
+					di.setLocales(als);
+					rpmi.setDisplayname(di);
+					rpmi.setDescription(di);
+					
+					// continue; // Now we use a faux rpmi to continue
 				}
 				if (rpmi.getDisplayname() != null) {
 					iup.setRpName(CarUtility.localize(rpmi.getDisplayname(),preflang));
@@ -1597,6 +1802,9 @@ public class CarmaController {
 		if (rhmil == null) {
 			ModelAndView error = new ModelAndView("errorPage");
 			error.addObject("message","Unable to retrieve RH list");
+			error.addObject("transient","true");
+			error.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			error.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return(error);
 		}
 		
@@ -1808,15 +2016,15 @@ public class CarmaController {
 		String ut = config.getProperty("car.userIdentifier", false);
 		if (ut == null) {
 			u.setUserType("eduPersonPrincipalName");
-			CarUtility.locError("ERR1134",LogCriticality.debug,"set User Type to default (eduPersonPrincipalName)");
+			CarUtility.locDebug("ERR1134","set User Type to default (eduPersonPrincipalName)");
 
 		} else {
 			u.setUserType(ut);
-			CarUtility.locError("ERR1134",LogCriticality.debug,"UserType from config is " + ut);
+			CarUtility.locDebug("ERR1134","UserType from config is " + ut);
 		}
 		u.setUserValue(request.getRemoteUser());
 		UserReturnedPolicy newRPPolicy = CarUtility.getNewRPTemplate(u, config);
-		CarUtility.locError("ERR1134",LogCriticality.debug,"Retrieved policy.");
+		CarUtility.locDebug("ERR1134","Retrieved policy.");
 		String newRPBaseId = newRPPolicy.getPolicyMetaData().getPolicyId().getBaseId();
 		
 		constructedPolicy.setDescription("Default policy for NewRPTemplate");
@@ -1895,13 +2103,16 @@ public class CarmaController {
 		} catch (Exception e) {
 			ModelAndView model = new ModelAndView("errorPage");
 			model.addObject("Failed to serialize new RP template for storage");
+			model.addObject("transient","true");
+			model.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			model.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return model;
 		}
 		
 		//CarUtility.postCOPSUPolicy(entity, config);
 		CarUtility.putCOPSUPolicy(newRPBaseId, constructedPolicy, config);
-		
-		CarUtility.locError("ERR1134",LogCriticality.info,"newRPPolicy JSON is: " + entity);
+		if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+			CarUtility.locLog("ERR1134","newRPPolicy JSON for " + request.getRemoteUser() + " is: " + entity);
 		return new ModelAndView("redirect:new_rp?success=Preferences Updated");
 			
 	}

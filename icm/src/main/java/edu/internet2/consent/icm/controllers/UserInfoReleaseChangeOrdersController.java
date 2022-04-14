@@ -29,13 +29,15 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import edu.internet2.consent.icm.cfg.IcmConfig;
 import edu.internet2.consent.icm.model.LogCriticality;
@@ -52,8 +54,8 @@ public class UserInfoReleaseChangeOrdersController {
 	
 	@SuppressWarnings("unused")
 	private String caller = "";
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(UserInfoReleaseChangeOrdersController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG = LogFactory.getLog(UserInfoReleaseChangeOrdersController.class);
 	
 	// Utility method for internal use only for generating responses in proper format.
 	// We tack on the headers required for CORS with Swagger.io here automatically
@@ -62,6 +64,43 @@ public class UserInfoReleaseChangeOrdersController {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
 	}
 	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = IcmUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
+	}
 	
 
 	// Attempt to avoid remapping in the change order case.
@@ -102,7 +141,7 @@ public class UserInfoReleaseChangeOrdersController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -115,11 +154,16 @@ public class UserInfoReleaseChangeOrdersController {
 			int status = IcmUtility.extractStatusCode(response);
 			
 			// Literal pass-thru in this case
+			try {
+				IcmUtility.locDebug("ERR1137","Returning ChangeOrder " + change_order);
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.fromStatusCode(status),rbody);
 			
 
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0064",LogCriticality.error,e.getMessage());
+			return IcmUtility.locError(500, "ERR0064",e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
@@ -159,10 +203,15 @@ public class UserInfoReleaseChangeOrdersController {
 			response = IcmUtility.forwardRequest(httpClient, "GET",  copsuHost,  copsuPort,  sb.toString(), request, null);
 			String rbody = IcmUtility.extractBody(response);
 			int status = IcmUtility.extractStatusCode(response);
+			try {
+				IcmUtility.locDebug("ERR1137","Returning ChangeOrder search responses");
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.fromStatusCode(status),rbody);
 		
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0064", LogCriticality.error, e.getMessage());
+			return IcmUtility.locError(500, "ERR0064", e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
@@ -190,7 +239,7 @@ public class UserInfoReleaseChangeOrdersController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -200,9 +249,14 @@ public class UserInfoReleaseChangeOrdersController {
 			response = IcmUtility.forwardRequest(httpClient, "POST", copsuHost, copsuPort, sb.toString(), request, entity);
 			String rbody = IcmUtility.extractBody(response);
 			int status = IcmUtility.extractStatusCode(response);
+			try {
+				IcmUtility.locLog("Created Change Order: " + rbody);
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.fromStatusCode(status),rbody);
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0064", LogCriticality.error, e.getMessage());
+			return IcmUtility.locError(500, "ERR0064", e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);

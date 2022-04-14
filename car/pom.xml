@@ -41,7 +41,8 @@
 		</dependency>	
 		
 		<!-- Logging -->
-		<dependency>
+		<!--  Switching to logback with SLF4J in front and log4j and jcl compat -->
+		<!-- <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${org.slf4j-version}</version>
@@ -57,7 +58,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j-version}</version>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> -->
 		<!-- <dependency>
 	 		<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -82,17 +83,34 @@
 			</exclusions>
 			<scope>runtime</scope>
 		</dependency> -->
-		 <dependency>
+	<!-- 	 <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
-    <version>2.11.2</version>
-  </dependency>
+    <version>2.16.0</version>
+  </dependency> 
   <dependency>
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
-    <version>2.11.2</version>
-  </dependency>
-
+    <version>2.16.0</version>
+  </dependency> -->
+  <!--  slf4j via logback and compat for jcl and log4j -->
+  <!-- SLF4J and commons-logging/log4j interface libraries -->
+    <dependency> 
+ 	 <groupId>ch.qos.logback</groupId>
+  	 <artifactId>logback-classic</artifactId>
+  	 <version>1.2.8</version>
+	</dependency>
+	<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>jcl-over-slf4j</artifactId>
+    <version>1.7.32</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.slf4j</groupId>
+	  <artifactId>log4j-over-slf4j</artifactId>
+	  <version>1.7.32</version>
+	</dependency>
+	<!--  end SLF4J dependencies -->
 		<!-- @Inject -->
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -136,6 +154,13 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.6</version>
+			    <!-- Block inclusion of commons-logging -->
+    <exclusions>
+    <exclusion>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+    </exclusion>
+    </exclusions>  <!--  end block inclusion -->
 		</dependency>
    <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -157,11 +182,12 @@
     	<artifactId>jsr311-api</artifactId>
     	<version>1.1.1</version>
     </dependency> -->
-     <dependency>
+    <!--  Remove commons-logging for SLF4J with jcl compat -->
+     <!--  <dependency>
     	<groupId>commons-logging</groupId>
     	<artifactId>commons-logging</artifactId>
     	<version>1.2</version>
-    </dependency>
+    </dependency> -->
     <dependency>
     	<groupId>com.fasterxml.jackson.core</groupId>
     	<artifactId>jackson-databind</artifactId>
@@ -207,6 +233,12 @@
 	<groupId>org.apache.velocity</groupId>
 	<artifactId>velocity-tools</artifactId>
 	<version>2.0</version>
+	<exclusions>
+	  <exclusion>
+	    <groupId>commons-logging</groupId>
+	    <artifactId>commons-logging</artifactId>
+	  </exclusion>
+	</exclusions>
 	</dependency>
 	<dependency>
 	<groupId>org.hibernate</groupId>

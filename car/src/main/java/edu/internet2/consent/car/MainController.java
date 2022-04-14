@@ -36,6 +36,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -215,16 +216,16 @@ public class MainController {
                     
                 } else {
                 	// RSA public key retrieval failed
-                	CarUtility.locError("ERR1109",LogCriticality.error);
+                	CarUtility.locError("ERR1109");
                 	return null;
                 }
 			} else {
 				// RSA private key for us failed retrieval
-				CarUtility.locError("ERR1110", LogCriticality.error);
+				CarUtility.locError("ERR1110");
 				return null;
 			}
 		} catch (Exception e) {
-			CarUtility.locError("ERR1111",LogCriticality.error,e.getMessage());
+			CarUtility.locError("ERR1111",e.getMessage());
 			return null;
 		} finally {
 			Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
@@ -248,7 +249,7 @@ public class MainController {
 			jwe = JWEObject.parse(b64input);
 		} catch (Exception e) {
 			// On exception, return null
-			CarUtility.locError("ERR1101", LogCriticality.error);
+			CarUtility.locError("ERR1101");
 			return null;
 		}
 		
@@ -293,13 +294,13 @@ public class MainController {
                             	Date exp = jcs.getDateClaim("exp");
                             	if (System.currentTimeMillis() > exp.getTime()) {
                             		// Expired
-                            		CarUtility.locError("ERR1107",LogCriticality.info, String.valueOf(exp),String.valueOf(new Date(System.currentTimeMillis())));
+                            		CarUtility.locLog("ERR1107", String.valueOf(exp),String.valueOf(new Date(System.currentTimeMillis())));
                             		return null;
                             	}
                             	Date iat = jcs.getDateClaim("iat");
                             	if (System.currentTimeMillis() < (iat.getTime() - 300000)) {
                             		// Issued in future > 5 minutes
-                            		CarUtility.locError("ERR1108",LogCriticality.info, String.valueOf(iat), String.valueOf(new Date(System.currentTimeMillis())));;
+                            		CarUtility.locLog("ERR1108", String.valueOf(iat), String.valueOf(new Date(System.currentTimeMillis())));;
                             		return null;
                             	}
                             	String b64 = jcs.getStringClaim("request");
@@ -325,22 +326,22 @@ public class MainController {
                         			retval = w.getRequest();
                         			return retval;
                         		} catch (Exception e) {
-                        			CarUtility.locError("ERR1104", LogCriticality.error, e.getMessage());
+                        			CarUtility.locError("ERR1104", e.getMessage());
                         			return null;
                         		}
                             } else {
                             	// verification failure
-                            	CarUtility.locError("ERR1105",LogCriticality.error);
+                            	CarUtility.locError("ERR1105");
                             	return null;
                             }
                     } else {
                     	// key retrieval failed
-                    	CarUtility.locError("ERR1106",LogCriticality.error);
+                    	CarUtility.locError("ERR1106");
                     	return null;
                     }
 			} else {
 				// privkey didn't work
-				CarUtility.locError("ERR1102",LogCriticality.error);
+				CarUtility.locError("ERR1102");
 				return null;
 			}
 		} catch (JOSEException x) {
@@ -348,7 +349,7 @@ public class MainController {
 			throw new RuntimeException(x);
 		}
 		catch (Exception e) {
-			CarUtility.locError("ERR1103",LogCriticality.error,e.getMessage());
+			CarUtility.locError("ERR1103",e.getMessage());
 			return null;
 		}finally {
 			Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
@@ -372,7 +373,7 @@ public class MainController {
 			jwe = JWEObject.parse(b64input);
 		} catch (Exception e) {
 			// On exception, return null
-			CarUtility.locError("ERR1101", LogCriticality.error);
+			CarUtility.locError("ERR1101");
 			return null;
 		}
 		
@@ -417,13 +418,13 @@ public class MainController {
                             	Date exp = jcs.getDateClaim("exp");
                             	if (System.currentTimeMillis() > exp.getTime()) {
                             		// Expired
-                            		CarUtility.locError("ERR1107",LogCriticality.info, String.valueOf(exp),String.valueOf(new Date(System.currentTimeMillis())));
+                            		CarUtility.locLog("ERR1107", String.valueOf(exp),String.valueOf(new Date(System.currentTimeMillis())));
                             		return null;
                             	}
                             	Date iat = jcs.getDateClaim("iat");
                             	if (System.currentTimeMillis() < (iat.getTime() - 300000)) {
                             		// Issued in future > 5 minutes
-                            		CarUtility.locError("ERR1108",LogCriticality.info, String.valueOf(iat), String.valueOf(new Date(System.currentTimeMillis())));;
+                            		CarUtility.locLog("ERR1108", String.valueOf(iat), String.valueOf(new Date(System.currentTimeMillis())));;
                             		return null;
                             	}
                             	String b64 = jcs.getStringClaim("request");
@@ -450,22 +451,22 @@ public class MainController {
                         			retval = w.getRequest();
                         			return retval;
                         		} catch (Exception e) {
-                        			CarUtility.locError("ERR1104", LogCriticality.error, e.getMessage());
+                        			CarUtility.locError("ERR1104", e.getMessage());
                         			return null;
                         		}
                             } else {
                             	// verification failure
-                            	CarUtility.locError("ERR1105",LogCriticality.error);
+                            	CarUtility.locError("ERR1105");
                             	return null;
                             }
                     } else {
                     	// key retrieval failed
-                    	CarUtility.locError("ERR1106",LogCriticality.error);
+                    	CarUtility.locError("ERR1106");
                     	return null;
                     }
 			} else {
 				// privkey didn't work
-				CarUtility.locError("ERR1102",LogCriticality.error);
+				CarUtility.locError("ERR1102");
 				return null;
 			}
 		} catch (JOSEException x) {
@@ -473,7 +474,7 @@ public class MainController {
 			throw new RuntimeException(x);
 		}
 		catch (Exception e) {
-			CarUtility.locError("ERR1103",LogCriticality.error,e.getMessage());
+			CarUtility.locError("ERR1103",e.getMessage());
 			return null;
 		}finally {
 			Security.removeProvider(BouncyCastleProvider.PROVIDER_NAME);
@@ -556,13 +557,13 @@ public class MainController {
 		CarConfig config = CarConfig.getInstance();
 
 		if (! CarUtility.isAuthenticated(request, headers , "", config)) {
-			return new ModelAndView("errorPage").addObject("message","Failed");
+			return new ModelAndView("errorPage").addObject("message","Failed").addObject("top_heading",CarUtility.getLocalComponent("top_heading")).addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		}
 		String rhid = request.getParameter("rhid");
 		String iiid = request.getParameter("iiid");
 		InfoItemMetaInformationCache cache = InfoItemMetaInformationCache.getInstance();
 		cache.evictCachedInfoItemMetaInformation(rhid,iiid);
-		return new ModelAndView("errorPage").addObject("message","Success");
+		return new ModelAndView("errorPage").addObject("message","Success").addObject("top_heading",CarUtility.getLocalComponent("top_heading")).addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 	}
 	
 	// evictrpmicache?rhid=rhid&rpid=rpid
@@ -570,7 +571,7 @@ public class MainController {
 	public ModelAndView evictRPMICache(HttpServletRequest request, @RequestHeader HttpHeaders headers) {
 		CarConfig config = CarConfig.getInstance();
 		if (! CarUtility.isAuthenticated(request,  headers, "", config)) {
-			return new ModelAndView("errorPage").addObject("message","Failed");
+			return new ModelAndView("errorPage").addObject("message","Failed").addObject("top_heading",CarUtility.getLocalComponent("top_heading")).addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		}
 		String rhid = request.getParameter("rhid");
 		String rpid = request.getParameter("rpid");
@@ -580,7 +581,7 @@ public class MainController {
 			cache.evictCachedRPMetaInformation(rhid,rptype,rpid);
 		else
 			cache.evictCachedRPMetaInformation(rhid, rpid);
-		return new ModelAndView("errorPage").addObject("message","Success");
+		return new ModelAndView("errorPage").addObject("message","Success").addObject("top_heading",CarUtility.getLocalComponent("top_heading")).addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 	}
 	
 	// evictvaluemicache?iiid=iiid&iivalue=iivalue
@@ -588,13 +589,13 @@ public class MainController {
 	public ModelAndView evictValueMICache(HttpServletRequest request, @RequestHeader HttpHeaders headers) {
 		CarConfig config = CarConfig.getInstance();
 		if (! CarUtility.isAuthenticated(request,  headers,  "",  config)) {
-			return new ModelAndView("errorPage").addObject("message","Failed");
+			return new ModelAndView("errorPage").addObject("message","Failed").addObject("top_heading",CarUtility.getLocalComponent("top_heading")).addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		}
 		String iiid = request.getParameter("iiid");
 		String iivalue = request.getParameter("iivalue");
 		ValueMetaInformationCache cache = ValueMetaInformationCache.getInstance();
 		cache.evictCachedValueMetaInformation(iiid, iivalue);
-		return new ModelAndView("errorPage").addObject("message","Success");
+		return new ModelAndView("errorPage").addObject("message","Success").addObject("top_heading",CarUtility.getLocalComponent("top_heading")).addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 	}
 	
 	@RequestMapping(value="/dumpiicache", method=RequestMethod.GET)
@@ -619,6 +620,8 @@ public class MainController {
 			}
 		}
 		retval.addObject("message",sb.toString());
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		return retval;
 	}
 	@RequestMapping(value="/dumprpmicache", method=RequestMethod.GET)
@@ -643,6 +646,8 @@ public class MainController {
 			}
 		}
 		retval.addObject("message",sb.toString());
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		return retval;
 	}
 
@@ -656,8 +661,11 @@ public class MainController {
 		sb.append("Value cache size: " + CacheScrubber.getLastvalsize() + " entries<br>");
 		sb.append("Last cycle length: " + CacheScrubber.getLastrunduration() + " milliseconds<br>");
 		sb.append("Max cycle length (since restart): " + CacheScrubber.getMaxduration() + " milliseconds<br>");
+		sb.append("Number of cache cycles since restart: " + CacheScrubber.getRuncount());
 		
 		retval.addObject("message",sb.toString());
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		return retval;
 	}
 	
@@ -665,6 +673,8 @@ public class MainController {
 	public ModelAndView returnReflex(HttpServletRequest request) {
 		ModelAndView retval = new ModelAndView("errorPage");
 		retval.addObject("message","GET request not supported for /reflex endpoint");
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		return retval;
 	}
 	
@@ -692,9 +702,11 @@ public class MainController {
 	@RequestMapping(value="/filteranddecide", method=RequestMethod.GET)
 	public ModelAndView returnFilterAndDecide(HttpServletRequest request) {
 		ModelAndView retval = new ModelAndView("errorPage");
-		CarUtility.locError("ERR0066",LogCriticality.info,"/reflex endpoint");
+		CarUtility.locLog("ERR0066","/reflex endpoint");
 		retval.addObject("message",CarUtility.getLocalError("ERR0066","/reflex endpoint"));
 		retval.addObject("intercept_view","1");
+		retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+		retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 		return retval;
 	}
 	
@@ -722,7 +734,7 @@ public class MainController {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		// End let's try
@@ -741,17 +753,17 @@ public class MainController {
 		try {
 			request.setCharacterEncoding("UTF-8");
 		} catch (Exception e) {
-			CarUtility.locError("ERR1134",LogCriticality.error,"Failed to set UTF-8 character encoding on input");
+			CarUtility.locError("ERR1134","Failed to set UTF-8 character encoding on input");
 		}
 		
-		CarUtility.locError("ERR1166", LogCriticality.error,"CAR data inits took " + (System.currentTimeMillis() - curtime) + "ms");
+		CarUtility.locDebug("ERR1166","CAR data inits took " + (System.currentTimeMillis() - curtime) + "ms");
 		curtime = System.currentTimeMillis();
 		
 		// Perform the necessary initialization
 		
 		CarConfig config = CarUtility.init(request);
 		
-		CarUtility.locError("ERR1166", LogCriticality.error,"CAR Config initialization took " + (System.currentTimeMillis() - curtime) + "ms");
+		CarUtility.locDebug("ERR1166","CAR Config initialization took " + (System.currentTimeMillis() - curtime) + "ms");
 		curtime = System.currentTimeMillis();
 		
 		// Marshal the preferred language for interpolating internationalized strings
@@ -765,7 +777,7 @@ public class MainController {
 		// and a map of descriptions to use in case we need them
 		HashMap<String,String> oadescr = new HashMap<String,String>();
 
-		CarUtility.locError("ERR1166", LogCriticality.error,"HashMap creation took " + (System.currentTimeMillis() - curtime) + "ms");
+		CarUtility.locDebug("ERR1166","HashMap creation took " + (System.currentTimeMillis() - curtime) + "ms");
 		curtime = System.currentTimeMillis();
 		
 		// We have two cases, determined by the presence or absence of data in the Session.
@@ -773,47 +785,49 @@ public class MainController {
 		
 		HttpSession session = request.getSession(true);
 		
-		CarUtility.locError("ERR1166",  LogCriticality.error,"Establishing Session took " + (System.currentTimeMillis() - curtime) + "ms");
+		CarUtility.locDebug("ERR1166","Establishing Session took " + (System.currentTimeMillis() - curtime) + "ms");
 		curtime = System.currentTimeMillis();
 		
 		if (session == null) {
-			CarUtility.locError("ERR0067",LogCriticality.error);
+			CarUtility.locError("ERR0067");
 			retval = new ModelAndView("errorPage");
 			retval.addObject("message",CarUtility.getLocalError("ERR0067"));
 			retval.addObject("intercept_view","1");
+			retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return retval;
 		} 
 		session.setMaxInactiveInterval(600);  // 10 minute window for sessions
-		CarUtility.locError("ERR1166", LogCriticality.error,"Setting max interactive interval took " + (System.currentTimeMillis() - curtime));
+		CarUtility.locDebug("ERR1166","Setting max interactive interval took " + (System.currentTimeMillis() - curtime));
 		curtime = System.currentTimeMillis();
 		
 		// Determine if there's an established conversation in the input data
 		if (request.getParameter("conversation") != null) {
 			convo = Integer.parseInt(request.getParameter("conversation"));
-			CarUtility.locError("ERR1166",  LogCriticality.error,"Pulling existing converation number took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166","Pulling existing converation number took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 		} else {
-			CarUtility.locError("ERR1166", LogCriticality.error,"Checking conversation took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166","Checking conversation took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			// Determine what the next available conversation number in the session is
 			if (session.getAttribute("maxconv") != null) {
-				CarUtility.locError("ERR1166",  LogCriticality.error, "Pulling maxconv took " + (System.currentTimeMillis() - curtime) + "ms");
+				CarUtility.locDebug("ERR1166", "Pulling maxconv took " + (System.currentTimeMillis() - curtime) + "ms");
 				curtime = System.currentTimeMillis();
 				
 				// bump it and add back
 				convo = Integer.parseInt((String) session.getAttribute("maxconv")) + 1;
-				CarUtility.locError("ERR1166", LogCriticality.error,"Bumping maxconv took " + (System.currentTimeMillis() - curtime) + "ms");
+				CarUtility.locDebug("ERR1166","Bumping maxconv took " + (System.currentTimeMillis() - curtime) + "ms");
 				curtime = System.currentTimeMillis();
 				
 				session.setAttribute("maxconv",String.valueOf(convo));
-				CarUtility.locError("ERR1166", LogCriticality.error,"Writing maxconv to session attribut took " + (System.currentTimeMillis() - curtime) + "ms");
+				CarUtility.locDebug("ERR1166","Writing maxconv to session attribut took " + (System.currentTimeMillis() - curtime) + "ms");
 				curtime = System.currentTimeMillis();
 			} else {
 				// no maxconv value -- start from 0 and set it forward
 				convo = 0;
 				session.setAttribute("maxconv", String.valueOf(convo));
-				CarUtility.locError("ERR1166", LogCriticality.error,"Setting maxconv to 0 took " + (System.currentTimeMillis() - curtime) + "ms");
+				CarUtility.locDebug("ERR1166","Setting maxconv to 0 took " + (System.currentTimeMillis() - curtime) + "ms");
 				curtime = System.currentTimeMillis();
 			}
 		}
@@ -821,11 +835,11 @@ public class MainController {
 		// now we have convo set, snatch it as a String
 		sconvo = String.valueOf(convo);
 		
-		CarUtility.locError("ERR1166", LogCriticality.error,"Setting conversation number took " + (System.currentTimeMillis() - curtime) + "ms");
+		CarUtility.locDebug("ERR1166","Setting conversation number took " + (System.currentTimeMillis() - curtime) + "ms");
 		curtime = System.currentTimeMillis();
 		
 		// Session initialization done
-		CarUtility.locError("ERR1166", LogCriticality.error, "Remaining CAR decide initialization took " + (System.currentTimeMillis() - curtime) +"ms");
+		CarUtility.locDebug("ERR1166", "Remaining CAR decide initialization took " + (System.currentTimeMillis() - curtime) +"ms");
 		curtime = System.currentTimeMillis();
 		
 		if (session.getAttribute(sconvo + ":" + "returntourl") == null || session.getAttribute(sconvo + ":" + "icmdecision") == null) {
@@ -841,15 +855,17 @@ public class MainController {
 				inputRequest = parseInput(request);
 			}
 			// input parse
-			CarUtility.locError("ERR1166", LogCriticality.error,"Parsing Input took" + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166","Parsing Input took" + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			if (inputRequest == null) {
 				// failed input processing
-				CarUtility.locError("ERR0068", LogCriticality.info);
+				CarUtility.locLog("ERR0068");
 				ModelAndView r = new ModelAndView("errorPage");
 				r.addObject("message",CarUtility.getLocalError("ERR0068"));
 				r.addObject("intercept_view","1");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return r;
 			} //else {
 				// RGC debug
@@ -889,6 +905,8 @@ public class MainController {
 				ModelAndView r = new ModelAndView("errorPage");
 				r.addObject("message",CarUtility.getLocalError("ERR0069"));
 				r.addObject("intercept_view","1");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return r;
 			}
 			
@@ -897,18 +915,20 @@ public class MainController {
 			session.setAttribute(sconvo + ":" + "usertype", userattr);
 			// Now that we have the request information marshalled
 			
-			CarUtility.locError("ERR1166", LogCriticality.error, "Request marshalling took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166", "Request marshalling took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 
 			// Retrieve RP metainformation and parse out the RP attribute information
 			
 			ReturnedRPMetaInformation rpmetainformation = CarUtility.getRPMetaInformation(rhid, rpid, config, httpClient);
 			// Handle unrecognized RP
+			boolean unrecRP = false;
 			if (rpmetainformation == null || rpmetainformation.getRpproperties() == null) {
 				// unrecognized RP
 				if ("true".equals(config.getProperty("car.accept_unregistered_rp", false))) {
 					rpmetainformation = new ReturnedRPMetaInformation();
-				
+					unrecRP = true;
+					
 					rpmetainformation.setDefaultshowagain("true");
 					rpmetainformation.setDescription(null);
 					rpmetainformation.setDisplayname(null);
@@ -928,17 +948,21 @@ public class MainController {
 					ArrayList<ReturnedRPProperty> arp = new ArrayList<ReturnedRPProperty>();
 					arp.add(rpp);
 					rpmetainformation.setRpproperties(arp);
-					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+					CarUtility.locLog("ERR0806", rpid);
 				} else {
-					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+					CarUtility.locLog("ERR0806", rpid);
 					ModelAndView r = new ModelAndView("errorPage");
 					r.addObject("message",CarUtility.getLocalError("ERR0806",rpid));
 					r.addObject("page-title","Unrecognized RP");
 					r.addObject("intercept_view","1");
+					r.addObject("transient","true");
+					r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+					r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 					return r;
 				}
 			}
 			ReturnedRPProperty rrrpp = new ReturnedRPProperty();
+			
 			rrrpp.setRppropertyname("entityId");
 			rrrpp.setRppropertyvalue(rpid);
 			
@@ -951,7 +975,7 @@ public class MainController {
 			//} catch (Exception e) {
 				// ignore
 			//}
-			CarUtility.locError("ERR1166", LogCriticality.error,"RP property retrieval took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166","RP property retrieval took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			// Retrieve the required and optional attribute list information as well
@@ -979,12 +1003,31 @@ public class MainController {
 			if (rprequirediilist == null) {
 				rprequirediilist = new ReturnedRPRequiredInfoItemList();
 				rprequirediilist.setRequiredlist(new ArrayList<InfoItemValueList>());
+				// In the event of an unrecognized RP, use the inputAttrMap keys instead -- RGC
+				// This is an approximation.
+				if (unrecRP) {
+					Set<String> ss = inputAttrMap.keySet();
+					CarUtility.locLog("ERR1134","Forging " + ss.size() + " attributes");
+					for (String s : ss) {
+						InfoItemValueList il = new InfoItemValueList();
+						InfoItemIdentifier ii = new InfoItemIdentifier();
+						ii.setIiid(s);
+						ii.setIitype("attribute"); // force these to be attributes
+						il.setInfoitemidentifier(ii);
+						ArrayList<String> v = new ArrayList<String>();
+						v.add("^.*$");
+						il.setValuelist(v);
+						il.setSourceitemname(s);
+						rprequirediilist.getRequiredlist().add(il);
+					}
+				}
 			}
 			if (rpoptionaliilist == null) {
 				rpoptionaliilist = new ReturnedRPOptionalInfoItemList();
 				rpoptionaliilist.setOptionallist(new ArrayList<InfoItemValueList>());
 			}
-			CarUtility.locError("ERR1166", LogCriticality.error,"Retrieving attribute lists took " + (System.currentTimeMillis() - curtime) + "ms");
+			
+			CarUtility.locDebug("ERR1166","Retrieving attribute lists took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			// We now need to construct a master attribute/valueset list from the passed-in data and the 
@@ -1110,7 +1153,7 @@ public class MainController {
 				hasvalues.add(iii.getIiid()); // for tracking
 			}
 			
-			CarUtility.locError("ERR1166", LogCriticality.error,"Converting required to IVL took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166","Converting required to IVL took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			// And the somewhat more complicated add of the optional cases
@@ -1244,12 +1287,13 @@ public class MainController {
 				//ObjectMapper m = new ObjectMapper();
 				ObjectMapper m = OMSingleton.getInstance().getOm();
 				//CarUtility.locError("ERR0078",LogCriticality.debug, m.writeValueAsString(desiredAttributes));
-				CarUtility.locError("ERR0078", LogCriticality.debug, new String(m.writeValueAsBytes(desiredAttributes),StandardCharset.UTF_8));
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR0078", new String(m.writeValueAsBytes(desiredAttributes),StandardCharset.UTF_8));
 			} catch (Exception ign) {
 				// ignore
 			}
 			
-			CarUtility.locError("ERR1166", LogCriticality.error,"Merging optional attrs took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166","Merging optional attrs took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			// Now we have the desired attribute/valueset filtered to current values list in desiredAttributes.
@@ -1375,7 +1419,7 @@ public class MainController {
 			
 			dro.setArrayOfRelyingPartyProperty(arpp);
 			
-			CarUtility.locError("ERR1166", LogCriticality.error, "Building ICM request took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166", "Building ICM request took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			// And convert the request to JSON for passing to the service
@@ -1387,46 +1431,55 @@ public class MainController {
 				decisionRequestJson = mapper.writeValueAsString(dro);
 			} catch (Exception e) {
 				ModelAndView r = new ModelAndView("errorPage");
-				CarUtility.locError("ERR0081",LogCriticality.info, "#1");
+				CarUtility.locError("ERR0081", "#1");
 				r.addObject("messsage",CarUtility.getLocalError("ERR0016"));
 				r.addObject("intercept_view","1");
+				r.addObject("transient","true");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return r;
 			}
 			//TODO: change back to info instead of error
 			// CarUtility.locError("ERR0082",LogCriticality.error, decisionRequestJson);
 			// And send it out to get back a response
 			
-			CarUtility.locError("ERR1166", LogCriticality.info, "Serializing ICM request took " + (System.currentTimeMillis() - curtime) + "ms");
+			CarUtility.locDebug("ERR1166", "Serializing ICM request took " + (System.currentTimeMillis() - curtime) + "ms");
 			curtime = System.currentTimeMillis();
 			
 			IcmDecisionResponseObject response = CarUtility.sendDecisionRequest(decisionRequestJson,config);
 			//TODO: change back to info instead of error
-			CarUtility.locError("ERR0077",LogCriticality.info, decisionRequestJson);
+			if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+				CarUtility.locLog("ERR0077", decisionRequestJson);
 			
 			// Check for bad ICM response
 			if (response == null) {
 				ModelAndView r = new ModelAndView("errorPage");
-				CarUtility.locError("ERR0802",LogCriticality.error);
+				CarUtility.locError("ERR0802");
 				r.addObject("message",CarUtility.getLocalError("ERR0802"));
 				r.addObject("intercept_view","1");
+				r.addObject("transient","true");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			} else {
 				try {
 					//ObjectMapper tmapper = new ObjectMapper();
 					ObjectMapper tmapper = OMSingleton.getInstance().getOm();
 					String m = tmapper.writeValueAsString(response);
 					//TODO: log this at debug not error
-					CarUtility.locError("ERR0803",LogCriticality.error, m);
+					if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+						CarUtility.locDebug("ERR0803", m);
 				} catch (Exception e) {
-					CarUtility.locError("ERR0803",LogCriticality.error,"unable to parse ICM response for log");
+					// ignore -- best effort logging here
 				}
 			}
-			CarUtility.locError("ERR1166", LogCriticality.error,"ICM response took " + (System.currentTimeMillis() - curtime) + "ms to get back");
+			CarUtility.locDebug("ERR1166","ICM response took " + (System.currentTimeMillis() - curtime) + "ms to get back");
 			curtime = System.currentTimeMillis();
 			
 			// We now have an IcmDecisionResponse object.  Save it in the session.
 			session.setAttribute(sconvo + ":" + "icmdecision", response);   // save the current decision response as is.
 			try {
-				CarUtility.locError("ERR0813",LogCriticality.info, response.toJSON());
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locLog("ERR0813", response.toJSON());
 			} catch(Exception e) {
 				// ignore
 			}
@@ -1450,7 +1503,8 @@ public class MainController {
 			}
 			// if RP default is set to "never", override user setting and always default to car.default.showAgain value (usually false)
 			if ((urpmi==null || urpmi.isShowagain()) && (rpmetainformation.getDefaultshowagain() == null || ! rpmetainformation.getDefaultshowagain().equalsIgnoreCase("never"))) {
-				CarUtility.locError("ERR1117",LogCriticality.debug,"User " + uservalue + " has showAgain = true");
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo",false)))
+					CarUtility.locDebug("ERR1117","User " + uservalue + " has showAgain = true");
 				askUserForDecisions = true;   // they said to show them the page again or they've never made a decision so we show on first attempt
 			}
 			boolean haschoices = false; // no choices unless we find some
@@ -1467,7 +1521,8 @@ public class MainController {
 								riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config, httpClient);
 							}
 							if (riimi != null && ! riimi.isAsnd()) {
-								CarUtility.locError("ERR1117",LogCriticality.debug,"askMe decision for " + idfis.getInfoId().getInfoValue());
+								if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+									CarUtility.locDebug("ERR1117","askMe decision for " + idfis.getInfoId().getInfoValue());
 								askUserForDecisions = true;
 								todisplay = true;  // RGC - 11-21-2018
 								haschoices = true;
@@ -1492,11 +1547,11 @@ public class MainController {
 			}
 			// RGC - 11-21-2018
 			if (askUserForDecisions && ! todisplay) {
-				CarUtility.locError("ERR1134",LogCriticality.error,"Setting askUserForDecisions to false because todisplay is false");
+				CarUtility.locDebug("ERR1134","Setting askUserForDecisions to false because todisplay is false");
 				askUserForDecisions = false;
 			}
 			
-			CarUtility.locError("ERR1134", LogCriticality.error,"askUserForDecisions is " + askUserForDecisions + " and todisplay is " + todisplay);
+			CarUtility.locDebug("ERR1134","askUserForDecisions is " + askUserForDecisions + " and todisplay is " + todisplay);
 			session.setAttribute(sconvo + ":" + "askUserForDecisions", askUserForDecisions);
 			
 			
@@ -1630,12 +1685,16 @@ public class MainController {
 					decisionRequestJson2 = mapper2.writeValueAsString(dro);
 				} catch (Exception e) {
 					ModelAndView r = new ModelAndView("errorPage");
-					CarUtility.locError("ERR0081",LogCriticality.debug,"#1");
+					CarUtility.locDebug("ERR0081",LogCriticality.debug,"#1");
 					r.addObject("messsage",CarUtility.getLocalError("ERR0016"));
 					r.addObject("intercept_view","1");
+					r.addObject("transient","true");
+					r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+					r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 					return r;
 				}
-				CarUtility.locError("ERR0084",LogCriticality.info,decisionRequestJson2);
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locLog("ERR0084",decisionRequestJson2);
 				edu.internet2.consent.arpsi.model.DecisionResponseObject arpsiResponse = CarUtility.sendARPSIDecisionRequest(decisionRequestJson2, config);
 				boolean hasMustDecisions = false;
 				ArrayList<InjectedDecision> injectedDecisions = new ArrayList<InjectedDecision>();
@@ -1652,10 +1711,10 @@ public class MainController {
 					
 					if (riimi != null && riimi.getDisplayname() != null) {
 						String localized = CarUtility.localize(riimi.getDisplayname(), preflang);
-						CarUtility.locError("ERR0085", LogCriticality.debug,aid,localized);
+						CarUtility.locDebug("ERR0085",aid,localized);
 						attrDisplayName = localized;
 					} else {
-						CarUtility.locError("ERR0086", LogCriticality.info,aid);
+						CarUtility.locDebug("ERR0086",aid);
 						attrDisplayName=aid;
 					}
 					
@@ -1750,10 +1809,10 @@ public class MainController {
 							}
 							if (riimi != null && riimi.getDisplayname() != null) {
 								String localized = CarUtility.localize(riimi.getDisplayname(),preflang);
-								CarUtility.locError("ERR0085", LogCriticality.debug,idfis.getInfoId().getInfoValue(),localized);
+								CarUtility.locDebug("ERR0085",idfis.getInfoId().getInfoValue(),localized);
 								attrDisplayName = localized;
 							} else {
-								CarUtility.locError("ERR0086", LogCriticality.debug,idfis.getInfoId().getInfoValue());
+								CarUtility.locDebug("ERR0086",idfis.getInfoId().getInfoValue());
 								attrDisplayName = idfis.getInfoId().getInfoValue();
 							}
 							
@@ -1974,23 +2033,23 @@ public class MainController {
 				ObjectMapper omapper = OMSingleton.getInstance().getOm();
 				try {
 					debugReturn.addObject("sensitivity",omapper.writeValueAsString(sensitivity));
-					CarUtility.locError("ERR1112",LogCriticality.debug,omapper.writeValueAsString(sensitivity));
+					CarUtility.locDebug("ERR1112",omapper.writeValueAsString(sensitivity));
 				} catch (Exception ign) {
-					CarUtility.locError("ERR1113",LogCriticality.info,sensitivity.toString());
+					CarUtility.locDebug("ERR1113",sensitivity.toString());
 					debugReturn.addObject("sensitivity","");
 				}
 				try {
 					debugReturn.addObject("asnd",omapper.writeValueAsString(asnd));
-					CarUtility.locError("ERR1114",LogCriticality.debug, omapper.writeValueAsString(asnd));
+					CarUtility.locDebug("ERR1114", omapper.writeValueAsString(asnd));
 				} catch (Exception ign) {
-					CarUtility.locError("ERR1115", LogCriticality.info,asnd.toString());
+					CarUtility.locDebug("ERR1115",asnd.toString());
 					debugReturn.addObject("asnd","");
 				}
 				try {
 					debugReturn.addObject("policytype",omapper.writeValueAsString(policytype));
-					CarUtility.locError("ERR1119",LogCriticality.debug,omapper.writeValueAsString(policytype));
+					CarUtility.locDebug("ERR1119",omapper.writeValueAsString(policytype));
 				} catch (Exception ign) {
-					CarUtility.locError("ERR1120",LogCriticality.info, policytype.toString());
+					CarUtility.locDebug("ERR1120", policytype.toString());
 					debugReturn.addObject("policytype","");
 				}
 				try {
@@ -2131,16 +2190,16 @@ public class MainController {
 				
 				debugReturn.addObject("typemap",typemap);
 				
-				CarUtility.locError("ERR1166", LogCriticality.error, "Marshalling display data for intercept took " + (System.currentTimeMillis() - curtime) + "ms");
+				CarUtility.locDebug("ERR1166", "Marshalling display data for intercept took " + (System.currentTimeMillis() - curtime) + "ms");
 				curtime = System.currentTimeMillis();
 				
 				if (hasMay || hasMustDecisions || hasNoChoice) {  // pass thru if everything turns out to be missing or ASND
-					CarUtility.locError("ERR1134", LogCriticality.error,"Displaying intercept");
+					CarUtility.locLog("ERR1134","Displaying intercept");
 					return debugReturn;
 				} 
-				CarUtility.locError("ERR1134",  LogCriticality.error,"Not Displaying intercept, in AskUser mode");
+				CarUtility.locLog("ERR1134",  LogCriticality.error,"Not Displaying intercept, in AskUser mode");
 			}
-			CarUtility.locError("ERR1134",  LogCriticality.error,"Not displaying intercept, no user questions either");
+			CarUtility.locLog("ERR1134",  LogCriticality.error,"Not displaying intercept, no user questions either");
 		}
 		// if we get here, we're on a return trip by definition.
 		
@@ -2152,6 +2211,8 @@ public class MainController {
 			ModelAndView e = new ModelAndView("errorPage");
 			e.addObject("message","Your browser did not properly identify itself.  This usually indicates a bug.");
 			e.addObject("intercept_view","1");
+			e.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			e.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return e;  // bail out if there is no conversation specified, since we cannot continue otherwise
 		}
 		
@@ -2164,6 +2225,9 @@ public class MainController {
 				ModelAndView e = new ModelAndView("errorPage");
 				e.addObject("message","CSRF failure.  This may occur due to a sesison timeout, due to the use of your browser's back button, or due to purposeful attack.");
 				e.addObject("intercept_view","1");
+				e.addObject("transient","true");
+				e.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				e.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return e; // bail out if CSRF test fails for any reason
 			}
 		}
@@ -2237,11 +2301,13 @@ public class MainController {
 									}
 								}
 							}
-							if (usectr) {
+							/* removing debugs here */
+							/*if (usectr) {
 								CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),String.valueOf(ctr),v,request.getParameter("radio_"+iids.getInfoId().getInfoValue()+"_"+ctr));
 							} else {
 								CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),"nocounter",v,idov.getReleaseDecision().toString());
-							}
+							}*/
+							
 							// At this point, if usectr is false, we didn't get a value, and if it is true, 
 							// we use ctr as the counter for the value
 							if (!usectr) {
@@ -2303,19 +2369,19 @@ public class MainController {
 								}
 							}
 						}
-						if (usectr) {
+						// Removing debugs here
+						/*if (usectr) {
 							CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),String.valueOf(ctr),v,request.getParameter("radio_"+iids.getInfoId().getInfoValue()+"_"+ctr));
 						} else {
 							CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),"nocounter",v,idov.getReleaseDecision().toString());
-						}
+						}*/
 						
 						// At this point, if usectr is false, we didn't get a value, and if it is true, 
 						// we use ctr as the counter for the value
 						if (!usectr) {
 							// this is an odd case that shouldn't happen, but if it does somehow, we simply
 							// use the value that was present to begin with.
-							CarUtility.locError("ERR0801",LogCriticality.error);
-							CarUtility.locError("ERR1134", LogCriticality.error,"Handling " + iids.getInfoId().getInfoValue());
+							CarUtility.locDebug("ERR0801");
 							AttributeValuePair avp = new AttributeValuePair();
 							avp.setAttrname(iids.getInfoId().getInfoValue());
 							avp.setAttrvalue(v);
@@ -2388,7 +2454,8 @@ public class MainController {
 						nvd.setValue(ap.getAttrvalue());
 						nvd.setDecision("permit");
 						alnvd.add(nvd);
-						CarUtility.locError("ERR1134", LogCriticality.error,"ASND override of ap.getAttrname() = ap.getAttrvalue() applied");
+						if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+							CarUtility.locDebug("ERR1134","ASND override of ap.getAttrname() = ap.getAttrvalue() applied");
 					}
 				}
 			}
@@ -2416,20 +2483,24 @@ public class MainController {
 				WrappedDecisionResponse w = new WrappedDecisionResponse();
 				w.setDecisionResponse(unwrapped);
 				if (! useCrypto) {
-					CarUtility.locLog("LOG1002",LogCriticality.debug);
+					CarUtility.locDebug("LOG1002");
 					resultView.addObject("json",new String(Base64.encodeBase64(w.toJson().getBytes())));
 				} else {
-					CarUtility.locLog("LOG1003",LogCriticality.debug);
+					CarUtility.locDebug("LOG1003");
 					resultView.addObject("json",signAndEncryptToRHAsJWT(new String(Base64.encodeBase64(w.toJson().getBytes())),rhid));
 				}
 				resultView.addObject("returnUrl",returntourl);
 				// debug
-				CarUtility.locError("ERR0808",LogCriticality.debug,w.toJson());
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR0808",w.toJson());
 			} catch (Exception e) {
 				// for now, we don't care about why
 				ModelAndView error = new ModelAndView("errorPage");
 				error.addObject("message","Failed constructing base64 encoded JSON representation for return: " + e.getMessage());
 				error.addObject("intercept_view","1");
+				error.addObject("transient","true");
+				error.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				error.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return new ModelAndView("errorPage");
 			}
 			
@@ -2446,7 +2517,7 @@ public class MainController {
 				if (request.getParameter("saveandshow") != null || request.getParameter("saveandhide") != null) {
 					// we need to do a merge-save
 					// Start by getting the existing COPSU policy
-					CarUtility.locError("ERR0804",LogCriticality.debug);
+					CarUtility.locDebug("ERR0804");
 					UserReturnedPolicy rp = CarUtility.getCOPSUPolicy(username,rhid,rpid,config);
 					UserInfoReleasePolicy irp = rp.getUserInfoReleasePolicy();
 					// And build a new IRP from the name-value decisions we have for the must and may decisions
@@ -2580,21 +2651,21 @@ public class MainController {
 					for (int sc = 0; sc < 5 && !succ; sc++) {
 						succ = CarUtility.putCOPSUPolicy(baseid,newirp,config);
 						if (!succ)
-							CarUtility.locError("ERR0814",LogCriticality.error,String.valueOf(sc));
+							CarUtility.locError("ERR0814",String.valueOf(sc));
 					}
 				}
 				// And regardless of that, update showagain for the user accordingly
 				// We use usertype and username to do the setting
 				if (request.getParameter("saveandshow") != null || request.getParameter("dontsave") != null || ! succ) {
-					CarUtility.locError("ERR0809",LogCriticality.debug,"true");
+					CarUtility.locDebug("ERR0809","true");
 					CarUtility.setShowAgain(usertype,username,rpid,true,config);
 				} else {
-					CarUtility.locError("ERR0809",LogCriticality.debug,"false");
+					CarUtility.locDebug("ERR0809","false");
 					CarUtility.setShowAgain(usertype,username,rpid,false,config);
 				}
 			} catch (Exception ign) {
 				// Log and ignore
-				CarUtility.locError("ERR0805",LogCriticality.error,CarUtility.exceptionStacktraceToString(ign));
+				CarUtility.locError("ERR0805",CarUtility.exceptionStacktraceToString(ign));
 			}
 			// and after a best effort at updating, send the response onward
 			resultView.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
@@ -2621,7 +2692,7 @@ public class MainController {
 		try {
 			request.setCharacterEncoding("UTF-8");
 		} catch (Exception e) {
-			CarUtility.locError("ERR1134",LogCriticality.error,"Failed to set UTF-8 character encoding on input");
+			CarUtility.locError("ERR1134","Failed to set UTF-8 character encoding on input");
 		}
 		
 		// Perform the necessary initialization
@@ -2644,10 +2715,13 @@ public class MainController {
 		
 		HttpSession session = request.getSession(true);
 		if (session == null) {
-			CarUtility.locError("ERR0067",LogCriticality.error);
+			CarUtility.locError("ERR0067");
 			retval = new ModelAndView("errorPage");
 			retval.addObject("message",CarUtility.getLocalError("ERR0067"));
 			retval.addObject("intercept_view","1");
+			retval.addObject("transient","true");
+			retval.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			retval.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return retval;
 		} 
 		session.setMaxInactiveInterval(600);  // 10 minute window for sessions
@@ -2686,10 +2760,12 @@ public class MainController {
 			
 			if (inputRequest == null) {
 				// failed input processing
-				CarUtility.locError("ERR0068", LogCriticality.info);
+				CarUtility.locError("ERR0068");
 				ModelAndView r = new ModelAndView("errorPage");
 				r.addObject("message",CarUtility.getLocalError("ERR0068"));
 				r.addObject("intercept_view","1");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return r;
 			} //else {
 				// RGC debug
@@ -2743,10 +2819,12 @@ public class MainController {
 			}
 			
 			if (uservalue == null) {
-				CarUtility.locError("ERR0069",LogCriticality.info);
+				CarUtility.locError("ERR0069");
 				ModelAndView r = new ModelAndView("errorPage");
 				r.addObject("message",CarUtility.getLocalError("ERR0069"));
 				r.addObject("intercept_view","1");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return r;
 			}
 			
@@ -2759,11 +2837,13 @@ public class MainController {
 			
 			ReturnedRPMetaInformation rpmetainformation = CarUtility.getRPMetaInformation(rhid, rpid, config);
 			// Handle unrecognized RP
+			boolean unrecRP = false;
 			if (rpmetainformation == null || rpmetainformation.getRpproperties() == null) {
 				// unrecognized RP
 				if ("true".equals(config.getProperty("car.accept_unregistered_rp", false))) {
 					rpmetainformation = new ReturnedRPMetaInformation();
-				
+					unrecRP = true;
+					
 					rpmetainformation.setDefaultshowagain("true");
 					rpmetainformation.setDescription(null);
 					rpmetainformation.setDisplayname(null);
@@ -2783,13 +2863,16 @@ public class MainController {
 					ArrayList<ReturnedRPProperty> arp = new ArrayList<ReturnedRPProperty>();
 					arp.add(rpp);
 					rpmetainformation.setRpproperties(arp);
-					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+					CarUtility.locLog("ERR0806", rpid);
 				} else {
-					CarUtility.locError("ERR0806",LogCriticality.error, rpid);
+					CarUtility.locError("ERR0806", rpid);
 					ModelAndView r = new ModelAndView("errorPage");
 					r.addObject("message",CarUtility.getLocalError("ERR0806",rpid));
 					r.addObject("page-title","Unrecognized RP");
 					r.addObject("intercept_view","1");
+					r.addObject("transient","true");
+					r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+					r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 					return r;
 				}
 			}
@@ -2799,9 +2882,10 @@ public class MainController {
 				rrrpp.setRppropertyname(passedRPType);
 				rrrpp.setRppropertyvalue(rpid);
 				rpmetainformation.getRpproperties().add(rrrpp);
+			} else {
+				rrrpp.setRppropertyname("entityId");  // fake an entityId if there isn't one... 
+				rrrpp.setRppropertyvalue(rpid);
 			}
-			rrrpp.setRppropertyname("entityId");  // fake an entityId if there isn't one... 
-			rrrpp.setRppropertyvalue(rpid);
 			
 			rpmetainformation.getRpproperties().add(rrrpp);  // add the entity ID as entityId property
 			// Debug
@@ -3102,7 +3186,8 @@ public class MainController {
 				//ObjectMapper m = new ObjectMapper();
 				ObjectMapper m = OMSingleton.getInstance().getOm();
 				//CarUtility.locError("ERR0078",LogCriticality.debug, m.writeValueAsString(desiredAttributes));
-				CarUtility.locError("ERR0078", LogCriticality.debug, new String(m.writeValueAsBytes(desiredAttributes),StandardCharset.UTF_8));
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR0078", new String(m.writeValueAsBytes(desiredAttributes),StandardCharset.UTF_8));
 			} catch (Exception ign) {
 				// ignore
 			}
@@ -3239,9 +3324,12 @@ public class MainController {
 				decisionRequestJson = mapper.writeValueAsString(dro);
 			} catch (Exception e) {
 				ModelAndView r = new ModelAndView("errorPage");
-				CarUtility.locError("ERR0081",LogCriticality.info, "#1");
+				CarUtility.locError("ERR0081", "#1");
 				r.addObject("messsage",CarUtility.getLocalError("ERR0016"));
 				r.addObject("intercept_view","1");
+				r.addObject("transient","true");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return r;
 			}
 			//TODO: change back to info instead of error
@@ -3250,30 +3338,36 @@ public class MainController {
 			
 			IcmDecisionResponseObject response = CarUtility.sendDecisionRequest(decisionRequestJson,config);
 			//TODO: change back to info instead of error
-			CarUtility.locError("ERR0077",LogCriticality.error, decisionRequestJson);
+			if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+				CarUtility.locDebug("ERR0077", decisionRequestJson);
 			
 			// Check for bad ICM response
 			if (response == null) {
 				ModelAndView r = new ModelAndView("errorPage");
-				CarUtility.locError("ERR0802",LogCriticality.error);
+				CarUtility.locError("ERR0802");
 				r.addObject("message",CarUtility.getLocalError("ERR0802"));
 				r.addObject("intercept_view","1");
+				r.addObject("transient","true");
+				r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			} else {
 				try {
 					//ObjectMapper tmapper = new ObjectMapper();
 					ObjectMapper tmapper = OMSingleton.getInstance().getOm();
 					String m = tmapper.writeValueAsString(response);
 					//TODO: log this at debug not error
-					CarUtility.locError("ERR0803",LogCriticality.error, m);
+					if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+						CarUtility.locDebug("ERR0803", m);
 				} catch (Exception e) {
-					CarUtility.locError("ERR0803",LogCriticality.error,"unable to parse ICM response for log");
+					// ignore -- best effort logging
 				}
 			}
 
 			// We now have an IcmDecisionResponse object.  Save it in the session.
 			session.setAttribute(sconvo + ":" + "icmdecision", response);   // save the current decision response as is.
 			try {
-				CarUtility.locError("ERR0813",LogCriticality.info, response.toJSON());
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR0813", response.toJSON());
 			} catch(Exception e) {
 				// ignore
 			}
@@ -3297,7 +3391,8 @@ public class MainController {
 			}
 			// if RP default is set to "never", override user setting and always default to car.default.showAgain value (usually false)
 			if ((urpmi==null || urpmi.isShowagain()) && (rpmetainformation.getDefaultshowagain() == null || ! rpmetainformation.getDefaultshowagain().equalsIgnoreCase("never"))) {
-				CarUtility.locError("ERR1117",LogCriticality.debug,"User " + uservalue + " has showAgain = true");
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR1117","User " + uservalue + " has showAgain = true");
 				askUserForDecisions = true;   // they said to show them the page again or they've never made a decision so we show on first attempt
 			}
 			boolean haschoices = false; // no choices unless we find some
@@ -3314,7 +3409,6 @@ public class MainController {
 								riimi = CarUtility.getInfoItemMetaInformation(rhid,  idfis.getInfoId().getInfoValue(), config);
 							}
 							if (riimi != null && ! riimi.isAsnd()) {
-								CarUtility.locError("ERR1117",LogCriticality.debug,"askMe decision for " + idfis.getInfoId().getInfoValue());
 								askUserForDecisions = true;
 								todisplay = true;  // RGC - 11-21-2018
 								haschoices = true;
@@ -3339,11 +3433,11 @@ public class MainController {
 			}
 			// RGC - 11-21-2018
 			if (askUserForDecisions && ! todisplay) {
-				CarUtility.locError("ERR1134",LogCriticality.error,"Setting askUserForDecisions to false because todisplay is false");
+				CarUtility.locDebug("ERR1134","Setting askUserForDecisions to false because todisplay is false");
 				askUserForDecisions = false;
 			}
 			
-			CarUtility.locError("ERR1134", LogCriticality.error,"askUserForDecisions is " + askUserForDecisions + " and todisplay is " + todisplay);
+			CarUtility.locDebug("ERR1134","askUserForDecisions is " + askUserForDecisions + " and todisplay is " + todisplay);
 			session.setAttribute(sconvo + ":" + "askUserForDecisions", askUserForDecisions);
 			
 			
@@ -3477,12 +3571,16 @@ public class MainController {
 					decisionRequestJson2 = mapper2.writeValueAsString(dro);
 				} catch (Exception e) {
 					ModelAndView r = new ModelAndView("errorPage");
-					CarUtility.locError("ERR0081",LogCriticality.debug,"#1");
+					CarUtility.locDebug("ERR0081","#1");
 					r.addObject("messsage",CarUtility.getLocalError("ERR0016"));
 					r.addObject("intercept_view","1");
+					r.addObject("transient","true");
+					r.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+					r.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 					return r;
 				}
-				CarUtility.locError("ERR0084",LogCriticality.info,decisionRequestJson2);
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR0084",decisionRequestJson2);
 				edu.internet2.consent.arpsi.model.DecisionResponseObject arpsiResponse = CarUtility.sendARPSIDecisionRequest(decisionRequestJson2, config);
 				boolean hasMustDecisions = false;
 				ArrayList<InjectedDecision> injectedDecisions = new ArrayList<InjectedDecision>();
@@ -3499,10 +3597,10 @@ public class MainController {
 					
 					if (riimi != null && riimi.getDisplayname() != null) {
 						String localized = CarUtility.localize(riimi.getDisplayname(), preflang);
-						CarUtility.locError("ERR0085", LogCriticality.debug,aid,localized);
+						CarUtility.locDebug("ERR0085",aid,localized);
 						attrDisplayName = localized;
 					} else {
-						CarUtility.locError("ERR0086", LogCriticality.info,aid);
+						CarUtility.locDebug("ERR0086",aid);
 						attrDisplayName=aid;
 					}
 					
@@ -3597,10 +3695,10 @@ public class MainController {
 							}
 							if (riimi != null && riimi.getDisplayname() != null) {
 								String localized = CarUtility.localize(riimi.getDisplayname(),preflang);
-								CarUtility.locError("ERR0085", LogCriticality.debug,idfis.getInfoId().getInfoValue(),localized);
+								CarUtility.locDebug("ERR0085",idfis.getInfoId().getInfoValue(),localized);
 								attrDisplayName = localized;
 							} else {
-								CarUtility.locError("ERR0086", LogCriticality.debug,idfis.getInfoId().getInfoValue());
+								CarUtility.locDebug("ERR0086",idfis.getInfoId().getInfoValue());
 								attrDisplayName = idfis.getInfoId().getInfoValue();
 							}
 							
@@ -3810,23 +3908,23 @@ public class MainController {
 				ObjectMapper omapper = OMSingleton.getInstance().getOm();
 				try {
 					debugReturn.addObject("sensitivity",omapper.writeValueAsString(sensitivity));
-					CarUtility.locError("ERR1112",LogCriticality.debug,omapper.writeValueAsString(sensitivity));
+					CarUtility.locDebug("ERR1112",omapper.writeValueAsString(sensitivity));
 				} catch (Exception ign) {
-					CarUtility.locError("ERR1113",LogCriticality.info,sensitivity.toString());
+					CarUtility.locDebug("ERR1113",sensitivity.toString());
 					debugReturn.addObject("sensitivity","");
 				}
 				try {
 					debugReturn.addObject("asnd",omapper.writeValueAsString(asnd));
-					CarUtility.locError("ERR1114",LogCriticality.debug, omapper.writeValueAsString(asnd));
+					CarUtility.locDebug("ERR1114", omapper.writeValueAsString(asnd));
 				} catch (Exception ign) {
-					CarUtility.locError("ERR1115", LogCriticality.info,asnd.toString());
+					CarUtility.locDebug("ERR1115",asnd.toString());
 					debugReturn.addObject("asnd","");
 				}
 				try {
 					debugReturn.addObject("policytype",omapper.writeValueAsString(policytype));
-					CarUtility.locError("ERR1119",LogCriticality.debug,omapper.writeValueAsString(policytype));
+					CarUtility.locDebug("ERR1119",omapper.writeValueAsString(policytype));
 				} catch (Exception ign) {
-					CarUtility.locError("ERR1120",LogCriticality.info, policytype.toString());
+					CarUtility.locDebug("ERR1120", policytype.toString());
 					debugReturn.addObject("policytype","");
 				}
 				try {
@@ -3968,12 +4066,12 @@ public class MainController {
 				debugReturn.addObject("typemap",typemap);
 				
 				if (hasMay || hasMustDecisions || hasNoChoice) {  // pass thru if everything turns out to be missing or ASND
-					CarUtility.locError("ERR1134", LogCriticality.error,"Displaying intercept");
+					CarUtility.locDebug("ERR1134","Displaying intercept");
 					return debugReturn;
 				} 
-				CarUtility.locError("ERR1134",  LogCriticality.error,"Not Displaying intercept, in AskUser mode");
+				CarUtility.locDebug("ERR1134","Not Displaying intercept, in AskUser mode");
 			}
-			CarUtility.locError("ERR1134",  LogCriticality.error,"Not displaying intercept, no user questions either");
+			CarUtility.locDebug("ERR1134","Not displaying intercept, no user questions either");
 		}
 		// if we get here, we're on a return trip by definition.
 		
@@ -3985,6 +4083,8 @@ public class MainController {
 			ModelAndView e = new ModelAndView("errorPage");
 			e.addObject("message","Your browser did not properly identify itself.  This usually indicates a bug.");
 			e.addObject("intercept_view","1");
+			e.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+			e.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 			return e;  // bail out if there is no conversation specified, since we cannot continue otherwise
 		}
 		
@@ -3997,6 +4097,8 @@ public class MainController {
 				ModelAndView e = new ModelAndView("errorPage");
 				e.addObject("message","CSRF failure.  This may occur due to a sesison timeout, due to the use of your browser's back button, or due to purposeful attack.");
 				e.addObject("intercept_view","1");
+				e.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				e.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
 				return e; // bail out if CSRF test fails for any reason
 			}
 		}
@@ -4070,11 +4172,13 @@ public class MainController {
 									}
 								}
 							}
-							if (usectr) {
+							/* Removing debugging here */
+							/*if (usectr) {
 								CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),String.valueOf(ctr),v,request.getParameter("radio_"+iids.getInfoId().getInfoValue()+"_"+ctr));
 							} else {
 								CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),"nocounter",v,idov.getReleaseDecision().toString());
-							}
+							}*/
+							
 							// At this point, if usectr is false, we didn't get a value, and if it is true, 
 							// we use ctr as the counter for the value
 							if (!usectr) {
@@ -4136,18 +4240,19 @@ public class MainController {
 								}
 							}
 						}
-						if (usectr) {
+						/* Removing debugging here */
+						/*if (usectr) {
 							CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),String.valueOf(ctr),v,request.getParameter("radio_"+iids.getInfoId().getInfoValue()+"_"+ctr));
 						} else {
 							CarUtility.locError("ERR0812",LogCriticality.debug,iids.getInfoId().getInfoValue(),"nocounter",v,idov.getReleaseDecision().toString());
-						}
+						}*/
 						
 						// At this point, if usectr is false, we didn't get a value, and if it is true, 
 						// we use ctr as the counter for the value
 						if (!usectr) {
 							// this is an odd case that shouldn't happen, but if it does somehow, we simply
 							// use the value that was present to begin with.
-							CarUtility.locError("ERR0801",LogCriticality.error);
+							CarUtility.locError("ERR0801");
 							// CarUtility.locError("ERR1134", LogCriticality.error,"Handling " + iids.getInfoId().getInfoValue());
 							AttributeValuePair avp = new AttributeValuePair();
 							avp.setAttrname(iids.getInfoId().getInfoValue());
@@ -4221,7 +4326,6 @@ public class MainController {
 						nvd.setValue(ap.getAttrvalue());
 						nvd.setDecision("permit");
 						alnvd.add(nvd);
-						CarUtility.locError("ERR1134", LogCriticality.error,"ASND override of ap.getAttrname() = ap.getAttrvalue() applied");
 					}
 				}
 			}
@@ -4249,21 +4353,26 @@ public class MainController {
 				WrappedDecisionResponse w = new WrappedDecisionResponse();
 				w.setDecisionResponse(unwrapped);
 				if (! useCrypto) {
-					CarUtility.locLog("LOG1002",LogCriticality.debug);
+					CarUtility.locDebug("LOG1002");
 					resultView.addObject("json",new String(Base64.encodeBase64(w.toJson().getBytes())));
 				} else {
-					CarUtility.locLog("LOG1003",LogCriticality.debug);
+					CarUtility.locDebug("LOG1003");
 					resultView.addObject("json",signAndEncryptToRHAsJWT(new String(Base64.encodeBase64(w.toJson().getBytes())),rhid));
 				}
 				resultView.addObject("returnUrl",returntourl);
 				// debug
-				CarUtility.locError("ERR0808",LogCriticality.debug,w.toJson());
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CarUtility.locDebug("ERR0808",LogCriticality.debug,w.toJson());
 			} catch (Exception e) {
 				// for now, we don't care about why
 				ModelAndView error = new ModelAndView("errorPage");
 				error.addObject("message","Failed constructing base64 encoded JSON representation for return: " + e.getMessage());
 				error.addObject("intercept_view","1");
-				return new ModelAndView("errorPage");
+				error.addObject("transient","true");
+				error.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));
+				error.addObject("institutional_logo_url",CarUtility.getLocalComponent("institutional_logo_url"));
+				/*return new ModelAndView("errorPage");*/
+				return error;
 			}
 			
 			// Immediately before returning the push to the other side, check if updates are required, and
@@ -4279,7 +4388,7 @@ public class MainController {
 				if (request.getParameter("saveandshow") != null || request.getParameter("saveandhide") != null) {
 					// we need to do a merge-save
 					// Start by getting the existing COPSU policy
-					CarUtility.locError("ERR0804",LogCriticality.debug);
+					CarUtility.locDebug("ERR0804");
 					UserReturnedPolicy rp = CarUtility.getCOPSUPolicy(username,rhid,rpid,config);
 					UserInfoReleasePolicy irp = rp.getUserInfoReleasePolicy();
 					// And build a new IRP from the name-value decisions we have for the must and may decisions
@@ -4413,21 +4522,21 @@ public class MainController {
 					for (int sc = 0; sc < 5 && !succ; sc++) {
 						succ = CarUtility.putCOPSUPolicy(baseid,newirp,config);
 						if (!succ)
-							CarUtility.locError("ERR0814",LogCriticality.error,String.valueOf(sc));
+							CarUtility.locError("ERR0814",String.valueOf(sc));
 					}
 				}
 				// And regardless of that, update showagain for the user accordingly
 				// We use usertype and username to do the setting
 				if (request.getParameter("saveandshow") != null || request.getParameter("dontsave") != null || ! succ) {
-					CarUtility.locError("ERR0809",LogCriticality.debug,"true");
+					CarUtility.locDebug("ERR0809","true");
 					CarUtility.setShowAgain(usertype,username,rpid,true,config);
 				} else {
-					CarUtility.locError("ERR0809",LogCriticality.debug,"false");
+					CarUtility.locDebug("ERR0809","false");
 					CarUtility.setShowAgain(usertype,username,rpid,false,config);
 				}
 			} catch (Exception ign) {
 				// Log and ignore
-				CarUtility.locError("ERR0805",LogCriticality.error,CarUtility.exceptionStacktraceToString(ign));
+				CarUtility.locError("ERR0805",CarUtility.exceptionStacktraceToString(ign));
 			}
 			// and after a best effort at updating, send the response onward
 			resultView.addObject("top_heading",CarUtility.getLocalComponent("top_heading"));

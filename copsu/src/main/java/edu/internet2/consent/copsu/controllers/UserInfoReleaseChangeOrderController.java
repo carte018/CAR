@@ -16,6 +16,7 @@
  */
 package edu.internet2.consent.copsu.controllers;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,8 +33,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -58,12 +59,50 @@ public class UserInfoReleaseChangeOrderController {
 
 	@SuppressWarnings("unused")
 	private String caller = "";
-	@SuppressWarnings("unused")
-	private static final Log LOG=LogFactory.getLog(UserInfoReleaseChangeOrderController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG=LogFactory.getLog(UserInfoReleaseChangeOrderController.class);
 	
 	// Response builder
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = CopsuUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	// CORS
@@ -84,11 +123,11 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			config = CopsuUtility.init("getChangeOrder", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
+			return CopsuUtility.locError(500,"ERR0004");
 		}
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 		
 		Query<ReturnedChangeOrder> coQuery = sess.createQuery("from ReturnedChangeOrder where changeOrderMetaData.changeOrderId = :changeId",ReturnedChangeOrder.class);
@@ -103,7 +142,7 @@ public class UserInfoReleaseChangeOrderController {
 				return resp;
 			} catch (Exception e) {
 				sess.close();
-				return CopsuUtility.locError(500, "ERR0044",LogCriticality.error,e.getMessage());
+				return CopsuUtility.locError(500, "ERR0044",e.getMessage());
 			}
 		} else {
 			sess.close();
@@ -159,7 +198,7 @@ public class UserInfoReleaseChangeOrderController {
 		
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 		
 		Query<ReturnedChangeOrder> coQuery = sess.createQuery(sb.toString(),ReturnedChangeOrder.class);
@@ -189,7 +228,7 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			return buildResponse(Status.OK,list.toJSON());
 		} catch (JsonProcessingException j) {
-			return CopsuUtility.locError(500, "ERR0016",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0016");
 		} finally {
 			sess.close();
 		}
@@ -209,7 +248,7 @@ public class UserInfoReleaseChangeOrderController {
 		try {
 			config = CopsuUtility.init("postChangeOrder", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
+			return CopsuUtility.locError(500,"ERR0004");
 		}
 		
 		// Input is a JSON serialized ChangeOrder
@@ -238,7 +277,7 @@ public class UserInfoReleaseChangeOrderController {
 		} catch (JsonMappingException e) {
 			return CopsuUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return CopsuUtility.locError(500, "ERR0007",LogCriticality.info);
+			return CopsuUtility.locError(500, "ERR0007");
 		}
 		
 		// Otherwise, we mapped the input JSON to a change order
@@ -312,7 +351,7 @@ public class UserInfoReleaseChangeOrderController {
 		
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			return CopsuUtility.locError(500, "ERR0018",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0018");
 		}
 
 		
@@ -356,13 +395,20 @@ public class UserInfoReleaseChangeOrderController {
 			// If there is an exception during the application, we must roll back the transaction
 			// We assume here that the apply() method in the returned change order has already rolled back any changes it made based on its exception
 			// And return a failure
-			return CopsuUtility.locError(500, "ERR0037", LogCriticality.error, "Change order application failure: " + e.getMessage());
+			return CopsuUtility.locError(500, "ERR0037", "Change order application failure: " + e.getMessage());
 		}
 		try {
+			try {
+				CopsuUtility.locLog("LOG0015","Change order " + rco.getChangeOrderMetaData().getChangeOrderId() + " applied");
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CopsuUtility.locDebug("LOG0015","Change order text: " + rco.toJSON());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.OK,rco.toJSON());
 		} catch (Exception e) {
 			// JSON parsing error
-			return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0016");
 		}
 	} 
 }

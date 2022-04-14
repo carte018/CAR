@@ -16,11 +16,13 @@
  */
 package edu.internet2.consent.copsu.controllers;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,9 +32,11 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,8 +65,8 @@ import edu.internet2.consent.exceptions.CopsuInitializationException;
 public class UserInfoReleaseDecisionController {
 	@SuppressWarnings("unused")
 	private static String caller = ""; // calling user/system
-	@SuppressWarnings("unused")
-	private static Log LOG = LogFactory.getLog(UserInfoReleaseDecisionController.class);
+	//@SuppressWarnings("unused")
+	//private static Log LOG = LogFactory.getLog(UserInfoReleaseDecisionController.class);
 	
 	// This WS comprises a single (POST) endpoint that accepts a JSON represented decisionRequestObject
 	// and returns a decisionResponseObject.
@@ -75,6 +79,43 @@ public class UserInfoReleaseDecisionController {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "POST").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
 	}
 	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = CopsuUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
+	}
 	
 	// No authentication support at the moment, although we call a stub authorization check in
 	// each endpoint.
@@ -108,7 +149,7 @@ public class UserInfoReleaseDecisionController {
 		try {
 			config = CopsuUtility.init("postDecisionRequest", request, headers, null);
 		} catch (CopsuInitializationException e) {
-			return CopsuUtility.locError(500,"ERR0004",LogCriticality.error);
+			return CopsuUtility.locError(500,"ERR0004");
 		}
 		// Parse the input document
 		//ObjectMapper mapper = new ObjectMapper();
@@ -122,7 +163,7 @@ public class UserInfoReleaseDecisionController {
 		} catch (JsonMappingException me) {
 			return CopsuUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception ioe) {
-			return CopsuUtility.locError(500, "ERR0007",LogCriticality.error);
+			return CopsuUtility.locError(500, "ERR0007");
 		}
 		
 		// Now we have the inputRequest parsed -- check for mandatory fields in the JSON
@@ -315,7 +356,7 @@ public class UserInfoReleaseDecisionController {
 				if (!foundReleaseDirective) {
 					// If no directive can be descried for this case, we have an error
 					sess.close();
-					return CopsuUtility.locError(404, "ERR0036",LogCriticality.error,iiv,iid.getInfoValue());
+					return CopsuUtility.locError(404, "ERR0036",iiv,iid.getInfoValue());
 				}
 			}
 			// For iid (one of the requested info IDs) we now have the breakout of what gets what response
@@ -385,12 +426,18 @@ public class UserInfoReleaseDecisionController {
 		} catch (Exception e) {
 			// leak prevention
 			sess.close();
-			return CopsuUtility.locError(500, "ERR0037",LogCriticality.error,e.getMessage());
+			return CopsuUtility.locError(500, "ERR0037",e.getMessage());
 		} 
 		// And return
 		try {
 			// Log what we've done
-			CopsuUtility.locLog("LOG0013",LogCriticality.info,dro.getDecisionId(),applicablePolicy.getPolicyMetaData().getPolicyId().getBaseId(),applicablePolicy.getPolicyMetaData().getPolicyId().getVersion());
+			try {
+				CopsuUtility.locLog("LOG0013",LogCriticality.info,dro.getDecisionId(),applicablePolicy.getPolicyMetaData().getPolicyId().getBaseId(),applicablePolicy.getPolicyMetaData().getPolicyId().getVersion());
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					CopsuUtility.locDebug("LOG0015","Decision: " + dro.toJSON());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.OK,dro.toJSON());
 		} catch (Exception e) {
 			return CopsuUtility.locError(500, "ERR0016", LogCriticality.error);

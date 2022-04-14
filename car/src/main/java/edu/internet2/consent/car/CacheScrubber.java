@@ -100,7 +100,7 @@ public class CacheScrubber extends TimerTask {
 		// Get our parameter (mintime -- cycletime matters for the scheduler not for us
 		CarConfig config = CarConfig.getInstance();
 		String mintimes = config.getProperty("car.cache.scrubber.mintime",false);
-		int mintime = 600;  // default to 600 seconds lifetime in cache
+		int mintime = 1200;  // default to 1200 seconds (20 minutes) lifetime in cache
 		if (mintimes != null) {
 			mintime = Integer.parseInt(mintimes);
 		}
@@ -108,7 +108,7 @@ public class CacheScrubber extends TimerTask {
 		status = "Scrubbing RPs";
 		
 		// And start scrubbing with the RP metainformation
-		CarUtility.locError("ERR1123",LogCriticality.debug);
+		CarUtility.locDebug("ERR1123");
 		RPMetaInformationCache rpmic = RPMetaInformationCache.getInstance();
 		Iterator<Entry<String,CachedRPMetaInformation>> iter = rpmic.getCache().iterator();
 		long c = 0;
@@ -119,7 +119,7 @@ public class CacheScrubber extends TimerTask {
 			httpClient = CarHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			CarUtility.locError("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			CarUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 		while (iter.hasNext()) {
@@ -138,10 +138,10 @@ public class CacheScrubber extends TimerTask {
 					ReturnedRPMetaInformation foo = CarUtility.getRPMetaInformation(rhid, rptype, rpid,config,httpClient);
 					if (foo == null) {
 						n += 1;
-						CarUtility.locDebugErr("ERR1128",rhid,rptype+"|"+rpid);
+						CarUtility.locDebug("ERR1128",rhid,rptype+"|"+rpid);
 					} else {
 						if (foo.getDisplayname() != null && foo.getDisplayname().getLocales() != null && ! foo.getDisplayname().getLocales().isEmpty()) 
-							CarUtility.locDebugErr("ERR1129",rhid,rptype+"|"+rpid,foo.getDisplayname().getLocales().get(0).getValue());
+							CarUtility.locDebug("ERR1129",rhid,rptype+"|"+rpid,foo.getDisplayname().getLocales().get(0).getValue());
 					}
 				} else {
 					String[] p = e.getKey().split("\\|",2);
@@ -152,10 +152,10 @@ public class CacheScrubber extends TimerTask {
 					ReturnedRPMetaInformation foo = CarUtility.getRPMetaInformation(rhid,rpid,config,httpClient);
 					if (foo == null) {
 						n += 1;
-						CarUtility.locDebugErr("ERR1128",rhid,rpid);
+						CarUtility.locDebug("ERR1128",rhid,rpid);
 					} else {
 						if (foo.getDisplayname() != null && foo.getDisplayname().getLocales() != null && ! foo.getDisplayname().getLocales().isEmpty()) 
-							CarUtility.locDebugErr("ERR1129",rhid,rpid,foo.getDisplayname().getLocales().get(0).getValue());
+							CarUtility.locDebug("ERR1129",rhid,rpid,foo.getDisplayname().getLocales().get(0).getValue());
 					}
 				}
 			}
@@ -165,7 +165,7 @@ public class CacheScrubber extends TimerTask {
 		status = "Scrubbing IIs";
 		
 		// And then scrub the II metainformation in the same fashion
-		CarUtility.locError("ERR1124",LogCriticality.debug);
+		CarUtility.locDebug("ERR1124");
 		InfoItemMetaInformationCache iimic = InfoItemMetaInformationCache.getInstance();
 		Iterator<Entry<String,CachedInfoItemMetaInformation>> iiter = iimic.getCache().iterator();
 		c = 0;
@@ -186,10 +186,12 @@ public class CacheScrubber extends TimerTask {
 					// TODO:  For the moment, we special-case the "oauth_scope" type explicitly here 
 					// TODO: to resolve a cache corruption caused by conflating oauth_scope iis
 					// TODO: with attribute iis.
-					iimic.evictCachedInfoItemMetaInformation(rhid,iiid);
+					
+					// No longer evicting null entries from the cache -- they are valid negative cache elements
+					// iimic.evictCachedInfoItemMetaInformation(rhid,iiid);
 					if (CarUtility.getInfoItemMetaInformation(rhid, "oauth_scope", iiid,config,httpClient) == null) {
 						n += 1;
-						CarUtility.locDebugErr("ERR1128",rhid,iiid);
+						CarUtility.locDebug("ERR1128",rhid,iiid);
 					}
 				}
 			}
@@ -198,7 +200,7 @@ public class CacheScrubber extends TimerTask {
 		status = "Scrubbing values";
 		
 		// And finally the value metainformation
-		CarUtility.locError("ERR1125",LogCriticality.debug);
+		CarUtility.locDebug("ERR1125");
 		ValueMetaInformationCache vmic = ValueMetaInformationCache.getInstance();
 		Iterator<Entry<String,CachedValueMetaInformation>> viter = vmic.getCache().iterator();
 		c = 0;
@@ -215,12 +217,12 @@ public class CacheScrubber extends TimerTask {
 				//vmic.storeCachedValueMetaInformation(iiid, value, CarUtility.getValueMetaInformation(iiid, value, config));
 				if (CarUtility.getValueMetaInformation(iiid,value,config, httpClient) == null) {
 					n += 1;
-					CarUtility.locDebugErr("ERR1128",iiid,value);
+					CarUtility.locDebug("ERR1128",iiid,value);
 				}
 			}
 		}
 		lastvalsize = c - n;
-		CarUtility.locError("ERR1126",LogCriticality.debug);
+		CarUtility.locDebug("ERR1126");
 		status = "Idle";
 		runcount += 1;
 		lastrunduration = System.currentTimeMillis() - lastrunstart;

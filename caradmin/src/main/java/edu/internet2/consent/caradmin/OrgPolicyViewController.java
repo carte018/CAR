@@ -232,7 +232,7 @@ public class OrgPolicyViewController {
 					rr.setOperation("moveAfter");
 					rr.setPolicy(req.getParameter("afterid"));
 				}
-				CarAdminUtils.locError("ERR0063",LogCriticality.debug,rr.getPolicyToChange(),rr.getOperation(),rr.getPolicy());
+				CarAdminUtils.locDebug("ERR0063",rr.getPolicyToChange(),rr.getOperation(),rr.getPolicy());
 				CarAdminUtils.postIcmPolicyPrecedence(rr);
 				return(retval);
 			} else if (req.getParameter("formid") != null && req.getParameter("formid").equals("orgpolmover")) {
