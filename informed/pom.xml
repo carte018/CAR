@@ -247,7 +247,7 @@
     <servlet-api-version>2.5</servlet-api-version>
     <!-- <springfox-version>2.3.1</springfox-version>
     <spring-version>4.1.8.RELEASE</spring-version> -->
-    <hibernate-version>5.4.0.Final</hibernate-version>
+    <hibernate-version>5.4.24.Final</hibernate-version>
     <hikaricp-version>3.2.0</hikaricp-version>
     <mysql-version>8.0.13</mysql-version>
     <validator-version>6.0.13.Final</validator-version>
