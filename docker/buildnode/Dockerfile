@@ -9,7 +9,7 @@ MAINTAINER Rob Carter "rob@duke.edu"
 #
 # Misc Prep
 #
-ADD sources.list /etc/apt/sources.list
+#ADD sources.list /etc/apt/sources.list
 ADD container.tar.gz /tmp/
 ADD ldap.tar.gz /tmp/
 ADD lconfig.tar.gz /etc/
