@@ -15,7 +15,7 @@ RUN groupadd -r tomcat8 && useradd -r -g tomcat8 tomcat8
 #
 # Misc Prep
 #
-ADD sources.list /etc/apt/sources.list
+#ADD sources.list /etc/apt/sources.list
 RUN apt-get -y update
 RUN apt-get -y install apt-utils
 RUN apt-get -y update
