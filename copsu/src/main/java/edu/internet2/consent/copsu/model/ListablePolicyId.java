@@ -31,7 +31,8 @@ public class ListablePolicyId {
 	
 	@JsonIgnore
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long ListablePolicyIdentifier;
 	
 	@JsonProperty("baseId")

@@ -30,8 +30,12 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
@@ -53,7 +57,7 @@ import edu.internet2.consent.icm.model.ErrorModel;
 
 public class IcmUtility {
 	
-	private static final Log LOG=LogFactory.getLog(IcmUtility.class);
+	private static final Logger LOG=LoggerFactory.getLogger(IcmUtility.class);
 	private static ResourceBundle locRB = ResourceBundle.getBundle("i18n.errors",new Locale("en")); // singleton for error processing, "en" default
 	private static ResourceBundle locDB = ResourceBundle.getBundle("i18n.logs",new Locale("en"));   // singleton for logging debugs
 	private static boolean registered = false;
@@ -130,6 +134,13 @@ public class IcmUtility {
 		if (sl != null) {
 				locDB = ResourceBundle.getBundle("i18n.logs",new Locale(sl));  // override if found
 		}
+		
+		// Adjust the logger's config'd log level if logLevel is specified in configuration
+		
+		if (config.getProperty("logLevel", false) != null) {
+			((ch.qos.logback.classic.Logger)LOG).setLevel(Level.toLevel(config.getProperty("logLevel", false)));
+		}
+		
 		return(config);
 		
 	}
@@ -160,12 +171,37 @@ public class IcmUtility {
 
 	}
 	
+	public static Response locError(int retcode, String errcode) {
+		return locError(retcode,errcode,LogCriticality.error);
+	}
+	public static Response locError(int retcode, String errcode, String... strings) {
+		return locError(retcode,errcode,LogCriticality.error,strings);
+	}
+	
+	public static void locLog(String errcode) {
+		locLog(errcode, LogCriticality.info);
+	}
+	public static void locLog(String errcode, String...strings) {
+		locLog(errcode, LogCriticality.info, strings);
+	}
+	
+	public static void locDebug(String errcode) {
+		locDebug(errcode, LogCriticality.debug);
+	}
+	public static void locDebug(String errcode, String...strings) {
+		locDebug(errcode, LogCriticality.debug, strings);
+	}
+	
 	public static Response locError(int retcode, String errcode,LogCriticality crit) {
 		// return the Response object to use for an error return.  Along the way, write a log message.
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
+		// No longer necessary
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		if (crit == null || LogCriticality.error.equals(crit))
 			LOG.error("ERROR ecode=" + errcode + ": " + locRB.getString(errcode));
+		else
+			LOG.info("ERROR ecode=" + errcode + ": " + locRB.getString(errcode));
 		return new ErrorModel(retcode,locRB.getString(errcode)).toResponse();
 	}
 	
@@ -179,18 +215,24 @@ public class IcmUtility {
 					raw = raw.replaceAll("\\{"+i+"\\}", args[i]);
 			}
 		}
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
+		// No longer needed
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		if (crit == null || LogCriticality.error.equals(crit))
 			LOG.error("ERROR ecode=" + errcode + ": " + raw);
+		else
+			LOG.info("ERROR ecode=" + errcode + ": " + raw);
 		return new ErrorModel(retcode,raw).toResponse();
 	}
 	
 	public static void locLog(String errcode,LogCriticality crit) {
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " "+ locDB.getString(errcode));
+		// No longer necessary
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		
+		LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " "+ locDB.getString(errcode));
 	}
 	
 	public static void locLog(String errcode, LogCriticality crit, String...strings) {
@@ -201,12 +243,28 @@ public class IcmUtility {
 					ret = ret.replaceAll("\\{"+i+"\\}",strings[i]);
 			}
 		}
-		if (crit == null)
-			crit = LogCriticality.error;
-		if (isLog(crit))
-			LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " " + ret);
+		// No longer necessary
+		//if (crit == null)
+		//	crit = LogCriticality.error;
+		//if (isLog(crit))
+		
+		LOG.info(crit.toString().toUpperCase() + " ecode=" + errcode + " " + ret);
 	}
 	
+	public static void locDebug(String errcode,LogCriticality crit) {
+		LOG.debug(crit.toString().toUpperCase() + " ecode=" + errcode + " "+ locDB.getString(errcode));
+	}
+	public static void locDebug(String errcode, LogCriticality crit, String...strings) {
+		String ret = locDB.getString(errcode);
+		if (ret != null && strings != null && strings.length > 0) {
+			for (int i=0;i<strings.length;i++) {
+				if (strings[i] != null) 
+					ret = ret.replaceAll("\\{"+i+"\\}", strings[i]);
+			}
+		}
+		LOG.debug(crit.toString().toUpperCase() + " ecode=" + errcode + " " + ret);
+	}
+
 	public static Session getHibernateSession() {
 		Session session = (Session) threadLocal.get(); 
 		

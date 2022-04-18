@@ -60,7 +60,7 @@ public class CarAdminHttpClientFactory {
 			client = HttpClients.custom().setConnectionManagerShared(true).setConnectionManager(pool).setSSLSocketFactory(factory).build();
 		} catch (Exception e) {
 			// On exception fall through and allow the failure to trigger a downstream exception
-			CarAdminUtils.locError("ERR1136", LogCriticality.error,e.getMessage());
+			CarAdminUtils.locError("ERR1136",e.getMessage());
 		}
 	}
 	
@@ -69,7 +69,7 @@ public class CarAdminHttpClientFactory {
 		if (client != null) {
 			return client;
 		}
-		CarAdminUtils.locError("ERR1136", LogCriticality.error,"Failed retrieving client from factory");
+		CarAdminUtils.locError("ERR1136","Failed retrieving client from factory");
 		throw new RuntimeException("Failed retrieving client from SSL connection factory");
 	}
 	

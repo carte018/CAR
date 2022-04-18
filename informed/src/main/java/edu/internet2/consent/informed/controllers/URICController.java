@@ -30,8 +30,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -51,12 +51,50 @@ public class URICController {
 
 	@SuppressWarnings("unused")
 	private String caller="";
-	@SuppressWarnings("unused")
-	private final Log LOG = LogFactory.getLog(URICController.class);
+	//@SuppressWarnings("unused")
+	//private final Log LOG = LogFactory.getLog(URICController.class);
 	
 	// Response builder
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST, PUT, DELETE").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = InformedUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	// CORS
@@ -84,7 +122,7 @@ public class URICController {
 		try {
 			config = InformedUtility.init("deleteURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Unescape
@@ -93,7 +131,7 @@ public class URICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		// Get a transaction
@@ -111,6 +149,14 @@ public class URICController {
 			sess.delete(rurpmi.get(0));
 			tx.commit();
 			sess.close();
+			try {
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					InformedUtility.locLog("ERR0070","Deleted user metainformation record " + rurpmi.get(0).getRumiid() + " for user " + rurpmi.get(0).getUseridentifier().getUsertype() + "," + rurpmi.get(0).getUseridentifier().getUserid());
+				else
+					InformedUtility.locLog("ERR0070","Deleted user metainformation record " + rurpmi.get(0).getRumiid());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 		} else {
 			tx.commit();
 			sess.close();
@@ -135,14 +181,14 @@ public class URICController {
 		try {
 			config = InformedUtility.init("getURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		Query<ReturnedUserRPMetaInformation> retQuery = sess.createQuery("from ReturnedUserRPMetaInformation",ReturnedUserRPMetaInformation.class);
@@ -160,7 +206,7 @@ public class URICController {
 				
 				return buildResponse(Status.OK,mapper.writeValueAsString(rurpmi));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -177,7 +223,7 @@ public class URICController {
 		try {
 			config = InformedUtility.init("getURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 
 		// Unescape
@@ -186,7 +232,7 @@ public class URICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 
 		Query<ReturnedUserRPMetaInformation> retQuery = sess.createQuery("from ReturnedUserRPMetaInformation where rpidentifier.rptype = :rptype and rpidentifier.rpid = :rpid and useridentifier.usertype = :usertype and useridentifier.userid = :userid",ReturnedUserRPMetaInformation.class);
@@ -204,7 +250,7 @@ public class URICController {
 			try {
 				return buildResponse(Status.OK,rurpmi.get(0).toJSON());
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}
@@ -221,7 +267,7 @@ public class URICController {
 		try {
 			config = InformedUtility.init("putURMetaInformation", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		//Unescape
@@ -241,7 +287,7 @@ public class URICController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// now we are authorized and we have a valid object
@@ -249,7 +295,7 @@ public class URICController {
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Start a transaction
@@ -272,6 +318,14 @@ public class URICController {
 			tx.commit();
 			sess.close();
 			tosave = rurpmi;
+			try {
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					InformedUtility.locLog("ERR0070","Created user metainfo record " + rurpmi.getRumiid() + " for user " + rurpmi.getUseridentifier().getUsertype() + "," + rurpmi.getUseridentifier().getUserid());
+				else
+					InformedUtility.locLog("ERR0070","Created user metainfo record " + rurpmi.getRumiid());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 		} else {
 			// update retList[0] with ritl data and save it
 			retList.get(0).setShowagain(rurpmi.isShowagain());
@@ -279,6 +333,14 @@ public class URICController {
 			tosave=retList.get(0);
 			tx.commit();
 			sess.close();
+			try {
+				if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+					InformedUtility.locLog("ERR0070","Updated user metainfo record " + rurpmi.getRumiid() + " for user " + rurpmi.getUseridentifier().getUsertype() + "," + rurpmi.getUseridentifier().getUserid());
+				else
+					InformedUtility.locLog("ERR0070","Updated user metainfo record " + rurpmi.getRumiid());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 		}
 		} catch (Exception e) {
 			tx.rollback();
@@ -292,7 +354,7 @@ public class URICController {
 		try {
 			return buildResponse(Status.OK,tosave.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 }

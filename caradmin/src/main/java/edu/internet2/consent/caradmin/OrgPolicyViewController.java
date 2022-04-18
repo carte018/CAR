@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -232,7 +232,7 @@ public class OrgPolicyViewController {
 					rr.setOperation("moveAfter");
 					rr.setPolicy(req.getParameter("afterid"));
 				}
-				CarAdminUtils.locError("ERR0063",LogCriticality.debug,rr.getPolicyToChange(),rr.getOperation(),rr.getPolicy());
+				CarAdminUtils.locDebug("ERR0063",rr.getPolicyToChange(),rr.getOperation(),rr.getPolicy());
 				CarAdminUtils.postIcmPolicyPrecedence(rr);
 				return(retval);
 			} else if (req.getParameter("formid") != null && req.getParameter("formid").equals("orgpolmover")) {

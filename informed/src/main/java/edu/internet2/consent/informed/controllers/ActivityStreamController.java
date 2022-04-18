@@ -27,8 +27,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -48,12 +48,50 @@ public class ActivityStreamController {
 
 	@SuppressWarnings("unused")
 	private String caller="";
-	@SuppressWarnings("unused")
-	private final Log LOG = LogFactory.getLog(IIICController.class);
+	//@SuppressWarnings("unused")
+	//private final Log LOG = LogFactory.getLog(IIICController.class);
 	
 	// Response builder
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST, PUT, DELETE").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = InformedUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	// No need for CORS here, since this isn't ever being presented via the OpenAPI interface
@@ -69,7 +107,7 @@ public class ActivityStreamController {
 		try {
 			config = InformedUtility.init("postActivityStreamEntry", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Deserialize the input
@@ -86,13 +124,13 @@ public class ActivityStreamController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Override timestamp if needed
@@ -106,6 +144,11 @@ public class ActivityStreamController {
 			sess.save(entry);
 			tx.commit();
 			sess.close();
+			try {
+				InformedUtility.locLog("ERR0070","Created Activity Stream record: " + entry.getAseid());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 		} catch (Exception e) {
 			tx.rollback();
 			throw new RuntimeException("Transaction rollback",e);
@@ -118,7 +161,7 @@ public class ActivityStreamController {
 		try {
 			return buildResponse(Status.OK,entry.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -144,13 +187,13 @@ public class ActivityStreamController {
 		try {
 			config = InformedUtility.init("getActivityStreamEntries", request, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		Query<ActivityStreamEntry> retQuery = null;
 		if (type == null) {
@@ -175,7 +218,7 @@ public class ActivityStreamController {
 				
 				return buildResponse(Status.OK,om.writeValueAsString(lase));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}

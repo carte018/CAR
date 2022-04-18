@@ -45,6 +45,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import edu.internet2.consent.arpsi.auth.AuthenticationDriver;
 import edu.internet2.consent.arpsi.cfg.ArpsiConfig;
 import edu.internet2.consent.arpsi.model.ListOfOrgReturnedPolicy;
 import edu.internet2.consent.arpsi.model.LogCriticality;
@@ -61,12 +62,14 @@ import edu.internet2.consent.arpsi.model.UserProperty;
 import edu.internet2.consent.arpsi.util.ArpsiUtility;
 import edu.internet2.consent.arpsi.util.OMSingleton;
 
+import java.math.BigInteger;
+
 @Path("/org-info-release-policies")
 public class OrgInfoReleasePolicyController {
 	@SuppressWarnings("unused")
 	private String caller = "";
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(OrgInfoReleasePolicyController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG = LogFactory.getLog(OrgInfoReleasePolicyController.class);
 	
 	
 	// Utility method for internal use only for generating responses in proper format.
@@ -74,6 +77,46 @@ public class OrgInfoReleasePolicyController {
 	// We assume that the caller is setting both status code and entity, so we don't differentiate
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	// Healthcheck support for decision controller
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = ArpsiUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select count(1) from dual");
+			c =  ((BigInteger) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	
@@ -114,7 +157,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("postPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
+			return ArpsiUtility.locError(500,"ERR0004");
 		}
 		
 		// Map the input into an org policy 
@@ -165,7 +208,7 @@ public class OrgInfoReleasePolicyController {
 		// Establish a Hibernate session to operate on this stuff
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
+			return ArpsiUtility.locError(500, "ERR0018");
 		}
 		
 		// It is actually perfectly legal to have multiple copies of the exact same policy in the ARPSI, useful
@@ -180,11 +223,13 @@ public class OrgInfoReleasePolicyController {
 		// Set createTime to now
 		opm.setCreateTime(System.currentTimeMillis());
 		
-		// Set creator.  For now, we have no logged in user, so we default to SYSTEM/ARPSI
-		// TODO:  This needs to change when we get an authorization/authentication strategy around the ARPSI
+		// Set creator.  
 		UserId creator = new UserId();
 		creator.setUserType("SYSTEM");
-		creator.setUserValue("ARPSI");
+		creator.setUserValue(AuthenticationDriver.getAuthenticatedUser(request, headers, config));
+		if (creator.getUserValue() == null || creator.getUserValue().equalsIgnoreCase(""))
+			creator.setUserValue("ARPSI");
+
 		opm.setCreator(creator);
 		
 		// Set policy state
@@ -231,10 +276,11 @@ public class OrgInfoReleasePolicyController {
 		sess.save(orp);
 		tx.commit();
 		sess.close();
+		ArpsiUtility.locLog("LOG0021","Stored policy " + orp.getPolicyMetaData().getPolicyId().getBaseId() + ", version " + orp.getPolicyMetaData().getPolicyId().getVersion());
 		try {
 			return buildResponse(Status.OK,orp.toJSON());
 		} catch (JsonProcessingException e) {
-			return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
+			return ArpsiUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -336,9 +382,14 @@ public class OrgInfoReleasePolicyController {
 				lorp.addPolicy(o);
 			}
 			try {
+				ArpsiUtility.locDebug("LOG0021","Returning " + lorp.getContained().size() + " policies for getRootById");
+			} catch (Exception e) {
+				// log at best effort
+			}
+			try {
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (JsonProcessingException j) {
-				return ArpsiUtility.locError(500,"ERR0016",LogCriticality.error);
+				return ArpsiUtility.locError(500,"ERR0016");
 			} finally {
 				if (sess != null) {
 					sess.close();
@@ -376,7 +427,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("getPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
+			return ArpsiUtility.locError(500,"ERR0004");
 		}
 
 		
@@ -387,7 +438,7 @@ public class OrgInfoReleasePolicyController {
 		
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
+			return ArpsiUtility.locError(500, "ERR0018");
 		}
 		sess.setHibernateFlushMode(FlushMode.MANUAL);  // we are read only
 		
@@ -419,6 +470,8 @@ public class OrgInfoReleasePolicyController {
 			queryBuilder.append(" AND policyMetaData.creator.userValue = :creator");
 		}
 		String queryString = queryBuilder.toString();
+		
+		ArpsiUtility.locDebug("LOG0021","getRoot() Query: {" + queryString + "} searching for " + request.getQueryString());
 		
 		Query<OrgReturnedPolicy> searchQuery = sess.createQuery(queryString,OrgReturnedPolicy.class);
 		searchQuery.setParameter("rhvalue", request.getParameter("resource-holder"));
@@ -502,6 +555,11 @@ public class OrgInfoReleasePolicyController {
 		} else {
 			// 200 result
 			try {
+				ArpsiUtility.locDebug("LOG0021","Returning " + retval.getContained().size() + " results from search");
+			} catch (Exception e) {
+				// ignore - log at best effort
+			}
+			try {
 				return buildResponse(Status.OK,retval.toJSON());
 			} catch (Exception e) {
 				return ArpsiUtility.locError(500, "ERR0016",LogCriticality.error);
@@ -527,7 +585,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("putPolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
+			return ArpsiUtility.locError(500,"ERR0004");
 		}
 
 		
@@ -542,7 +600,7 @@ public class OrgInfoReleasePolicyController {
 		} catch (JsonMappingException j) {
 			return ArpsiUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0007",LogCriticality.error);
+			return ArpsiUtility.locError(500,"ERR0007");
 		}
 		
 		// Now we have the input policy
@@ -551,7 +609,7 @@ public class OrgInfoReleasePolicyController {
 		
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500, "ERR0018",LogCriticality.error);
+			return ArpsiUtility.locError(500, "ERR0018");
 		}
 		
 		// Start a transaction
@@ -590,7 +648,7 @@ public class OrgInfoReleasePolicyController {
 		} catch (Exception e) {
 			tx.rollback();
 			sess.close();
-			return ArpsiUtility.locError(500, "ERR0022",LogCriticality.error);
+			return ArpsiUtility.locError(500, "ERR0022");
 		}
 		
 		// Update createTime in the policy
@@ -625,7 +683,11 @@ public class OrgInfoReleasePolicyController {
 		tx.commit();
 		
 		sess.close();
-		
+		try {
+			ArpsiUtility.locLog("LOG0021","Updated policy " + newPolicy.getPolicyMetaData().getPolicyId().getBaseId() + ", to version: " + newPolicy.getPolicyMetaData().getPolicyId().getVersion());
+		} catch (Exception e) {
+			// ignore - log at best effort
+		}
 		try {
 			return buildResponse(Status.OK,newPolicy.toJSON());
 		} catch (JsonProcessingException e) {
@@ -644,7 +706,7 @@ public class OrgInfoReleasePolicyController {
 		try {
 			config = ArpsiUtility.init("deletePolicy", request, headers, null);
 		} catch (Exception e) {
-			return ArpsiUtility.locError(500,"ERR0004",LogCriticality.error);
+			return ArpsiUtility.locError(500,"ERR0004");
 		}
 
 		// Authorization verified.
@@ -654,7 +716,7 @@ public class OrgInfoReleasePolicyController {
 
 		Session sess = ArpsiUtility.getHibernateSession();
 		if (sess == null) {
-			return ArpsiUtility.locError(500,"ERR0018",LogCriticality.error);
+			return ArpsiUtility.locError(500,"ERR0018");
 		}
 		Transaction tx = sess.beginTransaction();
 		
@@ -675,11 +737,21 @@ public class OrgInfoReleasePolicyController {
 				sess.delete(resultList.get(0));
 				tx.commit();
 				sess.close();
+				try {
+					ArpsiUtility.locLog("LOG0021","Expunged policy: " + resultList.get(0).getPolicyMetaData().getPolicyId().getBaseId());
+				} catch (Exception e) {
+					// ignore - log at best effort
+				}
 				return buildResponse(Status.NO_CONTENT,"");
 			} else {
 				resultList.get(0).getPolicyMetaData().setState(PolicyState.inactive);
 				tx.commit();
 				sess.close();
+				try {
+					ArpsiUtility.locLog("LOG0021","Deactivated policy: " + resultList.get(0).getPolicyMetaData().getPolicyId().getBaseId() + ", version" + resultList.get(0).getPolicyMetaData().getPolicyId().getVersion());
+				} catch (Exception e) {
+					// ignore - best effort logging
+				}
 				return buildResponse(Status.NO_CONTENT,"");
 			}
 		}

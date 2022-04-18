@@ -62,9 +62,9 @@ public class ValueMetaInformationCache {
 	public boolean hasCachedValueMetaInformation(String iiid, String iivalue) {
 		//return cache.containsKey(iiid+":"+iivalue);
 		if (! cache.containsKey(iiid+"|"+iivalue))
-				CarUtility.locDebugErr("ERR1121",iiid+"|"+iivalue);
+				CarUtility.locDebug("ERR1121",iiid+"|"+iivalue);
 		else
-				CarUtility.locDebugErr("ERR1122",iiid+"|"+iivalue);
+				CarUtility.locDebug("ERR1122",iiid+"|"+iivalue);
 		return cache.containsKey(iiid+"|"+iivalue);
 	}
 	

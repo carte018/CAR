@@ -32,7 +32,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ValueObject {
 
 		@Id
-		@GeneratedValue(strategy=GenerationType.AUTO)
+		//@GeneratedValue(strategy=GenerationType.AUTO)
+		@GeneratedValue(strategy=GenerationType.IDENTITY)
 		@JsonIgnore
 		private Long valueKey;
 		

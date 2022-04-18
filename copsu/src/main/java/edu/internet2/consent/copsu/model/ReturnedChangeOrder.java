@@ -24,8 +24,7 @@ import javax.persistence.Embedded;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -37,6 +36,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.internet2.consent.copsu.cfg.CopsuConfig;
+import edu.internet2.consent.copsu.util.CopsuUtility;
 import edu.internet2.consent.copsu.util.FactoryFactory;
 import edu.internet2.consent.copsu.util.OMSingleton;
 
@@ -44,7 +44,8 @@ import edu.internet2.consent.copsu.util.OMSingleton;
 public class ReturnedChangeOrder {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long ChangeOrderIdentifier;
 
@@ -145,7 +146,6 @@ public class ReturnedChangeOrder {
 		//    close the session
 		//    return (void)
 		
-		final Log LOG = LogFactory.getLog(ReturnedChangeOrder.class);
 		CopsuConfig config = CopsuConfig.getInstance();
 		
 		// Get a Hibernate session/transaction started
@@ -257,7 +257,7 @@ public class ReturnedChangeOrder {
 		} catch (Exception e) {
 			tx.rollback();
 			sess.close();
-			LOG.error("Exception while updating existing policy:  " + e.getMessage());
+			CopsuUtility.locDebug("LOG0015","Exception while updating existing policy: " + e.getMessage());
 			throw new RuntimeException(e);
 		}
 		tx.commit();

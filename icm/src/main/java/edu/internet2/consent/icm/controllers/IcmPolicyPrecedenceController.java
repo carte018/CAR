@@ -28,8 +28,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -52,14 +52,52 @@ import edu.internet2.consent.icm.cfg.IcmConfig;
 public class IcmPolicyPrecedenceController {
 
 	String caller = "";
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(IcmPolicyPrecedenceController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG = LogFactory.getLog(IcmPolicyPrecedenceController.class);
 	
 	// Utility method for internal use only for generating responses in proper format.
 	// We tack on the headers required for CORS with Swagger.io here automatically
 	// We assume that the caller is setting both status code and entity, so we don't differentiate
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = IcmUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	// OPTIONS responder for CORS compliance for the "/" pathed endpoints
@@ -78,7 +116,7 @@ public class IcmPolicyPrecedenceController {
 		try {
 			config = IcmUtility.init("getPrecedence", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004",LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}
 		
 		// Now we are authorized
@@ -94,7 +132,7 @@ public class IcmPolicyPrecedenceController {
 		// Hibernate
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 		
 		ListOfReturnedPrecedenceObject lorp = new ListOfReturnedPrecedenceObject();
@@ -125,7 +163,7 @@ public class IcmPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
+				return IcmUtility.locError(500, "ERR0016");
 			}
 		}
 		
@@ -167,7 +205,7 @@ public class IcmPolicyPrecedenceController {
 				sess.close();
 				return buildResponse(Status.OK,lorp.toJSON());
 			} catch (Exception e) {
-				return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
+				return IcmUtility.locError(500, "ERR0016");
 			}
 		}
 		
@@ -177,7 +215,7 @@ public class IcmPolicyPrecedenceController {
 		
 		if (retList == null || retList.isEmpty()) {
 			sess.close();
-			return IcmUtility.locError(404, "ERR0019", LogCriticality.error);
+			return IcmUtility.locError(404, "ERR0019", LogCriticality.info);
 		}
 		
 		for (IcmReturnedPolicy irp : retList) {
@@ -192,9 +230,14 @@ public class IcmPolicyPrecedenceController {
 		
 		try {
 			sess.close();
+			try {
+				IcmUtility.locDebug("ERR1137","Returning precedence for " + lorp.getContained().size() + " ICM Policies");
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.OK,lorp.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -211,7 +254,7 @@ public class IcmPolicyPrecedenceController {
 		try {
 			config = IcmUtility.init("patchPrecedence", request, headers, null);
 		} catch (Exception e) {
-			return IcmUtility.locError(500,"ERR0004", LogCriticality.error);
+			return IcmUtility.locError(500,"ERR0004");
 		}		
 		
 		List<PrecedenceInstruction>piList = null;
@@ -233,7 +276,7 @@ public class IcmPolicyPrecedenceController {
 
 		Session sess = IcmUtility.getHibernateSession();
 		if (sess == null) {
-			return IcmUtility.locError(500, "ERR0018",LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0018");
 		}
 
 		Transaction tx = (Transaction) sess.beginTransaction();
@@ -351,9 +394,14 @@ public class IcmPolicyPrecedenceController {
 		
 		try {
 			sess.close();
+			try {
+				IcmUtility.locLog("ERR1137","Updated ICM policy precedence: " + lorp.toJSON());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 			return buildResponse(Status.OK,lorp.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0016", LogCriticality.error);
+			return IcmUtility.locError(500, "ERR0016");
 		}
 	}
 }

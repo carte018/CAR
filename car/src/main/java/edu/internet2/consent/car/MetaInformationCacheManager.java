@@ -58,7 +58,7 @@ public class MetaInformationCacheManager {
 			if (cycletimes != null) {
 				cycletime = Long.parseLong(cycletimes);
 			}
-			CarUtility.locError("ERR1127",LogCriticality.info,String.valueOf(cycletime));
+			CarUtility.locLog("ERR1127",String.valueOf(cycletime));
 			timer.scheduleAtFixedRate(timed,cycletime*1000,cycletime*1000);
 		   }
 		  }

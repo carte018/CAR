@@ -36,13 +36,15 @@ import javax.ws.rs.core.Response.Status;
 
 import edu.internet2.consent.copsu.model.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -79,8 +81,8 @@ public class UserInfoReleasePoliciesController {
 
 	@SuppressWarnings("unused")
 	private String caller = "";
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(UserInfoReleasePoliciesController.class);
+	//@SuppressWarnings("unused")
+	//private static final Log LOG = LogFactory.getLog(UserInfoReleasePoliciesController.class);
 	
 	// Utility method for internal use only for generating responses in proper format.
 	// We tack on the headers required for CORS with Swagger.io here automatically
@@ -88,6 +90,44 @@ public class UserInfoReleasePoliciesController {
 
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin", "http://editor.swagger.io").header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH").header("Access-Control-Allow-Credentials", "true").header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = IcmUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	
@@ -344,7 +384,7 @@ public class UserInfoReleasePoliciesController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -361,7 +401,10 @@ public class UserInfoReleasePoliciesController {
 			
 			
 			response = IcmUtility.forwardRequest(httpClient, "PUT", copsuHost, copsuPort, sb.toString(), request, sendEntity);
-			
+			if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+				IcmUtility.locDebug("ERR1137","Forwarded COPSU PUT request to " + copsuHost + ":" + copsuPort + ": " + sendEntity);
+			else
+				IcmUtility.locDebug("ERR1137","Forwarded COPSU PUT request to " + copsuHost + ":" + copsuPort);
 			
 			String rbody = IcmUtility.extractBody(response);
 			int status = IcmUtility.extractStatusCode(response);
@@ -378,7 +421,7 @@ public class UserInfoReleasePoliciesController {
 			return buildResponse(Status.fromStatusCode(status),ur.toJSON());
 			
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
@@ -408,7 +451,7 @@ public class UserInfoReleasePoliciesController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -423,6 +466,7 @@ public class UserInfoReleasePoliciesController {
 				String rbody = IcmUtility.extractBody(response);
 				return buildResponse(Status.fromStatusCode(status),rbody);
 			}
+			IcmUtility.locLog("Deleted COPSU policy: " + policy_id);
 			
 			// otherwise, return an empty response because there's no content to return
 			return buildResponse(Status.NO_CONTENT,"");
@@ -462,7 +506,7 @@ public class UserInfoReleasePoliciesController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -471,6 +515,9 @@ public class UserInfoReleasePoliciesController {
 			response = IcmUtility.forwardRequest(httpClient,"GET",copsuHost,copsuPort,sb.toString(),request,null);
 			rbody = IcmUtility.extractBody(response);
 			status = IcmUtility.extractStatusCode(response);
+			
+			IcmUtility.locDebug("ERR1137","Forwarded GET request to COPSU for policy: " + policy_id);
+			
 			if (status >= 300)
 				return buildResponse(Status.fromStatusCode(status),rbody);
 			//ObjectMapper om = new ObjectMapper();
@@ -483,7 +530,7 @@ public class UserInfoReleasePoliciesController {
 			
 			return buildResponse(Status.fromStatusCode(response.getStatusLine().getStatusCode()),ulr.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
@@ -517,7 +564,7 @@ public class UserInfoReleasePoliciesController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -529,6 +576,8 @@ public class UserInfoReleasePoliciesController {
 			// No matter what, we get the body of the response back
 			String rbody = IcmUtility.extractBody(response);
 			int status = IcmUtility.extractStatusCode(response);
+			
+			IcmUtility.locDebug("ERR1137","Forwarded GET search request to COPSU");
 			
 			// On error, return error code + body
 			if (status >= 300) 
@@ -542,9 +591,11 @@ public class UserInfoReleasePoliciesController {
 			for (ReturnedPolicy l : lr) {
 				ulr.addPolicy(convertToIcmUserReturnedPolicy(l));
 			}
+			IcmUtility.locDebug("ERR1137","Returning " + lr.size() + " results from COPSU");
+			
 			return buildResponse(Status.fromStatusCode(status),ulr.toJSON());
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);
@@ -578,7 +629,7 @@ public class UserInfoReleasePoliciesController {
 			httpClient = IcmHttpClientFactory.getHttpsClient();
 		} catch (Exception e) {
 			// Log and create a raw client instead
-			IcmUtility.locLog("ERR1136", LogCriticality.error,"Falling back to default HttpClient d/t failed client initialization");
+			IcmUtility.locDebug("ERR1136","Falling back to default HttpClient d/t failed client initialization");
 			httpClient = HttpClientBuilder.create().build();
 		}
 
@@ -596,6 +647,11 @@ public class UserInfoReleasePoliciesController {
 			// send it
 			response = IcmUtility.forwardRequest(httpClient, "POST", copsuHost, copsuPort, sb.toString(), request, sendEntity);
 			
+			if ("true".equalsIgnoreCase(config.getProperty("logSensitiveInfo", false)))
+				IcmUtility.locLog("ERR1137","Forwarded POST to COPSU " + copsuHost + ":" + copsuPort + " for policy: " + sendEntity);
+			else
+				IcmUtility.locLog("ERR1137","Forwarded POST to COPSU " + copsuHost + ":" + copsuPort);
+			
 			// Process the response
 			int status = IcmUtility.extractStatusCode(response);
 			String rbody = IcmUtility.extractBody(response);
@@ -608,7 +664,7 @@ public class UserInfoReleasePoliciesController {
 			return buildResponse(Status.fromStatusCode(status),urp.toJSON());
 			
 		} catch (Exception e) {
-			return IcmUtility.locError(500, "ERR0056",LogCriticality.error,e.getMessage());
+			return IcmUtility.locError(500, "ERR0056",e.getMessage());
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
 			HttpClientUtils.closeQuietly(response);

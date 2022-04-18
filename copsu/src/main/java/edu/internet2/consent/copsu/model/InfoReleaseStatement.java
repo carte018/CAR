@@ -39,7 +39,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class InfoReleaseStatement {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	//@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@JsonIgnore
 	private Long InfoIdKey;
 	

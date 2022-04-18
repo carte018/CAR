@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -35,7 +35,7 @@ import edu.internet2.consent.copsu.model.CreatorId;
 import edu.internet2.consent.copsu.model.DirectiveAllOtherValues;
 import edu.internet2.consent.copsu.model.InfoReleasePolicy;
 import edu.internet2.consent.copsu.model.InfoReleaseStatement;
-import edu.internet2.consent.copsu.model.LogCriticality;
+//import edu.internet2.consent.copsu.model.LogCriticality;
 import edu.internet2.consent.copsu.model.NewRPTemplateTypeConst;
 import edu.internet2.consent.copsu.model.NewRPTemplateValueConst;
 import edu.internet2.consent.copsu.model.PolicyId;
@@ -49,8 +49,8 @@ import edu.internet2.consent.copsu.model.UserId;
 
 public class NewEntityUtilities {
 	
-	@SuppressWarnings("unused")
-	private static Log LOG = LogFactory.getLog(NewEntityUtilities.class);
+	//@SuppressWarnings("unused")
+	//private static Log LOG = LogFactory.getLog(NewEntityUtilities.class);
 	
 	// Class wrapper for shared static functions for new entities
 	// Create a new RP policy for a user based on the user's new RP template
@@ -60,7 +60,7 @@ public class NewEntityUtilities {
 		// Get a session from Hibernate
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			throw new RuntimeException(CopsuUtility.locError(500, "ERR0018",LogCriticality.error).getEntity().toString()); // throw here, since we're not inline
+			throw new RuntimeException(CopsuUtility.locError(500, "ERR0018").getEntity().toString()); // throw here, since we're not inline
 		}
 		
 		ReturnedPolicy newrpt = new ReturnedPolicy();
@@ -104,7 +104,7 @@ public class NewEntityUtilities {
 		List<ReturnedPolicy> pl = getNewRPTemplate.list();
 		// if the policy doesn't exist, it's a major error
 		if (pl == null || pl.isEmpty()) {
-			throw new RuntimeException(CopsuUtility.locError(500, "ERR0037",LogCriticality.error,"RP template missing for " + user.getUserValue()).getEntity().toString());
+			throw new RuntimeException(CopsuUtility.locError(500, "ERR0037","RP template missing for " + user.getUserValue()).getEntity().toString());
 		}
 		newrpt.setPolicyMetaData(md);
 		//
@@ -169,7 +169,7 @@ public class NewEntityUtilities {
 		// Get a session from Hibernate
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			throw new RuntimeException(CopsuUtility.locError(500, "ERR0018",LogCriticality.error).getEntity().toString());
+			throw new RuntimeException(CopsuUtility.locError(500, "ERR0018").getEntity().toString());
 		}
 
 		ReturnedPolicy newrpt = new ReturnedPolicy();
@@ -191,7 +191,7 @@ public class NewEntityUtilities {
 		rcoQuery.setParameter("changeId","NewUserChangeOrder");
 		List<ReturnedChangeOrder> lrco = rcoQuery.list();
 		if (lrco.isEmpty()) {
-			throw new RuntimeException(CopsuUtility.locError(500, "ERR0037",LogCriticality.error,"Failed to retrieve new user configuration").getEntity().toString());
+			throw new RuntimeException(CopsuUtility.locError(500, "ERR0037","Failed to retrieve new user configuration").getEntity().toString());
 		}
 		
 		ReturnedChangeOrder newUserChangeOrder = lrco.get(0);
@@ -280,7 +280,7 @@ public class NewEntityUtilities {
 		tx.commit();
 		return newrpt;
 	} catch (Exception e) {
-		CopsuUtility.locLog("LOG0014",LogCriticality.info,user.getUserValue(),e.getMessage());
+		CopsuUtility.locError(500,"LOG0014",user.getUserValue(),e.getMessage());
 			if (tx != null) {
 			tx.rollback();
 		}
@@ -306,7 +306,7 @@ public class NewEntityUtilities {
 		
 		Session sess = CopsuUtility.getHibernateSession();
 		if (sess == null) {
-			throw new RuntimeException(CopsuUtility.locError(500, "ERR0018",LogCriticality.error).getEntity().toString());
+			throw new RuntimeException(CopsuUtility.locError(500, "ERR0018").getEntity().toString());
 		}
 		
 		// First, try to find the matching policy

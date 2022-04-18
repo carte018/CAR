@@ -41,7 +41,8 @@
 		</dependency>	
 		
 		<!-- Logging -->
-		<dependency>
+		<!--  moved to SLF4J atop logback with log4j & jcl compat -->
+		<!-- <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${org.slf4j-version}</version>
@@ -57,7 +58,7 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>${org.slf4j-version}</version>
 			<scope>runtime</scope>
-		</dependency>
+		</dependency> -->
 		<!-- <dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -82,7 +83,7 @@
 			</exclusions>
 			<scope>runtime</scope>
 		</dependency> -->
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-api</artifactId>
     <version>2.11.2</version>
@@ -91,7 +92,22 @@
     <groupId>org.apache.logging.log4j</groupId>
     <artifactId>log4j-core</artifactId>
     <version>2.11.2</version>
-  </dependency>
+  </dependency> -->
+   <dependency> 
+ 	 <groupId>ch.qos.logback</groupId>
+  	 <artifactId>logback-classic</artifactId>
+  	 <version>1.2.8</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>jcl-over-slf4j</artifactId>
+		<version>1.7.32</version>
+	</dependency>
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>log4j-over-slf4j</artifactId>
+		<version>1.7.32</version>
+	</dependency>
 
 		<!-- @Inject -->
 		<dependency>
@@ -136,6 +152,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.6</version>
+			<exclusions>
+			  <exclusion>
+			    <groupId>commons-logging</groupId>
+			    <artifactId>commons-logging</artifactId>
+			  </exclusion>
+			</exclusions>
 		</dependency>
    <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
@@ -157,11 +179,12 @@
     	<artifactId>jsr311-api</artifactId>
     	<version>1.1.1</version>
     </dependency> -->
-     <dependency>
+    <!-- Using compat in slf4j now -->
+     <!-- <dependency>
     	<groupId>commons-logging</groupId>
     	<artifactId>commons-logging</artifactId>
     	<version>1.2</version>
-    </dependency>
+    </dependency> -->
     <dependency>
     	<groupId>com.fasterxml.jackson.core</groupId>
     	<artifactId>jackson-databind</artifactId>
@@ -211,13 +234,23 @@
 	</dependency>
 	<dependency>
 		<groupId>org.apache.velocity</groupId>
-		<artifactId>velocity</artifactId>
-		<version>1.7</version>
+		<!-- <artifactId>velocity</artifactId>
+		<version>1.7</version> -->
+		<artifactId>velocity-engine-core</artifactId>
+		<version>2.3</version>
 	</dependency>
 <dependency>
-	<groupId>org.apache.velocity</groupId>
-	<artifactId>velocity-tools</artifactId>
-	<version>2.0</version>
+	<groupId>org.apache.velocity.tools</groupId>
+	<!-- <artifactId>velocity-tools</artifactId>
+	<version>2.0</version> -->
+	<artifactId>velocity-tools-generic</artifactId>
+	<version>3.1</version>
+	<exclusions>
+	  <exclusion>
+	    <groupId>commons-logging</groupId>
+	    <artifactId>commons-logging</artifactId>
+	  </exclusion>
+	</exclusions>
 	</dependency>
 	<dependency>
 	<groupId>org.hibernate</groupId>
@@ -243,6 +276,11 @@
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcprov-jdk15on</artifactId>
     <version>1.61</version>
+</dependency>
+<dependency>
+  <groupId>net.shibboleth.ext</groupId>
+  <artifactId>spring-extensions</artifactId>
+  <version>6.0.0</version>
 </dependency>
 	</dependencies>
     <build>
@@ -300,7 +338,8 @@
     <validator-version>6.0.13.Final</validator-version>
     <jackson-core-version>2.10.1</jackson-core-version>
 		<java-version>11</java-version>
-		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
+		<!-- <org.springframework-version>3.1.1.RELEASE</org.springframework-version> -->
+		<org.springframework-version>5.3.19</org.springframework-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
 		<org.slf4j-version>1.6.6</org.slf4j-version>
   </properties>

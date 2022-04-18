@@ -30,8 +30,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+//import org.apache.commons.logging.Log;
+//import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -52,12 +52,50 @@ public class AdminRoleController {
 
 	@SuppressWarnings("unused")
 	private String caller="";
-	@SuppressWarnings("unused")
-	private final Log LOG = LogFactory.getLog(IIICController.class);
+	//@SuppressWarnings("unused")
+	//private final Log LOG = LogFactory.getLog(IIICController.class);
 	
 	// Response builder
 	private Response buildResponse(Status code, String entity) {
 		return Response.status(code).entity(entity).header("Access-Control-Allow-Origin","http://editor.swagger.io").header("Access-Control-Allow-methods","GET, POST, PUT, DELETE").header("Access-Control-Allow-Credentials","true").header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept").type("application/json").build();
+	}
+	
+	@GET
+	@Path("/healthcheck")
+	public Response healthCheck(@Context HttpServletRequest request, @Context HttpHeaders headers) {
+		// We do a simple check against the database to verify that we have 
+		// DB access, and then return based on that either 200 or 500.
+		
+		boolean healthy = false;  // unhealthy until proven otherwise
+		
+		Session sess = InformedUtility.getHibernateSession();
+		
+		if (sess == null) {
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"No Session");
+		}
+		
+		long c = 0;
+		
+		try {
+			@SuppressWarnings("rawtypes")
+			Query q =  sess.createSQLQuery("select 1 from dual");
+			c =  ((Integer) q.uniqueResult()).longValue();
+			if (c == 1) {
+				healthy = true;
+			}
+		} catch (Exception e) {
+			// ignore
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Exception: " + e.getMessage());
+		} finally {
+			if (sess != null) 
+				sess.close();
+		}
+		
+		if (healthy) 
+			return buildResponse(Status.OK,"");
+		else
+			return buildResponse(Status.INTERNAL_SERVER_ERROR,"Check returned " + c);
+		
 	}
 	
 	//
@@ -99,7 +137,7 @@ public class AdminRoleController {
 		try {
 			config = InformedUtility.init("postAdminRoleMapping", req, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}
 		
 		//ObjectMapper mapper = new ObjectMapper();
@@ -114,13 +152,13 @@ public class AdminRoleController {
 		} catch (JsonMappingException e) {
 			return InformedUtility.locError(400, "ERR0006",LogCriticality.info);
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0007",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0007");
 		}
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		// Force time of creation and status
@@ -135,6 +173,11 @@ public class AdminRoleController {
 			sess.save(entry);
 			tx.commit();
 			sess.close();
+			try {
+				InformedUtility.locLog("ERR0070","Created admin role record " + entry.getAdminRoleId());
+			} catch (Exception e) {
+				// ignore -- best effort logging
+			}
 		} catch (Exception e) {
 			tx.rollback();
 			throw new RuntimeException("Transaction rollback",e);
@@ -147,7 +190,7 @@ public class AdminRoleController {
 		try {
 			return buildResponse(Status.OK,entry.toJSON());
 		} catch (Exception e) {
-			return InformedUtility.locError(500, "ERR0016",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0016");
 		}
 	}
 	
@@ -165,13 +208,13 @@ public class AdminRoleController {
 		try {
 			config = InformedUtility.init("getAdminRoleMapping", req, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Transaction tx = sess.beginTransaction();
@@ -190,6 +233,11 @@ public class AdminRoleController {
 			try {
 				tx.commit();
 				sess.close();
+				try {
+					InformedUtility.locLog("ERR0070","Deleted AdminRoleMapping: " + larm.get(0).getAdminRoleId());
+				} catch (Exception e) {
+					// ignore -- best effort logging
+				}
 			} catch (Exception e) {
 				tx.rollback();
 				throw new RuntimeException("Transaction rollback",e);
@@ -212,13 +260,13 @@ public class AdminRoleController {
 		try {
 			config = InformedUtility.init("getAdminRoleMapping", req, headers, null);
 		} catch (Exception e) {
-			return InformedUtility.locError(500,"ERR0004",LogCriticality.error);
+			return InformedUtility.locError(500,"ERR0004");
 		}		
 		
 		// Get a Hibernate session
 		Session sess = InformedUtility.getHibernateSession();
 		if (sess == null) {
-			return InformedUtility.locError(500, "ERR0018",LogCriticality.error);
+			return InformedUtility.locError(500, "ERR0018");
 		}
 		
 		Query<AdminRoleMapping> getQuery = null;
@@ -295,7 +343,7 @@ public class AdminRoleController {
 				
 				return buildResponse(Status.OK,om.writeValueAsString(larm));
 			} catch (Exception e) {
-				return InformedUtility.locError(500,"ERR0016",LogCriticality.error);
+				return InformedUtility.locError(500,"ERR0016");
 			} finally {
 				sess.close();
 			}

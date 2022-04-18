@@ -31,7 +31,8 @@ public class ListableRelyingPartyId {
 	
 		@JsonIgnore
 		@Id
-		@GeneratedValue(strategy=GenerationType.AUTO)
+		//@GeneratedValue(strategy=GenerationType.AUTO)
+		@GeneratedValue(strategy=GenerationType.IDENTITY)
 		private Long ListableRelyingPartyIdentifier;
 
 		private String RPtype;

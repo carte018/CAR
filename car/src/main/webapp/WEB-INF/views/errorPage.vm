@@ -15,10 +15,27 @@
 
  *#
 <html>
-    
+  <body>  
     <div id="main">
-      <div class="content-box">
-    	$message
+      <div class="content-section">
+      	<p>An error has occurred which the system cannot automatically recover from at 
+      	this time.  The error has been logged for system operators to investigate.</p>  
+      	#if($transient)
+      	<p>This particular error is usually transient and does not often recur.  
+      	Click <a href="javascript:history.back();">here</a> to try your request again.</p>
+      	<p>If you receive an error again, please try your request again at a later time, or 
+      	contact your IT support group for more information.</p>
+      	#else
+      	<p>This particular error may result from entering an errant URL, or from a 
+      	misconfiguration or permission issue at the system level.  It usually persists 
+      	for some time (or until operators intervene or you re-enter your request with 
+      	the correct URL). Please check your inputs and try your request again at a later 
+      	time, or contact your IT support group for more information.</p>
+      	#end
+      	<p>Details regarding the error appear below, for your reference.</p>
+        <div class="content-section">
+    	  $message
+        </div>
       </div>
     </div>
   </body>

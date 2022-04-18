@@ -230,9 +230,14 @@
 								#set($ifoo=$Collections.sort($iskeys,$iicomparator))
 								#foreach($iiii in $iskeys)
 									#set($iiinumber=$iiinumber+1)
+									#if($itype == "oauth_scope" && $scopedefs.containsKey($iiii.getIiid()))
+										#set($cdisp=$scopedefs.get($iiii.getIiid()).getInfoitems().toString())
+									#else
+										#set($cdisp="empty")
+									#end
 									<tr>
 										<input type="hidden" name="iid_$iiinumber" value="$iiii.getIiid()">
-										<td class="wrappingtd">$iiii.getIiid()</td>
+										<td class="wrappingtd">$iiii.getIiid() #if($itype == "oauth_scope")<fieldset style="float:right;">$cdisp</fieldset>#end</td>
 										<td class="wrappingtd">#if($ihash.get($iiii) && $ihash.get($iiii).getDisplayname() && $CarAdminUtils.localize($ihash.get($iiii).getDisplayname(),$lang))$CarAdminUtils.localize($ihash.get($iiii).getDisplayname(),$lang)#end</td>
 										<td class="wrappingtd">#if($ihash.get($iiii) && $ihash.get($iiii).getPresentationtype())$ihash.get($iiii).getPresentationtype()#else missing #end</td>
 										<td class="wrappingtd">#if($ihash.get($iiii) && $ihash.get($iiii).getPolicytype())#if($ihash.get($iiii).getPolicytype().equals("PAO"))by $itype#else by value#end #else missing #end</td>
@@ -278,7 +283,22 @@
 									#set($vinumber=$vinumber+1)
 									<tr>
 										<input type="hidden" name="iid_$vinumber" value="$vi.getIiid()">
-										<td class="wrappingtd">$vi.getIiid()</td>
+										#if(${itype}!="oauth_scope")
+											<td class="wrappingtd">$vi.getIiid()</td>
+										#else
+											<td class="wrappingtd">
+												$vi.getIiid()
+												#if(${itype}=="oauth_scope")
+													<fieldset style="float:right;">
+													    #foreach($iname in $iinamelist) 
+													    	<input type="checkbox" id="scopecont_${vinumber}_$iname" name="scopecont_$vinumber" value="$iname" #if($scopedefs.get($vi.getIiid()).getInfoitems().contains($iname))checked#end>
+															<label for="scopecont_${vinumber}_$iname" class="inline">$iname</label>
+															<br>
+														#end
+													</fieldset>
+												#end
+											</td>
+										#end
 										<td class="wrappingtd">#if($ihash.get($vi) && $ihash.get($vi).getDisplayname() && $CarAdminUtils.localize($ihash.get($vi).getDisplayname(),$lang))$CarAdminUtils.localize($ihash.get($vi).getDisplayname(),$lang)#end</td>
 										
 										<td class="wrappingtd">

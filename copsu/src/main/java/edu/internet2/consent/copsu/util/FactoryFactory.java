@@ -31,7 +31,7 @@ public class FactoryFactory {
 			if (cfile.exists()) 
 				factory = new Configuration().configure(cfile).buildSessionFactory();
 			else {
-				CopsuUtility.locLog("ERR0037", LogCriticality.error, "Failed to open /etc/car/copsu/hibernate.cfg.xml -- using local config");
+				CopsuUtility.locDebug("ERR0037", "Failed to open /etc/car/copsu/hibernate.cfg.xml -- using local config");
 				factory = new Configuration().configure().buildSessionFactory();
 			}
 		}

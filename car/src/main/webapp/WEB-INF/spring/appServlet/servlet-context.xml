@@ -25,10 +25,17 @@
 		
 	<context:component-scan base-package="edu.internet2.consent.car" />
 	<context:annotation-config/>
-	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+	<!-- <bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer"> -->
+	<bean id="velocityConfig" class="net.shibboleth.ext.spring.velocity.VelocityConfigurer">
 		<property name="resourceLoaderPath"><value>/</value></property>
+		<property name="velocityProperties">
+			<props>
+				<prop key="parser.allow_hyphen_in_identifiers">true</prop>
+			</props>
+		</property>
 	</bean>
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
+	<!-- <bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver"> -->
+	<bean id="viewResolver" class="edu.internet2.consent.car.VelocityLayoutViewResolver">
 		<property name="cache" value="true"/>
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="layoutUrl" value="/WEB-INF/layouts/layout.vm"/>

@@ -2,15 +2,25 @@ package edu.internet2.consent.car;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.http.HeaderElement;
+import org.apache.http.HeaderElementIterator;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
+import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeaderElementIterator;
+import org.apache.http.protocol.HTTP;
+import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 
 public class CarHttpClientFactory {
@@ -29,6 +39,8 @@ public class CarHttpClientFactory {
 			SSLConnectionSocketFactory factory = new SSLConnectionSocketFactory(sslc);
 			Registry reg = RegistryBuilder.create().register("https",factory).build();
 			pool = new PoolingHttpClientConnectionManager(reg);
+			
+			pool.setValidateAfterInactivity(-1);
 			
 			// Set some configuration parameters for the connection pool.
 			//
@@ -50,15 +62,26 @@ public class CarHttpClientFactory {
 			
 			pool.setMaxTotal(350);
 			pool.setDefaultMaxPerRoute(350);
-			
+						
 			// We must make the connection manager "shared" since the connections it mints
 			// may be used across multiple threads over time.  Otherwise we will encounter
 			// shutdown factory exceptions.
 			
-			client = HttpClients.custom().setConnectionManagerShared(true).setConnectionManager(pool).setSSLSocketFactory(factory).build();
+			client = HttpClients.custom().setDefaultRequestConfig(
+				    RequestConfig.custom().build()
+					).setConnectionManagerShared(true).setKeepAliveStrategy(new CarConnectionKeepAliveStrategy()).setConnectionManager(pool).setSSLSocketFactory(factory).build();
+			
+			// Spin a thread to watch for idle connections in the pool manager
+			
+			CarIdleConnectionMonitorThread watcher = new CarIdleConnectionMonitorThread(pool);
+			
+			watcher.start();
+			
+			// never join back
+			// watcher.join(100);  // or if you do , only wait 100ms for completion
 		} catch (Exception e) {
 			// On exception fall through and allow the failure to trigger a downstream exception
-			CarUtility.locError("ERR1136", LogCriticality.error,e.getMessage());
+			CarUtility.locError("ERR1136",e.getMessage());
 		}
 	}
 	
@@ -67,7 +90,7 @@ public class CarHttpClientFactory {
 		if (client != null) {
 			return client;
 		}
-		CarUtility.locError("ERR1136", LogCriticality.error,"Failed retrieving client from factory");
+		CarUtility.locError("ERR1136","Failed retrieving client from factory");
 		throw new RuntimeException("Failed retrieving client from SSL connection factory");
 	}
 	
@@ -75,4 +98,60 @@ public class CarHttpClientFactory {
 		// Instance release just involves nulling the client
 		client = null;
 	}
+}	
+
+// Define a keep alive strategy that honors KeepAlive headers and uses 1 minute
+// timeouts for connections that don't receive keepalive values in responses
+
+class CarConnectionKeepAliveStrategy implements ConnectionKeepAliveStrategy {
+	
+	@Override
+	public long getKeepAliveDuration(HttpResponse response, HttpContext context) {
+        HeaderElementIterator it = new BasicHeaderElementIterator
+                (response.headerIterator(HTTP.CONN_KEEP_ALIVE));
+            while (it.hasNext()) {
+                HeaderElement he = it.nextElement();
+                String param = he.getName();
+                String value = he.getValue();
+                if (value != null && param.equalsIgnoreCase
+                   ("timeout")) {
+                    return Long.parseLong(value) * 1000;
+                }
+            }
+            return 60 * 1000;  // Default to 1-minute 
+        }
+}
+
+// Define a Thread subclass that handles monitoring the HTTP connection
+// pool for stale members and reaps them.
+
+class CarIdleConnectionMonitorThread extends Thread {
+    private final HttpClientConnectionManager connMgr;
+    private volatile boolean shutdown;
+
+    public CarIdleConnectionMonitorThread(
+      PoolingHttpClientConnectionManager connMgr) {
+        super();
+        this.connMgr = connMgr;
+    }
+    @Override
+    public void run() {
+        try {
+            while (!shutdown) {
+                synchronized (this) {
+                    wait(1000);
+                    connMgr.closeExpiredConnections();
+                    connMgr.closeIdleConnections(90, TimeUnit.SECONDS);
+                }
+            }
+        } catch (InterruptedException ex) {
+            shutdown();
+        }
+    }
+    public void shutdown() {
+        shutdown = true;
+        synchronized (this) {
+            notifyAll();
+        }
+    }
 }
