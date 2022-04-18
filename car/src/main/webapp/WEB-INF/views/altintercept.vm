@@ -287,7 +287,7 @@ $( document ).ready(function() {
      var $permit = [];
      var $nccount = 0;
      $.each(li_collection, function() {
-     	$nccounc = $nccount + 1;
+     	$nccount = $nccount + 1;
      	$decision = $(this).find("input.nochoice_decision_pair:checked").val();
      	$display_name = $(this).find("span.attr_displayname").html();
      	$value = $(this).find("input.attr_value").val();

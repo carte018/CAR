@@ -45,7 +45,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -2173,6 +2173,8 @@ public class MainController {
 				
 				// provide a blind hashmap for handling form layout
 				HashMap<String,Integer> counters = new HashMap<String,Integer>();
+				// nullity in Velocity 2.x attaches to empty collections too
+				counters.put("make_counters_not_null_for_velocity", Integer.valueOf(1));
 				debugReturn.addObject("counters",counters);
 				
 				// For handling of showagain checkbox
@@ -4048,6 +4050,7 @@ public class MainController {
 				
 				// provide a blind hashmap for handling form layout
 				HashMap<String,Integer> counters = new HashMap<String,Integer>();
+				counters.put("make_counters_not_null_for_velocity",Integer.valueOf(1));
 				debugReturn.addObject("counters",counters);
 				
 				// For handling of showagain checkbox
