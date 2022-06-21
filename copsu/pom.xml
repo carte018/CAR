@@ -281,7 +281,7 @@
     <servlet-api-version>2.5</servlet-api-version>
     <hibernate-version>5.4.0.Final</hibernate-version>
     <hikaricp-version>3.2.0</hikaricp-version>
-    <mysql-version>8.0.13</mysql-version>
+    <mysql-version>8.0.28</mysql-version>
    <validator-version>6.0.13.Final</validator-version>
     <jackson-core-version>2.10.1</jackson-core-version>
     <!--  <org.aspectj-version>1.6.10</org.aspectj-version> -->
